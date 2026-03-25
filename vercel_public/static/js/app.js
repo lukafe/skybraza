@@ -139,33 +139,48 @@ function renderYesNo(card, q) {
 function renderSingleChoice(card, q) {
   const qid = q.id;
   const opts = q.options || [];
-  const wrap = document.createElement("div");
-  wrap.className = "q-field";
-
-  const sel = document.createElement("select");
-  sel.className = "q-select";
-  sel.setAttribute("aria-label", `Seleção ${qid}`);
-
-  const ph = document.createElement("option");
-  ph.value = "";
-  ph.textContent = "— Selecione —";
-  sel.appendChild(ph);
-
-  for (const o of opts) {
-    const op = document.createElement("option");
-    op.value = o.id;
-    op.textContent = o.label;
-    sel.appendChild(op);
-  }
+  /** Rádios em vez de &lt;select&gt;: listas nativas ignoram a largura do cartão com opções longas (ex.: P_list). */
+  const wrap = document.createElement("fieldset");
+  wrap.className = "q-multicheck q-radio-group";
+  wrap.setAttribute("aria-label", `Escolha única ${qid}`);
 
   const cur = state.answers[qid];
-  sel.value = cur && opts.some((o) => o.id === cur) ? cur : "";
+  const curId = cur && opts.some((o) => o.id === cur) ? cur : null;
+  const groupName = `single_${qid}`;
 
-  sel.addEventListener("change", () => {
-    state.answers[qid] = sel.value === "" ? null : sel.value;
-  });
+  for (const o of opts) {
+    const row = document.createElement("label");
+    row.className = "q-check-row";
+    const rb = document.createElement("input");
+    rb.type = "radio";
+    rb.name = groupName;
+    rb.value = o.id;
+    rb.checked = curId === o.id;
+    rb.addEventListener("change", () => {
+      if (rb.checked) state.answers[qid] = o.id;
+    });
+    const lab = document.createElement("span");
+    lab.className = "q-check-text";
+    lab.textContent = o.label;
+    row.appendChild(rb);
+    row.appendChild(lab);
+    wrap.appendChild(row);
+  }
 
-  wrap.appendChild(sel);
+  if (!curId) {
+    const hint = document.createElement("p");
+    hint.className = "q-radio-hint";
+    hint.textContent = "Selecione uma opção para continuar.";
+    wrap.appendChild(hint);
+    wrap.addEventListener(
+      "change",
+      () => {
+        hint.remove();
+      },
+      { once: true },
+    );
+  }
+
   card.appendChild(wrap);
 }
 

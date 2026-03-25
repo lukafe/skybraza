@@ -564,6 +564,18 @@ input[type="text"]:focus {
   word-break: break-word;
 }
 
+.q-radio-group {
+  margin: 0;
+}
+
+.q-radio-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+
 .q-actions {
   display: flex;
   flex-wrap: wrap;
