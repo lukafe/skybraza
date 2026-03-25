@@ -7,9 +7,10 @@ Na raiz do projeto Certik_VASP:
 
 Abrir no navegador: http://127.0.0.1:8000/
 
-Deploy Vercel: zero-config FastAPI — main.py na raiz + requirements.txt (fastapi).
-Ver: https://vercel.com/docs/frameworks/backend/fastapi
-Não usar pasta api/*.py com variável global `app` (cada ficheiro vira função separada).
+Deploy Vercel: zero-config FastAPI — main.py na raiz.
+Em pyproject.toml, secção [project] deve incluir `dependencies` com fastapi etc.
+(senão a Vercel pode não instalar pacotes e o import de main.py falha).
+Ver: https://vercel.com/docs/functions/runtimes/python#dependencies
 Em local também: npx vercel dev
 
 Endpoints JSON:
