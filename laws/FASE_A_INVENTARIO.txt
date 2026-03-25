@@ -1,0 +1,40 @@
+================================================================================
+FASE A — INVENTÁRIO E NORMALIZAÇÃO DO CORPUS (laws/)
+Projeto: CertiK VASP — Escopo IN 701
+================================================================================
+
+A.1 Texto integral IN 701 (art. 4º e § 1º)
+  - Ficheiro canónico: IN701-texto-integral.txt
+  - (Migrado de IN701.TXT para extensão .txt em minúsculas.)
+
+A.2 Normalização de nomes
+  - Extensão .txt em todos os extratos migrados.
+  - Removidos espaços e nomes ambíguos (ex.: "5-Art 43", "3-Art83").
+  - Padrão: <Fonte>_<Referência-IN701>.txt
+    Ex.: Res520-art32-33_IN701-art4-II.txt
+
+A.3 Matriz de cobertura
+  - Ficheiro: COVERAGE_MATRIX.yaml
+  - Contém: todos os itens do art. 4º (I a XVII) e § 1º (I, II, III) mapeados para
+    ficheiros existentes, stubs, referências explícitas na IN 701 e status.
+
+A.4 Lacunas (STUB)
+  - Ficheiros STUB_*.txt com instruções em PT para colar extratos oficiais.
+  - Próximo passo (Fase B): substituir STUBs por texto Res. 520 PT e validar numeração.
+
+A.5 Idioma
+  - IN 701: PT (canónico).
+  - Res. 520 na pasta: maioritariamente EN — trocar por PT oficial BCB quando possível.
+
+Script de migração (já executado): scripts/migrate_laws_phase_a.py
+  - Reexecutar apenas se restaurar cópias antigas dos nomes de ficheiro.
+
+Resumo de contagem (ver YAML):
+  - Itens na matriz: 25 (subdivisões de I, IX e X conforme redação do art. 4º)
+  - Completo: 7 | Parcial: 3 | Incompleto: 15 — ver resumo_contagem em COVERAGE_MATRIX.yaml
+
+Roteiro completo das fases (A–E): laws/ROTEIRO_FASES.txt
+
+================================================================================
+Fim do inventário Fase A
+================================================================================

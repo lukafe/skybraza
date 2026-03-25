@@ -1,0 +1,49 @@
+Jornada 2 — plano de ação (mapeamento + implementação)
+=======================================================
+
+Objetivo
+--------
+Após a delimitação IN 701 (Jornada 1), orientar o cliente sobre:
+1) **Smart contract audit** (quando aplicável): repositório Git **ou** convite ao utilizador GitHub **Certik4audit**.
+2) **Penetration test** (quando aplicável): preenchimento de **formulário** (URL configurável).
+3) **Pedido de evidências (RFI)** por **inciso ativado** no escopo: documentação e informação adicional
+   necessária à auditoria de compliance (além de SC e pentest).
+
+Mapeamento requisição ↔ inciso
+------------------------------
+A fonte normativa é `laws/AUDITOR_EVIDENCE_BY_INCISO.yaml`:
+- Cada chave é um `inciso_id` idêntico a `COVERAGE_MATRIX.yaml` (ex.: `I_a`, `VII`, `par1_I_h`).
+- Cada inciso lista **itens** com: `id`, `titulo`, `detalhe`, `categoria`
+  (`politica`, `procedimento`, `evidencia`, `contrato`, `diagrama`, `organizacional`).
+- O motor agrega apenas os incisos presentes em `active_keys` após `compute_scope()`.
+
+Diagnóstico na primeira fase do questionário (bloco **diag**)
+-------------------------------------------------------------
+- **P_diag_sc** (audit_only): contratos inteligentes próprios ou contratados em produção?
+  → Se **Sim**, `journey_2.smart_contract_audit.aplicavel = true`.
+- **P_diag_surface** (audit_only): opera sistemas expostos à Internet (site, app, APIs, painel, webhooks)?
+  → Se **Sim**, `journey_2.penetration_test.aplicavel = true` (linha base para VASP digital).
+  → Se **Não**, pentest fica **não aplicável por defeito**, com nota para confirmação com analista
+    (ex.: modelo apenas white-label sem superfície própria — caso raro).
+
+Heurística pentest
+------------------
+Não é literalmente “todo mundo”: depende de **superfície própria exposta**. A pergunta **P_diag_surface**
+materializa isso; operações só institucionais/offline podem ficar fora até validação humana.
+
+Implementação no código (Jornada 2)
+-----------------------------------
+- `evidence_requests.py` — carrega YAML, aplica filtros, monta `journey_2`.
+- `rules_engine.compute_scope()` — acrescenta `meta["journey_2"]` para API, Streamlit e testes.
+- `api/main.py` — repassa `journey_2` no JSON de `POST /api/scope`.
+- `web/js/app.js` + `web/css/styles.css` — secção **Próximos passos** nos resultados.
+- `app.py` (Streamlit) — expander com SC / pentest / checklist por inciso.
+- `scripts/validar_projeto.py` — valida que todos os incisos da matriz têm entrada no YAML de evidências.
+- `CERTIK_PENTEST_FORM_URL` (env) — URL real do formulário de pentest (opcional).
+
+Próximos passos humanos
+-----------------------
+1. URL padrão do pentest: formulário Google **CertiK Application Penetration Testing Questionnaire**
+   (`AUDITOR_EVIDENCE_BY_INCISO.yaml` → `pentest_form_url_default`). Opcional: `CERTIK_PENTEST_FORM_URL`.
+2. Revisão jurídica/comercial dos textos de `detalhe` nos itens de evidência.
+3. Opcional: exportar checklist para PDF/CRM a partir do JSON `journey_2`.

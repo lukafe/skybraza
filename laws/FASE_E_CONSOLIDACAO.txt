@@ -1,0 +1,26 @@
+================================================================================
+FASE E — CONSOLIDAÇÃO E VALIDAÇÃO DO ROTEIRO (fecho A–E)
+Projeto: CertiK VASP — Escopo IN 701
+================================================================================
+
+E.1 Objetivo
+  - Alinhar documentação interna (FASE_B e notas) com o código após as fases C e D.
+  - Garantir validação repetível: matriz ↔ questionário ↔ motor ↔ exportação JSON.
+  - Fixar um índice único: laws/ROTEIRO_FASES.txt.
+
+E.2 Correções de consistência (lógica / referências)
+  - Gatilhos: apenas em laws/questionnaire.yaml (não em escopo_intermediario no YAML).
+  - normalize_answers: preserva chaves extra enviadas pela API/cliente (auditoria / extensões).
+  - TRIGGER_MAP (questionnaire_loader): subconjunto legado yes_no para testes; escopo real via resolve_triggers.
+
+E.3 Automação
+  - tests/test_phase_e.py — integração máxima (respostas que maximizam incisos) + JSON + blocos A–D.
+  - scripts/validar_projeto.py — exit 0 se tudo OK; usar em CI ou antes de release.
+
+E.4 Dívida documental (fora do escopo do código)
+  - Substituir STUB_* por extratos oficiais PT (BCB) onde indicado na matriz.
+  - Rever notas históricas em COVERAGE_MATRIX.yaml (“Fase B”) como backlog de corpus.
+
+================================================================================
+Fim — Fase E
+================================================================================

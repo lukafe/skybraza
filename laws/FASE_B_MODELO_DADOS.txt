@@ -1,0 +1,30 @@
+================================================================================
+FASE B — MODELO DE DADOS (matriz normativa → base do motor de escopo)
+================================================================================
+Atualizado após Fases C–E: gatilhos saíram do YAML da matriz.
+
+Fonte da matriz: laws/COVERAGE_MATRIX.yaml
+
+Código (matrix_loader.py):
+  - INCISOS_MATRIX — por inciso: item IN 701, artigo, descrição, refs Res. 520, ficheiros corpus, status.
+  - MANDATORY_KEYS — escopo_intermediario.obrigatorios (sempre no escopo intermediário).
+  - sort_scope_keys() — ordenação via ordem_exibicao no YAML.
+  - get_coverage_meta() — cabeçalho meta (incl. campo fase do roteiro).
+
+Secções relevantes no YAML:
+  - escopo_intermediario.obrigatorios
+  - ordem_exibicao
+  - incisos[] (id, rotulo_in701, law_files, stub_file, status, …)
+
+Gatilhos condicionais (não estão neste YAML):
+  - laws/questionnaire.yaml + questionnaire_loader.py (Fase C).
+
+Próximas camadas sobre a mesma matriz:
+  - readiness.py (Fase D) — prontidão do corpus por inciso no escopo ativo.
+  - rules_engine.compute_scope() agrega matriz + questionário + readiness.
+
+Dependência: PyYAML (requirements.txt).
+
+Ver também: laws/ROTEIRO_FASES.txt
+
+================================================================================

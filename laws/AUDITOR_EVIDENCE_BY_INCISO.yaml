@@ -1,0 +1,308 @@
+# Pedidos de evidência / documentação (RFI) por inciso IN 701 — Jornada 2
+# ids de inciso alinhados a COVERAGE_MATRIX.yaml
+# categorias: politica | procedimento | evidencia | contrato | diagrama | organizacional
+
+version: 1
+
+meta:
+  journey_label: "Jornada 2 — evidências e serviços técnicos CertiK"
+  smart_contract_github_user: "Certik4audit"
+  # Substitua em produção ou use env CERTIK_PENTEST_FORM_URL
+  pentest_form_url_default: "https://docs.google.com/forms/d/e/1FAIpQLSfs5DPT9ZHkAG2YPVCMnHcNcz4udbDu_Wh56pEGTGsFWukmHg/viewform"
+
+incisos:
+  I_a:
+    - id: ev_ia_pol_seg
+      titulo: Política de segregação patrimonial AV (cliente vs instituição)
+      detalhe: Versão aprovada, vigência, responsável e revisão periódica; referência explícita a carteiras e fluxos de fundos.
+      categoria: politica
+    - id: ev_ia_diag_fluxo
+      titulo: Diagramas e descrição técnica do fluxo de fundos
+      detalhe: Diagramas (alto nível e operacional), lista de tipos de carteira (hot/cold/omnibus/MPC) e reconciliações periódicas (amostra recente anonimizada).
+      categoria: diagrama
+    - id: ev_ia_evid_reconc
+      titulo: Evidências de reconciliação e controles
+      detalhe: Procedimento de reconciliação, logs ou relatórios internos que demonstrem execução (trechos redigidos).
+      categoria: evidencia
+
+  I_b:
+    - id: ev_ib_pol_por
+      titulo: Política e metodologia de prova de reservas / comprovação de saldos
+      detalhe: Metodologia (self-attestation, auditoria externa, relatório interno), frequência e responsáveis.
+      categoria: politica
+    - id: ev_ib_docs_por
+      titulo: Artefactos recentes de PoR ou equivalente
+      detalhe: Último relatório público ou interno, hashes ou referências de snapshot, limitações declaradas.
+      categoria: evidencia
+    - id: ev_ib_proc_por
+      titulo: Procedimento operacional ligado à comprovação de reservas
+      detalhe: Passos desde extração de saldos até publicação/comunicação ao cliente.
+      categoria: procedimento
+
+  II:
+    - id: ev_ii_map_terc
+      titulo: Mapa de prestadores relevantes (outsourcing)
+      detalhe: Lista de terceiros críticos, função, criticidade, país de sede, substituição de contingência.
+      categoria: organizacional
+    - id: ev_ii_contr_aud
+      titulo: Contratos ou excertos com cláusulas de acesso, auditoria e SLA
+      detalhe: Cláusulas que permitam due diligence e supervisão (arts. 32–33 Res. 520 na ótica aplicável).
+      categoria: contrato
+    - id: ev_ii_gov_mud
+      titulo: Governança de mudanças em terceiros críticos
+      detalhe: Processo de onboarding/offboarding, revisão de segurança e aprovações internas.
+      categoria: procedimento
+
+  III:
+    - id: ev_iii_dd_exterior
+      titulo: Dossiê de diligência para parceiros no exterior / não autorizados no País
+      detalhe: Checklist legal e operacional, licenças equivalentes quando existirem, plano de mitigação.
+      categoria: evidencia
+    - id: ev_iii_plan_cont
+      titulo: Plano de contingência para falha de prestador estrangeiro
+      detalhe: Cenários, RTO/RPO onde aplicável, contactos de escalação.
+      categoria: procedimento
+    - id: ev_iii_ref_art83
+      titulo: Mapeamento ao art. 83 Res. 520 (quando aplicável)
+      detalhe: Narrativa de como a operação atende exigências para serviços no exterior (rascunho para parecer jurídico).
+      categoria: evidencia
+
+  IV:
+    - id: ev_iv_bcp_dr
+      titulo: Planos de continuidade e recuperação (BCP/DR) relevantes
+      detalhe: Âmbito institucional + terceiros críticos; dependências e priorização de sistemas.
+      categoria: politica
+    - id: ev_iv_testes
+      titulo: Registos de testes / simulados
+      detalhe: Atas, datas, achados e planos de remediação (anonimizados).
+      categoria: evidencia
+    - id: ev_iv_enc_incidentes
+      titulo: Encadeamento com gestão de incidentes
+      detalhe: Como BCP aciona playbooks de incidente e comunicação interna/externa.
+      categoria: procedimento
+
+  V:
+    - id: ev_v_pol_intercon
+      titulo: Política de interconectividade (APIs, parceiros, Open Finance)
+      detalhe: Aprovação de integrações, gestão de chaves API, limites e monitorização.
+      categoria: politica
+    - id: ev_v_inv_integr
+      titulo: Inventário de integrações expostas
+      detalhe: Endpoints, ambientes, autenticação, dados trocados (classificação), dono técnico.
+      categoria: diagrama
+    - id: ev_v_mud_seg
+      titulo: Controlo de mudanças em integrações críticas
+      detalhe: Fluxo de deploy, revisão de segurança, rollback e registos (amostra).
+      categoria: procedimento
+
+  VI_a:
+    - id: ev_via_pld
+      titulo: Programa de PLD/FTP alinhado a PSVAV
+      detalhe: Política, rastreabilidade de operações, reportes a órgãos competentes (sem dados sensíveis desnecessários).
+      categoria: politica
+    - id: ev_via_rel_pld
+      titulo: Relatórios ou métricas internas de PLD (amostra)
+      detalhe: KPIs, alertas tratados, revisões periódicas (redigidos).
+      categoria: evidencia
+
+  VI_b:
+    - id: ev_vib_pol_ciber
+      titulo: Política de segurança cibernética e hardening
+      detalhe: Referência a padrões internos, gestão de patches, acessos privilegiados, segmentação.
+      categoria: politica
+    - id: ev_vib_priv_access
+      titulo: Modelo de acessos privilegiados (PAM) e revisões
+      detalhe: Quem tem acesso a produção, MFA, revisão trimestral ou equivalente (evidência amostral).
+      categoria: evidencia
+    - id: ev_vib_patch
+      titulo: Procedimento de gestão de vulnerabilidades e patches
+      detalhe: SLAs internos, exceções aprovadas e registo de CVE críticos tratados.
+      categoria: procedimento
+
+  VII:
+    - id: ev_vii_pol_chaves
+      titulo: Política de guarda de chaves e instrumentos de controle
+      detalhe: MPC/HSM/custodiante, segregação de funções no fluxo de assinatura, backup e recuperação de chaves.
+      categoria: politica
+    - id: ev_vii_proc_mov
+      titulo: Procedimento de movimentação on-chain (autorização de 4 olhos, limites)
+      detalhe: Fluxo desde pedido até broadcast, logs internos (amostra anonimizada).
+      categoria: procedimento
+    - id: ev_vii_map_comp
+      titulo: Diagrama de componentes de custódia
+      detalhe: Atores (VASP, cliente, MPC, cold), redes e papéis de assinatura.
+      categoria: diagrama
+
+  VIII:
+    - id: ev_viii_prog_monitor
+      titulo: Programa de monitorização contínua de segurança
+      detalhe: SIEM/EDR, revisões de risco, indicadores e periodicidade de relatório à gestão.
+      categoria: politica
+    - id: ev_viii_evid_rev
+      titulo: Evidências de revisões e melhorias
+      detalhe: Atas de comité de risco ou segurança, planos de ação (trechos).
+      categoria: evidencia
+
+  IX_a:
+    - id: ev_ixa_pol_list
+      titulo: Política de listagem, suspensão e deslistagem
+      detalhe: Critérios de risco, comité, registo de decisões e comunicação ao cliente quando aplicável.
+      categoria: politica
+    - id: ev_ixa_atas
+      titulo: Amostra de atas ou tickets de decisões de listagem
+      detalhe: Casos representativos anonimizados (entrada, suspensão, saída).
+      categoria: evidencia
+
+  IX_b:
+    - id: ev_ixb_div_risco
+      titulo: Divulgação de riscos para ativos referenciados em moeda fiduciária
+      detalhe: Materiais ao cliente (app/site/termos) e coerência com art. 65 Res. 520 (rascunho para jurídico).
+      categoria: evidencia
+    - id: ev_ixb_proc_aval
+      titulo: Procedimento de avaliação e aprovação de stablecoins/tokenizados
+      detalhe: Quem aprova, dados de emissor, reservas e cenários de stress quando aplicável.
+      categoria: procedimento
+
+  X_a:
+    - id: ev_xa_pol_conflito
+      titulo: Política de conflitos de interesse e segregação de funções na governança
+      detalhe: Situações cobertas, declarações de interesse, controle interno.
+      categoria: politica
+    - id: ev_xa_evid_controles
+      titulo: Exemplos de mitigação aplicada (anonimizados)
+      detalhe: Casos ou fluxos onde conflito foi tratado.
+      categoria: evidencia
+
+  X_b_i:
+    - id: ev_xbi_map_controles
+      titulo: Mapa de controles internos vs normas IF/autorização BCB aplicável
+      detalhe: Matriz controle → dono → frequência → evidência esperada.
+      categoria: organizacional
+    - id: ev_xbi_docs_inst
+      titulo: Documentação de órgãos de controle interno e auditoria interna
+      detalhe: Regimento, planos anuais, amostra de relatório ao conselho (índice ou sumário).
+      categoria: evidencia
+
+  X_b_ii:
+    - id: ev_xbii_pol_fiat
+      titulo: Política para recursos em moeda fiduciária em nome do cliente
+      detalhe: Concordância com limites e informações ao cliente (art. 85) — alinhamento com jurídico.
+      categoria: politica
+    - id: ev_xbii_proc_saldos
+      titulo: Procedimentos de reconciliação de saldos fiat e correção de erros
+      detalhe: Fluxo operacional e comunicação ao cliente.
+      categoria: procedimento
+    - id: ev_xbii_evid_limites
+      titulo: Evidências de cumprimento de limites e salvaguardas
+      detalhe: Relatórios internos ou extracts redigidos.
+      categoria: evidencia
+
+  XI:
+    - id: ev_xi_org_risco
+      titulo: Organograma de risco, compliance, capital e auditoria interna
+      detalhe: Mandatos, reporte ao conselho, independência.
+      categoria: organizacional
+    - id: ev_xi_relatorios
+      titulo: Calendário e amostra de relatórios ao conselho (índices)
+      detalhe: Temas cobertos nos últimos 12 meses (sem dados sensíveis).
+      categoria: evidencia
+
+  XII:
+    - id: ev_xii_plano_inc
+      titulo: Plano de resposta a incidentes de cibersegurança
+      detalhe: Tempos de deteção/resposta, comunicação ao BCB/clientes conforme modelo interno.
+      categoria: politica
+    - id: ev_xii_playbooks
+      titulo: Playbooks ou runbooks (amostra)
+      detalhe: Cenários cobertos (ransomware, vazamento de chaves, indisponibilidade crítica).
+      categoria: procedimento
+
+  XIII:
+    - id: ev_xiii_pol_mercado
+      titulo: Política de vigilância de mercado (spoofing, wash trading, manipulação)
+      detalhe: Regras de deteção, fontes de dados, escalação.
+      categoria: politica
+    - id: ev_xiii_evid_alertas
+      titulo: Estatísticas ou exemplos de alertas tratados (anonimizados)
+      detalhe: Volume, falsos positivos, ações corretivas.
+      categoria: evidencia
+
+  XIV:
+    - id: ev_xiv_modelo_contr
+      titulo: Modelo de contrato de custódia (arts. 73, 75, 78)
+      detalhe: Versão vigente, gestão de alterações contratuais e aceite do cliente.
+      categoria: contrato
+    - id: ev_xiv_papeis
+      titulo: Descrição dos papéis instituição vs cliente na custódia
+      detalhe: Responsabilidades, limites e comunicação de incidentes.
+      categoria: procedimento
+
+  XV:
+    - id: ev_xv_medidas_76
+      titulo: Inventário de medidas do custodiante (art. 76 I–XII)
+      detalhe: Mapeamento medida → responsável → evidência operacional.
+      categoria: organizacional
+    - id: ev_xv_revisoes
+      titulo: Registos de revisões periódicas das medidas
+      detalhe: Atas ou relatórios internos (trechos).
+      categoria: evidencia
+
+  XVI:
+    - id: ev_xvi_redund
+      titulo: Descrição da redundância de instrumentos de controle sobre AV
+      detalhe: Mecanismos alternativos, testes de falha, dependências críticas.
+      categoria: diagrama
+    - id: ev_xvi_continuidade
+      titulo: Evidências de continuidade operacional em cenário de falha
+      detalhe: Relatórios de teste ou simulado (anonimizados).
+      categoria: evidencia
+
+  XVII:
+    - id: ev_xvii_proc_recup
+      titulo: Procedimentos de recuperação de material redundante para supervisão do BCB
+      detalhe: Acesso a logs, chaves de leitura, prazos e responsáveis.
+      categoria: procedimento
+    - id: ev_xvii_logs
+      titulo: Amostra de logs ou relatórios de recuperação (redigidos)
+      detalhe: Demonstração de rastreabilidade sem expor segredos operacionais.
+      categoria: evidencia
+
+  par1_I:
+    - id: ev_p1_canais
+      titulo: Canais de transparência ao cliente (instituição, contratadas, seguros, DLT art. 67)
+      detalhe: Lista de canais, exemplos de comunicações e referências contratuais.
+      categoria: evidencia
+    - id: ev_p1_pol_trans
+      titulo: Política de transparência e linguagem clara ao investidor
+      detalhe: Revisão jurídica/compliance e critérios de aprovação de conteúdo.
+      categoria: politica
+
+  par1_II:
+    - id: ev_p2_edu
+      titulo: Materiais educativos sobre riscos de AV
+      detalhe: Links ou PDFs públicos, datas de atualização, público-alvo.
+      categoria: evidencia
+    - id: ev_p2_proc_pub
+      titulo: Procedimento de publicação e revisão de conteúdo educativo
+      detalhe: Workflow de aprovação (compliance/marketing).
+      categoria: procedimento
+
+  par1_III:
+    - id: ev_p3_rel_pos
+      titulo: Modelo de relatório de posição em AV do cliente
+      detalhe: Frequência, formato, reconciliação com movimentações e tratamento de erros.
+      categoria: procedimento
+    - id: ev_p3_amostra
+      titulo: Amostra anonimizada de relatório de posição
+      detalhe: Exemplo redigido ou template preenchido fictício.
+      categoria: evidencia
+
+  par1_I_h:
+    - id: ev_ph_pol_staking
+      titulo: Divulgação de riscos para staking / rendimento / produtos equivalentes
+      detalhe: Contraparte, smart contracts relevantes, riscos de protocolo (alinhamento art. 71 — jurídico).
+      categoria: politica
+    - id: ev_ph_contr_ref
+      titulo: Referência a contratos ou interfaces utilizados no produto
+      detalhe: Endereços ou repos em scope para eventual smart contract audit; termos ao cliente.
+      categoria: evidencia

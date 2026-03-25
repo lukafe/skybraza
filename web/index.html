@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CertiK — Escopo IN 701 (pré-avaliação)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/styles.css?v=8" />
+  </head>
+  <body class="sk-app">
+    <noscript>
+      <div class="noscript-banner" role="alert">
+        <strong>JavaScript necessário.</strong> Ative JavaScript no navegador. Esta página deve ser aberta
+        pelo servidor local (não abra o ficheiro HTML diretamente): no terminal, na pasta do projeto, execute
+        <code>python serve_web.py</code> e use o endereço mostrado (por exemplo <code>http://127.0.0.1:8000</code>).
+      </div>
+    </noscript>
+    <a class="skip-link" href="#main">Ir ao conteúdo</a>
+
+    <header class="site-header sk-topbar">
+      <div class="wrap sk-topbar-row">
+        <a class="sk-brand-lockup" href="#main" aria-label="CertiK Compliance Scope — início">
+          <span class="sk-brand-mark" aria-hidden="true">CertiK</span>
+          <span class="sk-brand-divider" aria-hidden="true"></span>
+          <span class="sk-brand-product">Compliance Scope</span>
+        </a>
+        <nav class="sk-nav" aria-label="Navegação do produto">
+          <span class="sk-nav-pill sk-nav-pill--active">IN 701</span>
+          <a class="sk-nav-pill sk-nav-pill--link" href="https://skynet.certik.com" target="_blank" rel="noopener noreferrer">Skynet</a>
+          <a class="sk-nav-pill sk-nav-pill--link" href="https://www.certik.com" target="_blank" rel="noopener noreferrer">certik.com</a>
+        </nav>
+      </div>
+      <div class="sk-subbar wrap">
+        <p class="sk-subbar-line">
+          <span class="sk-subbar-badge">VASP intermediária</span>
+          Delimitação orientativa para certificação técnica · alinhamento BCB Res. 520
+        </p>
+      </div>
+    </header>
+
+    <main id="main" class="wrap main sk-main">
+      <section id="intro" class="panel intro-panel" aria-labelledby="intro-title">
+        <span class="pill">Pré-avaliação orientativa</span>
+        <h1 id="intro-title">Delimitação técnica (fase intermediária)</h1>
+        <p class="lead">
+          O questionário começa por um <strong>diagnóstico curto</strong> (smart contracts e superfície exposta à Internet)
+          para preparar a <strong>Jornada 2</strong> — pedidos de documentação por inciso, além de orientações para
+          smart contract audit e pentest quando aplicável. Depois, com base na sua operação, o resultado mostra
+          <strong>duas categorias</strong>: incisos
+          <strong>sujeitos a auditoria</strong> nesta configuração e incisos <strong>fora deste escopo</strong>,
+          com explicação objetiva em cada caso. Para os sujeitos a auditoria, indicamos também uma
+          <strong>orientação indicativa</strong> para o conteúdo do relatório perante o BCB (não substitui
+          parecer jurídico nem o modelo oficial da instituição).
+        </p>
+        <label class="field">
+          <span class="field-label">Nome da instituição / projeto</span>
+          <input
+            type="text"
+            id="institution"
+            name="institution"
+            maxlength="500"
+            placeholder="Ex.: Sua VASP S.A."
+            autocomplete="organization"
+          />
+        </label>
+        <button type="button" class="btn btn-primary" id="btn-start">Iniciar questionário</button>
+      </section>
+
+      <section id="wizard" class="wizard hidden" aria-live="polite">
+        <div class="wizard-top">
+          <div class="progress-wrap">
+            <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+          </div>
+          <p class="step-label" id="step-label">Passo 1 de 4</p>
+          <h2 class="block-title" id="block-title"></h2>
+          <p class="block-lead hidden" id="block-lead"></p>
+        </div>
+
+        <div id="questions-container" class="questions"></div>
+
+        <div class="wizard-nav">
+          <button type="button" class="btn btn-ghost" id="btn-back">Voltar</button>
+          <button type="button" class="btn btn-primary" id="btn-next">Próximo</button>
+        </div>
+      </section>
+
+      <section id="results" class="results hidden" aria-labelledby="results-title">
+        <div class="panel results-hero">
+          <span class="pill pill-ok">Resultado</span>
+          <h2 id="results-title">Painel de resultados</h2>
+          <p id="results-summary" class="summary-line"></p>
+          <div class="metrics metrics-results" id="metrics"></div>
+          <div id="corpus-panel" class="corpus-panel corpus-panel--compact hidden" aria-label="Prontidão do corpus"></div>
+          <div class="results-actions">
+            <button type="button" class="btn btn-ghost" id="btn-restart">Novo questionário</button>
+          </div>
+        </div>
+
+        <div id="journey-2-panel" class="panel journey-2-panel journey-2-panel--compact hidden" aria-labelledby="j2-title">
+          <h3 id="j2-title" class="j2-heading">Serviços técnicos complementares</h3>
+          <p id="j2-lead" class="j2-lead"></p>
+          <div id="j2-streams" class="j2-streams"></div>
+          <p id="j2-notes" class="j2-notes hidden"></p>
+        </div>
+
+        <div class="results-body" id="results-body">
+          <section class="results-section results-section--audit" aria-labelledby="sec-audit-title">
+            <div class="results-section-head">
+              <h3 class="results-section-title" id="sec-audit-title">
+                <span class="title-dot" aria-hidden="true"></span>
+                Sujeitos a auditoria — expandir por inciso
+              </h3>
+              <span class="results-count" id="count-audit" aria-live="polite">0</span>
+            </div>
+            <p class="results-section-lead" id="col-audit-lead"></p>
+            <div id="cards-audit" class="inciso-card-list dash-audit-list"></div>
+          </section>
+          <section class="results-section results-section--skip" aria-labelledby="sec-skip-title">
+            <div class="results-section-head">
+              <h3 class="results-section-title results-section-title--muted" id="sec-skip-title">
+                <span class="title-dot title-dot--muted" aria-hidden="true"></span>
+                Fora deste escopo
+              </h3>
+              <span class="results-count results-count--muted" id="count-skip" aria-live="polite">0</span>
+            </div>
+            <p class="results-section-lead" id="col-skip-lead"></p>
+            <div id="cards-skip" class="inciso-card-list"></div>
+          </section>
+        </div>
+
+        <p class="fine-print results-disclaimer">
+          Resultado indicativo para alinhamento com a CertiK. A delimitação perante o Banco Central é validada em processo
+          formal. Orientações de relatório são genéricas — adapte ao modelo da sua instituição e à assessoria jurídica.
+          <a href="https://www.certik.com" target="_blank" rel="noopener">certik.com</a>
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer sk-footer">
+      <div class="wrap footer-inner sk-footer-inner">
+        <span class="sk-footer-copy">© 2026 CertiK · ferramenta interna / uso institucional</span>
+        <div class="sk-footer-links" aria-label="CertiK">
+          <a href="https://skynet.certik.com" target="_blank" rel="noopener noreferrer">Skynet</a>
+          <a href="https://www.certik.com" target="_blank" rel="noopener noreferrer">Site</a>
+          <a href="https://twitter.com/CertiK" target="_blank" rel="noopener noreferrer">X</a>
+          <a href="https://t.me/certik_announcements" target="_blank" rel="noopener noreferrer">Telegram</a>
+        </div>
+      </div>
+    </footer>
+
+    <div id="toast" class="toast hidden" role="status"></div>
+
+    <script src="/static/js/app.js?v=8" type="module"></script>
+  </body>
+</html>

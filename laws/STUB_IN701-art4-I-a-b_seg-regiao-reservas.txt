@@ -1,0 +1,18 @@
+================================================================================
+STUB — Corpus em construção | Fase A (IN 701 × Res. 520)
+Idioma alvo: PT-BR (texto oficial BCB)
+================================================================================
+
+IN 701 — Art. 4º, inciso I (alíneas a e b)
+- (a) Efetiva segregação entre AV da prestadora e AV de clientes/usuários.
+- (b) Prova de reservas — demonstrar que a prestadora possui efetivamente os AV declarados.
+
+Ação: Inserir aqui os dispositivos da Resolução BCB nº 520/2025 (e normas correlatas)
+que materializam segregação patrimonial, carteiras omnibus/transitórias e comprovação
+de reservas/saldos, conforme citados ou implícitos no regime de PSVAV.
+
+Sugestão de pesquisa no texto oficial:
+- Capítulo IX, Seção II (patrimônio separado / segregação)
+- Dispositivos sobre comprovação de saldos ou “proof of reserves” (terminologia da Res. 520)
+
+Fonte: https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520

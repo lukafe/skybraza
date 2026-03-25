@@ -1,0 +1,14 @@
+================================================================================
+STUB — Corpus em construção | Fase A
+================================================================================
+
+IN 701 — Art. 4º, § 1º, I (alíneas a a h)
+Informações claras e precisas ao cliente/usuário, incluindo:
+- (d) Fundos garantidores/seguros — art. 68 Res. 520
+- (g)(ii) Divulgação mínima — art. 67, I a VIII Res. 520
+- (h) Staking — art. 71 Res. 520
+
+Ação: Criar sub-ficheiros ou secções com os arts. 67, 68 e 71 na íntegra (PT oficial)
+e demais alíneas que dependam de dispositivos espalhados na Res. 520.
+
+Fonte: Resolução BCB nº 520/2025.

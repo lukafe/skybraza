@@ -1,0 +1,38 @@
+Arranque do servidor web (API + SPA)
+====================================
+
+Na raiz do projeto Certik_VASP:
+
+  uvicorn api.main:app --reload --host 127.0.0.1 --port 8000
+
+Abrir no navegador: http://127.0.0.1:8000/
+
+Endpoints JSON:
+  GET  /api/health          — inclui api_schema_version
+  GET  /api/questions       — blocos e perguntas
+  POST /api/scope           — corpo: {"institution": "...", "answers": {...}}
+
+Segurança opcional
+------------------
+Se definir a variável de ambiente CERTIK_API_KEY, todos os pedidos a /api/*
+exceto GET /api/health devem enviar o cabeçalho:
+
+  X-Certik-Api-Key: <mesmo valor>
+
+Útil para staging ou rede interna. Em desenvolvimento local, omita a variável.
+
+Narrativas «por que será auditado» (opcional)
+---------------------------------------------
+Com a variável de ambiente GEMINI_API_KEY definida, o motor pode reescrever as explicações
+por inciso com o modelo configurado em GEMINI_MODEL (padrão: gemini-1.5-flash).
+Sem chave, usam-se textos estáticos em português do Brasil.
+
+Pentest (Jornada 2)
+-------------------
+O URL do Google Forms de scoping de pentest vem de `laws/AUDITOR_EVIDENCE_BY_INCISO.yaml`
+(`pentest_form_url_default`) ou da variável `CERTIK_PENTEST_FORM_URL` se definida.
+
+Validação offline
+-----------------
+  python scripts/validar_projeto.py
+  pytest

@@ -1,0 +1,13 @@
+================================================================================
+STUB — Corpus em construção | Fase A
+================================================================================
+
+IN 701 — Art. 4º, inciso VIII
+Monitoramento contínuo de segurança institucional e avaliação de riscos (detetar, prevenir,
+responder a ameaças e incidentes).
+
+Ação: Cruzar com Res. 520 — gestão de riscos operacionais, SOC, gestão de incidentes
+(institucional, não apenas ciber — pode sobrepor-se parcialmente ao art. 48 e à política
+de ciber do inciso XII).
+
+Fonte: Resolução BCB nº 520/2025.

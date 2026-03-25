@@ -1,0 +1,34 @@
+================================================================================
+ROTEIRO DE FASES — CertiK VASP · Escopo IN 701 (intermediária)
+================================================================================
+Ordem de execução e ficheiros de referência (estado: A–E concluídos no código).
+
+  Fase A — Inventário corpus laws/
+    laws/FASE_A_INVENTARIO.txt
+    COVERAGE_MATRIX.yaml (inventário + STUBs)
+    scripts/migrate_laws_phase_a.py
+
+  Fase B — Modelo de dados da matriz normativa
+    laws/FASE_B_MODELO_DADOS.txt
+    matrix_loader.py → INCISOS_MATRIX, MANDATORY_KEYS, ordem_exibicao, get_coverage_meta()
+
+  Fase C — Questionário declarativo e gatilhos por tipo de pergunta
+    laws/questionnaire.yaml
+    questionnaire_loader.py → resolve_triggers(), normalize_answers(), TRIGGER_MAP (só yes/no legado)
+
+  Fase D — Prontidão do corpus no escopo + pacote JSON de exportação
+    laws/FASE_D_PRONTIDAO_E_EXPORT.txt
+    readiness.py → corpus_readiness_for_scope(), build_export_package()
+
+  Fase E — Consolidação: documentação alinhada, validação automatizada, fecho de roteiro
+    laws/FASE_E_CONSOLIDACAO.txt
+    tests/test_phase_e.py
+    scripts/validar_projeto.py
+
+Motor unificado:
+  rules_engine.py → compute_scope() (matriz + questionário + readiness)
+
+Interfaces:
+  app.py (Streamlit) · api/main.py + web/ · scripts/simular_empresa.py
+
+================================================================================

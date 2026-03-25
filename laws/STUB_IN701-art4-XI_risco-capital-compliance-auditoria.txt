@@ -1,0 +1,12 @@
+================================================================================
+STUB — Corpus em construção | Fase A
+================================================================================
+
+IN 701 — Art. 4º, inciso XI
+Estruturas de gerenciamento de risco e de capital, compliance e auditoria interna na
+forma da regulamentação aplicável a IF e demais autorizadas BCB.
+
+Ação: Mapear normas BCB de governança, risco, capital (se aplicável), compliance e
+auditoria interna para o tipo institucional e colar referências + trechos-chave.
+
+Nota: Corpus tipicamente fora da pasta Res520-*; pode ser múltiplas resoluções BCB.

@@ -1,0 +1,12 @@
+================================================================================
+STUB — Corpus em construção | Fase A
+================================================================================
+
+IN 701 — Art. 4º, inciso XVI
+Mecanismos de redundância adotados para os instrumentos de controle sobre os ativos virtuais.
+
+Ação: Cruzar com Res. 520, art. 76, XII e parágrafos (redundância) e demais menções a
+backup de chaves/shards. O ficheiro Res520-art76_IN701-art4-XV.txt já cobre parte do tema;
+aqui focar no enquadramento específico do inciso XVI face à supervisão.
+
+Fonte: Resolução BCB nº 520/2025.

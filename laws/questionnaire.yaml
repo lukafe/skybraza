@@ -1,0 +1,313 @@
+# Questionário de escopo IN 701 — tipos mistos e gatilhos declarativos
+# Cada add_incisos / when_true deve usar id existente em COVERAGE_MATRIX.yaml (incisos[].id)
+# Ortografia: português brasileiro (pt-BR) nos textos ao utilizador.
+
+version: 1
+
+blocks:
+  - id: diag
+    title: "Diagnóstico — serviços técnicos CertiK (Jornada 2)"
+    lead: >
+      Estas perguntas não alteram o escopo IN 701; servem para preparar a segunda parte da jornada
+      (smart contract audit, pentest e checklist de documentação por inciso).
+  - id: A
+    title: "Fluxo de valor, custódia e reservas"
+    lead: "Modelo de chaves, trânsito de ativos, saldos em fiat e comprovação de reservas."
+  - id: B
+    title: "Parceiros, infraestrutura e terceiros"
+    lead: "Liquidez, nuvem, custódia por terceiros e contrapartes no exterior."
+  - id: C
+    title: "Produto, oferta e conectividade"
+    lead: "Listagem, stablecoins, staking e APIs com instituições financeiras."
+  - id: D
+    title: "Governança, mercado e detalhamento operacional"
+    lead: "Mapa de terceiros, narrativa do fluxo e práticas de mercado."
+
+questions:
+  # ---------- Bloco diag (Jornada 2) ----------
+  - id: P_diag_sc
+    block: diag
+    order: 1
+    type: yes_no
+    text: >
+      A instituição desenvolve, faz deploy ou contrata o desenvolvimento de smart contracts próprios
+      em produção (tokens, vaults, staking on-chain, bridges ou lógica de protocolo sob sua responsabilidade)?
+    justificativa: >
+      Objetivo: saber se haverá trilha de smart contract audit (repositório Git ou convite ao utilizador Certik4audit).
+      Não altera incisos IN 701.
+    tags: [jornada2, smart_contract]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: P_diag_surface
+    block: diag
+    order: 2
+    type: yes_no
+    text: >
+      A VASP opera sistemas próprios expostos à internet para clientes ou parceiros
+      (site, aplicativo móvel, APIs REST/GraphQL, painel administrativo, webhooks)?
+    justificativa: >
+      Objetivo: indicar se costuma aplicar-se penetration test em superfície própria.
+      Operações apenas white-label sem infraestrutura própria podem ser exceção — confirmar com a CertiK.
+    tags: [jornada2, pentest]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  # ---------- Bloco A ----------
+  - id: P1
+    block: A
+    order: 10
+    type: yes_no
+    text: >
+      A plataforma gera endereços de depósito exclusivos por cliente e a VASP, parceiro MPC
+      ou outro terceiro detém ou compartilha controle operacional sobre as chaves privadas associadas
+      (incluindo coassinatura ou fragmentos que permitam movimentação)?
+    justificativa: >
+      Objetivo: identificar custódia operacional de chaves ou equivalente (depositário ativo).
+      Se Sim, aciona o cluster VII, XIV, XVI e XVII. Se Não e o modelo for apenas cliente assinando (P_arch client_only),
+      a ferramenta não deve tratar como custódia da VASP os incisos desse cluster — salvo se marcar custódia institucional em P_tp.
+    tags: [custodia, chaves]
+    when_true: [VII, XIV, XVI, XVII]
+    when_false: []
+
+  - id: P2
+    block: A
+    order: 20
+    type: yes_no
+    text: >
+      Durante ordens de compra ou venda, os ativos passam por carteira transitória ou omnibus
+      sob controle da VASP (ou de parceiro agindo em seu nome) antes do destino final ao cliente?
+    justificativa: >
+      Objetivo: captar trânsito de ativos sob controle da intermediária (segregação em movimento).
+      Gatilhos típicos: I (a), I (b) e XV.
+    tags: [transito, segregacao]
+    when_true: [I_a, I_b, XV]
+    when_false: []
+
+  - id: P3
+    block: A
+    order: 30
+    type: yes_no
+    text: >
+      A instituição mantém contas de pagamento ou saldo em BRL (ou outra moeda fiduciária)
+      em nome do cliente aguardando ordens de compra de ativos virtuais?
+    justificativa: >
+      Objetivo: identificar recurso fiduciário do cliente na intermediária antes da conversão em AV.
+      Gatilho típico: X (b) (ii), alinhado ao art. 85 da Res. 520.
+    tags: [fiat, pagamento]
+    when_true: [X_b_ii]
+    when_false: []
+
+  - id: P_arch
+    block: A
+    order: 40
+    type: single_choice
+    text: >
+      Qual cenário descreve melhor quem pode iniciar ou autorizar movimentações on-chain dos
+      fundos do cliente na prática predominante da operação?
+    justificativa: >
+      Objetivo: qualificar o modelo (custodial da VASP, MPC misto, terceiro integral ou não custodial).
+      Apenas o cliente assinando, com P1 = Não e sem custódia institucional em P_tp, não aciona VII/XIV/XVI/XVII.
+      Demais opções refletem custódia ou terceirização com impacto nos incisos indicados.
+    tags: [custodia, modelo]
+    options:
+      - id: client_only
+        label: "Apenas o cliente (interface não custodial ou equivalente; a VASP não movimenta fundos)."
+        add_incisos: []
+      - id: vasp_operates
+        label: "A VASP ou operador designado movimenta em nome do cliente (hot wallet, omnibus, etc.)."
+        add_incisos: [VII, XIV, XVI, XVII]
+      - id: mpc_mixed
+        label: "MPC ou multipart assinatura em que a VASP e terceiros têm papéis de controle."
+        add_incisos: [VII, XIV, XVI, XVII, II]
+      - id: full_third_custody
+        label: "Custódia integral por terceiro contratado (a VASP não detém chaves, mas contrata o serviço)."
+        add_incisos: [VII, XIV, II, III]
+
+  # ---------- Bloco B ----------
+  - id: P4
+    block: B
+    order: 10
+    type: yes_no
+    text: >
+      Os parceiros que executam ordens (provedores de liquidez) incluem entidade sediada no exterior
+      ou sem autorização direta do Banco Central do Brasil para atividade equivalente no País?
+    justificativa: >
+      Objetivo: mapear contraparte e terceirização com exposição internacional ou não regulada localmente.
+      Gatilhos típicos: II, III e IV.
+    tags: [liquidez, exterior]
+    when_true: [II, III, IV]
+    when_false: []
+
+  - id: P5
+    block: B
+    order: 20
+    type: yes_no
+    text: >
+      O ledger de saldos, a base de clientes ou o motor de roteamento de ordens reside em nuvem ou
+      em datacenter de terceiro, com contrato de acesso ou auditoria alinhado às normas do BCB?
+    justificativa: >
+      Objetivo: identificar outsourcing relevante de tecnologia e continuidade.
+      Gatilhos típicos: II e IV (arts. 32 e 33 e continuidade).
+    tags: [nuvem, dados]
+    when_true: [II, IV]
+    when_false: []
+
+  - id: P6
+    block: B
+    order: 30
+    type: yes_no
+    text: >
+      Existem parceiros estrangeiros ou não autorizados pelo BCB em papéis relevantes além da
+      liquidez (por exemplo: custódia institucional, pagamentos, KYC como serviço crítico)?
+    justificativa: >
+      Objetivo: captar risco de prestador no exterior e diligências (ex.: art. 83 da Res. 520).
+      Gatilho típico: III.
+    tags: [terceiros, exterior]
+    when_true: [III]
+    when_false: []
+
+  - id: P_tp
+    block: B
+    order: 40
+    type: multi_choice
+    text: "Selecione todos os papéis de terceiros materialmente relevantes na operação hoje:"
+    justificativa: >
+      Objetivo: aprofundar o mapa de terceiros (liquidez, custódia institucional, nuvem, fiat, KYC).
+      A opção «custódia institucional» aciona VII e XIV mesmo que P1 seja Não — indica uso de custodiante de criptoativos.
+    tags: [terceiros, mapa]
+    options:
+      - id: lp
+        label: "Provedor de liquidez / market maker"
+        add_incisos: [II, IV]
+      - id: custody_inst
+        label: "Custódia institucional de criptoativos (cold, MPC, custodiante regulado ou não)"
+        add_incisos: [VII, XIV, II]
+      - id: cloud_infra
+        label: "Computação em nuvem / hospedagem de sistemas críticos"
+        add_incisos: [II, IV]
+      - id: fiat_bank
+        label: "Instituição de pagamento / banco para fiat (contas, Pix, TED)"
+        add_incisos: [II, V]
+      - id: kyc_vendor
+        label: "Fornecedor externo de KYC / PLD como serviço crítico"
+        add_incisos: [II, VI_a]
+
+  # ---------- Bloco C ----------
+  - id: P7
+    block: C
+    order: 10
+    type: yes_no
+    text: >
+      A plataforma permite negociação de ativos com paridade ou referência explícita a moedas
+      fiduciárias (stablecoins, tokenizado, USD, BRL)?
+    justificativa: >
+      Objetivo: identificar ativos referenciados em moeda fiduciária e divulgação ao cliente.
+      Gatilho típico: IX (b) / art. 65 da Res. 520.
+    tags: [stablecoin, produto]
+    when_true: [IX_b]
+    when_false: []
+
+  - id: P8
+    block: C
+    order: 20
+    type: yes_no
+    text: >
+      A VASP oferece staking, rendimento, travamento ou produtos equivalentes ao cliente
+      (direto ou white-label com parceiro)?
+    justificativa: >
+      Objetivo: captar produtos de rendimento sobre AV e transparência ao investidor.
+      Gatilho típico: § 1º (I) (h) / art. 71 da Res. 520.
+    tags: [staking, rendimento]
+    when_true: [par1_I_h]
+    when_false: []
+
+  - id: P9
+    block: C
+    order: 30
+    type: yes_no
+    text: >
+      A VASP fornece ou utiliza APIs ou SDKs para se interconectar a outras instituições financeiras
+      ou a prestadores de pagamento (on/off-ramp, Open Finance, etc.)?
+    justificativa: >
+      Objetivo: mapear interconectividade regulada (governança de integrações).
+      Gatilho típico: V / art. 43 da Res. 520.
+    tags: [api, if]
+    when_true: [V]
+    when_false: []
+
+  - id: P_list
+    block: C
+    order: 40
+    type: single_choice
+    text: >
+      Na prática, como a intermediária expõe ao cliente o universo de ativos virtuais negociáveis?
+      (Isto é distinto de usar internamente um ou outro ativo só para roteamento, liquidação ou integração técnica,
+      sem que o cliente escolha entre um catálogo ou oferta ampliável de AV.)
+    justificativa: >
+      Objetivo: alinhar IX (a) a situações em que há oferta, catálogo ou política de listagem/suspensão/deslistagem
+      perante o cliente. Modelos de conjunto fechado só para execução (sem catálogo ampliável) não acionam IX (a).
+      IX (b) continua a depender sobretudo de ativos referenciados em moeda fiduciária (pergunta sobre stablecoins).
+    tags: [listagem, catalogo]
+    options:
+      - id: execution_only
+        label: >
+          Conjunto fechado para execução: o cliente não escolhe entre catálogo ampliável de AV; a operação limita-se
+          a um ou poucos ativos/pares fixos (ex.: produto único, roteamento contratual, liquidação em AV específico
+          sem política própria nem espelhamento amplo de catálogo).
+        add_incisos: []
+      - id: mirror_lp
+        label: >
+          Catálogo amplo espelhado: o cliente acessa múltiplos ativos reproduzidos do(s) parceiro(s) de liquidez,
+          ainda que a VASP não tenha comitê próprio de listagem.
+        add_incisos: [IX_a]
+      - id: own_committee
+        label: "A VASP aplica critérios próprios (comitê, política escrita) para listar, suspender ou deslistar ativos."
+        add_incisos: [IX_a, IX_b]
+      - id: hybrid_list
+        label: "Híbrido: base do parceiro mais camada de aprovação ou de risco interna da VASP sobre o que é ofertado."
+        add_incisos: [IX_a, IX_b]
+
+  # ---------- Bloco D ----------
+  - id: P_narr
+    block: D
+    order: 10
+    type: text_short
+    text: >
+      Descreva em poucas linhas o fluxo ponta a ponta: depósito → negociação → saque
+      (atores, sistemas e terceiros envolvidos). Opcional, porém recomendado para o auditor.
+    justificativa: >
+      Objetivo: contexto qualitativo para o relatório; não altera gatilhos automáticos.
+    tags: [narrativa, fluxo]
+    max_length: 2500
+    placeholder: "Ex.: cliente deposita via Pix na IF X; saldo interno; ordem roteada para o LP Y…"
+
+  - id: P_reserves
+    block: D
+    order: 20
+    type: yes_no
+    text: >
+      A instituição publica ou se compromete a auditar ou comprovar reservas dos criptoativos
+      sob responsabilidade da plataforma (proof of reserves, attestation ou relatório equivalente)?
+    justificativa: >
+      Objetivo: identificar compromisso explícito com comprovação de reservas além do trânsito (P2).
+      Gatilho típico: I (b).
+    tags: [reservas, transparencia]
+    when_true: [I_b]
+    when_false: []
+
+  - id: P_surveillance
+    block: D
+    order: 30
+    type: yes_no
+    text: >
+      Existem sistemas ou processos documentados para monitorar práticas espúrias no ambiente
+      da plataforma (spoofing, wash trading, manipulação de preço)?
+    justificativa: >
+      Objetivo: maturidade operacional de vigilância de mercado; o inciso XIII já é obrigatório na matriz intermediária.
+    tags: [mercado, surveillance]
+    audit_only: true
+    when_true: []
+    when_false: []

@@ -1,0 +1,14 @@
+================================================================================
+STUB — Corpus em construção | Fase A
+================================================================================
+
+IN 701 — Art. 4º, inciso XVII
+Procedimentos de recuperação do material sujeito à redundância (inciso XVI), para fins
+de atuação da supervisão do Banco Central do Brasil.
+
+Ação: Extrair trechos da Res. 520/2025 sobre acesso da supervisão, recuperação em
+cenários de falha, e procedimentos de entrega de material redundante ao BCB.
+
+Cruzar com: art. 76, § 1º (acesso do BCB ao conteúdo do mecanismo de redundância).
+
+Fonte: Resolução BCB nº 520/2025.

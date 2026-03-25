@@ -1,0 +1,11 @@
+================================================================================
+STUB — Corpus em construção | Fase A
+================================================================================
+
+IN 701 — Art. 4º, inciso IX, alínea a
+Políticas de oferta, listagem, suspensão e deslistagem dos ativos virtuais selecionados.
+
+Ação: Extrair da Res. 520/2025 os arts. sobre listagem, due diligence de tokens,
+suspensão/deslistagem (ex.: art. 64 e correlatos — confirmar numeração na versão oficial).
+
+Fonte: Resolução BCB nº 520/2025.

@@ -1,0 +1,82 @@
+# Orientações indicativas para conteúdo "ótimo" no relatório/certificação perante o BCB (IN 701 × Res. 520).
+# Texto orientativo, não jurídico; validar com área de compliance e modelo oficial da instituição.
+version: 1
+
+incisos:
+  I_a: |
+    Descreva de forma objetiva os mecanismos de segregação patrimonial entre AV da instituição e dos clientes
+    (carteiras, registos, reconciliações), com referência a políticas aprovadas, diagramas do fluxo de fundos
+    e evidências de reconciliação periódica. Cite trechos aplicáveis da Res. 520 alinhados à IN 701.
+  I_b: |
+    Apresente a política e os procedimentos de prova de reservas (metodologia, frequência, responsáveis,
+    independentemente de attestation externa ou relatório interno), e como o cliente ou o BCB podem verificar
+    coerência com saldos divulgados.
+  II: |
+    Liste serviços relevantes terceirizados (nuvem, processamento, custódia de terceiros, etc.), contratos,
+    cláusulas de acesso/auditoria e mapeamento de criticidade conforme Cap. IX da Res. 520 (arts. 32 e 33).
+  III: |
+    Para cada prestador relevante no exterior ou não autorizado no País: diligência legal e operacional,
+    plano de contingência e referência ao art. 83 da Res. 520 quando aplicável.
+  IV: |
+    Documente planos de continuidade e recuperação envolvendo a instituição e contratadas, testes realizados
+    e encadeamento com gestão de incidentes.
+  V: |
+    Detalhe políticas de interconectividade (APIs, Open Finance, parceiros), governança de mudanças, monitorização
+    e conformidade com o art. 43 da Res. 520.
+  VI_a: |
+    Descreva o programa de PLD/FTP alinhado às obrigações das PSVAV, rastreabilidade de operações e reporte
+    a órgãos competentes, sem expor dados sensíveis desnecessários no relatório público.
+  VI_b: |
+    Evidencie controles de segurança cibernética e resiliência do ambiente computacional (art. 48, I a VIII),
+    incluindo gestão de patches, acessos privilegiados e resposta a incidentes.
+  VII: |
+    Explique políticas de guarda de chaves e instrumentos de controle (incl. MPC/custódia de terceiros),
+    segregação de funções no fluxo de assinatura e revisão periódica de permissões.
+  VIII: |
+    Apresente monitorização contínua de segurança institucional, avaliação de riscos e melhoria contínua,
+    com indicadores e periodicidade de revisão pela alta gestão.
+  IX_a: |
+    Documente o processo de listagem, suspensão e deslistagem de ativos (comitê, critérios de risco,
+    registo de decisões e comunicação ao cliente quando aplicável).
+  IX_b: |
+    Para ativos referenciados em moeda fiduciária, descreva critérios de seleção, divulgação de riscos ao
+    cliente e conformidade com o art. 65 da Res. 520.
+  X_a: |
+    Evidencie segregação de funções e mitigação de conflitos de interesse na governança, com políticas e
+    exemplos de controlo interno aplicáveis.
+  X_b_i: |
+    Relacione o sistema de controles internos à regulamentação de IF/autorizadas BCB aplicável, com mapeamento
+    documental e responsáveis.
+  X_b_ii: |
+    Demonstre atendimento às condições dos arts. 69 e 85 da Res. 520 no que couber à operação (limites,
+    segregação, informações ao cliente, etc.).
+  XI: |
+    Descreva estruturas de risco, capital, compliance e auditoria interna na extensão aplicável, com organograma
+    e periodicidade de relatórios ao conselho.
+  XII: |
+    Apresente política de cibersegurança, plano de resposta a incidentes e alinhamento à regulamentação de
+    nuvem/cibersegurança BCB em vigor.
+  XIII: |
+    Documente deteção e prevenção de práticas espúrias (spoofing, wash trading, manipulação), monitorização de
+    mercado e escalação de alertas.
+  XIV: |
+    Inclua modelo de contrato de custódia (arts. 73, 75 e 78), papéis da instituição e do cliente, e gestão
+    de alterações contratuais.
+  XV: |
+    Detalhe medidas e planos do custodiante conforme art. 76 (I a XII), com evidências operacionais e revisões.
+  XVI: |
+    Explique redundância de instrumentos de controle sobre AV e como a continuidade operacional é assegurada.
+  XVII: |
+    Descreva procedimentos de recuperação de material redundante para fins de supervisão do BCB, testes e logs.
+  par1_I: |
+    Liste canais de transparência ao cliente (instituição, contratadas relevantes, seguros art. 68, direitos,
+    custódia, DLT art. 67), com exemplos de comunicações e contratos.
+  par1_II: |
+    Apresente materiais educativos sobre riscos do mercado de AV e boas práticas, e como são disponibilizados
+    ao cliente (app, site, termos).
+  par1_III: |
+    Explique frequência e formato do relatório de posição em AV do cliente, reconciliação com movimentações
+    e correção de erros.
+  par1_I_h: |
+    Para staking/rendimento: divulgação de riscos, contraparte, smart contracts relevantes e alinhamento ao
+    art. 71 da Res. 520, com linguagem clara ao investidor.

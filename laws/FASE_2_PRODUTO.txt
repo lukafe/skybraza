@@ -1,0 +1,25 @@
+Fase 2 — produto e prioridades (Onda C)
+=======================================
+
+Escopo sugerido
+---------------
+1. Corpus normativo: substituir STUBs e extratos EN por trechos oficiais PT-BR (BCB) onde aplicável.
+2. Motor: revisão jurídica humana da matriz e dos gatilhos após atualizações da IN 701 / Res. 520.
+3. Relatório: modelo de exportação alinhado ao template institucional CertiK / cliente (além do JSON interno).
+
+Stack (decisão de referência)
+-----------------------------
+- API FastAPI + SPA estática em ``web/`` para clientes e demos públicas.
+- Streamlit ``app.py`` para uso interno (questionário completo, Gemini, fluxo analista).
+- Manter uma única fonte de verdade: ``laws/*.yaml`` + ``rules_engine.compute_scope``.
+
+Roadmap corpus
+--------------
+- Priorizar incisos com ``corpus_status: incompleto`` e ``STUB`` na matriz.
+- Versionar ficheiros em ``laws/`` e refletir alterações em ``COVERAGE_MATRIX.yaml``.
+
+Política de dados / Gemini
+--------------------------
+- Não enviar PII ou segredos à API Gemini; usar apenas resumos agregados do escopo (incisos, contagens).
+- Chaves API apenas em variáveis de ambiente; nunca em repositório.
+- Opcional: ``CERTIK_API_KEY`` na API HTTP para ambientes expostos (ver ``laws/SERVIDOR_API.txt``).

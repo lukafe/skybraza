@@ -1,0 +1,12 @@
+================================================================================
+STUB — Corpus em construção | Fase A
+================================================================================
+
+IN 701 — Art. 4º, inciso VII
+Requisitos regulamentares para políticas de guarda e proteção dos instrumentos de
+controle dos AV de clientes/usuários.
+
+Ação: Extrair da Res. 520/2025 o capítulo/seção sobre chaves privadas, MPC, cold/hot wallet,
+políticas de custódia e proteção de instrumentos de controle (incl. refs. ao art. 43, VI).
+
+Fonte: Resolução BCB nº 520/2025.

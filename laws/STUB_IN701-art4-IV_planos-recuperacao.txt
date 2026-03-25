@@ -1,0 +1,14 @@
+================================================================================
+STUB — Corpus em construção | Fase A
+================================================================================
+
+IN 701 — Art. 4º, inciso IV
+Planos de recuperação das posições e de controlo dos AV e recursos financeiros dos
+clientes/usuários; planos da prestadora; incidentes envolvendo instituição ou contratada.
+
+Ação: Extrair da Res. 520/2025 os arts. sobre continuidade de negócios, recuperação,
+plano de resposta a incidentes cibernéticos e cenários envolvendo terceiros relevantes.
+
+Cruzar com: arts. 32–33 (serviços relevantes) e políticas do art. 43 (continuidade).
+
+Fonte oficial BCB: Resolução 520/2025 (texto consolidado).

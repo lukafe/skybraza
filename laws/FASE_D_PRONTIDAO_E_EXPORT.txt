@@ -1,0 +1,37 @@
+================================================================================
+FASE D — PRONTIDÃO DO CORPUS (laws/) E PACOTE DE EXPORTAÇÃO
+Projeto: CertiK VASP — Escopo IN 701
+================================================================================
+
+D.1 Objetivo
+  - Cruzar o escopo ativo (incisos IN 701 selecionados pelo motor) com o status
+    de cada entrada na matriz (completo | parcial | incompleto).
+  - Destacar referências a ficheiros STUB_* ainda por substituir por extratos
+    oficiais (tipicamente Res. 520 em PT no BCB).
+  - Emitir um índice 0–100 (ponderação: completo=1, parcial=0,5, incompleto/outro=0)
+    apenas como indicador de cobertura documental no repositório — não substitui
+    parecer jurídico ou auditoria.
+
+D.2 Código
+  - readiness.py — corpus_readiness_for_scope(), build_export_package(), json_safe_meta().
+  - rules_engine.compute_scope() inclui meta["corpus_readiness"].
+  - API POST /api/scope devolve meta.corpus_readiness e export_bundle (JSON pronto).
+  - Streamlit (Dashboard): métricas de corpus + exportar pacote JSON.
+  - SPA web/: métricas de corpus + botão exportar JSON.
+
+D.3 Pacote export_bundle
+  - Versão de esquema: export_schema_version = "1".
+  - Inclui: institution, generated_at_utc, coverage_matrix_meta, scope_table,
+    engine_meta (respostas normalizadas, gatilhos, texto livre, prontidão, etc.).
+
+D.4 Próximos passos sugeridos (fora do escopo mínimo da Fase D)
+  - Substituir STUBs e extratos EN por PT oficial onde aplicável.
+  - Ligação direta a hashes/versionamento do corpus por release.
+
+Validação automatizada (Fase E):
+  - python scripts/validar_projeto.py
+  - pytest tests/test_phase_e.py
+
+================================================================================
+Fim — Fase D
+================================================================================
