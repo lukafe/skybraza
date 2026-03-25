@@ -630,44 +630,6 @@ input[type="text"]:focus {
   margin-bottom: 1.25rem;
 }
 
-.corpus-panel {
-  margin: 1rem 0 1.25rem;
-  padding: 1rem 1.1rem;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-.corpus-panel.hidden {
-  display: none;
-}
-.corpus-title {
-  margin: 0 0 0.65rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--accent);
-}
-.corpus-metrics {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 0.65rem;
-  margin-bottom: 0.5rem;
-}
-.metric-sm {
-  padding: 0.65rem 0.5rem;
-}
-.metric-sm .metric-value {
-  font-size: 1.25rem;
-}
-.metric-sm .metric-label {
-  font-size: 0.68rem;
-}
-.corpus-hint {
-  margin: 0;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  line-height: 1.4;
-}
-
 .metric {
   position: relative;
   background: linear-gradient(160deg, var(--bg-card-strong) 0%, var(--bg-elevated) 100%);
@@ -838,11 +800,6 @@ input[type="text"]:focus {
 
 .metric--muted .metric-value {
   color: var(--text-muted);
-}
-
-.corpus-panel--compact {
-  margin-top: 1rem;
-  margin-bottom: 0;
 }
 
 /* Corpo do resultado: secções empilhadas (evita colunas “sumidas” e scroll preso) */

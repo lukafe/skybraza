@@ -669,26 +669,6 @@ async function submitScope() {
   elLeadS.textContent =
     "Incisos excluídos nesta configuração — expanda para o motivo.";
 
-  const cr = data.corpus_readiness;
-  const cp = $("#corpus-panel");
-  if (cr && cp) {
-    const c = cr.counts || {};
-    const idx = typeof cr.readiness_index_0_100 === "number" ? cr.readiness_index_0_100.toFixed(1) : "—";
-    cp.innerHTML = `
-      <p class="corpus-title">Corpus laws/ (referência)</p>
-      <div class="corpus-metrics">
-        <div class="metric metric-sm"><div class="metric-value">${idx}</div><div class="metric-label">Índice</div></div>
-        <div class="metric metric-sm"><div class="metric-value">${c.completo ?? 0}</div><div class="metric-label">Completo</div></div>
-        <div class="metric metric-sm"><div class="metric-value">${c.parcial ?? 0}</div><div class="metric-label">Parcial</div></div>
-        <div class="metric metric-sm"><div class="metric-value">${c.incompleto ?? 0}</div><div class="metric-label">Incompleto</div></div>
-      </div>
-    `;
-    cp.classList.remove("hidden");
-  } else if (cp) {
-    cp.innerHTML = "";
-    cp.classList.add("hidden");
-  }
-
   sessionStorage.removeItem(J2_PEDIDO_STORAGE_KEY);
   renderJourney2(data.journey_2);
 
