@@ -14,6 +14,7 @@ Local: uvicorn main:app --reload --host 127.0.0.1 --port 8000
 
 from __future__ import annotations
 
+import logging
 import os
 import sys
 from pathlib import Path
@@ -23,7 +24,7 @@ ROOT = Path(__file__).resolve().parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from fastapi import FastAPI, HTTPException, Request  # noqa: E402
+from fastapi import FastAPI, HTTPException, Request, Response  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
@@ -45,12 +46,15 @@ STATIC_DIR = PUBLIC_DIR / "static"
 
 API_SCHEMA_VERSION = "2"
 
+logger = logging.getLogger(__name__)
+
 app = FastAPI(title="CertiK VASP Scoping API", version="1.0.0")
 
+# allow_credentials=False com allow_origins=["*"] — combinação válida nos browsers (credentials+wildcard é rejeitada).
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -107,10 +111,11 @@ def health() -> dict[str, str]:
 
 
 @app.get("/api/questions")
-def get_questions() -> dict[str, Any]:
+def get_questions(response: Response) -> dict[str, Any]:
     from questionnaire_loader import get_blocks
     from rules_engine import questions_by_block
 
+    response.headers["Cache-Control"] = "public, max-age=300"
     by_block = questions_by_block()
     blocks_out: list[dict[str, Any]] = []
     for mb in get_blocks():
@@ -133,8 +138,15 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
 
     try:
         _, meta = compute_scope(body.answers)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e)) from e
+    except Exception:
+        logger.exception("compute_scope failed")
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "code": "SCOPE_COMPUTE_ERROR",
+                "message": "Não foi possível calcular o escopo com as respostas enviadas. Revise o questionário ou tente novamente.",
+            },
+        ) from None
 
     inst = body.institution.strip()
     return {

@@ -71,27 +71,27 @@ def _coerce_bool(val: Any) -> bool:
     return bool(val)
 
 
-def _validate_incisos(incs: list[str], ctx: str) -> None:
+def _validate_incisos(incs: list[Any], ctx: str) -> None:
     for k in incs:
-        if k not in INCISOS_MATRIX:
+        sk = str(k)
+        if sk not in INCISOS_MATRIX:
             raise QuestionnaireLoadError(f"{ctx}: inciso desconhecido '{k}'")
 
 
-def validate_questionnaire_against_matrix() -> list[str]:
-    warnings: list[str] = []
+def assert_questionnaire_incisos_align_with_matrix() -> None:
+    """Garante que todos os incisos referenciados no YAML existem na matriz. Levanta QuestionnaireLoadError se não."""
     for q in get_questions():
         qid = q["id"]
         t = q.get("type")
         if t == "yes_no":
-            _validate_incisos(list(q.get("when_true") or []), qid)
-            _validate_incisos(list(q.get("when_false") or []), qid)
+            _validate_incisos(list(q.get("when_true") or []), str(qid))
+            _validate_incisos(list(q.get("when_false") or []), str(qid))
         elif t == "single_choice":
             for opt in q.get("options") or []:
                 _validate_incisos(list(opt.get("add_incisos") or []), f"{qid}.{opt.get('id')}")
         elif t == "multi_choice":
             for opt in q.get("options") or []:
                 _validate_incisos(list(opt.get("add_incisos") or []), f"{qid}.{opt.get('id')}")
-    return warnings
 
 
 def potential_triggers_per_inciso() -> dict[str, list[str]]:
@@ -196,7 +196,7 @@ def resolve_triggers(answers: dict[str, Any]) -> tuple[dict[str, list[str]], dic
         if t == "yes_no":
             incs = list(q.get("when_true") or []) if norm.get(qid) else list(q.get("when_false") or [])
             for inc in incs:
-                triggered_by.setdefault(inc, []).append(qid)
+                triggered_by.setdefault(str(inc), []).append(qid)
 
         elif t == "single_choice":
             val = norm.get(qid)
@@ -205,7 +205,7 @@ def resolve_triggers(answers: dict[str, Any]) -> tuple[dict[str, list[str]], dic
             for opt in q.get("options") or []:
                 if opt.get("id") == val:
                     for inc in opt.get("add_incisos") or []:
-                        triggered_by.setdefault(inc, []).append(qid)
+                        triggered_by.setdefault(str(inc), []).append(qid)
                     break
 
         elif t == "multi_choice":
@@ -214,7 +214,7 @@ def resolve_triggers(answers: dict[str, Any]) -> tuple[dict[str, list[str]], dic
                 oid = opt.get("id")
                 if oid in chosen:
                     for inc in opt.get("add_incisos") or []:
-                        triggered_by.setdefault(inc, []).append(qid)
+                        triggered_by.setdefault(str(inc), []).append(qid)
 
     for k, vlist in list(triggered_by.items()):
         triggered_by[k] = sorted(set(vlist))
@@ -223,7 +223,7 @@ def resolve_triggers(answers: dict[str, Any]) -> tuple[dict[str, list[str]], dic
 
 
 # Validação na importação
-_Q_WARN = validate_questionnaire_against_matrix()
+assert_questionnaire_incisos_align_with_matrix()
 QUESTIONS: list[dict[str, Any]] = get_questions()
 TRIGGER_MAP: dict[str, frozenset[str]] = build_yes_no_trigger_map()
 
@@ -232,6 +232,7 @@ __all__ = [
     "QUESTIONS",
     "QuestionnaireLoadError",
     "TRIGGER_MAP",
+    "assert_questionnaire_incisos_align_with_matrix",
     "all_question_ids",
     "build_yes_no_trigger_map",
     "get_blocks",

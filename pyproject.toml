@@ -19,3 +19,5 @@ dependencies = [
 # https://vercel.com/docs/frameworks/backend/fastapi
 [project.scripts]
 app = "main:app"
+
+# Manter [project.dependencies] alinhado com o núcleo em requirements.txt (CI valida com scripts/verify_pyproject_runtime_deps.py).

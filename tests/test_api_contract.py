@@ -67,6 +67,20 @@ def test_post_scope_invalid_body_returns_422(client: TestClient) -> None:
     assert r.status_code == 422
 
 
+def test_post_scope_compute_error_hides_internal_detail(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    import rules_engine  # noqa: PLC0415
+
+    def _boom(*_a, **_kw):
+        raise RuntimeError("internal_secret_xyz")
+
+    monkeypatch.setattr(rules_engine, "compute_scope", _boom)
+    r = client.post("/api/scope", json={"institution": "X", "answers": {}})
+    assert r.status_code == 400
+    body = r.json()
+    assert body["detail"]["code"] == "SCOPE_COMPUTE_ERROR"
+    assert "internal_secret" not in str(body)
+
+
 def test_optional_api_key_rejects_without_header(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("CERTIK_API_KEY", "test-secret-key")
     # Lê CERTIK_API_KEY em cada pedido — não é necessário recarregar o módulo

@@ -23,7 +23,11 @@ async function fetchJSON(path, options = {}) {
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail || res.statusText || "Erro na requisição");
+    const d = err.detail;
+    let msg = res.statusText || "Erro na requisição";
+    if (typeof d === "string") msg = d;
+    else if (d && typeof d === "object" && typeof d.message === "string") msg = d.message;
+    throw new Error(msg);
   }
   return res.json();
 }
@@ -58,6 +62,31 @@ function initAnswersFromBlocks() {
       else state.answers[q.id] = false;
     }
   }
+}
+
+/** single_choice obrigatório (exceto audit_only) antes de avançar ou submeter. */
+function blockHasUnansweredSingleChoice(block) {
+  for (const q of block.questions) {
+    if (q.audit_only) continue;
+    if (qType(q) !== "single_choice") continue;
+    const v = state.answers[q.id];
+    if (v == null || v === "") {
+      showToast(`Selecione uma opção em ${q.id} antes de continuar.`);
+      return true;
+    }
+  }
+  return false;
+}
+
+function setNavLoading(loading) {
+  const btn = $("#btn-next");
+  const back = $("#btn-back");
+  if (btn) {
+    btn.disabled = loading;
+    btn.classList.toggle("btn-loading", loading);
+    btn.setAttribute("aria-busy", loading ? "true" : "false");
+  }
+  if (back) back.disabled = loading;
 }
 
 function normalizeBlockAnswers(block) {
@@ -569,6 +598,7 @@ async function submitScope() {
 
   let data;
   try {
+    setNavLoading(true);
     data = await fetchJSON("/api/scope", {
       method: "POST",
       body: JSON.stringify(payload),
@@ -576,6 +606,8 @@ async function submitScope() {
   } catch (e) {
     showToast(String(e.message || e));
     throw e;
+  } finally {
+    setNavLoading(false);
   }
 
   const { sujeitos, fora } = normalizeScopePayload(data);
@@ -702,6 +734,7 @@ async function boot() {
   $("#btn-next").addEventListener("click", async () => {
     const block = state.blocks[state.step];
     normalizeBlockAnswers(block);
+    if (blockHasUnansweredSingleChoice(block)) return;
 
     const last = state.step === state.blocks.length - 1;
     if (last) {

@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import os
 import re
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from typing import Any
 
 from matrix_loader import INCISOS_MATRIX, sort_scope_keys
@@ -192,7 +193,12 @@ def try_enrich_why_with_llm(
     """
     Opcional: chama Gemini para reescrever cada narrativa (pt-BR), mantendo fidelidade.
     Sem GEMINI_API_KEY ou em caso de erro, devolve {}.
+
+    Na Vercel o LLM fica desligado por defeito (timeout/latência da função). Ative com
+    ENABLE_GEMINI_ON_VERCEL=1. Limite de espera: GEMINI_TIMEOUT_SEC (default 45).
     """
+    if (os.environ.get("VERCEL") or "").strip() and (os.environ.get("ENABLE_GEMINI_ON_VERCEL") or "").strip() != "1":
+        return {}
     api_key = (os.environ.get("GEMINI_API_KEY") or "").strip()
     if not api_key:
         return {}
@@ -242,16 +248,28 @@ Responda APENAS com um objeto JSON cujo formato seja: {{"INCISO_ID": "texto comp
 com uma chave para cada "id" do array, sem markdown."""
 
     try:
+        timeout_sec = float((os.environ.get("GEMINI_TIMEOUT_SEC") or "45").strip() or "45")
+    except ValueError:
+        timeout_sec = 45.0
+
+    def _call_gemini():
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(model_name)
-        resp = model.generate_content(
+        return model.generate_content(
             prompt,
             generation_config={
                 "temperature": 0.35,
                 "max_output_tokens": 8192,
             },
         )
+
+    try:
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            fut = pool.submit(_call_gemini)
+            resp = fut.result(timeout=timeout_sec)
         raw = (resp.text or "").strip()
+    except FuturesTimeoutError:
+        return {}
     except Exception:
         return {}
 

@@ -1,5 +1,6 @@
-# Dependências do projeto. A Vercel deteta FastAPI via fastapi em requirements.txt
-# (https://vercel.com/docs/functions/runtimes/python).
+# CI + local: instalar tudo daqui. Vercel: núcleo em pyproject.toml (validar com
+# scripts/verify_pyproject_runtime_deps.py); deteta FastAPI também via requirements.txt se usado.
+# https://vercel.com/docs/functions/runtimes/python
 fastapi>=0.109.0,<1
 starlette>=0.27.0,<1
 pydantic>=2.0.0,<3

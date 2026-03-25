@@ -1,5 +1,8 @@
 """
 CertiK — Ferramenta de Scoping IN 701 (VASP intermediária) / BCB Res. 520.
+
+UI Streamlit (este ficheiro): mesmo motor que a SPA em public/ + API FastAPI (main.py).
+Alterações ao questionário refletem automaticamente aqui; copy e layout podem divergir da web.
 """
 
 from __future__ import annotations

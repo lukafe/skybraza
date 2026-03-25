@@ -37,6 +37,19 @@ def main() -> int:
         print(f"ERRO de importação: {e}")
         return 1
 
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "check_public_bundle_sync",
+        ROOT / "scripts" / "check_public_bundle_sync.py",
+    )
+    _sync_mod = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(_sync_mod)
+    sync_errs = _sync_mod.compare_public_trees()
+    for e in sync_errs:
+        errors.append(f"[public↔vercel_public] {e}")
+
     meta_yaml = get_coverage_meta()
     if meta_yaml.get("fase") != "E":
         errors.append(f"meta.fase esperado 'E', veio {meta_yaml.get('fase')!r}")
