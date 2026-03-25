@@ -92,19 +92,19 @@ def _certik_css() -> None:
     st.markdown(
         """
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         html, body, [class*="css"]  {
-            font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
         }
         .block-container { padding-top: 1.35rem; max-width: 1180px; }
-        h1 { letter-spacing: -0.03em; color: #EEF1F6 !important; }
+        h1 { letter-spacing: -0.03em; color: #f4f4f5 !important; }
         .certik-badge {
             display: inline-block;
             padding: 0.28rem 0.7rem;
             border-radius: 999px;
-            background: linear-gradient(135deg, rgba(46,230,182,0.12), rgba(92,157,255,0.12));
-            border: 1px solid rgba(46,230,182,0.35);
-            color: #2EE6B6;
+            background: linear-gradient(135deg, rgba(255,59,71,0.14), rgba(255,59,71,0.06));
+            border: 1px solid rgba(255,59,71,0.4);
+            color: #ff6b6b;
             font-size: 0.72rem;
             font-weight: 700;
             letter-spacing: 0.06em;
@@ -112,8 +112,8 @@ def _certik_css() -> None:
             margin-bottom: 0.55rem;
         }
         div[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #0c0e14 0%, #07080c 100%);
-            border-right: 1px solid #1e2635;
+            background: linear-gradient(180deg, #0c0c0e 0%, #050506 100%);
+            border-right: 1px solid #2a2a30;
         }
         </style>
         """,

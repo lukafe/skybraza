@@ -3,72 +3,79 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CertiK — Escopo IN 701 (pré-avaliação)</title>
+    <meta name="theme-color" content="#050506" />
+    <meta
+      name="description"
+      content="Ferramenta CertiK — delimitação orientativa de escopo IN 701 (VASP intermediária) e alinhamento à Res. BCB 520."
+    />
+    <title>CertiK — Escopo IN 701</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/css/styles.css?v=11" />
+    <link rel="stylesheet" href="/static/css/styles.css?v=12" />
   </head>
   <body class="sk-app">
     <noscript>
       <div class="noscript-banner" role="alert">
-        <strong>JavaScript necessário.</strong> Ative JavaScript no navegador. Não abra este ficheiro em
-        <code>file://</code>. Use o URL do deploy (Vercel) ou, em local, <code>python serve_web.py</code> ou
-        <code>npx vercel dev</code>.
+        <strong>JavaScript necessário.</strong> Ative JavaScript. Não utilize <code>file://</code> — abra pelo URL do
+        deploy ou execute <code>python serve_web.py</code> / <code>npx vercel dev</code> em local.
       </div>
     </noscript>
     <a class="skip-link" href="#main">Ir ao conteúdo</a>
 
     <header class="site-header sk-topbar">
       <div class="wrap sk-topbar-row">
-        <a class="sk-brand-lockup" href="#main" aria-label="CertiK Compliance Scope — início">
+        <a class="sk-brand-lockup" href="#main" aria-label="CertiK — Compliance Scope, início">
           <span class="sk-brand-mark" aria-hidden="true">CertiK</span>
           <span class="sk-brand-divider" aria-hidden="true"></span>
           <span class="sk-brand-product">Compliance Scope</span>
         </a>
-        <nav class="sk-nav" aria-label="Navegação do produto">
-          <span class="sk-nav-pill sk-nav-pill--active">IN 701</span>
-          <a class="sk-nav-pill sk-nav-pill--link" href="https://skynet.certik.com" target="_blank" rel="noopener noreferrer">Skynet</a>
-          <a class="sk-nav-pill sk-nav-pill--link" href="https://www.certik.com" target="_blank" rel="noopener noreferrer">certik.com</a>
+        <nav class="sk-nav" aria-label="Produtos CertiK">
+          <span class="sk-nav-pill sk-nav-pill--active" title="Esta ferramenta">IN 701</span>
+          <a class="sk-nav-pill sk-nav-pill--link" href="https://skynet.certik.com" target="_blank" rel="noopener noreferrer"
+            >Skynet</a
+          >
+          <a class="sk-nav-pill sk-nav-pill--link" href="https://www.certik.com" target="_blank" rel="noopener noreferrer"
+            >certik.com</a
+          >
         </nav>
       </div>
       <div class="sk-subbar wrap">
         <p class="sk-subbar-line">
-          <span class="sk-subbar-badge">VASP intermediária</span>
-          Delimitação orientativa para certificação técnica · alinhamento BCB Res. 520
+          <span class="sk-subbar-badge">VASP · fase intermediária</span>
+          <span>Pré-avaliação técnica para certificação · matriz alinhada à IN 701 e Res. nº 520 do BCB</span>
         </p>
       </div>
     </header>
 
     <main id="main" class="wrap main sk-main">
       <section id="intro" class="panel intro-panel" aria-labelledby="intro-title">
-        <span class="pill">Pré-avaliação orientativa</span>
-        <h1 id="intro-title">Delimitação técnica (fase intermediária)</h1>
+        <span class="pill">Pré-avaliação</span>
+        <h1 id="intro-title">Delimitação de escopo IN 701</h1>
         <p class="lead">
-          O questionário começa por um <strong>diagnóstico curto</strong> (smart contracts e superfície exposta à Internet)
-          para preparar a <strong>Jornada 2</strong> — pedidos de documentação por inciso, além de orientações para
-          smart contract audit e pentest quando aplicável. Depois, com base na sua operação, o resultado mostra
-          <strong>duas categorias</strong>: incisos
-          <strong>sujeitos a auditoria</strong> nesta configuração e incisos <strong>fora deste escopo</strong>,
-          com explicação objetiva em cada caso. Para os sujeitos a auditoria, indicamos também uma
-          <strong>orientação indicativa</strong> para o conteúdo do relatório perante o BCB (não substitui
-          parecer jurídico nem o modelo oficial da instituição).
+          Fluxo em blocos, no estilo de um <strong>checklist operacional</strong> (semelhante à leitura de métricas no
+          <a href="https://skynet.certik.com" target="_blank" rel="noopener noreferrer">Skynet</a>): primeiro um
+          <strong>diagnóstico curto</strong> (smart contracts e superfície exposta), depois o questionário completo. O
+          resultado organiza incisos <strong>no escopo de auditoria</strong> e <strong>fora deste escopo</strong>, com
+          contexto por inciso, checklist de evidências (Jornada&nbsp;2) e notas para smart contract audit / pentest quando
+          aplicável. Orientações ao BCB são <strong>indicativas</strong> — não substituem parecer jurídico nem o modelo
+          oficial da instituição.
         </p>
         <label class="field">
-          <span class="field-label">Nome da instituição / projeto</span>
+          <span class="field-label">Instituição ou projeto</span>
           <input
             type="text"
             id="institution"
             name="institution"
             maxlength="500"
-            placeholder="Ex.: Sua VASP S.A."
+            placeholder="Ex.: Nome da VASP ou projeto"
             autocomplete="organization"
           />
         </label>
-        <button type="button" class="btn btn-primary" id="btn-start">Iniciar questionário</button>
+        <button type="button" class="btn btn-primary" id="btn-start">Começar questionário</button>
       </section>
 
       <section id="wizard" class="wizard hidden" aria-live="polite">
@@ -85,14 +92,14 @@
 
         <div class="wizard-nav">
           <button type="button" class="btn btn-ghost" id="btn-back">Voltar</button>
-          <button type="button" class="btn btn-primary" id="btn-next">Próximo</button>
+          <button type="button" class="btn btn-primary" id="btn-next">Continuar</button>
         </div>
       </section>
 
       <section id="results" class="results hidden" aria-labelledby="results-title">
         <div class="panel results-hero">
-          <span class="pill pill-ok">Resultado</span>
-          <h2 id="results-title">Painel de resultados</h2>
+          <span class="pill pill-ok">Resumo</span>
+          <h2 id="results-title">Painel de escopo</h2>
           <p id="results-summary" class="summary-line"></p>
           <div class="metrics metrics-results" id="metrics"></div>
           <div id="corpus-panel" class="corpus-panel corpus-panel--compact hidden" aria-label="Prontidão do corpus"></div>
@@ -102,7 +109,7 @@
         </div>
 
         <div id="journey-2-panel" class="panel journey-2-panel journey-2-panel--compact hidden" aria-labelledby="j2-title">
-          <h3 id="j2-title" class="j2-heading">Serviços técnicos complementares</h3>
+          <h3 id="j2-title" class="j2-heading">Serviços técnicos CertiK</h3>
           <p id="j2-lead" class="j2-lead"></p>
           <div id="j2-streams" class="j2-streams"></div>
           <p id="j2-notes" class="j2-notes hidden"></p>
@@ -113,7 +120,7 @@
             <div class="results-section-head">
               <h3 class="results-section-title" id="sec-audit-title">
                 <span class="title-dot" aria-hidden="true"></span>
-                Sujeitos a auditoria — expandir por inciso
+                No escopo de auditoria
               </h3>
               <span class="results-count" id="count-audit" aria-live="polite">0</span>
             </div>
@@ -134,17 +141,17 @@
         </div>
 
         <p class="fine-print results-disclaimer">
-          Resultado indicativo para alinhamento com a CertiK. A delimitação perante o Banco Central é validada em processo
-          formal. Orientações de relatório são genéricas — adapte ao modelo da sua instituição e à assessoria jurídica.
-          <a href="https://www.certik.com" target="_blank" rel="noopener">certik.com</a>
+          Resultado orientativo para alinhamento com a CertiK. A delimitação perante o Banco Central é validada em processo
+          formal. Adapte relatórios ao modelo interno e à assessoria jurídica.
+          <a href="https://www.certik.com" target="_blank" rel="noopener noreferrer">certik.com</a>
         </p>
       </section>
     </main>
 
     <footer class="site-footer sk-footer">
       <div class="wrap footer-inner sk-footer-inner">
-        <span class="sk-footer-copy">© 2026 CertiK · ferramenta interna / uso institucional</span>
-        <div class="sk-footer-links" aria-label="CertiK">
+        <span class="sk-footer-copy">© 2026 CertiK · uso institucional</span>
+        <div class="sk-footer-links" aria-label="Ligações CertiK">
           <a href="https://skynet.certik.com" target="_blank" rel="noopener noreferrer">Skynet</a>
           <a href="https://www.certik.com" target="_blank" rel="noopener noreferrer">Site</a>
           <a href="https://twitter.com/CertiK" target="_blank" rel="noopener noreferrer">X</a>
@@ -153,8 +160,8 @@
       </div>
     </footer>
 
-    <div id="toast" class="toast hidden" role="status"></div>
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-    <script src="/static/js/app.js?v=11" type="module"></script>
+    <script src="/static/js/app.js?v=12" type="module"></script>
   </body>
 </html>

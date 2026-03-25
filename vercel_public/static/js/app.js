@@ -264,7 +264,7 @@ function renderQuestions() {
       const note = document.createElement("p");
       note.className = "q-audit-note";
       note.textContent =
-        "Uso para relatório / maturidade operacional; não altera incisos do escopo automaticamente.";
+        "Só para relatório e maturidade — não altera o escopo de auditoria automaticamente.";
       card.appendChild(note);
     }
 
@@ -281,7 +281,7 @@ function renderQuestions() {
   $("#btn-back").classList.toggle("hidden", state.step === 0);
 
   const last = state.step === state.blocks.length - 1;
-  $("#btn-next").textContent = last ? "Ver resultado" : "Próximo";
+  $("#btn-next").textContent = last ? "Ver painel" : "Continuar";
 }
 
 function escapeHtml(s) {
@@ -375,7 +375,7 @@ function createDashDocumentRow(p, iid, getNextPedidoIndex) {
 
   const ot = document.createElement("aside");
   ot.className = "dash-doc-otimo";
-  ot.innerHTML = `<p class="dash-doc-otimo-label">Documento exemplar — o que deve conter</p><p class="dash-doc-otimo-text">${escapeHtml(String(p.documento_otimo || ""))}</p>`;
+  ot.innerHTML = `<p class="dash-doc-otimo-label">Entregável exemplar</p><p class="dash-doc-otimo-text">${escapeHtml(String(p.documento_otimo || ""))}</p>`;
 
   const shell = document.createElement("div");
   shell.className = "dash-pedido-shell j2-pedido";
@@ -445,14 +445,14 @@ function renderDashAuditInciso(row, checklistBloc, index, getNextPedidoIndex) {
   ctx.className = "dash-context";
   const ctxSum = document.createElement("summary");
   ctxSum.className = "dash-context-summary";
-  ctxSum.textContent = "Contexto da auditoria";
+  ctxSum.textContent = "Contexto de escopo";
   const ctxBody = document.createElement("div");
   ctxBody.className = "dash-context-body";
   const pq = Array.isArray(row.perguntas_gatilho) ? row.perguntas_gatilho : [];
   const gat = pq.length
     ? `<p class="dash-gatilho"><strong>Gatilho no questionário:</strong> ${escapeHtml(pq.join(", "))}</p>`
     : "";
-  ctxBody.innerHTML = `<p class="dash-label">Por que será auditado</p><p class="dash-text">${escapeHtml(row.por_que_sera_auditado || "")}</p><p class="dash-label dash-label--bcb">Orientação indicativa para o relatório ao BCB</p><p class="dash-text dash-text--bcb">${escapeHtml(row.orientacao_relatorio_bcb || "")}</p>${gat}`;
+  ctxBody.innerHTML = `<p class="dash-label">Por que entra no escopo</p><p class="dash-text">${escapeHtml(row.por_que_sera_auditado || "")}</p><p class="dash-label dash-label--bcb">Relatório ao BCB (indicativo)</p><p class="dash-text dash-text--bcb">${escapeHtml(row.orientacao_relatorio_bcb || "")}</p>${gat}`;
   ctx.appendChild(ctxSum);
   ctx.appendChild(ctxBody);
 
@@ -460,11 +460,11 @@ function renderDashAuditInciso(row, checklistBloc, index, getNextPedidoIndex) {
   docsSection.className = "dash-docs-section";
   const docsTitle = document.createElement("h4");
   docsTitle.className = "dash-docs-title";
-  docsTitle.textContent = "Documentação necessária (este projeto)";
+  docsTitle.textContent = "Checklist de evidências";
   const docsLead = document.createElement("p");
   docsLead.className = "dash-docs-lead";
   docsLead.textContent =
-    "Só constam pedidos para incisos sujeitos a auditoria nesta delimitação. Expanda cada documento para ver o pedido e um perfil de entregável exemplar.";
+    "Apenas incisos no escopo atual. Abra cada linha para o pedido e o perfil de um entregável exemplar.";
   docsSection.appendChild(docsTitle);
   docsSection.appendChild(docsLead);
 
@@ -478,7 +478,7 @@ function renderDashAuditInciso(row, checklistBloc, index, getNextPedidoIndex) {
   } else {
     const emp = document.createElement("p");
     emp.className = "dash-docs-empty";
-    emp.textContent = "Sem pedidos de documentação mapeados.";
+    emp.textContent = "Sem pedidos mapeados para este inciso.";
     docsSection.appendChild(emp);
   }
 
@@ -493,14 +493,14 @@ function renderDashSkipContainer(fora) {
   const host = document.createElement("div");
   host.className = "dash-skip-host";
   if (!fora.length) {
-    host.innerHTML = '<p class="empty-col">Nenhum inciso fora do escopo.</p>';
+    host.innerHTML = '<p class="empty-col">Todos os incisos da matriz entram no escopo nesta configuração.</p>';
     return host;
   }
   const outer = document.createElement("details");
   outer.className = "dash-skip-outer";
   const s = document.createElement("summary");
   s.className = "dash-skip-outer-summary";
-  s.innerHTML = `<span class="dash-skip-outer-title">Ver incisos fora deste escopo</span><span class="dash-skip-outer-count">${fora.length}</span>`;
+  s.innerHTML = `<span class="dash-skip-outer-title">Incisos fora deste escopo</span><span class="dash-skip-outer-count">${fora.length}</span>`;
   outer.appendChild(s);
   const inner = document.createElement("div");
   inner.className = "dash-skip-outer-body";
@@ -543,7 +543,7 @@ function renderJourney2(j2) {
   lead.textContent =
     typeof j2.label === "string" && j2.label.trim()
       ? j2.label
-      : "Smart contract audit e pentest quando aplicáveis. A checklist de documentação está organizada por inciso no painel «Sujeitos a auditoria» abaixo.";
+      : "Smart contract audit e pentest quando aplicáveis. A checklist por inciso está na secção «No escopo de auditoria» abaixo.";
 
   const sc = j2.smart_contract_audit && typeof j2.smart_contract_audit === "object" ? j2.smart_contract_audit : {};
   const pt = j2.penetration_test && typeof j2.penetration_test === "object" ? j2.penetration_test : {};
@@ -633,11 +633,11 @@ async function submitScope() {
   }
 
   const nome = institution ? `<strong>${escapeHtml(institution)}</strong> — ` : "";
-  elSummary.innerHTML = `${nome}Nesta delimitação, <strong>${na}</strong> inciso(s) entram como <strong>sujeitos a auditoria</strong> e <strong>${nf}</strong> ficam <strong>fora deste escopo</strong> (matriz IN 701 intermediária).`;
+  elSummary.innerHTML = `${nome}<strong>${na}</strong> inciso(s) no <strong>escopo de auditoria</strong> e <strong>${nf}</strong> <strong>fora deste escopo</strong> (matriz IN 701 · fase intermediária).`;
 
   elMetrics.innerHTML = `
-    <div class="metric"><div class="metric-value">${na}</div><div class="metric-label">Sujeitos a auditoria</div></div>
-    <div class="metric"><div class="metric-value">${mand}</div><div class="metric-label">Obrigatórios (matriz)</div></div>
+    <div class="metric"><div class="metric-value">${na}</div><div class="metric-label">No escopo</div></div>
+    <div class="metric"><div class="metric-value">${mand}</div><div class="metric-label">Obrigatórios</div></div>
     <div class="metric"><div class="metric-value">${cond}</div><div class="metric-label">Por respostas</div></div>
     <div class="metric metric--muted"><div class="metric-value">${nf}</div><div class="metric-label">Fora do escopo</div></div>
   `;
@@ -646,9 +646,9 @@ async function submitScope() {
   elCountS.textContent = String(fora.length);
 
   elLeadA.textContent =
-    "Expanda cada inciso: contexto da auditoria, depois cada documento pedido (com perfil de entregável exemplar). Só constam incisos e documentos deste escopo.";
+    "Abra cada inciso: contexto, relatório BCB (indicativo) e checklist de evidências com perfil de entregável.";
   elLeadS.textContent =
-    "Lista compacta: expanda o bloco para ver incisos que não entram nesta delimitação e o motivo.";
+    "Incisos excluídos nesta configuração — expanda para o motivo.";
 
   const cr = data.corpus_readiness;
   const cp = $("#corpus-panel");
@@ -656,7 +656,7 @@ async function submitScope() {
     const c = cr.counts || {};
     const idx = typeof cr.readiness_index_0_100 === "number" ? cr.readiness_index_0_100.toFixed(1) : "—";
     cp.innerHTML = `
-      <p class="corpus-title">Corpus interno (referência documental)</p>
+      <p class="corpus-title">Corpus laws/ (referência)</p>
       <div class="corpus-metrics">
         <div class="metric metric-sm"><div class="metric-value">${idx}</div><div class="metric-label">Índice</div></div>
         <div class="metric metric-sm"><div class="metric-value">${c.completo ?? 0}</div><div class="metric-label">Completo</div></div>
@@ -687,7 +687,7 @@ async function submitScope() {
 
   if (!sujeitos.length) {
     listA.innerHTML =
-      '<p class="empty-col">Nenhum inciso sujeito a auditoria — confirme que o servidor foi reiniciado após atualizar o projeto (API antiga não devolve estas listas).</p>';
+      '<p class="empty-col">Nenhum inciso no escopo. Se esperava linhas, confirme a versão da API (GET /api/v1/health).</p>';
   } else {
     sujeitos.forEach((row, i) => {
       if (!row || typeof row !== "object") return;
