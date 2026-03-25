@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#050506" />
+    <meta name="theme-color" content="#0D0D0F" />
     <meta
       name="description"
       content="Ferramenta CertiK — delimitação orientativa de escopo IN 701 (VASP intermediária) e alinhamento à Res. BCB 520."
@@ -12,10 +12,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/css/styles.css?v=18" />
+    <link rel="stylesheet" href="/static/css/styles.css?v=19" />
   </head>
   <body class="sk-app app-view-intro">
     <noscript>
@@ -42,6 +42,13 @@
             >certik.com</a
           >
         </nav>
+        <a
+          class="sk-topbar-mono-link"
+          href="https://www.certik.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          >certik.com</a
+        >
       </div>
       <div class="sk-subbar wrap">
         <p class="sk-subbar-line">
@@ -53,41 +60,54 @@
 
     <main id="main" class="wrap main sk-main">
       <section id="intro" class="intro-landing" aria-labelledby="intro-title">
-        <div class="intro-landing__inner">
-          <div class="intro-landing__brand">
-            <img
-              class="intro-landing__logo"
-              src="/static/images/certik-logo.svg"
-              width="152"
-              height="28"
-              alt="CertiK"
-            />
-          </div>
-          <h1 id="intro-title" class="intro-landing__title">Escopo IN 701</h1>
-          <p class="intro-landing__objective">
-            Ferramenta da <strong>CertiK</strong> para delimitar, de forma orientativa, o escopo de conformidade da sua
-            operação (VASP em fase intermediária — IN 701 e Res. 520 do BCB). Um fluxo curto gera uma visão do que entra
-            na auditoria e do que fica fora, para apoiar a preparação regulatória. Não substitui parecer jurídico.
-          </p>
-          <div class="intro-landing__cta">
-            <label class="field">
-              <span class="field-label">Nome da empresa</span>
-              <input
-                type="text"
-                id="institution"
-                name="institution"
-                maxlength="500"
-                placeholder="Ex.: nome da VASP ou projeto"
-                autocomplete="organization"
-                aria-required="true"
+        <div class="intro-landing__float">
+          <div class="intro-landing__inner">
+            <div class="intro-landing__brand">
+              <img
+                class="intro-landing__logo"
+                src="/static/images/certik-logo.svg"
+                width="168"
+                height="31"
+                alt="CertiK"
               />
-            </label>
-            <button type="button" class="btn btn-primary btn-hero" id="btn-start">Continuar</button>
+            </div>
+            <h1 id="intro-title" class="intro-landing__title">Escopo IN 701</h1>
+            <div class="intro-landing__desc">
+              <p class="intro-landing__desc-line">
+                Ferramenta <strong>CertiK</strong> para delimitar o escopo de conformidade da sua operação (VASP · IN 701
+                · Res. 520 BCB).
+              </p>
+              <p class="intro-landing__desc-line">
+                Fluxo curto: vê o que entra na auditoria e o que fica fora — apoio à preparação regulatória.
+              </p>
+              <p class="intro-landing__desc-line intro-landing__desc-line--muted">
+                Orientação técnica indicativa; não substitui parecer jurídico.
+              </p>
+            </div>
+            <div class="intro-landing__cta">
+              <label class="field">
+                <span class="field-label intro-landing__field-label">Nome da empresa</span>
+                <input
+                  type="text"
+                  id="institution"
+                  name="institution"
+                  class="intro-landing__input"
+                  maxlength="500"
+                  placeholder="Ex: Minha VASP ou Nome do Projeto"
+                  autocomplete="organization"
+                  aria-required="true"
+                />
+              </label>
+              <button type="button" class="btn btn-primary btn-hero intro-landing__submit" id="btn-start">
+                Continuar
+              </button>
+            </div>
+            <p class="intro-landing__certik-foot">
+              CERTIK · COMPLIANCE SCOPE
+              <span class="intro-landing__certik-foot-sep" aria-hidden="true">·</span>
+              <a href="https://www.certik.com" target="_blank" rel="noopener noreferrer">certik.com</a>
+            </p>
           </div>
-          <p class="intro-landing__certik-foot">
-            <a href="https://www.certik.com" target="_blank" rel="noopener noreferrer">certik.com</a>
-            — auditoria blockchain e segurança Web3.
-          </p>
         </div>
       </section>
 
@@ -175,6 +195,6 @@
 
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-    <script src="/static/js/app.js?v=18" type="module"></script>
+    <script src="/static/js/app.js?v=19" type="module"></script>
   </body>
 </html>
