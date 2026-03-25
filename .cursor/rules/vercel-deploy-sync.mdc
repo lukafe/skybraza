@@ -1,0 +1,11 @@
+---
+description: Commit, push e sync para deploy automático na Vercel
+alwaysApply: true
+---
+
+# Deploy Vercel (Git)
+
+- O projeto usa **GitHub** (`origin`) na branch **`main`**; a Vercel faz deploy ao receber push.
+- Sempre que alterares **`public/`** (HTML, CSS, JS, imagens), executa **`python scripts/sync_vercel_public.py`** para espelhar em **`vercel_public/`** antes do commit, salvo indicação em contrário.
+- Ao concluir alterações que devam ir para produção: **`git add`**, **`git commit`** com mensagem clara, **`git push origin main`**. Não deixar o trabalho só no disco sem push se o objetivo for atualizar a app na Vercel.
+- Se o utilizador pedir explicitamente para não fazer push ou não commitar, respeitar.
