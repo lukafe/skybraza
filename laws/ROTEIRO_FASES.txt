@@ -29,6 +29,6 @@ Motor unificado:
   rules_engine.py → compute_scope() (matriz + questionário + readiness)
 
 Interfaces:
-  app.py (Streamlit) · main.py + public/ · scripts/simular_empresa.py
+  app.py (Streamlit) · api/index.py (+ main.py atalho) + public/ · scripts/simular_empresa.py
 
 ================================================================================

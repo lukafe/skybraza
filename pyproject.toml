@@ -4,6 +4,6 @@ version = "1.0.0"
 description = "IN 701 VASP scoping API + static SPA"
 requires-python = ">=3.11"
 
-# Vercel FastAPI: main.py na raiz (documentado em vercel.com/docs/frameworks/backend/fastapi)
+# Vercel: ASGI em api/index.py (pasta api/ = Serverless Functions)
 [project.scripts]
-app = "main:app"
+app = "api.index:app"
