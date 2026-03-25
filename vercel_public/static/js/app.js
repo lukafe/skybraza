@@ -600,7 +600,7 @@ async function submitScope() {
   let data;
   try {
     setNavLoading(true);
-    data = await fetchJSON("/api/scope", {
+    data = await fetchJSON("/scope", {
       method: "POST",
       body: JSON.stringify(payload),
     });
