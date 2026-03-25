@@ -741,7 +741,7 @@ async function boot() {
     const inst = $("#institution");
     const name = (inst.value || "").trim();
     if (!name) {
-      showToast("Indique o nome da empresa para continuar.");
+      showToast("Indique o nome da sua empresa para continuar.");
       inst.focus();
       return;
     }
