@@ -29,6 +29,19 @@ def test_health_includes_api_schema_version(client: TestClient) -> None:
     data = r.json()
     assert data["status"] == "ok"
     assert data["api_schema_version"] == API_SCHEMA_VERSION
+    assert data.get("api_rest_version") == "v1"
+
+
+def test_v1_routes_mirror_legacy(client: TestClient) -> None:
+    h = client.get("/api/v1/health")
+    assert h.status_code == 200
+    assert h.json() == client.get("/api/health").json()
+    q = client.get("/api/v1/questions")
+    assert q.status_code == 200
+    assert q.json()["api_schema_version"] == API_SCHEMA_VERSION
+    leg = client.post("/api/v1/scope", json={"institution": "A", "answers": {}})
+    assert leg.status_code == 200
+    assert leg.json()["institution"] == "A"
 
 
 def test_questions_includes_api_schema_version(client: TestClient) -> None:
@@ -91,4 +104,14 @@ def test_optional_api_key_rejects_without_header(monkeypatch: pytest.MonkeyPatch
     assert r2.status_code == 200
     r3 = c.get("/api/health")
     assert r3.status_code == 200
+    r4 = c.get("/api/v1/health")
+    assert r4.status_code == 200
+    r5 = c.post("/api/v1/scope", json={"answers": {}})
+    assert r5.status_code == 401
+    r6 = c.post(
+        "/api/v1/scope",
+        json={"answers": {}},
+        headers={"X-Certik-Api-Key": "test-secret-key"},
+    )
+    assert r6.status_code == 200
     monkeypatch.delenv("CERTIK_API_KEY", raising=False)

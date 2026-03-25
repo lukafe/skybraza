@@ -9,6 +9,10 @@ Estáticos: a doc Vercel serve public/ na CDN; a função Python pode não ver e
 Usamos vercel_public/ (cópia) em produção para FileResponse + /static.
 Após editar public/, execute: python scripts/sync_vercel_public.py
 
+Rotas versionadas: /api/v1/* (recomendado). Legado: /api/* (mesmo comportamento).
+
+Env: LOG_LEVEL, LOG_FORMAT=text|json, RATE_LIMIT_* (ver rate_limit.py), RATE_LIMIT_DISABLED=1
+
 Local: uvicorn main:app --reload --host 127.0.0.1 --port 8000
 """
 
@@ -17,6 +21,7 @@ from __future__ import annotations
 import logging
 import os
 import sys
+import time
 from pathlib import Path
 from typing import Any
 
@@ -24,11 +29,16 @@ ROOT = Path(__file__).resolve().parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from fastapi import FastAPI, HTTPException, Request, Response  # noqa: E402
+from fastapi import APIRouter, FastAPI, HTTPException, Request, Response  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 from pydantic import BaseModel, Field  # noqa: E402
+
+from logging_config import configure_logging  # noqa: E402
+from rate_limit import build_rate_limit_middleware  # noqa: E402
+
+configure_logging()
 
 _ON_VERCEL = bool(os.environ.get("VERCEL"))
 
@@ -45,12 +55,13 @@ PUBLIC_DIR = _web_root()
 STATIC_DIR = PUBLIC_DIR / "static"
 
 API_SCHEMA_VERSION = "2"
+API_REST_VERSION = "v1"
 
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="CertiK VASP Scoping API", version="1.0.0")
 
-# allow_credentials=False com allow_origins=["*"] — combinação válida nos browsers (credentials+wildcard é rejeitada).
+# CORS por último no add_middleware = camada mais externa (primeira a ver o pedido).
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -61,12 +72,32 @@ app.add_middleware(
 
 
 @app.middleware("http")
+async def access_log_middleware(request: Request, call_next):
+    if not request.url.path.startswith("/api"):
+        return await call_next(request)
+    t0 = time.perf_counter()
+    response = await call_next(request)
+    ms = (time.perf_counter() - t0) * 1000.0
+    logger.info(
+        "http_request method=%s path=%s status=%s duration_ms=%.2f",
+        request.method,
+        request.url.path,
+        response.status_code,
+        ms,
+    )
+    return response
+
+
+app.middleware("http")(build_rate_limit_middleware())
+
+
+@app.middleware("http")
 async def optional_api_key_guard(request: Request, call_next):
     key = os.environ.get("CERTIK_API_KEY")
     if not key:
         return await call_next(request)
     path = request.url.path
-    if path == "/api/health" or not path.startswith("/api/"):
+    if path in ("/api/health", "/api/v1/health") or not path.startswith("/api"):
         return await call_next(request)
     if request.headers.get("X-Certik-Api-Key") == key:
         return await call_next(request)
@@ -105,12 +136,20 @@ class ScopeRequest(BaseModel):
     answers: dict[str, Any] = Field(default_factory=dict)
 
 
-@app.get("/api/health")
+api_router = APIRouter(tags=["scope"])
+
+
+@api_router.get("/health")
 def health() -> dict[str, str]:
-    return {"status": "ok", "phase": "E", "api_schema_version": API_SCHEMA_VERSION}
+    return {
+        "status": "ok",
+        "phase": "E",
+        "api_schema_version": API_SCHEMA_VERSION,
+        "api_rest_version": API_REST_VERSION,
+    }
 
 
-@app.get("/api/questions")
+@api_router.get("/questions")
 def get_questions(response: Response) -> dict[str, Any]:
     from questionnaire_loader import get_blocks
     from rules_engine import questions_by_block
@@ -132,7 +171,7 @@ def get_questions(response: Response) -> dict[str, Any]:
     return {"blocks": blocks_out, "api_schema_version": API_SCHEMA_VERSION}
 
 
-@app.post("/api/scope")
+@api_router.post("/scope")
 def post_scope(body: ScopeRequest) -> dict[str, Any]:
     from rules_engine import compute_scope
 
@@ -165,6 +204,10 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
     }
 
 
+app.include_router(api_router, prefix="/api")
+app.include_router(api_router, prefix="/api/v1")
+
+
 # Na Vercel a CDN também pode servir public/; aqui garantimos /static quando o pedido chega à função.
 if STATIC_DIR.is_dir():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
@@ -175,14 +218,13 @@ async def spa_index() -> FileResponse | HTMLResponse:
     index = PUBLIC_DIR / "index.html"
     if index.is_file():
         return FileResponse(index, media_type="text/html; charset=utf-8")
-    # Fallback: cópia em falta no deploy (correr scripts/sync_vercel_public.py e commitar vercel_public/)
     return HTMLResponse(
         status_code=503,
         content=(
             "<html><body><h1>Frontend não empacotado</h1>"
             "<p>Na Vercel falta <code>vercel_public/index.html</code> no repositório.</p>"
             "<p>Localmente: <code>python scripts/sync_vercel_public.py</code> e commit.</p>"
-            "<p><a href='/api/health'>GET /api/health</a></p></body></html>"
+            "<p><a href='/api/v1/health'>GET /api/v1/health</a></p></body></html>"
         ),
     )
 

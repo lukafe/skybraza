@@ -1,5 +1,6 @@
 /**
- * SPA — questionário IN 701 (cliente). Consome /api/questions e /api/scope.
+ * SPA — questionário IN 701 (cliente). Consome /api/v1/questions e /api/v1/scope.
+ * Legado /api/* mantido no servidor para integrações antigas.
  */
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -11,9 +12,9 @@ const state = {
   answers: {},
 };
 
-/** Base URL da API: vazio = mesmo origin (Vercel, uvicorn, vercel dev). */
+/** Prefixo REST versionado (recomendado). */
 function apiBase() {
-  return "";
+  return "/api/v1";
 }
 
 async function fetchJSON(path, options = {}) {
@@ -706,13 +707,13 @@ async function submitScope() {
 
 async function boot() {
   try {
-    const data = await fetchJSON("/api/questions");
+    const data = await fetchJSON("/questions");
     state.blocks = data.blocks || [];
     if (!state.blocks.length) throw new Error("Nenhum bloco de perguntas retornado.");
   } catch (e) {
     const msg =
       String(e.message || e) +
-      " — Confirme que está a usar o URL do site (mesmo domínio) e que a API responde em /api/questions (ex.: python serve_web.py ou deploy na Vercel). Não abra o HTML em file://.";
+      " — Confirme que está a usar o URL do site (mesmo domínio) e que a API responde em /api/v1/questions (ex.: python serve_web.py ou deploy na Vercel). Não abra o HTML em file://.";
     showToast(msg);
     return;
   }
