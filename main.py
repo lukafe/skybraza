@@ -5,6 +5,10 @@ Entrypoint suportado pela Vercel (zero-config):
 https://vercel.com/docs/frameworks/backend/fastapi
 https://vercel.com/docs/functions/runtimes/python
 
+Estáticos: a doc Vercel serve public/ na CDN; a função Python pode não ver esse FS.
+Usamos vercel_public/ (cópia) em produção para FileResponse + /static.
+Após editar public/, execute: python scripts/sync_vercel_public.py
+
 Local: uvicorn main:app --reload --host 127.0.0.1 --port 8000
 """
 
@@ -21,18 +25,27 @@ if str(ROOT) not in sys.path:
 
 from fastapi import FastAPI, HTTPException, Request  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
-from fastapi.responses import FileResponse, JSONResponse  # noqa: E402
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 from pydantic import BaseModel, Field  # noqa: E402
 
-PUBLIC_DIR = ROOT / "public"
+_ON_VERCEL = bool(os.environ.get("VERCEL"))
+
+
+def _web_root() -> Path:
+    """Raiz do SPA/CSS/JS servidos por esta app (incl. na Vercel dentro do bundle)."""
+    vp = ROOT / "vercel_public"
+    if _ON_VERCEL and (vp / "index.html").is_file():
+        return vp
+    return ROOT / "public"
+
+
+PUBLIC_DIR = _web_root()
 STATIC_DIR = PUBLIC_DIR / "static"
 
 API_SCHEMA_VERSION = "2"
 
 app = FastAPI(title="CertiK VASP Scoping API", version="1.0.0")
-
-_ON_VERCEL = bool(os.environ.get("VERCEL"))
 
 app.add_middleware(
     CORSMiddleware,
@@ -140,16 +153,26 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
     }
 
 
-if STATIC_DIR.is_dir() and not _ON_VERCEL:
+# Na Vercel a CDN também pode servir public/; aqui garantimos /static quando o pedido chega à função.
+if STATIC_DIR.is_dir():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
-@app.get("/")
-async def spa_index() -> FileResponse:
+@app.get("/", response_model=None)
+async def spa_index() -> FileResponse | HTMLResponse:
     index = PUBLIC_DIR / "index.html"
-    if not index.is_file():
-        raise HTTPException(status_code=404, detail="Frontend não encontrado (public/index.html).")
-    return FileResponse(index, media_type="text/html; charset=utf-8")
+    if index.is_file():
+        return FileResponse(index, media_type="text/html; charset=utf-8")
+    # Fallback: cópia em falta no deploy (correr scripts/sync_vercel_public.py e commitar vercel_public/)
+    return HTMLResponse(
+        status_code=503,
+        content=(
+            "<html><body><h1>Frontend não empacotado</h1>"
+            "<p>Na Vercel falta <code>vercel_public/index.html</code> no repositório.</p>"
+            "<p>Localmente: <code>python scripts/sync_vercel_public.py</code> e commit.</p>"
+            "<p><a href='/api/health'>GET /api/health</a></p></body></html>"
+        ),
+    )
 
 
 if __name__ == "__main__":
