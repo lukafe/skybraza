@@ -194,8 +194,11 @@ function renderMultiChoice(card, q) {
       else chosen.delete(o.id);
       sync();
     });
+    const lab = document.createElement("span");
+    lab.className = "q-check-text";
+    lab.textContent = o.label;
     row.appendChild(cb);
-    row.appendChild(document.createTextNode(" " + o.label));
+    row.appendChild(lab);
     wrap.appendChild(row);
   }
 
