@@ -15,7 +15,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/css/styles.css?v=17" />
+    <link rel="stylesheet" href="/static/css/styles.css?v=18" />
   </head>
   <body class="sk-app app-view-intro">
     <noscript>
@@ -58,48 +58,36 @@
             <img
               class="intro-landing__logo"
               src="/static/images/certik-logo.svg"
-              width="198"
-              height="36"
+              width="152"
+              height="28"
               alt="CertiK"
             />
-            <span class="intro-landing__product">Compliance Scope</span>
           </div>
-          <p class="intro-landing__kicker">IN 701 · VASP intermediária · BCB Res. 520</p>
-          <h1 id="intro-title" class="intro-landing__title">Delimitação de escopo</h1>
-          <p class="intro-landing__lede">
-            Pré-avaliação em blocos, leitura tipo <strong>métricas no Skynet</strong> —
-            <a href="https://skynet.certik.com" target="_blank" rel="noopener noreferrer">Skynet</a>
-            — primeiro diagnóstico curto (contratos e superfície exposta), depois o questionário completo. Resultado com
-            incisos <strong>no escopo</strong> e <strong>fora do escopo</strong>, Jornada&nbsp;2 e orientações indicativas
-            ao BCB.
+          <h1 id="intro-title" class="intro-landing__title">Escopo IN 701</h1>
+          <p class="intro-landing__objective">
+            Ferramenta da <strong>CertiK</strong> para delimitar, de forma orientativa, o escopo de conformidade da sua
+            operação (VASP em fase intermediária — IN 701 e Res. 520 do BCB). Um fluxo curto gera uma visão do que entra
+            na auditoria e do que fica fora, para apoiar a preparação regulatória. Não substitui parecer jurídico.
           </p>
-          <details class="intro-landing__more">
-            <summary>O que inclui e limites</summary>
-            <div class="intro-landing__more-body">
-              <p>
-                O fluxo organiza incisos da IN 701 no escopo de auditoria e fora deste escopo, com contexto por inciso,
-                checklist de evidências (Jornada&nbsp;2) e notas para smart contract audit / pentest quando aplicável.
-              </p>
-              <p>
-                <strong>Importante:</strong> orientações são <strong>indicativas</strong> — não substituem parecer
-                jurídico nem o modelo oficial da instituição perante o BCB.
-              </p>
-            </div>
-          </details>
           <div class="intro-landing__cta">
-            <label class="field field-optional">
-              <span class="field-label">Instituição ou projeto <span class="optional-tag">opcional</span></span>
+            <label class="field">
+              <span class="field-label">Nome da empresa</span>
               <input
                 type="text"
                 id="institution"
                 name="institution"
                 maxlength="500"
-                placeholder="Ex.: Nome da VASP ou projeto"
+                placeholder="Ex.: nome da VASP ou projeto"
                 autocomplete="organization"
+                aria-required="true"
               />
             </label>
-            <button type="button" class="btn btn-primary btn-hero" id="btn-start">Iniciar</button>
+            <button type="button" class="btn btn-primary btn-hero" id="btn-start">Continuar</button>
           </div>
+          <p class="intro-landing__certik-foot">
+            <a href="https://www.certik.com" target="_blank" rel="noopener noreferrer">certik.com</a>
+            — auditoria blockchain e segurança Web3.
+          </p>
         </div>
       </section>
 
@@ -187,6 +175,6 @@
 
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-    <script src="/static/js/app.js?v=17" type="module"></script>
+    <script src="/static/js/app.js?v=18" type="module"></script>
   </body>
 </html>

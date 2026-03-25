@@ -738,6 +738,13 @@ async function boot() {
   }
 
   $("#btn-start").addEventListener("click", () => {
+    const inst = $("#institution");
+    const name = (inst.value || "").trim();
+    if (!name) {
+      showToast("Indique o nome da empresa para continuar.");
+      inst.focus();
+      return;
+    }
     initAnswersFromBlocks();
     state.step = 0;
     setView("wizard");
