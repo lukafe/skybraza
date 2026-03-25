@@ -2,8 +2,9 @@
 name = "certik-vasp-scope"
 version = "1.0.0"
 description = "IN 701 VASP scoping API + static SPA"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 
-# Vercel: ASGI em api/index.py (pasta api/ = Serverless Functions)
+# Vercel FastAPI: entrypoint explícito (também deteta main.py automaticamente)
+# https://vercel.com/docs/frameworks/backend/fastapi
 [project.scripts]
-app = "api.index:app"
+app = "main:app"
