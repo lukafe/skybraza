@@ -5,6 +5,7 @@
   "description": "CertiK IN 701 VASP scoping — SPA estática em public/ + FastAPI em api/index.py",
   "scripts": {
     "dev": "vercel dev",
+    "build": "echo No Node build; static assets in public/",
     "start": "python -m uvicorn api.index:app --host 127.0.0.1 --port 8000"
   },
   "engines": {

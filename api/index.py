@@ -4,7 +4,8 @@ API web para o questionário de escopo IN 701 (clientes).
 Local (uvicorn):
   uvicorn api.index:app --reload --host 0.0.0.0 --port 8000
 
-Deploy Vercel: expõe `app` (FastAPI); estáticos em `public/` servidos pela CDN.
+Deploy Vercel: instância ASGI exposta como `app` (ver pyproject.toml).
+Imports pesados (motor + YAML) são lazy nos handlers para cold start em /api/health.
 """
 
 from __future__ import annotations
@@ -25,15 +26,14 @@ from fastapi.responses import FileResponse, JSONResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 from pydantic import BaseModel, Field  # noqa: E402
 
-from questionnaire_loader import get_blocks  # noqa: E402
-from rules_engine import compute_scope, questions_by_block  # noqa: E402
-
 PUBLIC_DIR = ROOT / "public"
 STATIC_DIR = PUBLIC_DIR / "static"
 
 API_SCHEMA_VERSION = "2"
 
 app = FastAPI(title="CertiK VASP Scoping API", version="1.0.0")
+
+_ON_VERCEL = bool(os.environ.get("VERCEL"))
 
 app.add_middleware(
     CORSMiddleware,
@@ -91,11 +91,15 @@ class ScopeRequest(BaseModel):
 
 @app.get("/api/health")
 def health() -> dict[str, str]:
+    """Sem imports do motor — ideal para cold start na Vercel."""
     return {"status": "ok", "phase": "E", "api_schema_version": API_SCHEMA_VERSION}
 
 
 @app.get("/api/questions")
 def get_questions() -> dict[str, Any]:
+    from questionnaire_loader import get_blocks
+    from rules_engine import questions_by_block
+
     by_block = questions_by_block()
     blocks_out: list[dict[str, Any]] = []
     for mb in get_blocks():
@@ -114,6 +118,8 @@ def get_questions() -> dict[str, Any]:
 
 @app.post("/api/scope")
 def post_scope(body: ScopeRequest) -> dict[str, Any]:
+    from rules_engine import compute_scope
+
     try:
         _, meta = compute_scope(body.answers)
     except Exception as e:
@@ -136,9 +142,8 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
     }
 
 
-# Em produção na Vercel, `/` e `/static/*` vêm da pasta `public/` (CDN).
-# Em local, servimos a mesma árvore para espelhar o deploy.
-if STATIC_DIR.is_dir():
+# Na Vercel os estáticos vêm de public/ na CDN; evitar mount duplicado / IO no runtime Python.
+if STATIC_DIR.is_dir() and not _ON_VERCEL:
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
@@ -148,3 +153,9 @@ async def spa_index() -> FileResponse:
     if not index.is_file():
         raise HTTPException(status_code=404, detail="Frontend não encontrado (public/index.html).")
     return FileResponse(index, media_type="text/html; charset=utf-8")
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run("api.index:app", host="127.0.0.1", port=8000, reload=True)
