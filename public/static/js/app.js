@@ -42,6 +42,7 @@ function showToast(msg) {
 }
 
 function setView(view) {
+  document.body.classList.toggle("app-view-intro", view === "intro");
   $("#intro").classList.toggle("hidden", view !== "intro");
   $("#wizard").classList.toggle("hidden", view !== "wizard");
   $("#results").classList.toggle("hidden", view !== "results");
