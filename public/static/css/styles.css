@@ -149,28 +149,10 @@ body.sk-app > .noscript-banner {
 }
 
 .sk-brand-mark {
-  font-weight: 800;
-  font-size: 1.2rem;
-  letter-spacing: -0.03em;
-  background: linear-gradient(105deg, #ffffff 0%, var(--accent-bright) 42%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.sk-brand-divider {
-  width: 1px;
-  height: 1.1rem;
-  background: linear-gradient(180deg, transparent, var(--border), transparent);
-  border-radius: 1px;
-}
-
-.sk-brand-product {
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--text-muted);
-  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  color: #ececf1;
 }
 
 .sk-topbar-mono-link {
@@ -1630,22 +1612,10 @@ body.app-view-intro .site-header.sk-topbar {
   box-shadow: none;
 }
 
-body.app-view-intro .sk-brand-divider,
-body.app-view-intro .sk-brand-product {
-  display: none;
-}
-
 body.app-view-intro .sk-brand-mark {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.98rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #8a8a92;
-  background: none;
-  -webkit-text-fill-color: #8a8a92;
-  background-clip: unset;
-  -webkit-background-clip: unset;
+  color: #a1a1aa;
 }
 
 body.app-view-intro .sk-main {
@@ -1683,26 +1653,21 @@ body.app-view-intro .sk-main {
   gap: 1.35rem;
 }
 
-.intro-landing__brand {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0.1rem;
-}
-
-.intro-landing__logo {
-  display: block;
-  height: auto;
-  max-width: min(168px, 75vw);
-  opacity: 1;
-  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.35));
+.intro-landing__wordmark {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9b9ba3;
 }
 
 .intro-landing__title {
   margin: 0;
-  font-size: clamp(2rem, 5.5vw, 2.5rem);
+  font-size: clamp(1.65rem, 4.8vw, 2.15rem);
   font-weight: 700;
   letter-spacing: -0.035em;
-  line-height: 1.12;
+  line-height: 1.15;
   background: linear-gradient(180deg, #ffffff 0%, #e4e4e7 45%, #a1a1aa 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -1823,29 +1788,25 @@ body.app-view-intro .sk-main {
 .intro-landing__certik-foot {
   margin: 0.35rem 0 0;
   padding-top: 0.35rem;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  line-height: 1.5;
-  color: #5e5e66;
+  font-family: var(--font);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.55;
+  color: #7a7a82;
   text-align: center;
 }
 
 .intro-landing__certik-foot a {
-  color: #7a7a84;
+  color: #a8a8b0;
+  font-weight: 600;
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
 .intro-landing__certik-foot a:hover {
-  color: #b4b4c0;
-}
-
-.intro-landing__certik-foot-sep {
-  margin: 0 0.35rem;
-  opacity: 0.5;
+  color: #d4d4d8;
 }
 
 .btn-hero {
