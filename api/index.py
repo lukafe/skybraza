@@ -4,7 +4,7 @@ API web para o questionário de escopo IN 701 (clientes).
 Local (uvicorn):
   uvicorn api.index:app --reload --host 0.0.0.0 --port 8000
 
-Deploy Vercel: instância ASGI exposta como `app` (ver pyproject.toml).
+Deploy Vercel: o ASGI é exposto em `index:app` na raiz (index.py reexporta este módulo).
 Imports pesados (motor + YAML) são lazy nos handlers para cold start em /api/health.
 """
 

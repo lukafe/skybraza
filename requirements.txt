@@ -1,6 +1,8 @@
 # Desenvolvimento local, CI e Streamlit. Na Vercel usa-se requirements-api.txt (ver vercel.json).
 fastapi>=0.109.0,<1
+starlette>=0.27.0,<1
 pydantic>=2.0.0,<3
+typing-extensions>=4.8.0,<5
 uvicorn[standard]>=0.27.0,<1
 httpx>=0.26.0,<1
 PyYAML>=6.0.1,<7
