@@ -25,3 +25,7 @@ htmlcov/
 Thumbs.db
 .idea/
 .vscode/
+
+# Vercel / Node (scripts locais)
+.vercel/
+node_modules/

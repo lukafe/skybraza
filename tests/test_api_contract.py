@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT))
 from matrix_loader import INCISOS_MATRIX, MANDATORY_KEYS  # noqa: E402
 
 # Import após sys.path
-from api.main import API_SCHEMA_VERSION, app  # noqa: E402
+from api.index import API_SCHEMA_VERSION, app  # noqa: E402
 
 
 @pytest.fixture()

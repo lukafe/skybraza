@@ -18,7 +18,7 @@ import webbrowser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-INDEX = ROOT / "web" / "index.html"
+INDEX = ROOT / "public" / "index.html"
 
 
 def _pick_port(host: str = "127.0.0.1", start: int = 8000, attempts: int = 15) -> int | None:
@@ -51,7 +51,7 @@ def main() -> None:
 
     if not INDEX.is_file():
         print(f"ERRO: Frontend não encontrado: {INDEX}")
-        print("Confirme que a pasta 'web' está na raiz do projeto Certik_VASP.")
+        print("Confirme que a pasta 'public' está na raiz do projeto Certik_VASP.")
         sys.exit(1)
 
     try:
@@ -76,7 +76,7 @@ def main() -> None:
     threading.Thread(target=_open_later, args=(url,), daemon=True).start()
 
     uvicorn.run(
-        "api.main:app",
+        "api.index:app",
         host=host,
         port=port,
         reload=False,

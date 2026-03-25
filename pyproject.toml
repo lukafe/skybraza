@@ -1,0 +1,9 @@
+[project]
+name = "certik-vasp-scope"
+version = "1.0.0"
+description = "IN 701 VASP scoping API + static SPA"
+requires-python = ">=3.11"
+
+# Vercel (FastAPI): ponto de entrada ASGI
+[project.scripts]
+app = "api.index:app"

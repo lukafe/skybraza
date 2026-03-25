@@ -11,6 +11,7 @@ const state = {
   answers: {},
 };
 
+/** Base URL da API: vazio = mesmo origin (Vercel, uvicorn, vercel dev). */
 function apiBase() {
   return "";
 }
@@ -679,7 +680,7 @@ async function boot() {
   } catch (e) {
     const msg =
       String(e.message || e) +
-      " — Confirme que o servidor está a correr (na pasta do projeto: python serve_web.py) e que abriu o URL http://127.0.0.1:PORTA (não abra index.html em file://).";
+      " — Confirme que está a usar o URL do site (mesmo domínio) e que a API responde em /api/questions (ex.: python serve_web.py ou deploy na Vercel). Não abra o HTML em file://.";
     showToast(msg);
     return;
   }

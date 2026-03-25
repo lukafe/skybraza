@@ -9,7 +9,7 @@ Escopo sugerido
 
 Stack (decisão de referência)
 -----------------------------
-- API FastAPI + SPA estática em ``web/`` para clientes e demos públicas.
+- API FastAPI + SPA estática em ``public/`` (``/static/…``) para clientes e demos públicas.
 - Streamlit ``app.py`` para uso interno (questionário completo, Gemini, fluxo analista).
 - Manter uma única fonte de verdade: ``laws/*.yaml`` + ``rules_engine.compute_scope``.
 

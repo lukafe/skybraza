@@ -17,7 +17,7 @@ D.2 Código
   - rules_engine.compute_scope() inclui meta["corpus_readiness"].
   - API POST /api/scope devolve meta.corpus_readiness e export_bundle (JSON pronto).
   - Streamlit (Dashboard): métricas de corpus + exportar pacote JSON.
-  - SPA web/: métricas de corpus + botão exportar JSON.
+  - SPA public/: métricas de corpus + botão exportar JSON.
 
 D.3 Pacote export_bundle
   - Versão de esquema: export_schema_version = "1".

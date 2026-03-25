@@ -1,12 +1,10 @@
 """
 API web para o questionário de escopo IN 701 (clientes).
 
-Executar a partir da raiz do projeto:
-  uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
-Abrir: http://127.0.0.1:8000
+Local (uvicorn):
+  uvicorn api.index:app --reload --host 0.0.0.0 --port 8000
 
-Opcional (rede interna / staging): variável de ambiente CERTIK_API_KEY — exige cabeçalho
-X-Certik-Api-Key em todos os pedidos /api/* exceto GET /api/health.
+Deploy Vercel: expõe `app` (FastAPI); estáticos em `public/` servidos pela CDN.
 """
 
 from __future__ import annotations
@@ -30,7 +28,8 @@ from pydantic import BaseModel, Field  # noqa: E402
 from questionnaire_loader import get_blocks  # noqa: E402
 from rules_engine import compute_scope, questions_by_block  # noqa: E402
 
-WEB_DIR = ROOT / "web"
+PUBLIC_DIR = ROOT / "public"
+STATIC_DIR = PUBLIC_DIR / "static"
 
 API_SCHEMA_VERSION = "2"
 
@@ -137,14 +136,15 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
     }
 
 
-if WEB_DIR.is_dir():
-    app.mount("/static", StaticFiles(directory=str(WEB_DIR)), name="static")
+# Em produção na Vercel, `/` e `/static/*` vêm da pasta `public/` (CDN).
+# Em local, servimos a mesma árvore para espelhar o deploy.
+if STATIC_DIR.is_dir():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
 @app.get("/")
 async def spa_index() -> FileResponse:
-    """Servido depois do mount /static para não sombrear ficheiros estáticos."""
-    index = WEB_DIR / "index.html"
+    index = PUBLIC_DIR / "index.html"
     if not index.is_file():
-        raise HTTPException(status_code=404, detail="Frontend não encontrado (web/index.html).")
+        raise HTTPException(status_code=404, detail="Frontend não encontrado (public/index.html).")
     return FileResponse(index, media_type="text/html; charset=utf-8")

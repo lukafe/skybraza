@@ -36,7 +36,7 @@ Implementação no código (Jornada 2)
 - `evidence_requests.py` — carrega YAML, aplica filtros, monta `journey_2`.
 - `rules_engine.compute_scope()` — acrescenta `meta["journey_2"]` para API, Streamlit e testes.
 - `api/main.py` — repassa `journey_2` no JSON de `POST /api/scope`.
-- `web/js/app.js` + `web/css/styles.css` — secção **Próximos passos** nos resultados.
+- `public/static/js/app.js` + `public/static/css/styles.css` — secção **Próximos passos** nos resultados.
 - `app.py` (Streamlit) — expander com SC / pentest / checklist por inciso.
 - `scripts/validar_projeto.py` — valida que todos os incisos da matriz têm entrada no YAML de evidências.
 - `CERTIK_PENTEST_FORM_URL` (env) — URL real do formulário de pentest (opcional).
