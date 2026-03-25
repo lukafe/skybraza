@@ -3,11 +3,11 @@ Arranque do servidor web (API + SPA)
 
 Na raiz do projeto Certik_VASP:
 
-  uvicorn api.index:app --reload --host 127.0.0.1 --port 8000
+  uvicorn main:app --reload --host 127.0.0.1 --port 8000
 
 Abrir no navegador: http://127.0.0.1:8000/
 
-Deploy Vercel: estáticos em public/; API em api/index.py (ver pyproject.toml [project.scripts]).
+Deploy Vercel: estáticos em public/; ASGI em main.py (pyproject [project.scripts] app = main:app). Compat: api.index reexporta app.
 Em local também: npx vercel dev
 
 Endpoints JSON:

@@ -4,6 +4,6 @@ version = "1.0.0"
 description = "IN 701 VASP scoping API + static SPA"
 requires-python = ">=3.11"
 
-# Vercel (FastAPI): módulo na raiz evita erro "could not import api/index.py"
+# Vercel FastAPI: main.py na raiz (documentado em vercel.com/docs/frameworks/backend/fastapi)
 [project.scripts]
-app = "index:app"
+app = "main:app"

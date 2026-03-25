@@ -1,4 +1,4 @@
-# Imports de api/index.py (topo): fastapi.*, pydantic.*
+# Imports de main.py (topo): fastapi.*, pydantic.*
 # Transitivos usados pelo motor (lazy): pandas, PyYAML, google-generativeai, tabulate
 fastapi>=0.109.0,<1
 starlette>=0.27.0,<1

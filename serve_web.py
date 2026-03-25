@@ -76,7 +76,7 @@ def main() -> None:
     threading.Thread(target=_open_later, args=(url,), daemon=True).start()
 
     uvicorn.run(
-        "api.index:app",
+        "main:app",
         host=host,
         port=port,
         reload=False,
