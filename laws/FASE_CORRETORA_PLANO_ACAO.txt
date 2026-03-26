@@ -1,0 +1,151 @@
+================================================================================
+PLANO DE AÇÃO — TRILHA «CORRETORA» (perfil operacional IN 701 / Res. 520)
+Projeto: CertiK VASP — escopo declarativo multi-trilha
+================================================================================
+Versão: 1 · Estado: planeamento (sem implementação obrigatória neste artefacto)
+
+--------------------------------------------------------------------------------
+0. Enquadramento normativo (revisão profunda — o que a IN 701 exige vs. o produto)
+--------------------------------------------------------------------------------
+
+0.1 Objeto da IN 701
+  - Certificação técnica de prestadoras de serviços de ativos virtuais (PSVAV) perante o BCB,
+    com foco nos requisitos do art. 4º da IN 701 e correlação com a Resolução BCB nº 520/2025
+    (e normas correlatas citadas na própria IN).
+  - A IN não cria, por si, três «licenças» distintas nomeadas «intermediária / custodiante /
+    corretora»; cria obrigações aplicáveis consoante os serviços efetivamente prestados.
+  - Consequência: as «trilhas» CertiK são **modelos de escopo para questionário e matriz**,
+    não substituem parecer jurídico nem a classificação supervisionada pelo BCB.
+
+0.2 Onde encaixa «corretora»
+  - No mercado brasileiro, «corretora» de ativos virtuais costuma evocar:
+      · intermediação de negócios (matching, livro de ordens, execução para cliente);
+      · frequentemente **sem** guarda de chaves (cliente retira para carteira própria) ou com
+        guarda **híbrida** (hot wallet / trânsito) — perfil diferente de **custodiante puro**.
+  - Sob o art. 4º IN 701, um perfil «corretora» tende a:
+      · acentuar **práticas de mercado, transparência, listagem/suspensão de ativos** (IX),
+        **conduta de mercado / abusos** (XIII), **interconectividade** com IF/pagamentos (V),
+        **controles internos e conflitos** (X), **ciber/PLD** (VI, VIII, XII), **transparência
+        ao cliente** (§ 1º I–III);
+      · tratar **I (a)(b), VII, XIV–XVII** como **condicionais** quando houver guarda, trânsito
+        institucional ou omnibus — em linha com a lógica já usada na trilha intermediária
+        (supressão do cluster de custódia quando o modelo declarado é exclusivamente não custodial).
+  - **Hipótese de pacote mínimo (rascunho para validação jurídica):**
+      · Semelhante ao da intermediária atual (VI_a, VI_b, VIII, X_a, X_b_i, XI, XII, XIII,
+        par1_I, par1_II, par1_III) **mais** reforço explícito em **V** se a corretora opera
+        conectividade sistémica típica de mesa/plataforma de negociação;
+      · **I_a, I_b, II, IV, IX_a, IX_b, X_b_ii, XV** e cluster VII/XIV/XVI/XVII **por gatilhos**
+        (custódia operacional, trânsito, fiat do cliente, listagem, staking §1º I(h), etc.).
+  - **Obrigatório:** validar este pacote com **compliance jurídico BCB** antes de fixar YAML
+    de produção (os obrigatórios fixos da trilha corretora não podem ser apenas «engenharia»).
+
+0.3 Res. 520 e corpus
+  - Manter mapeamento `refs_explicitas_na_in701` e `law_files` alinhados ao texto final PT-BR
+    publicado pelo BCB (dívida já registada nas matrizes existentes).
+  - A trilha corretora **reutiliza o mesmo conjunto de incisos** (grelha art. 4º + § 1º) salvo
+    decisão futura de omitir linhas impossíveis para um dado perfil (com suporte jurídico).
+
+--------------------------------------------------------------------------------
+1. Inspiração técnica: o que já existe (intermediária | custodiante)
+--------------------------------------------------------------------------------
+
+  - Matriz: `laws/COVERAGE_MATRIX.yaml` + `escopo_intermediario.obrigatorios`
+  - Matriz custodiante: `laws/tracks/custodiante/COVERAGE_MATRIX.yaml` + `escopo_custodiante`
+  - Questionário: `laws/questionnaire.yaml` vs `laws/tracks/custodiante/questionnaire.yaml`
+  - Motor: `matrix_loader`, `questionnaire_loader`, `rules_engine.compute_scope(..., track=...)`
+  - API: `GET /questions?track=`, `POST /scope` com `track`, `health.features`
+  - UI: SPA (`public/`), Streamlit (`app.py`), feature flags (`CERTIK_ENABLE_*`)
+  - Testes: alinhamento matriz↔pergunta na importação; `test_custodiante_scope.py`; `validar_projeto`
+    por `TRACK_IDS`.
+
+  A trilha **corretora** deve seguir o **mesmo padrão de pastas e contratos**, com IDs de
+  pergunta prefixados (ex.: `corr_*`) para não colidir com `P_*` nem `cust_*`.
+
+--------------------------------------------------------------------------------
+2. Fases de implementação (plano de ação)
+--------------------------------------------------------------------------------
+
+FASE A — Definição jurídica e de produto (pré-código)
+  - Workshop com jurídico/compliance: fechar lista **obrigatorios** da trilha corretora e
+    incisos **exclusivamente condicionais**.
+  - Decidir se a corretora «pura» sem custódia declara supressão do cluster VII/XIV/XVI/XVII
+    (reutilizar `suppress_custody_cluster_if_non_custodial` com `track=corretora` ou ramo
+    específico se as perguntas forem distintas).
+  - Decidir naming oficial na UI: «Corretora / mesa de negociação» vs «Execução e matching».
+  - Saída: ata + tabela Excel/YAML esboço `escopo_corretora.obrigatorios` aprovada internamente.
+
+FASE B — Artefactos de dados (paralelo à Fase 1 custodiante)
+  - Criar `laws/tracks/corretora/COVERAGE_MATRIX.yaml`:
+      · copiar grelha `incisos[]` e `ordem_exibicao` da intermediária (ou da raiz) para manter
+        os mesmos 26 ids;
+      · definir `meta.track: corretora`, `escopo_corretora.obrigatorios` (lista fechada);
+      · `nota_trilha` explicando premissas (ex.: «sem guarda de chaves de cliente por defeito»).
+  - Rodar ou estender `scripts/validate_custodiante_track.py` → script genérico
+    `scripts/validate_track_matrix.py <track>` (opcional).
+
+FASE C — Questionário corretora
+  - Criar `laws/tracks/corretora/questionnaire.yaml`:
+      · blocos alinhados ao negócio: execução/matching, liquidez e conectividade, listagem,
+        mercado/abusos, risco operacional, narrativa;
+      · IDs `corr_*`; `audit_only` para Jornada 2 (espelhar `diag` das outras trilhas com IDs
+        `corr_diag_*`);
+      · gatilhos validados contra a matriz da trilha (import-time check já existente).
+
+FASE D — Motor e loaders
+  - `matrix_loader`: incluir `corretora` em `TRACK_IDS`, paths, `_SCOPE_YAML_KEY_BY_TRACK` =
+    `escopo_corretora`.
+  - `questionnaire_loader`: path para `laws/tracks/corretora/questionnaire.yaml`.
+  - `scope_narrative`: textos «por quê» e blurbs para `corr_*`; reutilizar supressão de custódia
+    se aplicável.
+  - `bcb_hints_loader`: opcional secção `tracks.corretora` em `BCB_REPORT_HINTS.yaml` para
+    incisos onde o relatório ao BCB difere do tom «custodiante».
+
+FASE E — Jornada 2 e evidências
+  - `evidence_requests.build_journey_2_payload`: ramo `track == corretora` para IDs de diagnóstico
+    (`corr_diag_sc`, etc.) e heurísticas (ex.: staking → mesma lógica que outras trilhas).
+  - Garantir `AUDITOR_EVIDENCE_BY_INCISO.yaml` cobre todos os ids (já cobertos se a grelha for
+    idêntica).
+
+FASE F — API e feature flag
+  - `main.py`: `normalize_track` aceita `corretora`; `CERTIK_ENABLE_CORRETORA_TRACK` (default on);
+    `health.features.corretora_track`.
+  - Documentar em `laws/SERVIDOR_API.txt`.
+
+FASE G — SPA e Streamlit
+  - Terceiro botão «Corretora» (ou rótulo acordado); `sessionStorage` / `POST` com `track=corretora`.
+  - Streamlit: `selectbox` com três opções (respeitando flags).
+  - CSS: estado ativo para 3 vias.
+
+FASE H — Testes e validação
+  - `tests/test_corretora_scope.py`: mínimo obrigatório, escopo máximo, Jornada 2, notas heurísticas.
+  - `validar_projeto.py`: já itera `TRACK_IDS` — incluir corretora quando existir.
+  - `pytest` + `python scripts/validar_projeto.py` no CI.
+
+FASE I — Documentação e roteiro
+  - Atualizar `laws/ROTEIRO_FASES.txt`, `FASE_B_MODELO_DADOS.txt` (nota multi-trilha),
+    `FASE_2_PRODUTO.txt` se necessário.
+
+--------------------------------------------------------------------------------
+3. Riscos e mitigação
+--------------------------------------------------------------------------------
+
+  - **Risco normativo:** obrigatórios errados → mitigação: Fase A obrigatória e revisão periódica.
+  - **Risco de UX:** três trilhas confundem o utilizador → textos curtos na intro + tooltip
+    «quando escolher cada trilha».
+  - **Risco de manutenção:** três YAMLs divergem na grelha `incisos` → mitigação futura:
+    gerar `incisos[]` a partir de uma única fonte + overlays por trilha (fora do escopo mínimo).
+
+--------------------------------------------------------------------------------
+4. Critérios de aceitação (definição de pronto)
+--------------------------------------------------------------------------------
+
+  [ ] Matriz corretora com `validate_matrix_consistency` sem avisos
+  [ ] Questionário sem incisos inválidos na importação
+  [ ] API e SPA com `track=corretora` end-to-end
+  [ ] Feature flag documentada e testada (403 quando desligada)
+  [ ] `validar_projeto` e `pytest` verdes
+  [ ] Parecer jurídico interno arquivado para `escopo_corretora.obrigatorios`
+
+================================================================================
+Fim do plano — implementação apenas após conclusão mínima da Fase A
+================================================================================

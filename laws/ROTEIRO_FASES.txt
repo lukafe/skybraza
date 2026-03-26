@@ -37,4 +37,6 @@ Interfaces:
 
 API: laws/SERVIDOR_API.txt (schema, track, feature flag, CORS)
 
+  Trilha «corretora» (planeada): laws/FASE_CORRETORA_PLANO_ACAO.txt
+
 ================================================================================
