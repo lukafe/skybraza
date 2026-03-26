@@ -1,0 +1,275 @@
+# Questionário — trilha CUSTODIANTE (IN 701)
+# IDs com prefixo cust_ para não colidir com a trilha intermediária no mesmo runtime (Fase 2+).
+# Cada add_incisos / when_true deve existir em laws/tracks/custodiante/COVERAGE_MATRIX.yaml (incisos[].id)
+
+version: 1
+track: custodiante
+schema_version_questionnaire: 1
+
+blocks:
+  - id: diag
+    title: "Diagnóstico — serviços técnicos CertiK (Jornada 2)"
+    lead: >
+      Estas perguntas não alteram o escopo IN 701; preparam a Jornada 2 (smart contract audit, pentest,
+      checklist de evidências). Adequado também a custodiantes com contratos ou integrações on-chain.
+  - id: A
+    title: "Guarda, segregação e trânsito de ativos"
+    lead: "Chaves, omnibus, prova de reservas e contas fiduciárias do cliente."
+  - id: B
+    title: "Terceiros, infraestrutura e subcustódia"
+    lead: "Nuvem, fornecedores no exterior, subcustodiantes e serviços críticos."
+  - id: C
+    title: "Universo de ativos, produtos e integrações"
+    lead: "Listagem ao cliente, stablecoins, staking e conexões com IF/pagamentos."
+  - id: D
+    title: "Narrativa e transparência operacional"
+    lead: "Fluxo ponta a ponta e compromissos públicos de reservas."
+
+questions:
+  # ---------- Bloco diag ----------
+  - id: cust_diag_sc
+    block: diag
+    order: 1
+    type: yes_no
+    text: >
+      A instituição desenvolve, faz deploy ou contrata smart contracts próprios em produção
+      (vaults de custódia on-chain, lógica de permissões, bridges ou protocolos sob sua responsabilidade)?
+    justificativa: >
+      Jornada 2 — possível trilha de smart contract audit. Não altera incisos.
+    tags: [jornada2, smart_contract]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_diag_surface
+    block: diag
+    order: 2
+    type: yes_no
+    text: >
+      A instituição opera sistemas próprios expostos à internet (portal de cliente, API de custódia,
+      painel administrativo, webhooks) para clientes ou parceiros?
+    justificativa: >
+      Jornada 2 — superfície para pentest. Não altera incisos.
+    tags: [jornada2, pentest]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  # ---------- Bloco A ----------
+  - id: cust_A_transit
+    block: A
+    order: 10
+    type: yes_no
+    text: >
+      Além da guarda estática, os ativos dos clientes passam por carteiras de trânsito ou omnibus
+      sob controlo da instituição (ou de subcustodiante agindo em seu nome) antes do destino final?
+    justificativa: >
+      Reforça segregação e prova de reservas em movimento (I_a, I_b); XV já correlaciona a deveres do custodiante.
+    tags: [transito, segregacao]
+    when_true: [I_a, I_b, XV]
+    when_false: []
+
+  - id: cust_A_fiat
+    block: A
+    order: 20
+    type: yes_no
+    text: >
+      A instituição mantém contas de pagamento ou saldo em moeda fiduciária (ex.: BRL) em nome do cliente
+      vinculado à operação de custódia de ativos virtuais (pré-conversão, saque fiat, ou conta reserva)?
+    justificativa: >
+      Aciona condições dos arts. 69 e 85 da Res. 520 (inciso X (b) (ii)).
+    tags: [fiat, pagamento]
+    when_true: [X_b_ii]
+    when_false: []
+
+  - id: cust_A_model
+    block: A
+    order: 30
+    type: single_choice
+    text: >
+      Qual modelo descreve melhor quem pode iniciar ou autorizar movimentações on-chain dos ativos custodiados
+      na prática predominante?
+    justificativa: >
+      Qualifica subcustódia e terceirização. VII–XVII já são obrigatórios na trilha custodiante; II/III reforçam
+      terceiros e diligência no exterior.
+    tags: [custodia, modelo]
+    options:
+      - id: inst_operates
+        label: "A instituição ou operador designado movimenta em nome do cliente (hot, cold rotacionada, políticas internas)."
+        add_incisos: []
+      - id: mpc_mixed
+        label: "MPC ou multipartição: a instituição e terceiros detêm fragmentos ou papéis de controlo."
+        add_incisos: [II]
+      - id: full_subcustody
+        label: "Subcustódia integral por terceiro contratado (a instituição não detém chaves sozinha, mas responde perante o cliente)."
+        add_incisos: [II, III]
+
+  # ---------- Bloco B ----------
+  - id: cust_B_exterior
+    block: B
+    order: 10
+    type: yes_no
+    text: >
+      Fornecedores relevantes (subcustódia, nuvem, pagamentos, processamento) incluem entidade sediada no exterior
+      ou sem autorização direta do Banco Central do Brasil para atividade equivalente no País?
+    justificativa: >
+      Terceirização com exposição internacional; arts. 32–33, 83 e continuidade (II, III, IV).
+    tags: [terceiros, exterior]
+    when_true: [II, III, IV]
+    when_false: []
+
+  - id: cust_B_cloud
+    block: B
+    order: 20
+    type: yes_no
+    text: >
+      Ledger de saldos, cofre de chaves, HSM, ou sistemas críticos de custódia residem em nuvem ou datacenter
+      de terceiro, com contrato alinhado às exigências do BCB?
+    justificativa: >
+      Outsourcing de tecnologia e continuidade (II, IV).
+    tags: [nuvem, dados]
+    when_true: [II, IV]
+    when_false: []
+
+  - id: cust_B_more_foreign
+    block: B
+    order: 30
+    type: yes_no
+    text: >
+      Existem outros parceiros estrangeiros ou não autorizados pelo BCB em papéis relevantes além dos já cobertos
+      (ex.: KYC como serviço crítico, mensageria de assinaturas)?
+    justificativa: >
+      Reforça diligência sobre prestador no exterior (art. 83) — III.
+    tags: [terceiros, exterior]
+    when_true: [III]
+    when_false: []
+
+  - id: cust_B_tp
+    block: B
+    order: 40
+    type: multi_choice
+    text: "Selecione terceiros materialmente relevantes na operação de custódia:"
+    justificativa: >
+      Mapa de outsourcing; opções somam incisos já obrigatórios ou condicionais conforme caso.
+    tags: [terceiros, mapa]
+    options:
+      - id: subcustody
+        label: "Subcustodiante de criptoativos (cold, MPC, institucional)"
+        add_incisos: [II, III]
+      - id: cloud_infra
+        label: "Nuvem / hospedagem de sistemas críticos de custódia"
+        add_incisos: [II, IV]
+      - id: fiat_bank
+        label: "Instituição de pagamento ou banco para fiat (Pix, TED, contas)"
+        add_incisos: [II, V]
+      - id: kyc_vendor
+        label: "Fornecedor externo de KYC / PLD como serviço crítico"
+        add_incisos: [II, VI_a]
+
+  # ---------- Bloco C ----------
+  - id: cust_C_stable
+    block: C
+    order: 10
+    type: yes_no
+    text: >
+      A custódia inclui ativos com paridade ou referência explícita a moeda fiduciária (stablecoins,
+      tokenizado lastreado, etc.) expostos ao cliente?
+    justificativa: >
+      Seleção e divulgação de AV referenciados (IX (b), art. 65 Res. 520).
+    tags: [stablecoin, produto]
+    when_true: [IX_b]
+    when_false: []
+
+  - id: cust_C_staking
+    block: C
+    order: 20
+    type: yes_no
+    text: >
+      A instituição oferece staking, rendimento, travamento ou produto equivalente sobre ativos custodiados
+      (direto ou com parceiro)?
+    justificativa: >
+      § 1º (I) (h) e art. 71 Res. 520.
+    tags: [staking, rendimento]
+    when_true: [par1_I_h]
+    when_false: []
+
+  - id: cust_C_if_api
+    block: C
+    order: 30
+    type: yes_no
+    text: >
+      A instituição integra-se a instituições financeiras ou prestadores de pagamento via APIs/SDKs
+      (on/off-ramp, Open Finance, liquidação)?
+    justificativa: >
+      V é obrigatório na trilha; pergunta documenta intensidade para relatório (pode não alterar conjunto).
+    tags: [api, if]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_C_catalog
+    block: C
+    order: 40
+    type: single_choice
+    text: >
+      Como o cliente acessa o universo de ativos virtuais que podem ser custodiados?
+      (Distinto de usar internamente um ativo só para liquidação técnica sem catálogo ao cliente.)
+    justificativa: >
+      IX (a) quando há política de oferta/listagem/suspensão ao cliente; IX (b) acoplado a stablecoins em cust_C_stable.
+    tags: [listagem, catalogo]
+    options:
+      - id: closed_set
+        label: >
+          Conjunto fechado: o cliente não escolhe entre catálogo ampliável; apenas ativos/pares definidos contratualmente.
+        add_incisos: []
+      - id: wide_mirror
+        label: "Catálogo amplo espelhado de terceiros (subcustodiante ou parceiro), sem comitê próprio de listagem."
+        add_incisos: [IX_a]
+      - id: own_policy
+        label: "A instituição aplica critérios próprios para admitir, suspender ou retirar ativos custodiáveis."
+        add_incisos: [IX_a, IX_b]
+      - id: hybrid
+        label: "Híbrido: base de terceiros mais camada interna de aprovação de risco."
+        add_incisos: [IX_a, IX_b]
+
+  # ---------- Bloco D ----------
+  - id: cust_D_narr
+    block: D
+    order: 10
+    type: text_short
+    text: >
+      Descreva o fluxo: onboarding → depósito/guarda → autorização de movimentação → saque
+      (atores, sistemas e terceiros). Opcional, recomendado para o auditor.
+    justificativa: >
+      Contexto qualitativo; não altera gatilhos.
+    tags: [narrativa, fluxo]
+    max_length: 2500
+    placeholder: "Ex.: onboarding KYC; depósito para endereço nominativo; política de aprovação interna; saque para carteira do cliente…"
+
+  - id: cust_D_attestation
+    block: D
+    order: 20
+    type: yes_no
+    text: >
+      A instituição publica ou contrata auditoria/attestation de reservas (proof of reserves ou equivalente)
+      além dos controlos internos mínimos?
+    justificativa: >
+      I_b já é obrigatório; resposta Sim reforça narrativa de comprovação explícita ao mercado.
+    tags: [reservas, transparencia]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_D_surveillance
+    block: D
+    order: 30
+    type: yes_no
+    text: >
+      Existem processos documentados para monitorar abusos no âmbito dos serviços oferecidos ao cliente
+      (ex.: sinais de manipulação ligados a APIs ou operações assistidas)?
+    justificativa: >
+      XIII já é obrigatório; maturidade operacional para Jornada 2.
+    tags: [mercado, surveillance]
+    audit_only: true
+    when_true: []
+    when_false: []

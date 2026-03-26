@@ -1,0 +1,402 @@
+# Matriz de cobertura — trilha CUSTODIANTE (IN 701 art. 4º × corpus laws/)
+# Fase 1: artefacto paralelo à matriz raiz. Loaders multi-track na Fase 2.
+# Revisar obrigatórios com parecer jurídico antes de produção.
+
+meta:
+  track: custodiante
+  schema_version_matrix: 1
+  instrucao_normativa: "BCB IN 701 (certificação técnica — intermediação e custódia)"
+  resolucao_principal: "Resolução BCB nº 520, de 10 de novembro de 2025"
+  pasta_corpus: "laws/"
+  fase: "E"
+  nota_idioma: >
+    O ficheiro IN701-texto-integral.txt está em português.
+    Vários extratos Res520-* estão em inglês (trabalho preliminar); para produção,
+    substituir por trechos oficiais em PT do site do BCB.
+  nota_trilha: >
+    PSVAV com operação predominantemente de custódia: núcleo patrimonial e de guarda (I_a, I_b, VII–XVII),
+    traves PLD/ciber/risco/práticas (VI, VIII, X–XIII, §1º I–III), terceirização e continuidade (II, IV) e
+    governança art. 43 (V) como obrigatórios. III, IX_a, IX_b, X_b_ii e par1_I_h entram por perguntas
+    (laws/tracks/custodiante/questionnaire.yaml).
+
+# Obrigatórios fixos (trilha custodiante). Gatilhos: laws/tracks/custodiante/questionnaire.yaml
+escopo_custodiante:
+  obrigatorios:
+    - I_a
+    - I_b
+    - II
+    - IV
+    - V
+    - VI_a
+    - VI_b
+    - VII
+    - VIII
+    - X_a
+    - X_b_i
+    - XI
+    - XII
+    - XIII
+    - XIV
+    - XV
+    - XVI
+    - XVII
+    - par1_I
+    - par1_II
+    - par1_III
+
+# Ordem de exibição no parecer (art. 4º IN 701 + § 1º + subitem staking)
+ordem_exibicao:
+  - I_a
+  - I_b
+  - II
+  - III
+  - IV
+  - V
+  - VI_a
+  - VI_b
+  - VII
+  - VIII
+  - IX_a
+  - IX_b
+  - X_a
+  - X_b_i
+  - X_b_ii
+  - XI
+  - XII
+  - XIII
+  - XIV
+  - XV
+  - XVI
+  - XVII
+  - par1_I
+  - par1_II
+  - par1_III
+  - par1_I_h
+
+# Cada entrada: item do art. 4º IN 701 (e § 1º) mapeado para ficheiros e referências explícitas na própria IN
+incisos:
+  - id: I_a
+    rotulo_in701: "I (a)"
+    artigo_in701: "4º, I, alínea a"
+    resumo_certificacao_pt: >
+      Mecanismos e procedimentos que permitam demonstrar a efetiva segregação entre AV da prestadora
+      e AV de clientes/usuários.
+    refs_explicitas_na_in701:
+      - "Res. 520 — segregação patrimonial / carteiras (Cap. IX, Seção II — confirmar arts. na versão oficial)"
+    law_files: []
+    stub_file: "STUB_IN701-art4-I-a-b_seg-regiao-reservas.txt"
+    status: incompleto
+
+  - id: I_b
+    rotulo_in701: "I (b)"
+    artigo_in701: "4º, I, alínea b"
+    resumo_certificacao_pt: >
+      Mecanismos destinados à asseguração da prova de reservas dos ativos virtuais.
+    refs_explicitas_na_in701:
+      - "Res. 520 — prova de reservas / comprovação de saldos (localizar capítulo pertinente na Res. 520)"
+    law_files: []
+    stub_file: "STUB_IN701-art4-I-a-b_seg-regiao-reservas.txt"
+    status: incompleto
+
+  - id: II
+    rotulo_in701: "II"
+    artigo_in701: "4º, II"
+    resumo_certificacao_pt: >
+      Serviços relevantes contratados (Cap. IX, Seção IV, Res. 520), em especial arts. 32 e 33;
+      adequação da contratação de processamento, armazenamento e nuvem (regramento IF/autorizadas BCB).
+    refs_explicitas_na_in701:
+      - "Res. 520, Cap. IX, Seção IV"
+      - "Res. 520, arts. 32 e 33"
+    law_files:
+      - "Res520-art32-33_IN701-art4-II.txt"
+    stub_file: null
+    status: completo
+
+  - id: III
+    rotulo_in701: "III"
+    artigo_in701: "4º, III"
+    resumo_certificacao_pt: >
+      Capacidade técnica, operacional e legal das empresas contratadas para serviços relevantes;
+      prestador no exterior — art. 83 Res. 520.
+    refs_explicitas_na_in701:
+      - "Res. 520, art. 83"
+    law_files:
+      - "Res520-art83_IN701-art4-III.txt"
+    stub_file: null
+    status: completo
+
+  - id: IV
+    rotulo_in701: "IV"
+    artigo_in701: "4º, IV"
+    resumo_certificacao_pt: >
+      Planos de recuperação de posições e controlo de AV e recursos financeiros de clientes,
+      e planos da própria prestadora, em incidentes envolvendo instituição ou contratada.
+    refs_explicitas_na_in701:
+      - "Res. 520 — continuidade de negócios / recuperação (localizar arts. correlatos ao tema)"
+    law_files: []
+    stub_file: "STUB_IN701-art4-IV_planos-recuperacao.txt"
+    status: incompleto
+
+  - id: V
+    rotulo_in701: "V"
+    artigo_in701: "4º, V"
+    resumo_certificacao_pt: >
+      Políticas e procedimentos do art. 43 da Res. 520 e regramentos de governança das atividades.
+    refs_explicitas_na_in701:
+      - "Res. 520, art. 43"
+    law_files:
+      - "Res520-art43_IN701-art4-V.txt"
+    stub_file: null
+    status: completo
+
+  - id: VI_a
+    rotulo_in701: "VI (a)"
+    artigo_in701: "4º, VI, alínea a"
+    resumo_certificacao_pt: >
+      Processos voltados à legislação de PLD/FTP e combate à utilização criminosa do SFN.
+    refs_explicitas_na_in701:
+      - "Legislação PLD/FTP aplicável às PSVAV (citar na certificação conforme modelo da instituição)"
+    law_files: []
+    stub_file: "STUB_IN701-art4-VI-a_PLD-FTIP.txt"
+    status: incompleto
+
+  - id: VI_b
+    rotulo_in701: "VI (b)"
+    artigo_in701: "4º, VI, alínea b"
+    resumo_certificacao_pt: >
+      Segurança, resiliência e funcionamento do ambiente computacional; mínimo art. 48, I a VIII, Res. 520.
+    refs_explicitas_na_in701:
+      - "Res. 520, art. 48, incisos I a VIII"
+    law_files:
+      - "Res520-art48_IN701-art4-VI-b.txt"
+    stub_file: null
+    status: completo
+
+  - id: VII
+    rotulo_in701: "VII"
+    artigo_in701: "4º, VII"
+    resumo_certificacao_pt: >
+      Requisitos para políticas de guarda e proteção dos instrumentos de controle dos AV de clientes/usuários.
+    refs_explicitas_na_in701:
+      - "Res. 520 — políticas de chaves / instrumentos de controle (localizar capítulo e arts.)"
+    law_files: []
+    stub_file: "STUB_IN701-art4-VII_guarda-instrumentos-controle.txt"
+    status: incompleto
+
+  - id: VIII
+    rotulo_in701: "VIII"
+    artigo_in701: "4º, VIII"
+    resumo_certificacao_pt: >
+      Mecanismos de monitoramento contínuo de segurança institucional e avaliação de riscos
+      (detetar, prevenir, responder).
+    refs_explicitas_na_in701:
+      - "Res. 520 — monitoramento e gestão de riscos operacionais (localizar arts.)"
+    law_files: []
+    stub_file: "STUB_IN701-art4-VIII_monitoramento-seguranca-institucional.txt"
+    status: incompleto
+
+  - id: IX_a
+    rotulo_in701: "IX (a)"
+    artigo_in701: "4º, IX, alínea a"
+    resumo_certificacao_pt: >
+      Políticas de oferta, listagem, suspensão e deslistagem de ativos virtuais selecionados.
+    refs_explicitas_na_in701:
+      - "Res. 520 — listagem / oferta de AV (ex.: art. 64 e correlatos — confirmar na versão oficial)"
+    law_files: []
+    stub_file: "STUB_IN701-art4-IX-a_listagem-ativos.txt"
+    status: incompleto
+
+  - id: IX_b
+    rotulo_in701: "IX (b)"
+    artigo_in701: "4º, IX, alínea b"
+    resumo_certificacao_pt: >
+      Seleção de AV referenciados em moeda fiduciária — art. 65, I a IX, Res. 520.
+    refs_explicitas_na_in701:
+      - "Res. 520, art. 65, incisos I a IX"
+    law_files:
+      - "Res520-art65_IN701-art4-IX-b.txt"
+    stub_file: null
+    status: completo
+    notas: "Ficheiro contém duplicação do Art. 65 no final — limpar na Fase B."
+
+  - id: X_a
+    rotulo_in701: "X (a)"
+    artigo_in701: "4º, X, alínea a"
+    resumo_certificacao_pt: >
+      Controlo interno — segregação de funções da governança com conflito de interesses potencial ou efetivo.
+    refs_explicitas_na_in701:
+      - "Res. 520, art. 69 (contexto conflito de interesse)"
+    law_files:
+      - "Res520-art69-art85_IN701-art4-X-b.txt"
+    stub_file: null
+    status: parcial
+    notas: "Texto do inciso X (a) está ligado ao art. 69; ficheiro atual agrupa 69+85 para X (b). Considerar ficheiro dedicado X (a) na Fase B."
+
+  - id: X_b_i
+    rotulo_in701: "X (b) (i)"
+    artigo_in701: "4º, X, b, i"
+    resumo_certificacao_pt: >
+      Regulamentação de sistemas de controles internos das IF e demais instituições autorizadas BCB.
+    refs_explicitas_na_in701:
+      - "Regulamentação de controles internos (IF/autorizadas) — corpus externo à pasta"
+    law_files: []
+    stub_file: "STUB_IN701-art4-X-b_i_controles-internos-IF.txt"
+    status: incompleto
+
+  - id: X_b_ii
+    rotulo_in701: "X (b) (ii)"
+    artigo_in701: "4º, X, b, ii"
+    resumo_certificacao_pt: >
+      Condições dos arts. 69 (I a IX) e 85 (I a XX), Res. 520.
+    refs_explicitas_na_in701:
+      - "Res. 520, art. 69, incisos I a IX"
+      - "Res. 520, art. 85, incisos I a XX"
+    law_files:
+      - "Res520-art69-art85_IN701-art4-X-b.txt"
+    stub_file: null
+    status: parcial
+    notas: "Art. 85 no ficheiro pode estar truncado em relação a I–XX completo — validar na Fase B."
+
+  - id: XI
+    rotulo_in701: "XI"
+    artigo_in701: "4º, XI"
+    resumo_certificacao_pt: >
+      Estruturas de gestão de risco e capital, compliance e auditoria interna na forma aplicável a IF/autorizadas.
+    refs_explicitas_na_in701:
+      - "Regulamentação aplicável a IF e autorizadas BCB (corpus externo)"
+    law_files: []
+    stub_file: "STUB_IN701-art4-XI_risco-capital-compliance-auditoria.txt"
+    status: incompleto
+
+  - id: XII
+    rotulo_in701: "XII"
+    artigo_in701: "4º, XII"
+    resumo_certificacao_pt: >
+      Políticas de segurança cibernética e plano de ação e resposta a incidentes, na forma da regulamentação em vigor.
+    refs_explicitas_na_in701:
+      - "Regulamentação de cibersegurança e nuvem em vigor para instituições autorizadas BCB"
+    law_files:
+      - "BCB-resolucao-ciberseguranca-nuvem_PT_IN701-art4-XII.txt"
+    stub_file: null
+    status: completo
+    notas: "Resolução BCB (PT) sobre política de segurança cibernética e nuvem — alinhada ao inciso XII."
+
+  - id: XIII
+    rotulo_in701: "XIII"
+    artigo_in701: "4º, XIII"
+    resumo_certificacao_pt: >
+      Políticas e mecanismos para identificar, monitorar e evitar práticas espúrias no mercado de AV.
+    refs_explicitas_na_in701:
+      - "Res. 520 — conduta de mercado / práticas espúrias (localizar arts.)"
+    law_files: []
+    stub_file: "STUB_IN701-art4-XIII_praticas-espurias.txt"
+    status: incompleto
+
+  - id: XIV
+    rotulo_in701: "XIV"
+    artigo_in701: "4º, XIV"
+    resumo_certificacao_pt: >
+      Contrato de custódia de AV conforme arts. 73 (inc. VIII), 75 e 78, Res. 520.
+    refs_explicitas_na_in701:
+      - "Res. 520, art. 73, inciso VIII"
+      - "Res. 520, arts. 75 e 78"
+    law_files:
+      - "Res520-art73-75-78_IN701-art4-XIV.txt"
+    stub_file: null
+    status: parcial
+    notas: "Extrato atual começa no art. 73 inc. VIII — completar mínimos do contrato de custódia (art. 73 caput) na Fase B."
+
+  - id: XV
+    rotulo_in701: "XV"
+    artigo_in701: "4º, XV"
+    resumo_certificacao_pt: >
+      Medidas/planos do custodiante conforme art. 76, I a XII, Res. 520.
+    refs_explicitas_na_in701:
+      - "Res. 520, art. 76, incisos I a XII"
+    law_files:
+      - "Res520-art76_IN701-art4-XV.txt"
+    stub_file: null
+    status: completo
+
+  - id: XVI
+    rotulo_in701: "XVI"
+    artigo_in701: "4º, XVI"
+    resumo_certificacao_pt: >
+      Mecanismos de redundância para instrumentos de controle sobre os ativos virtuais.
+    refs_explicitas_na_in701:
+      - "Res. 520 — redundância (ligado ao art. 76, XII e §s — cruzar com inciso XVII)"
+    law_files: []
+    stub_file: "STUB_IN701-art4-XVI_redundancia-instrumentos.txt"
+    status: incompleto
+
+  - id: XVII
+    rotulo_in701: "XVII"
+    artigo_in701: "4º, XVII"
+    resumo_certificacao_pt: >
+      Procedimentos de recuperação do material sujeito à redundância (inciso XVI), para supervisão do BCB.
+    refs_explicitas_na_in701:
+      - "Res. 520 — recuperação para supervisão (cruzar com art. 76, XII e §s)"
+    law_files: []
+    stub_file: "STUB_IN701-art4-XVII_recuperacao-supervisao-BCB.txt"
+    status: incompleto
+
+  - id: par1_I
+    rotulo_in701: "§ 1º (I)"
+    artigo_in701: "4º, § 1º, I (a–h)"
+    resumo_certificacao_pt: >
+      Informações claras e precisas ao cliente/usuário (instituição, canais, contratadas, seguros art. 68,
+      direitos, custódia, ativo e DLT art. 67, staking art. 71).
+    refs_explicitas_na_in701:
+      - "Res. 520, art. 68"
+      - "Res. 520, art. 67, incisos I a VIII"
+      - "Res. 520, art. 71"
+    law_files: []
+    stub_file: "STUB_IN701-art4-par1-I_transparencia-cliente-a-h.txt"
+    status: incompleto
+
+  - id: par1_II
+    rotulo_in701: "§ 1º (II)"
+    artigo_in701: "4º, § 1º, II"
+    resumo_certificacao_pt: >
+      Conteúdos informativos sobre boas práticas e riscos nas operações no mercado de AV.
+    refs_explicitas_na_in701:
+      - "Res. 520 / IN 701 — divulgação ao cliente (localizar arts. de conduta e transparência)"
+    law_files: []
+    stub_file: "STUB_IN701-art4-par1-II_boas-praticas-riscos.txt"
+    status: incompleto
+
+  - id: par1_III
+    rotulo_in701: "§ 1º (III)"
+    artigo_in701: "4º, § 1º, III"
+    resumo_certificacao_pt: >
+      Relatório atualizado de posição em AV detida pelo cliente ou usuário.
+    refs_explicitas_na_in701:
+      - "Res. 520 — informações de posição / extratos (localizar arts.)"
+    law_files: []
+    stub_file: "STUB_IN701-art4-par1-III_relatorio-posicao.txt"
+    status: incompleto
+
+  # Subitem do § 1º (I) acionado por gatilho (staking) — certificação específica alínea (h)
+  - id: par1_I_h
+    rotulo_in701: "§ 1º (I) (h)"
+    artigo_in701: "4º, § 1º, I, alínea h"
+    resumo_certificacao_pt: >
+      Operações de staking de ativos virtuais — riscos e informações dispostos no art. 71, Res. 520.
+    refs_explicitas_na_in701:
+      - "Res. 520, art. 71"
+    law_files: []
+    stub_file: "STUB_IN701-art4-par1-I_transparencia-cliente-a-h.txt"
+    status: incompleto
+    notas: "Detalhe da alínea (h) dentro do bloco § 1º (I); gatilho P8 no escopo intermediário."
+
+resumo_contagem:
+  total_itens_matriz: 26
+  nota: >
+    Trilha custodiante: mesma grelha de 26 itens; 21 obrigatórios fixos em escopo_custodiante;
+    condicionais típicos III, IX_a, IX_b, X_b_ii, par1_I_h via questionário.
+  status_completo: 7
+  status_parcial: 3
+  status_incompleto: 16
+
+ficheiros_canonicos:
+  in701_integral: "IN701-texto-integral.txt"
