@@ -58,17 +58,27 @@ function apiBase() {
 }
 
 async function fetchJSON(path, options = {}) {
-  const res = await fetch(`${apiBase()}${path}`, {
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
-    ...options,
-  });
+  const diag = `Diagnóstico: GET ${apiBase()}/health`;
+  let res;
+  try {
+    res = await fetch(`${apiBase()}${path}`, {
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      ...options,
+    });
+  } catch (e) {
+    const base =
+      e instanceof TypeError
+        ? "Não foi possível contactar a API (rede, CORS ou servidor parado)."
+        : String(e?.message || e);
+    throw new Error(`${base} ${diag}.`);
+  }
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     const d = err.detail;
     let msg = res.statusText || "Erro na requisição";
     if (typeof d === "string") msg = d;
     else if (d && typeof d === "object" && typeof d.message === "string") msg = d.message;
-    throw new Error(msg);
+    throw new Error(`${msg} — ${diag}.`);
   }
   return res.json();
 }

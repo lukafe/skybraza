@@ -13,15 +13,47 @@ Em pyproject.toml, secção [project] deve incluir `dependencies` com fastapi et
 Ver: https://vercel.com/docs/functions/runtimes/python#dependencies
 Em local também: npx vercel dev
 
-Endpoints JSON:
-  GET  /api/health          — inclui api_schema_version
-  GET  /api/questions       — blocos e perguntas
-  POST /api/scope           — corpo: {"institution": "...", "answers": {...}}
+Estáticos: após editar public/, execute python scripts/sync_vercel_public.py e faça commit de vercel_public/
+(cópia usada pelo bundle Python na Vercel).
 
-Segurança opcional
-------------------
+Endpoints JSON (versão REST recomendada: /api/v1/*; /api/* espelha o mesmo)
+----------------------------------------------------------------------------
+  GET  /api/v1/health
+       — status, api_schema_version (atual: 3), api_rest_version, features.custodiante_track
+
+  GET  /api/v1/questions?track=intermediaria|custodiante
+       — blocos e perguntas da trilha; Cache-Control público (5 min)
+
+  POST /api/v1/scope
+       — corpo JSON:
+         {
+           "institution": "...",
+           "answers": { ... },
+           "track": "intermediaria"   // opcional; default intermediaria; ou "custodiante"
+         }
+       — resposta inclui track, incisos sujeitos / fora de escopo, resumo, corpus_readiness, journey_2
+
+Trilha custodiante (feature flag)
+---------------------------------
+  Por omissão a trilha custodiante está ativa.
+  Para desativar (API devolve 403 em track=custodiante):
+    CERTIK_ENABLE_CUSTODIANTE_TRACK=0   (ou false, no, off)
+
+CORS
+----
+  Por omissão: allow_origins = * (adequado a demos).
+  Produção: defina CORS_ALLOWED_ORIGINS com lista separada por vírgulas, ex.:
+    CORS_ALLOWED_ORIGINS=https://app.exemplo.com,https://www.exemplo.com
+
+Rate limit
+----------
+  Configurável por env (ver rate_limit.py). Em serverless o limite por IP pode ser pouco eficaz entre
+  invocações; para APIs expostas use CERTIK_API_KEY e/ou gateway à frente.
+
+Segurança opcional (API key)
+----------------------------
 Se definir a variável de ambiente CERTIK_API_KEY, todos os pedidos a /api/*
-exceto GET /api/health devem enviar o cabeçalho:
+exceto GET /api/health e GET /api/v1/health devem enviar o cabeçalho:
 
   X-Certik-Api-Key: <mesmo valor>
 

@@ -92,11 +92,24 @@ def evidence_inciso_keys_declared() -> frozenset[str]:
     return frozenset(str(k) for k in inc.keys())
 
 
-def missing_evidence_yaml_incisos() -> list[str]:
-    from matrix_loader import INCISOS_MATRIX
+def missing_evidence_yaml_incisos(track: str | None = None) -> list[str]:
+    """
+    Incisos da matriz (trilha dada ou todas as trilhas) sem bloco em AUDITOR_EVIDENCE_BY_INCISO.yaml.
+    Sem ``track``, verifica a união das matrizes de todas as trilhas conhecidas.
+    """
+    from matrix_loader import TRACK_IDS, build_incisos_matrix, normalize_track
 
     declared = evidence_inciso_keys_declared()
-    return sorted(k for k in INCISOS_MATRIX if k not in declared)
+    if track is not None:
+        t = normalize_track(track)
+        matrix_keys = set(build_incisos_matrix(t).keys())
+        return sorted(k for k in matrix_keys if k not in declared)
+    missing: set[str] = set()
+    for tr in sorted(TRACK_IDS):
+        for k in build_incisos_matrix(tr):
+            if k not in declared:
+                missing.add(k)
+    return sorted(missing)
 
 
 def build_journey_2_payload(answers: dict[str, Any], meta_scope: dict[str, Any]) -> dict[str, Any]:
@@ -115,17 +128,19 @@ def build_journey_2_payload(answers: dict[str, Any], meta_scope: dict[str, Any])
     if track == "custodiante":
         p_sc = bool(answers.get("cust_diag_sc"))
         p_surf = bool(answers.get("cust_diag_surface"))
-        p8 = bool(answers.get("cust_C_staking"))
+        p_staking = bool(answers.get("cust_C_staking"))
+        q_staking, q_sc = "cust_C_staking", "cust_diag_sc"
     else:
         p_sc = bool(answers.get("P_diag_sc"))
         p_surf = bool(answers.get("P_diag_surface"))
-        p8 = bool(answers.get("P8"))
+        p_staking = bool(answers.get("P8"))
+        q_staking, q_sc = "P8", "P_diag_sc"
 
     notas: list[str] = []
-    if p8 and not p_sc:
+    if p_staking and not p_sc:
         notas.append(
-            "A operação indica staking/rendimento (P8). Confirme se existem smart contracts próprios ou "
-            "white-label on-chain não refletidos na pergunta sobre contratos em produção."
+            f"A operação indica staking/rendimento ({q_staking}). Confirme se existem smart contracts próprios ou "
+            f"white-label on-chain não refletidos na pergunta correspondente ({q_sc})."
         )
 
     sc_block: dict[str, Any] = {

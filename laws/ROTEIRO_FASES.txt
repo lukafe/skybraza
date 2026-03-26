@@ -1,24 +1,28 @@
 ================================================================================
-ROTEIRO DE FASES — CertiK VASP · Escopo IN 701 (intermediária)
+ROTEIRO DE FASES — CertiK VASP · Escopo IN 701 (trilhas intermediária e custodiante)
 ================================================================================
-Ordem de execução e ficheiros de referência (estado: A–E concluídos no código).
+Ordem de execução e ficheiros de referência (estado: A–E concluídos no código;
+trilha custodiante em laws/tracks/custodiante/).
 
   Fase A — Inventário corpus laws/
     laws/FASE_A_INVENTARIO.txt
     COVERAGE_MATRIX.yaml (inventário + STUBs)
     scripts/migrate_laws_phase_a.py
 
-  Fase B — Modelo de dados da matriz normativa
+  Fase B — Modelo de dados da matriz normativa (por trilha)
     laws/FASE_B_MODELO_DADOS.txt
-    matrix_loader.py → INCISOS_MATRIX, MANDATORY_KEYS, ordem_exibicao, get_coverage_meta()
+    matrix_loader.py → build_incisos_matrix(track), build_mandatory_keys(track),
+    INCISOS_MATRIX / MANDATORY_KEYS (default intermediária), ordem_exibicao, get_coverage_meta(track)
+    Trilha custodiante: laws/tracks/custodiante/COVERAGE_MATRIX.yaml
 
   Fase C — Questionário declarativo e gatilhos por tipo de pergunta
-    laws/questionnaire.yaml
-    questionnaire_loader.py → resolve_triggers(), normalize_answers(), TRIGGER_MAP (só yes/no legado)
+    laws/questionnaire.yaml (intermediária)
+    laws/tracks/custodiante/questionnaire.yaml (custodiante)
+    questionnaire_loader.py → resolve_triggers(), normalize_answers(…, track), TRIGGER_MAP (legado default)
 
   Fase D — Prontidão do corpus no escopo + pacote JSON de exportação
     laws/FASE_D_PRONTIDAO_E_EXPORT.txt
-    readiness.py → corpus_readiness_for_scope(), build_export_package()
+    readiness.py → corpus_readiness_for_scope(active_keys, track), build_export_package()
 
   Fase E — Consolidação: documentação alinhada, validação automatizada, fecho de roteiro
     laws/FASE_E_CONSOLIDACAO.txt
@@ -26,9 +30,11 @@ Ordem de execução e ficheiros de referência (estado: A–E concluídos no có
     scripts/validar_projeto.py
 
 Motor unificado:
-  rules_engine.py → compute_scope() (matriz + questionário + readiness)
+  rules_engine.py → compute_scope(answers, track=…)
 
 Interfaces:
-  app.py (Streamlit) · main.py (FastAPI) + public/ · scripts/simular_empresa.py
+  app.py (Streamlit) · main.py (FastAPI) + public/ + vercel_public/ · scripts/simular_empresa.py
+
+API: laws/SERVIDOR_API.txt (schema, track, feature flag, CORS)
 
 ================================================================================

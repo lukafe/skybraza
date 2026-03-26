@@ -11,7 +11,8 @@ Após editar public/, execute: python scripts/sync_vercel_public.py
 
 Rotas versionadas: /api/v1/* (recomendado). Legado: /api/* (mesmo comportamento).
 
-Env: LOG_LEVEL, LOG_FORMAT=text|json, RATE_LIMIT_* (ver rate_limit.py), RATE_LIMIT_DISABLED=1
+Env: LOG_LEVEL, LOG_FORMAT=text|json, RATE_LIMIT_* (ver rate_limit.py), RATE_LIMIT_DISABLED=1,
+     CORS_ALLOWED_ORIGINS (lista CSV; omissão = *), CERTIK_ENABLE_CUSTODIANTE_TRACK
 
 Local: uvicorn main:app --reload --host 127.0.0.1 --port 8000
 """
@@ -65,12 +66,22 @@ API_REST_VERSION = "v1"
 
 logger = logging.getLogger(__name__)
 
+
+def _cors_allowed_origins() -> list[str]:
+    """Lido no arranque do processo; alterar CORS_ALLOWED_ORIGINS exige reiniciar o servidor."""
+    raw = (os.environ.get("CORS_ALLOWED_ORIGINS") or "").strip()
+    if not raw:
+        return ["*"]
+    parts = [x.strip() for x in raw.split(",") if x.strip()]
+    return parts if parts else ["*"]
+
+
 app = FastAPI(title="CertiK VASP Scoping API", version="1.0.0")
 
 # CORS por último no add_middleware = camada mais externa (primeira a ver o pedido).
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_cors_allowed_origins(),
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],

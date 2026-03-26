@@ -90,8 +90,8 @@ questions:
       Qual modelo descreve melhor quem pode iniciar ou autorizar movimentações on-chain dos ativos custodiados
       na prática predominante?
     justificativa: >
-      Qualifica subcustódia e terceirização. VII–XVII já são obrigatórios na trilha custodiante; II/III reforçam
-      terceiros e diligência no exterior.
+      Qualifica subcustódia e terceirização. VII–XVII já são obrigatórios na trilha custodiante; MPC implica
+      terceiros com papéis de controlo — aciona III (diligência) além de II (já obrigatório na matriz).
     tags: [custodia, modelo]
     options:
       - id: inst_operates
@@ -99,7 +99,7 @@ questions:
         add_incisos: []
       - id: mpc_mixed
         label: "MPC ou multipartição: a instituição e terceiros detêm fragmentos ou papéis de controlo."
-        add_incisos: [II]
+        add_incisos: [II, III]
       - id: full_subcustody
         label: "Subcustódia integral por terceiro contratado (a instituição não detém chaves sozinha, mas responde perante o cliente)."
         add_incisos: [II, III]

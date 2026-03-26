@@ -28,7 +28,13 @@ def main() -> int:
     try:
         from bcb_hints_loader import missing_explicit_bcb_hints
         from evidence_requests import missing_evidence_yaml_incisos
-        from matrix_loader import INCISOS_MATRIX, MANDATORY_KEYS, TRACK_IDS, get_coverage_meta
+        from matrix_loader import (
+            INCISOS_MATRIX,
+            TRACK_IDS,
+            build_incisos_matrix,
+            build_mandatory_keys,
+            get_coverage_meta,
+        )
         from questionnaire_loader import get_blocks, get_questions
         from readiness import build_export_package
         from rules_engine import compute_scope
@@ -54,14 +60,17 @@ def main() -> int:
     if meta_yaml.get("fase") != "E":
         errors.append(f"meta.fase esperado 'E', veio {meta_yaml.get('fase')!r}")
 
-    block_ids = {str(b["id"]) for b in get_blocks()}
-    for q in get_questions():
-        if str(q.get("block", "")) not in block_ids:
-            errors.append(f"Pergunta {q['id']}: bloco inválido")
+    for tr in sorted(TRACK_IDS):
+        block_ids = {str(b["id"]) for b in get_blocks(tr)}
+        for q in get_questions(tr):
+            if str(q.get("block", "")) not in block_ids:
+                errors.append(f"[{tr}] Pergunta {q['id']}: bloco inválido")
 
-    for k in MANDATORY_KEYS:
-        if k not in INCISOS_MATRIX:
-            errors.append(f"Obrigatório ausente na matriz: {k}")
+    for tr in sorted(TRACK_IDS):
+        mat = build_incisos_matrix(tr)
+        for k in build_mandatory_keys(tr):
+            if k not in mat:
+                errors.append(f"[{tr}] Obrigatório '{k}' ausente na matriz")
 
     for tr in sorted(TRACK_IDS):
         miss_hints = missing_explicit_bcb_hints(tr)
@@ -73,11 +82,17 @@ def main() -> int:
         errors.append(f"AUDITOR_EVIDENCE_BY_INCISO sem bloco para incisos: {', '.join(miss_ev)}")
 
     try:
-        df, meta = compute_scope(maximize_scope_answers())
-        if meta["active_keys"] != set(INCISOS_MATRIX.keys()):
-            errors.append("Escopo máximo não cobre todos os incisos da matriz")
-        pack = build_export_package(institution="validar_projeto", meta=meta, scope_items=df.to_dict(orient="records"))
-        json.dumps(pack, ensure_ascii=True)
+        for tr in sorted(TRACK_IDS):
+            mat_keys = set(build_incisos_matrix(tr).keys())
+            df, meta = compute_scope(maximize_scope_answers(tr), track=tr)
+            if meta["active_keys"] != mat_keys:
+                errors.append(f"[{tr}] Escopo máximo não cobre todos os incisos da matriz")
+            pack = build_export_package(
+                institution="validar_projeto",
+                meta=meta,
+                scope_items=df.to_dict(orient="records"),
+            )
+            json.dumps(pack, ensure_ascii=True)
     except Exception as e:
         errors.append(f"Motor/exportação: {e}")
 
@@ -88,8 +103,9 @@ def main() -> int:
         return 1
 
     print("CertiK VASP — validação OK (Fase E)")
-    print(f"  Incisos na matriz: {len(INCISOS_MATRIX)}")
-    print(f"  Perguntas: {len(get_questions())}")
+    print(f"  Incisos (intermediária): {len(INCISOS_MATRIX)}")
+    for tr in sorted(TRACK_IDS):
+        print(f"  Perguntas [{tr}]: {len(get_questions(tr))}")
     return 0
 
 
