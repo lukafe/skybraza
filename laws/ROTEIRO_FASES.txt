@@ -37,6 +37,8 @@ Interfaces:
 
 API: laws/SERVIDOR_API.txt (schema, track, feature flag, CORS)
 
-  Trilha «corretora» (planeada): laws/FASE_CORRETORA_PLANO_ACAO.txt
+  Trilha «corretora» (planeada): laws/FASE_CORRETORA_PLANO_ACAO.txt (v2 — ler Fase 0 antes do código)
+  Mapeamento IN↔Res.520 (Fase 0): laws/MAPEAMENTO_IN701_REF_RES520.txt
+  Texto integral Res. 520 (referência): RES520BCB.txt na raiz do repositório
 
 ================================================================================

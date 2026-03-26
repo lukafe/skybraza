@@ -1,0 +1,24 @@
+================================================================================
+MAPEAMENTO — IN 701 (art. 4º / § 1º) ↔ referências Res. 520 (contexto)
+================================================================================
+Estado: **esqueleto para Fase 0** — preencher com parecer jurídico / auditoria.
+Foco de certificação: **IN 701**. A Res. 520 cita-se para modalidade e obrigações gerais.
+
+Formato sugerido por linha (inciso = id da matriz YAML, ex. I_a, VII, par1_I_h):
+  inciso_id | artigo_IN701 | resumo requisito certificação | refs_Res520 (opcional) | notas
+
+--------------------------------------------------------------------------------
+Exemplo (ilustrativo, não substitui revisão jurídica)
+--------------------------------------------------------------------------------
+
+  I_a | 4º, I, a | Segregação AV prestadora vs clientes | arts. 29–30 (segregação AV) | …
+
+--------------------------------------------------------------------------------
+Tabela — a completar na Fase 0
+--------------------------------------------------------------------------------
+
+  (Adicionar uma linha por cada id em ordem_exibicao / incisos[] das matrizes.)
+
+================================================================================
+Referência integral Res. 520 no repositório: ../RES520BCB.txt (raiz do projeto)
+================================================================================
