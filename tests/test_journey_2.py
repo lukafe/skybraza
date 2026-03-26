@@ -54,3 +54,49 @@ def test_journey_2_max_scope_total_pedidos() -> None:
     _, meta = compute_scope(maximize_scope_answers())
     j2 = meta["journey_2"]
     assert j2["total_pedidos_documentacao"] >= len(meta["active_keys"]) * 2
+
+
+def test_journey_2_corretora_bloco_e_heuristicas() -> None:
+    ans = {
+        "corr_E_margin_product": True,
+        "corr_E_rfq_offering": True,
+        "corr_E_conflict_units": True,
+    }
+    _, meta = compute_scope(ans, track="corretora")
+    notas = meta["journey_2"].get("notas_heuristica") or []
+    joined = " ".join(notas)
+    assert "corr_E_margin_product" in joined
+    assert "corr_E_rfq_offering" in joined
+    assert "corr_E_conflict_units" in joined
+
+
+def test_journey_2_custodiante_bloco_e_heuristicas() -> None:
+    ans = {
+        "cust_E_treasury_split": True,
+        "cust_E_subcustody_art74": True,
+        "cust_E_stress_art82": True,
+        "cust_E_staking_bcb_notice": True,
+    }
+    _, meta = compute_scope(ans, track="custodiante")
+    notas = meta["journey_2"].get("notas_heuristica") or []
+    joined = " ".join(notas)
+    assert "cust_E_treasury_split" in joined
+    assert "cust_E_subcustody_art74" in joined
+    assert "cust_E_stress_art82" in joined
+    assert "cust_E_staking_bcb_notice" in joined
+
+
+def test_journey_2_intermediaria_bloco_e_heuristicas() -> None:
+    ans = {
+        "int_E_art69_controls": True,
+        "int_E_lp_art38": True,
+        "int_E_mm_art39": True,
+        "int_E_rfq_art67": True,
+    }
+    _, meta = compute_scope(ans, track="intermediaria")
+    notas = meta["journey_2"].get("notas_heuristica") or []
+    joined = " ".join(notas)
+    assert "int_E_art69_controls" in joined
+    assert "int_E_lp_art38" in joined
+    assert "int_E_mm_art39" in joined
+    assert "int_E_rfq_art67" in joined

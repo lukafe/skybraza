@@ -18,7 +18,7 @@ trilhas custodiante e corretora em laws/tracks/{custodiante,corretora}/).
 
   Fase C — Questionário declarativo e gatilhos por tipo de pergunta
     laws/questionnaire.yaml (intermediária)
-    laws/tracks/custodiante/questionnaire.yaml (custodiante)
+    laws/tracks/custodiante/questionnaire.yaml (custodiante; bloco E + mapeamento em tracks/custodiante/)
     laws/tracks/corretora/questionnaire.yaml (corretora)
     questionnaire_loader.py → resolve_triggers(), normalize_answers(…, track), TRIGGER_MAP (legado default)
 
@@ -40,6 +40,12 @@ Interfaces:
 API: laws/SERVIDOR_API.txt (schema, track, feature flag, CORS)
 
   Trilha corretora: laws/tracks/corretora/ (matriz + questionário); plano histórico: laws/FASE_CORRETORA_PLANO_ACAO.txt
+  Trilha custodiante — revisão de fluxo e mapeamento teórico: laws/tracks/custodiante/REVISAO_FLUXO_QUESTIONARIO_CUSTODIANTE.txt
+  Mapeamento teórico (custodiante): laws/tracks/custodiante/MAPEAMENTO_INFORMACOES_TEORICAS_CUSTODIANTE.txt
+  Mapeamento teórico de informações por inciso (corretora): laws/tracks/corretora/MAPEAMENTO_INFORMACOES_TEORICAS_CORRETORA.txt
+  Trilha intermediária — revisão de fluxo e mapeamento teórico: laws/REVISAO_FLUXO_QUESTIONARIO_INTERMEDIARIA.txt
+  Mapeamento teórico (intermediária): laws/MAPEAMENTO_INFORMACOES_TEORICAS_INTERMEDIARIA.txt
+  Bloco E (intermediária, audit_only): laws/questionnaire.yaml (IDs int_E_*); Jornada 2: evidence_requests._journey_2_intermediaria_e_notas
   Mapeamento IN↔Res.520 (Fase 0): laws/MAPEAMENTO_IN701_REF_RES520.txt
   Texto integral Res. 520 (referência): RES520BCB.txt na raiz do repositório
 

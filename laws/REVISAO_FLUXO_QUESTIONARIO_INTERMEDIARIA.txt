@@ -1,0 +1,47 @@
+================================================================================
+REVISÃO — Fluxo alinhado às trilhas CORRETORA e CUSTODIANTE (paridade de produto)
+Trilha INTERMEDIÁRIA (PSVAV modalidade I — Res. 520 art. 4º §1º I; arts. 6º–7º)
+Artefactos: laws/questionnaire.yaml + laws/COVERAGE_MATRIX.yaml (sem subpasta tracks/)
+================================================================================
+
+1. Referência de fluxo (corretora / custodiante)
+-----------------------------------------------
+· Mapeamento teórico + bloco **E** (14 perguntas audit_only) + `schema_version_questionnaire: 2`
+· Jornada 2: notas heurísticas em `evidence_requests` por prefixo de pergunta (`corr_E_*`, `cust_E_*`)
+
+2. Estado anterior (intermediária)
+----------------------------------
+· Blocos A–D + diag; **17** perguntas (P_*); sem `schema_version_questionnaire` explícito no YAML raiz
+· **Obrigatórios fixos menores** que custodiante/corretora (`escopo_intermediario`); incisos I–V, VII, IX, X_b_ii,
+  par1_I_h sob **gatilhos** (P1, P2, P_arch, P_list, etc.)
+· **suppress_custody_cluster_if_non_custodial**: modelo exclusivamente não custodial (P_arch client_only sem
+  custódia institucional em P_tp) retira VII, XIV, XVI, XVII do escopo calculado — premissa própria desta trilha
+
+3. Alterações nesta entrega
+----------------------------
+[x] laws/MAPEAMENTO_INFORMACOES_TEORICAS_INTERMEDIARIA.txt
+[x] laws/REVISAO_FLUXO_QUESTIONARIO_INTERMEDIARIA.txt (este ficheiro)
+[x] questionnaire.yaml — `track: intermediaria`, `schema_version_questionnaire: 2`, bloco **E**, 14× `int_E_*`
+[x] evidence_requests — `_journey_2_intermediaria_e_notas`
+[x] teste em tests/test_journey_2.py
+[x] laws/ROTEIRO_FASES.txt — referência ao mapeamento intermediário
+
+4. Revisão das perguntas existentes (A–D)
+------------------------------------------
+[x] IDs P_* e gatilhos mantidos; bloco E usa prefixo **int_E_*** para não colidir com P_
+[x] Novas perguntas são **audit_only** — não alteram a lógica de gatilhos nem a supressão de custódia
+
+5. Conteúdo do bloco E (intermediária)
+--------------------------------------
+Foco em **intermediação** (art. 7º), **conflitos** (art. 69), **conduta de mercado** (art. 70), **listagem** (64),
+**RFQ/livro** (67), **liquidez/formador** (38–39), continuidade e PLD — espelhando a corretora onde faz sentido,
+com notas à **variabilidade** do perfil (custodial vs não custodial).
+
+6. Pendências
+-------------
+[ ] Parecer jurídico sobre mínimo fixo intermediário vs IN 701
+[ ] IN 701 integral em laws/ para confronto literal
+
+================================================================================
+Fim — intermediária
+================================================================================

@@ -4,7 +4,7 @@
 
 version: 1
 track: corretora
-schema_version_questionnaire: 1
+schema_version_questionnaire: 2
 
 blocks:
   - id: diag
@@ -24,6 +24,11 @@ blocks:
   - id: D
     title: "Narrativa e transparência operacional"
     lead: "Fluxo ponta a ponta e compromissos públicos de reservas."
+  - id: E
+    title: "Corretora — governança, continuidade e camada de intermediação"
+    lead: >
+      Res. 520 art. 10 (intermediação e custódia) e art. 85 (mitigação de conflitos na cumulação).
+      Perguntas de maturidade para relatório; a maioria não altera incisos (já obrigatórios na trilha).
 
 questions:
   # ---------- Bloco diag ----------
@@ -270,6 +275,203 @@ questions:
     justificativa: >
       XIII já é obrigatório; maturidade operacional para Jornada 2.
     tags: [mercado, surveillance]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  # ---------- Bloco E (corretora — profundidade pós-mapeamento teórico) ----------
+  - id: corr_E_conflict_units
+    block: E
+    order: 10
+    type: yes_no
+    text: >
+      Existem unidades ou linhas de reporte distintas entre a operação de intermediação/negociação (mesa, RFQ, OTC)
+      e a operação de custódia/guarda de AV, com regras escritas para reduzir conflito de interesses (Res. 520 art. 85)?
+    justificativa: >
+      Art. 85, I — separação explícita entre intermediação e custódia; reforça X (a) e incisos de controlo interno.
+    tags: [corretora, conflito, art85]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: corr_E_conflict_monitor
+    block: E
+    order: 20
+    type: yes_no
+    text: >
+      Existe monitoramento independente (2ª linha, compliance ou auditoria) sobre conflitos entre mesa/execução
+      e custódia, com registo de achados e plano de remediação?
+    justificativa: >
+      Art. 85, II — monitoramento independente da conformidade operacional em conflitos potenciais.
+    tags: [corretora, conflito, art85]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: corr_E_conflict_external_review
+    block: E
+    order: 30
+    type: yes_no
+    text: >
+      Nos últimos dois anos, houve revisão ou avaliação por entidade qualificada independente sobre estrutura
+      e mitigação de conflitos (intermediação + custódia)?
+    justificativa: >
+      Art. 85, IV — verificação bienal por entidade independente (quando aplicável à operação).
+    tags: [corretora, conflito, art85]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: corr_E_bcp_tested
+    block: E
+    order: 40
+    type: yes_no
+    text: >
+      Nos últimos 24 meses, a instituição executou teste ou exercício documentado de continuidade (BCP/DR)
+      que cubra falha de custodiante/subcustodiante, nuvem crítica ou indisponibilidade de chaves?
+    justificativa: >
+      IN 701 IV; Res. 520 art. 34, II e art. 43, IV e §4º — planos de recuperação e prazos de reinício.
+    tags: [continuidade, BCP]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: corr_E_seg_policy_patrimonial
+    block: E
+    order: 50
+    type: yes_no
+    text: >
+      Existe política documentada e aprovada que descreva a segregação patrimonial dos AV dos clientes face aos AV
+      próprios (carteiras, omnibus, prova de reservas, exceções legais), alinhada ao Cap. IX da Res. 520?
+    justificativa: >
+      Arts. 29–30 Res. 520; reforça evidência para I (a) e I (b) na prática documental.
+    tags: [segregacao, politica]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: corr_E_por_client_facing
+    block: E
+    order: 60
+    type: yes_no
+    text: >
+      A instituição divulga ao cliente ou ao público (site, app, relatório) demonstrações ou attestations de reservas
+      / reconciliação de saldos com periodicidade definida?
+    justificativa: >
+      I (b) já obrigatório; documenta maturidade de transparência além do mínimo interno.
+    tags: [prova_reservas, transparencia]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: corr_E_fgc_disclosure
+    block: E
+    order: 70
+    type: yes_no
+    text: >
+      Nas jornadas de oferta e contratação, o cliente é informado de forma explícita sobre a ausência de cobertura
+      FGC/FGCoop (e fundos análogos, se aplicável) para os AV ofertados?
+    justificativa: >
+      Res. 520 art. 68; alinha disclosure ao § 1º (I) IN 701 e transparência ao investidor.
+    tags: [disclosure, FGC, par1_I]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: corr_E_position_report_contract
+    block: E
+    order: 80
+    type: yes_no
+    text: >
+      O contrato ou termos regulamentam frequência, canal e conteúdo mínimo do relatório de posição em AV do cliente
+      (extrato), incluindo após movimentações relevantes?
+    justificativa: >
+      § 1º (III) IN 701; Res. 520 art. 79 — relatório tempestivo e fiel à posição interna.
+    tags: [extrato, par1_III]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: corr_E_sanctions_workflow
+    block: E
+    order: 90
+    type: yes_no
+    text: >
+      O fluxo operacional inclui triagem de endereços de carteira e partes contra listas de sanções / restritivas,
+      com registo de exceções tratadas?
+    justificativa: >
+      Res. 520 art. 34, III e art. 43 §2º V — integração a PLD e serviços relevantes.
+    tags: [PLD, sancoes, terceiros]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: corr_E_pld_retention
+    block: E
+    order: 100
+    type: yes_no
+    text: >
+      Registos de operações e diligências PLD (incl. identificação e monitoramento) são mantidos pelo prazo mínimo
+      legal aplicável (referência: 5 anos na Res. 520 art. 45, II, onde couber)?
+    justificativa: >
+      VI (a) IN 701; prazo de guarda para supervisão e órgãos competentes.
+    tags: [PLD, retencao]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: corr_E_liquidity_provider_contract
+    block: E
+    order: 110
+    type: yes_no
+    text: >
+      A instituição contrata provedor de liquidez para o ambiente de negociação (formação de preço, cotações),
+      com contrato que preveja modelo de negócio, liquidação e transferência de custódia conforme Res. 520?
+    justificativa: >
+      Art. 38 Res. 520; documenta cadeia de intermediação além da custódia.
+    tags: [intermediacao, liquidez, art38]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: corr_E_market_maker_contract
+    block: E
+    order: 120
+    type: yes_no
+    text: >
+      A instituição contrata formador de mercado para o seu book ou ambiente de negociação, com parâmetros mínimos
+      de atuação contratuais (frequência, spreads, equidade entre participantes)?
+    justificativa: >
+      Art. 39 Res. 520; relevante para conflito e conduta de mercado (XIII, 69, 70).
+    tags: [intermediacao, formador, art39]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: corr_E_margin_product
+    block: E
+    order: 130
+    type: yes_no
+    text: >
+      A instituição oferece ou planeja oferecer financiamento para compra de AV (conta margem / alavancagem ao retalho),
+      sujeito a limites e elegibilidade da Res. 520 (art. 72 e vedações do art. 12)?
+    justificativa: >
+      Art. 72 — apenas para perfis institucionais elegíveis; documentar se o produto existe para auditor evitar incumprimento.
+    tags: [margem, art72, risco]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: corr_E_rfq_offering
+    block: E
+    order: 140
+    type: yes_no
+    text: >
+      Além de livro de ordens ou matching tradicional, a instituição oferece negociação por cotação (RFQ / request for quote)
+      a clientes, com disclosure das condições exigidas pela Res. 520 (art. 67, §6º)?
+    justificativa: >
+      Transparência de preço e contraparte na intermediação; liga a § 1º (I) e art. 67.
+    tags: [RFQ, intermediacao, art67]
     audit_only: true
     when_true: []
     when_false: []

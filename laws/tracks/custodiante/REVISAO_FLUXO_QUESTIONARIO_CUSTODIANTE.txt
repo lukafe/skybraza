@@ -1,0 +1,44 @@
+================================================================================
+REVISÃO — Fluxo alinhado à trilha CORRETORA (paridade de produto)
+Trilha CUSTODIANTE (PSVAV modalidade II — Res. 520 art. 4º §1º II; arts. 8º–9º)
+================================================================================
+
+1. O que foi feito na corretora (referência)
+-------------------------------------------
+· Mapeamento teórico por inciso IN 701 × Res. 520: MAPEAMENTO_INFORMACOES_TEORICAS_CORRETORA.txt
+· Questionário: bloco **E** (schema_version_questionnaire 2), 14 perguntas audit_only corr_E_*
+· Jornada 2: notas heurísticas em evidence_requests._journey_2_corretora_e_notas
+· Testes: test_journey_2_corretora_bloco_e_heuristicas
+
+2. Estado anterior desta trilha (custodiante)
+---------------------------------------------
+· Blocos A–D + diag, **16** perguntas cust_*, schema_version_questionnaire **1**
+· Mesma grelha de 26 incisos e mesmo núcleo obrigatório que corretora na matriz YAML
+· Diferença **normativa de negócio**: objeto social **custódia** (art. 8º–9º), não intermediação+custódia
+  conjunta (art. 10). O bloco E da corretora (mesa, art. 85, RFQ, formador, liquidez, margem) **não** se
+  aplica literalmente; substitui-se por foco em **subcustódia (art. 74)**, **stress (art. 82)**,
+  **vedações patrimoniais (arts. 28–31)**, **comunicação staking ao BCB (art. 82 §5º)** e **registos de
+  instruções/eventos (art. 9º)**.
+
+3. Alterações nesta entrega (custodiante)
+-----------------------------------------
+[x] MAPEAMENTO_INFORMACOES_TEORICAS_CUSTODIANTE.txt — mapa teórico específico modalidade custódia
+[x] questionnaire.yaml — bloco **E**, 14× cust_E_*, schema_version_questionnaire **2**
+[x] evidence_requests — _journey_2_custodiante_e_notas + chamada em build_journey_2_payload
+[x] Teste journey_2 para heurísticas custodiante
+[x] ROTEIRO_FASES — linha de referência ao mapeamento custodiante
+
+4. Checklist de revisão das perguntas (A–D inalteradas neste passo)
+-------------------------------------------------------------------
+[x] Gatilhos when_true / add_incisos mantêm-se válidos face à matriz custodiante
+[x] Novos IDs cust_E_* não colidem com intermediária (prefixo cust_)
+[x] Perguntas E são audit_only — não alteram conjunto de incisos (núcleo já fixo na trilha)
+
+5. Pendências jurídicas / conteúdo (iguais às outras trilhas)
+-------------------------------------------------------------
+[ ] Parecer sobre lista fechada de obrigatórios face à IN 701
+[ ] IN 701 texto integral em laws/ para conferência literal
+
+================================================================================
+Fim da revisão de fluxo — custodiante
+================================================================================

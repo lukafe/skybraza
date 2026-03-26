@@ -1,0 +1,42 @@
+================================================================================
+MAPEAMENTO TEÓRICO — INFORMAÇÕES A CARACTERIZAR (TRILHA INTERMEDIÁRIA)
+PSVAV modalidade I — Res. 520 art. 4º §1º I; objeto: **intermediação** (arts. 6º–7º)
+Grelha IN 701: **26 itens** (mesma matriz `laws/COVERAGE_MATRIX.yaml`); **mínimo fixo** menor em `escopo_intermediario`
+================================================================================
+Versão: 1 · Complementa REVISAO_FLUXO_QUESTIONARIO_INTERMEDIARIA.txt
+
+DIFERENÇA ESTRUTURAL FACE ÀS OUTRAS TRILHAS
+------------------------------------------
+· **Menos obrigatórios fixos** na YAML: I–V, VII, IX, X_b_ii, par1_I_h e cluster de custódia entram sob **respostas**.
+· **Supressão declarativa**: se o cliente declara modelo **não custodial** (P_arch `client_only` e sem custódia
+  institucional em P_tp), o motor retira **VII, XIV, XVI, XVII** — coerente com ausência de guarda operacional da VASP,
+  sujeito a validação jurídica caso a caso.
+
+DOMÍNIOS PRIORITÁRIOS (Res. 520 — intermediária)
+-------------------------------------------------
+1) **Arts. 6º–7º** — objeto e atividades de intermediação (negociação, carteiras administradas, staking na intermediária
+   quando permitido, câmbio, etc.); **§1º** papéis adicionais (ME, PL, formador, serviços em DLT).
+2) **Arts. 64–67** — elegibilidade e divulgação de AV ofertados; **RFQ** (67 §6º); livro de ordens (67 §4º).
+3) **Arts. 38–39** — contratos com provedor de liquidez e formador de mercado.
+4) **Arts. 69–70** — mitigação de **conflito de interesses** e práticas espúrias (ligação XIII IN 701).
+5) **Arts. 28–31, 73** — quando há **custódia operacional** ou trânsito (P1, P2, P_arch) — sobreposição parcial com
+   trilha custodiante na prática.
+6) **Arts. 32–34, 44–47, 43, 48** — terceiros relevantes, PLD, políticas BCB, segurança computacional (como nas outras trilhas).
+
+INCISOS IN 701 TÍPICOS «INTERMEDIAÇÃO»
+--------------------------------------
+· **IX (a)(b)** — listagem e stablecoins (P_list, P7).
+· **X (a)** — conflito; **69** Res. 520.
+· **X (b)(ii)** — fiat do cliente (P3).
+· **I (a)(b), XV** — trânsito/reservas (P2, P_reserves).
+· **VII, XIV, XVI, XVII** — só com custódia declarada (P1, P_arch, P_tp custody_inst) ou suprimidos se não custodial.
+· **§1º (I)–(III), par1_I_h** — disclosure, extrato, staking (P8, contratos).
+
+IMPLEMENTAÇÃO
+-------------
+· Bloco **E** em `questionnaire.yaml`: `int_E_*`, `schema_version_questionnaire: 2`, perguntas **audit_only**.
+· Jornada 2: `_journey_2_intermediaria_e_notas` em `evidence_requests.py`.
+
+================================================================================
+Fim — revisão jurídica recomendada
+================================================================================

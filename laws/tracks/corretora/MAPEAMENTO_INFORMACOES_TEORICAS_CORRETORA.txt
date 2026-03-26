@@ -1,0 +1,448 @@
+================================================================================
+MAPEAMENTO TEÓRICO — INFORMAÇÕES QUE A DELIMITAÇÃO / AUDITORIA PRECISA CONHECER
+Trilha CORRETORA (PSVAV modalidade III — Res. 520 art. 4º §1º III e art. 10)
+Base normativa cruzada: IN BCB nº 701 (art. 4º e §1º — itens de certificação) × Res. 520/2025 × remissões
+================================================================================
+Versão: 1 · Uso: planeamento de questionário e evidências (não substitui parecer jurídico)
+
+AVISO
+-----
+Este ficheiro organiza, por inciso da IN 701, **o que seria necessário caracterizar** na
+instituição (factos, políticas, sistemas, contratos, registos) para **sustentar** o escopo de
+certificação técnica. A **obrigatoriedade** concreta de cada item na matriz CertiK segue
+`COVERAGE_MATRIX.yaml` (21 fixos + condicionais). Texto da Res. 520 citado a partir de
+`RES520BCB.txt` (raiz do projeto). A IN 701 integral deverá constar em `laws/` quando
+disponível para confronto literal.
+
+FONTES E CRUZAMENTOS GERAIS
+---------------------------
+· **Lei 14.478/2022** — conceito de ativo virtual (art. 3º); regime geral citado na Res. 520.
+· **Lei 4.595/1964** — competências CMN/BCB (preâmbulo Res. 520).
+· **Lei 12.865/2013** — arranjo de pagamentos (preâmbulo).
+· **Decreto 11.563/2023** — ordenamento (preâmbulo).
+· **Res. 520 Cap. IV** — modalidades: intermediária (arts. 6º–7º), custodiante (8º–9º),
+  **corretora (art. 10)**: objeto social = **intermediação e custódia** conjuntas.
+· **Res. 520 art. 87** — PSVAV observam regulamentação de IF e demais autorizadas BCB,
+  **na medida aplicável** (Cosif, prudencial, etc.).
+· **Res. 520 Cap. IX** — separação patrimonial (arts. 28–31), contratação relevante (32–42),
+  governança documental (43), PLD/monitoramento (44–47), segurança computacional (48+),
+  informação a clientes (60–63), listagem (64–67), stablecoins (65), staking (71),
+  contrato de custódia (73), política de custódia (75), deveres custodiante (76–82),
+  custódia exterior (83–84), **conflitos intermediação+custódia (85)** — **especialmente
+  pertinente à corretora**.
+· **Regulamentação externa à pasta** (citada na matriz IN 701): normas de **controles
+  internos** e **cibersegurança/nuvem** para IF/autorizadas BCB; **PLD/FT/PF** (Lei 9.613,
+  12.683, Cofre, circulares BCB conforme modelo da instituição); **LGPD** onde couber.
+
+LEGENDA DE APLICABILIDADE NA MATRIZ CERTIK (trilha corretora)
+-------------------------------------------------------------
+· **[O]** — obrigatório fixo em `escopo_corretora.obrigatorios` (21 incisos).
+· **[C]** — típico condicional por questionário (III, IX_a, IX_b, X_b_ii, par1_I_h); pode
+  entrar no escopo com respostas ou outros gatilhos.
+· **[G]** — na grelha de 26 itens; sempre avaliar se resposta ou serviço efetivo aciona.
+
+-------------------------------------------------------------------------------
+1. INCISO I (a) — IN 701 art. 4º, I, al. a [O]
+   Certificação (resumo matriz): segregação efetiva entre AV da prestadora e AV de clientes.
+-------------------------------------------------------------------------------
+Referências explícitas na matriz: Res. 520 — segregação patrimonial / carteiras (Cap. IX).
+
+**Res. 520 (texto integral):**
+· **Arts. 28–31** — segregação de **recursos financeiros** (contas individualizadas; regras
+  de oferta BaaS) e de **ativos virtuais** (art. 29); **política documentada** de segregação
+  AV (art. 30: carteiras distintas, **prova de reserva**, auditoria independente bienal,
+  transferência em descontinuidade, 5% omnibus próprio §2º–3º, responsável pela separação §5º);
+· **Art. 31** — vedação de uso de AV de clientes para operações próprias (exceções staking etc.).
+
+**Informações teóricas a mapear na instituição (checklist cognitivo):**
+· Estrutura de **carteiras** (própria vs clientes): endereços, etiquetagem, omnibus vs nominativo.
+· **Política escrita** de segregação patrimonial (art. 30) — conteúdo mínimo legal vs implementação.
+· Fluxo de **prova de reservas** (método, frequência, quem assina, publicação se houver).
+· **Auditoria independente** bienal (âmbito, último relatório, achados).
+· Cenários de **descontinuidade** e transferência de AV a outro custodiante ou cliente (art. 30, IV).
+· Se aplica **§ 2º–3º art. 30** (AV institucional em carteira de cliente até 5% — condições).
+· Responsável formal (diretor/admin) pela separação patrimonial (art. 30 §5º).
+· Para **corretora**: como **mesa/negociação** e **guarda** coexistem sem mistura patrimonial
+  (cruzamento com art. 85 — conflito intermediação/custódia).
+
+-------------------------------------------------------------------------------
+2. INCISO I (b) — IN 701 art. 4º, I, al. b [O]
+   Certificação: mecanismos de **prova de reservas** dos AV.
+-------------------------------------------------------------------------------
+Referências: Res. 520 — comprovação de saldos; **definição art. 2º, XIII** (prova de reservas).
+
+**Informações teóricas:**
+· Definição operacional de **prova de reservas** adotada (on-chain, auditor, agregadores).
+· Processo de **reconciliação** saldo interno × ledger × custódia de terceiros.
+· Documentação de **provas** entregues a supervisão / mercado (datas, âmbito).
+· Relação com **art. 30, II** (métodos de prova de reserva na política de segregação).
+· Evidências de **revisões** e falhas históricas corrigidas.
+
+-------------------------------------------------------------------------------
+3. INCISO II — IN 701 art. 4º, II [O]
+   Certificação: serviços relevantes contratados (Cap. IX, Seção IV); arts. 32 e 33; nuvem/IF.
+-------------------------------------------------------------------------------
+**Res. 520:** **arts. 32–42** (serviços relevantes); **art. 33** enumera exemplos (custódia,
+liquidez, formador de mercado, moeda eletrônica, conta, **tecnologia** §1º V–VI); **art. 34**
+(diligência pré-contratual, planos de recuperação, controles sanções, BaaS, transparência);
+**arts. 35–36** responsabilidade da contratante; **37–42** cláusulas, provedores liquidez,
+formadores, acesso BCB.
+
+**Informações teóricas:**
+· **Inventário** de prestadores **relevantes** (nome, serviço, criticidade, país).
+· Processo de **due diligence** pré-contratação (art. 34, I).
+· **Planos de recuperação** de posições e controlos de AV e RF de clientes se incidente na
+  contratada (art. 34, II) e alinhamento com **plano de resposta a incidentes** cibernéticos.
+· **Monitoramento** de listas de sanções / endereços (art. 34, III).
+· Contratos com **cláusulas** arts. 37, 40 (acesso BCB); **art. 41** informação a cliente sobre
+  terceiros e riscos; **art. 42** diretor responsável por contratações relevantes.
+· Se **nuvem / processamento**: encaixe na regulamentação citada no **art. 33 §2º** e **art. 43, X**.
+· Para **corretora**: terceiros em **match engine**, **custódia**, **liquidez**, **KYC as a service**.
+
+-------------------------------------------------------------------------------
+4. INCISO III — IN 701 art. 4º, III [C típico]
+   Certificação: capacidade técnica, operacional e **legal** de contratadas; prestador no exterior.
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 83** (custódia no exterior — cláusulas compatíveis BR, representante legal BR,
+bens/garantias, monitoramento posições, acesso BCB, segregação com eficácia em insolvência,
+carteiras identificáveis); **art. 84** (formalização, diretores responsáveis); **art. 34, I**
+(diligência); **art. 74** (subcustódia — padrão mínimo, stress test art. 82).
+
+**Informações teóricas:**
+· Lista de **fornecedores no exterior** e **fundamento legal** da contratação.
+· Para cada um: **autorização/supervisão** no país de origem (art. 83 §1º I a), representante BR,
+  garantias acionáveis (c), cláusulas contratuais (a–d do §1º II).
+· Evidência de **monitoramento contínuo** (art. 74, IV) e de **comunicação ao BCB** de descumprimento
+  (art. 74, VI).
+· **Mapeamento** de subcustódia MPC/HSM/cloud por jurisdição.
+
+-------------------------------------------------------------------------------
+5. INCISO IV — IN 701 art. 4º, IV [O]
+   Certificação: planos de **recuperação** de posições e controlos de AV e RF de clientes e da
+   prestadora em incidentes (instituição ou contratada).
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 34, II** (planos robustos); **art. 43, IV** (continuidade de negócios nas
+  políticas); **art. 43 §4º** (prazos de reinício e comunicação); **art. 48, VI** (continuidade
+  violações/desastres); **Cap. X** custódia (continuidade art. 76, X).
+
+**Informações teóricas:**
+· **BCP/DR** documentado: RTO/RPO, cenários (contratada indisponível, ransomware, falência custodiante).
+· **Plano** específico para **AV** (movimentação emergencial, chaves de contingência).
+· **Plano** para **RF** clientes (contas pagamento).
+· **Testes** (mesa, simulados) e última data.
+· Interfaces com **plano de resposta a incidentes** de cibersegurança.
+
+-------------------------------------------------------------------------------
+6. INCISO V — IN 701 art. 4º, V [O]
+   Certificação: políticas e procedimentos alinhados ao **art. 43** Res. 520 e governança.
+-------------------------------------------------------------------------------
+**Res. 520 art. 43** — políticas atualizadas ao BCB sobre: conduta; monitoramento operações;
+fraudes/crimes; **riscos e continuidade**; gestão terceiros; **guarda chaves**; PLD/FT/PF;
+segurança institucional; **ciber**; **nuvem**; **proteção de dados**; §2º treinamentos, conteúdos
+educativos mercado, contatos emergência BCB, listas suspeição, limites transação/saque,
+registos atípicos; §3º atribuição de responsabilidades; §4º prazos continuidade.
+
+**Informações teóricas:**
+· **Pacote de políticas** (índice) e data da última revisão **aprovada** (alinhado art. 16 governança).
+· Evidência de **disponibilização ao BCB** (formato eletrônico).
+· **Contatos de emergência** BCB (art. 43 §2º IV).
+· Cruzamento com **art. 15, II–III** (identificação PSVAV e **modalidade** ao cliente — corretora).
+
+-------------------------------------------------------------------------------
+7. INCISO VI (a) — IN 701 art. 4º, VI, al. a [O]
+   Certificação: processos **PLD/FTP** e combate à utilização criminosa do SFN.
+-------------------------------------------------------------------------------
+**Res. 520:** **arts. 44–47** (monitoramento, registros 5 anos art. 45 II, operações suspeitas,
+  dificuldades informadas ao BCB, KYC parceiros/prestadores art. 47); **art. 43, VII–XI e §2º V–VII**;
+  **art. 34, III** listas sanções.
+
+**Informações teóricas:**
+· **Framework PLD** (política, comitê, escalonamento COAF/autoridades).
+· **KYC/KYB** clientes e **usuários**; EDD quando aplicável.
+· **Monitoramento transacional** e **tipologias** AV-specific.
+· **Travel rule** / informações ao recebedor (art. 44 parágrafo).
+· Retenção **5 anos** (art. 45 II).
+· Integração **listas** internacionais e **endereços** de carteira.
+
+-------------------------------------------------------------------------------
+8. INCISO VI (b) — IN 701 art. 4º, VI, al. b [O]
+   Certificação: segurança, resiliência e ambiente computacional — mínimo **art. 48, I a VIII**.
+-------------------------------------------------------------------------------
+**Res. 520 art. 48:** identidades e acessos; monitoramento e resposta a incidentes; prevenção
+  (incl. DeFi); alçadas e senhas; cultura de segurança; **planos de continuidade**; melhores
+  práticas e certificações; **testes** incl. **contratos inteligentes** (vulnerabilidades,
+  revisão independente, simulação cenários adversos — VIII).
+
+**Informações teóricas:**
+· **IAM**, MFA, segregação de ambientes (prod/homolog).
+· **SOC**/SIEM, playbooks IR, retainer forense.
+· **Gestão de vulnerabilidades** e **pentest** (período, âmbito).
+· **Smart contracts** em produção: auditorias, upgradeability, multisig.
+· **Treinamentos** segurança (frequência, público).
+· Evidência de **testes** exigidos no VIII (tipos realizados).
+
+-------------------------------------------------------------------------------
+9. INCISO VII — IN 701 art. 4º, VII [O]
+   Certificação: políticas de **guarda e proteção** dos **instrumentos de controle** (chaves, etc.).
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 43, VI**; **art. 57** (informar cliente sobre guarda/armazenamento; terceiros;
+  autocustódia); **art. 73, III** métodos de guarda e tipos de carteira; **art. 9º** atividades
+  de custódia; **art. 48** segurança.
+
+**Informações teóricas:**
+· **Modelo de custódia** (quente/morna/fria, MPC, HSM, multi-instância).
+· **Políticas** de assinatura, rotação, segregação de funções (quem pode mover fundos).
+· **Geografia** das chaves e **procedimentos** de backup/recuperação (ligar XVI–XVII).
+· **Subcustódia** de chaves: contratos e SLAs.
+
+-------------------------------------------------------------------------------
+10. INCISO VIII — IN 701 art. 4º, VIII [O]
+    Certificação: monitoramento contínuo de **segurança institucional** e **avaliação de riscos**
+    (detetar, prevenir, responder).
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 48, II** monitoramento contínuo; **art. 43, VIII–IX**; **art. 45, I**
+    alinhamento controles internos e riscos; **art. 70** práticas espúrias (ligação XIII).
+
+**Informações teóricas:**
+· **Programa** de gestão de risco operacional/ciber (comitês, frequência de avaliação).
+· **Indicadores** e **alertas** (thresholds).
+· **Ligação** entre gestão de risco da **mesa** e da **custódia** (corretora).
+
+-------------------------------------------------------------------------------
+11. INCISO IX (a) — IN 701 art. 4º, IX, al. a [C típico]
+    Certificação: políticas de **oferta, listagem, suspensão e deslistagem** de AV.
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 64** (critérios claros; comitê técnico; política mínima §2º; fontes de dados §2º VI;
+    documentos ao BCB §4º I; lista pública §4º II); **art. 66** suspensão pelo BCB.
+
+**Informações teóricas:**
+· **Comitê de listagem** (atas, quórum, independência).
+· **Critérios** documentados por categoria de ativo.
+· **Processo** de suspensão/deslistagem e **comunicação** a clientes.
+· **Catálogo** público atualizado (site/app).
+· Relação com **atividades art. 7º** (intermediação) que a corretora efetivamente exerce.
+
+-------------------------------------------------------------------------------
+12. INCISO IX (b) — IN 701 art. 4º, IX, al. b [C típico]
+    Certificação: seleção de AV **referenciados em moeda fiduciária** — **art. 65, I a IX** (e X no texto).
+-------------------------------------------------------------------------------
+**Res. 520 art. 65:** requisitos adicionais stablecoins (regulação país origem, alertas
+    internacionais, mecanismo estabilização, reservas, provas de lastro, salvaguardas,
+    demonstrações auditadas, qualificações de risco, §2º direitos cliente descontinuidade,
+    §3º vedação certos algoritmos, §4º divulgação critérios, §5º definição lastro, §6º identificação
+    agência risco).
+
+**Informações teóricas:**
+· **Lista** de stablecoins ofertadas e **dossier** por ativo (checklist art. 65).
+· **Provas de lastro** recebidas do emissor e validação interna.
+· **Divulgação** pública dos critérios (§4º).
+· **Exceções** e **vedações** (§3º algoritmo).
+
+-------------------------------------------------------------------------------
+13. INCISO X (a) — IN 701 art. 4º, X, al. a [O]
+    Certificação: **segregação de funções** onde haja **conflito de interesses** potencial ou efetivo
+    na governança.
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 69** (mitigação na **intermediação** art. 7º — separação unidades, chinese wall,
+    melhor execução, monitoramento, consultoria independente); **art. 85** ( **cumulativa**
+    intermediação **e** custódia — separação explícita entre equipes de mesa e custódia,
+    monitoramento independente, políticas, verificação bienal IV, transparência VIII).
+
+**Informações teóricas:**
+· **Organograma** com unidades **negociação** vs **custódia** vs **compliance**.
+· **Política** de conflitos aprovada; **declarações** de conflito por projeto.
+· Evidência de **revisão bienal** independente (art. 85 §1º IV) se aplicável.
+· **Melhor execução** e tratamento quando instituição é contraparte (art. 69 §1º VII).
+
+-------------------------------------------------------------------------------
+14. INCISO X (b) (i) — IN 701 art. 4º, X, b, i [O]
+    Certificação: regulamentação de **controles internos** de IF e autorizadas BCB (corpus externo).
+-------------------------------------------------------------------------------
+**Informações teóricas (genéricas — confirmar normas vigentes BCB):**
+· **Estrutura** de controles internos (manual, linhas de defesa, auditoria interna).
+· **Mapeamento** normativo: quais resoluções/circulares de CI a PSVAV adota por analogia.
+· **Relatórios** de auditoria interna e plano de ação.
+
+-------------------------------------------------------------------------------
+15. INCISO X (b) (ii) — IN 701 art. 4º, X, b, ii [C típico — também RF/fiat]
+    Certificação: condições **arts. 69, I a IX** e **85, I a XX** Res. 520.
+-------------------------------------------------------------------------------
+**Res. 520:** conjunto **art. 69** + **art. 85** (lista extensa de mitigação — leitura integral
+    recomendada); **art. 28–30** quando há **RF** de clientes.
+
+**Informações teóricas:**
+· Matriz de **controles** espelhando cada inciso aplicável de **69** e **85** (autoavaliação).
+· Se **contas fiat** vinculadas: políticas **art. 85** + segregação **art. 28**.
+· **Corretora**: documentar **todos** os pontos de **conflito** entre receita de mesa e custódia.
+
+-------------------------------------------------------------------------------
+16. INCISO XI — IN 701 art. 4º, XI [O]
+    Certificação: **gestão de risco e capital**, **compliance**, **auditoria interna** na forma
+    aplicável a IF/autorizadas.
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 13** operações por conta própria (prudencial); **art. 14, III** diretores
+    (riscos, capital, divulgação); **art. 16** política governança; **art. 87** aplicação regulamentação
+    IF; **art. 88, II a** (riscos mercado/crédito/op/liquidez na autorização).
+
+**Informações teóricas:**
+· **Framework** ERM (appetite, limites, stress).
+· **Compliance** regulatório (função, relação com jurídico).
+· **Auditoria interna** (plano anual, independência).
+· **Capital** e **PR** se aplicável (art. 11 empréstimos com limite PR).
+
+-------------------------------------------------------------------------------
+17. INCISO XII — IN 701 art. 4º, XII [O]
+    Certificação: **política de segurança cibernética** e **plano de ação e resposta a incidentes**
+    conforme regulamentação vigente.
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 14, III e**; **art. 43, IX–X e §2º**; **art. 48**; **art. 75, V** política custódia
+    alinhada ciber; **art. 76 §1º, IV** compatibilidade com política ciber PSVAV.
+
+**Informações teóricas:**
+· **Política** e **PAI** aprovados; integração com **nuvem** (art. 43, X).
+· **Notificação** a autoridades/clientes (LGPD + BCB conforme norma setorial).
+· **Últimos incidentes** (lições aprendidas).
+
+-------------------------------------------------------------------------------
+18. INCISO XIII — IN 701 art. 4º, XIII [O]
+    Certificação: políticas e mecanismos contra **práticas espúrias** no mercado de AV.
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 70** (lista de práticas: pump, manipulação, oferta falsa, insider, redes sociais,
+    conluio; **§1º** comunicar ao BCB; **§2º** diretrizes BCB).
+
+**Informações teóricas:**
+· **Programa de vigilância de mercado** (surveillance) sobre book, RFQ, OTC.
+· **Regras** de uso de API e **rate limits** anti-manipulação.
+· **Procedimento** de reporte ao BCB (art. 70 §1º).
+· **Treinamento** equipe comercial.
+
+-------------------------------------------------------------------------------
+19. INCISO XIV — IN 701 art. 4º, XIV [O]
+    Certificação: **contrato de custódia** conforme **arts. 73 (VIII), 75 e 78** (matriz cita;
+    o **73 integral** é padrão legal completo).
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 73** (mínimos I–XIX + §§); **art. 75** política de custódia anexa/contrato;
+    **art. 78** segregação carteiras; **art. 74** se subcustódia.
+
+**Informações teóricas:**
+· **Modelo** de contrato vs contratos reais (anonimizados).
+· Cláusulas **tarifas** (73, VIII), **terceiros** (VII), **staking** (XI, §2º), **transferência**
+    custódia (XII), **prazos** ordens (XIV), **sincronização** posição (XVI), **fonte** cotação (XVIII).
+· **Política de custódia** (75) — última versão aprovada.
+· **Cadeia** prestador → custodiante → cliente (arts. 73 §6º, 74) se houver intermediação.
+
+-------------------------------------------------------------------------------
+20. INCISO XV — IN 701 art. 4º, XV [O]
+    Certificação: medidas/planos do custodiante — **art. 76, I a XII** (+ §§ redundância).
+-------------------------------------------------------------------------------
+**Res. 520 art. 76:** identificação cliente; exercício direitos; **reconciliação** com DLT;
+    sigilo; diligência/lealdade; qualidade processos/sistemas; registo incidentes; segurança física/lógica;
+    RH qualificado; **continuidade**; identificação adequada (XI subitens); **redundância** XII;
+    **§1º** requisitos redundância (lei BR, entidade BR, acesso BCB, compatibilidade ciber).
+
+**Informações teóricas:**
+· Procedimentos de **reconciliação** e SLAs de atualização de posição.
+· **Logs** de incidentes e métricas.
+· **Plano de continuidade** específico custódia.
+· **Redundância** técnica documentada (localização, testes de restauração — ver XVII).
+· **Mapa** de identificação (clientes, colaboradores, prestadores, natuza negócio, tecnologia,
+    transações, tipos de AV) — art. 76, XI.
+
+-------------------------------------------------------------------------------
+21. INCISO XVI — IN 701 art. 4º, XVI [O]
+    Certificação: **redundância** dos instrumentos de controle sobre os AV.
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 76, XII e §1º**; **art. 82** testes de estresse.
+
+**Informações teóricas:**
+· Arquitetura **redundante** (cópias de segredos, MPC thresholds, HSM em pare).
+· **Testes** de recuperação **sem** expor segredos em relatório público.
+· Relação com **stress tests** (82).
+
+-------------------------------------------------------------------------------
+22. INCISO XVII — IN 701 art. 4º, XVII [O]
+    Certificação: **recuperação** do material sujeito à redundância para **supervisão** do BCB.
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 76 §1º, III** acesso BCB ao conteúdo; procedimentos internos de **prova** de
+    posse de material sem divulgar segredos operacionais.
+
+**Informações teóricas:**
+· **Runbook** de recuperação para inspeção/supervisão.
+· **Evidências** de simulacros com **BCB** ou preparação para requisições.
+
+-------------------------------------------------------------------------------
+23. § 1º (I) — IN 701 art. 4º, §1º, I (a–h) [O] — exceto (h) staking frequentemente [C via par1_I_h]
+    Certificação: informações **claras e precisas** ao cliente (instituição, canais, contratadas,
+    **seguros art. 68**, direitos, custódia, **ativo e DLT art. 67**, **staking art. 71**).
+-------------------------------------------------------------------------------
+**Res. 520:** **arts. 60–63** canais e tarifas; **art. 67** informações sobre AV (I–VIII, §§ RFQ etc.);
+    **art. 68** ausência FGC/FGCoop; **art. 57** guarda; **art. 71** staking; **art. 41** terceiros.
+
+**Informações teóricas:**
+· **Pacote** de disclosure ao cliente (onboarding, contrato, site) mapeado **linha a linha** às alíneas.
+· **Prova** de divulgação de **riscos** por produto (PDFs, versões, datas).
+· **RFQ/Livro de ordens**: textos legais específicos (67 §§ 2º–7º).
+· **Contraparte própria** (67 §3º).
+· **Art. 68** sempre visível na oferta.
+
+-------------------------------------------------------------------------------
+24. § 1º (II) — IN 701 art. 4º, §1º, II [O]
+    Certificação: conteúdos sobre **boas práticas** e **riscos** no mercado de AV.
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 43 §2º, III** (conteúdos educativos); **art. 58–59** perfil e adequação;
+    **art. 62** transparência tarifária.
+
+**Informações teóricas:**
+· **Biblioteca** de conteúdos (blog, academy, avisos periódicos).
+· **Evidência** de **adequação** perfil x produto (59).
+· **Métricas** de alcance (opcional).
+
+-------------------------------------------------------------------------------
+25. § 1º (III) — IN 701 art. 4º, §1º, III [O]
+    Certificação: **relatório atualizado** de **posição** em AV do cliente.
+-------------------------------------------------------------------------------
+**Res. 520:** **art. 79** (relatório tempestivo: saldo, quantidade, histórico movimentações, acesso
+    eletrônico, §4º se cliente é PSVAV intermediária).
+
+**Informações teóricas:**
+· **Formato** e **frequência** do extrato/relatório.
+· **Conciliação** com posição on-chain/off-chain.
+· **SLA** de disponibilização após movimento.
+· API vs PDF; **histórico** armazenado.
+
+-------------------------------------------------------------------------------
+26. § 1º (I) (h) — staking [C típico — par1_I_h]
+    Certificação: riscos e informações **art. 71** Res. 520.
+-------------------------------------------------------------------------------
+**Res. 520 art. 71:** riscos I–V; contrato §1º–2º (condições, autorização cliente).
+
+**Informações teóricas:**
+· **Produtos** de staking/rendimento ofertados (cadeia, validador, riscos específicos).
+· **Contratos** e **screens** de consentimento.
+· **Comunicação** pré-contratual alinhada a 71.
+
+================================================================================
+SÍNTESE — DOMÍNIOS DE CONHECIMENTO TRANSVERSAIS (CORRETORA)
+================================================================================
+Para além dos incisos, a corretora exige visão integrada de:
+
+A) **Mesa e execução** — arts. 7º (atividades de intermediação permitidas), 67–70, 38–39 se
+   liquidez/formador, 72 se conta margem (vedações e elegibilidade).
+
+B) **Custódia e chaves** — arts. 8º–9º, 57, Cap. X (73–82), redundância 76 XII, exterior 83.
+
+C) **Conflito intermediação + custódia** — **art. 85** (dedicado à cumulação).
+
+D) **Terceiros e nuvem** — 32–42, 33 §2º, 43 X, 74–75.
+
+E) **Prudencial e autorização** — 11, 13–22, 87–88 (conforme fase da instituição).
+
+F) **Dados e privacidade** — 43 XI; LGPD; compartilhamentos para PLD.
+
+Implementação (questionário): bloco **E** em `questionnaire.yaml` (schema_version_questionnaire: 2)
+com 14 perguntas `corr_E_*` sobretudo **audit_only**, cobrindo art. 85, continuidade, segregação
+documental, disclosure FGC/extrato, PLD, arts. 38–39, 67 (RFQ), 72 (margem).
+
+================================================================================
+Fim do mapeamento teórico — revisão jurídica recomendada antes de uso em certificação formal
+================================================================================

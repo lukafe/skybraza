@@ -1,8 +1,11 @@
 # Questionário de escopo IN 701 — tipos mistos e gatilhos declarativos
 # Cada add_incisos / when_true deve usar id existente em COVERAGE_MATRIX.yaml (incisos[].id)
 # Ortografia: português brasileiro (pt-BR) nos textos ao utilizador.
+# Trilha: intermediária (laws/COVERAGE_MATRIX.yaml — escopo_intermediario)
 
 version: 1
+track: intermediaria
+schema_version_questionnaire: 2
 
 blocks:
   - id: diag
@@ -22,6 +25,11 @@ blocks:
   - id: D
     title: "Governança, mercado e detalhamento operacional"
     lead: "Mapa de terceiros, narrativa do fluxo e práticas de mercado."
+  - id: E
+    title: "Intermediária — governança, intermediação e maturidade regulatória"
+    lead: >
+      Modalidade intermediação (Res. 520 arts. 6º–7º). Perguntas de maturidade para relatório e Jornada 2;
+      em geral não alteram incisos (paridade com blocos E das trilhas custodiante e corretora).
 
 questions:
   # ---------- Bloco diag (Jornada 2) ----------
@@ -308,6 +316,203 @@ questions:
     justificativa: >
       Objetivo: maturidade operacional de vigilância de mercado; o inciso XIII já é obrigatório na matriz intermediária.
     tags: [mercado, surveillance]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  # ---------- Bloco E (intermediária — paridade de fluxo com custodiante/corretora) ----------
+  - id: int_E_art69_controls
+    block: E
+    order: 10
+    type: yes_no
+    text: >
+      Existem políticas e controles documentados para mitigar conflitos de interesse na intermediação (separação de
+      funções, melhor execução, tratamento quando a VASP ou partes relacionadas são contraparte), alinhados ao art. 69
+      da Res. 520?
+    justificativa: >
+      Intermediação com múltiplas atividades (art. 7º); reforça evidência para inciso X (a) IN 701.
+    tags: [conflito, art69, intermediacao]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_operations_segregation
+    block: E
+    order: 20
+    type: yes_no
+    text: >
+      Quando a operação combina negociação para clientes e gestão de ativos próprios (ou de treasury), existem
+      regras escritas e controles que separem claramente interesses próprios e de clientes (incluindo informação privilegiada)?
+    justificativa: >
+      Arts. 69 e 70 Res. 520; complementa P1/P2/P_arch ao nível de governança.
+    tags: [tesouraria, conflito]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_market_conduct_review
+    block: E
+    order: 30
+    type: yes_no
+    text: >
+      Nos últimos dois anos, houve avaliação independente (auditoria, consultoria regulatória ou revisão externa) sobre
+      práticas de mercado, conflitos ou surveillance alinhada aos arts. 69–70 da Res. 520?
+    justificativa: >
+      Maturidade para inciso XIII e conduta de mercado; não substitui obrigação contínua de monitoramento.
+    tags: [mercado, art70, revisao]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_bcp_tested
+    block: E
+    order: 40
+    type: yes_no
+    text: >
+      Nos últimos 24 meses, executou teste ou exercício documentado de continuidade (BCP/DR) cobrindo indisponibilidade
+      de parceiros de liquidez, nuvem, custodiante ou APIs críticas?
+    justificativa: >
+      IN 701 IV quando acionado; Res. 520 art. 34, II e art. 43, IV — paridade com outras trilhas.
+    tags: [continuidade, BCP]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_custody_model_documented
+    block: E
+    order: 50
+    type: yes_no
+    text: >
+      A instituição mantém documentação atualizada que explique o modelo de custódia/trânsito perante o cliente
+      (quem detém chaves, omnibus, MPC, terceiros), coerente com as respostas operacionais às perguntas P1, P2 e P_arch?
+    justificativa: >
+      Suporte a disclosure § 1º (I) e a coerência com supressão ou inclusão do cluster VII/XIV/XVI/XVII.
+    tags: [custodia, disclosure, P_arch]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_por_disclosure
+    block: E
+    order: 60
+    type: yes_no
+    text: >
+      A VASP divulga periodicamente ao cliente ou ao público demonstrações de reservas, reconciliação ou attestation
+      quando mantém ou rotula saldos agregados de clientes?
+    justificativa: >
+      Complementa P_reserves e I (b); transparência além do mínimo declaratório.
+    tags: [prova_reservas, transparencia]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_fgc_disclosure
+    block: E
+    order: 70
+    type: yes_no
+    text: >
+      Na oferta de produtos, o cliente é informado explicitamente sobre a ausência de cobertura FGC/FGCoop
+      (e fundos análogos, se aplicável) para os ativos virtuais?
+    justificativa: >
+      Res. 520 art. 68; alinha ao § 1º (I) IN 701.
+    tags: [disclosure, FGC]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_position_report_custodial
+    block: E
+    order: 80
+    type: yes_no
+    text: >
+      Quando há custódia ou trânsito sob responsabilidade da VASP (P1 ou P2), o contrato ou termos regulam relatório
+      ou extrato de posição em AV com frequência e canal definidos?
+    justificativa: >
+      § 1º (III) IN 701; art. 79 Res. 520 onde há relação de custódia com cliente.
+    tags: [extrato, par1_III]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_sanctions_workflow
+    block: E
+    order: 90
+    type: yes_no
+    text: >
+      O fluxo operacional inclui triagem de endereços e partes contra listas de sanções/restritivas, com registro de exceções?
+    justificativa: >
+      Art. 34, III e art. 43 §2º V Res. 520; coerente com PLD (VI_a).
+    tags: [PLD, sancoes]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_pld_retention
+    block: E
+    order: 100
+    type: yes_no
+    text: >
+      Registros de operações e diligências PLD são mantidos pelo prazo mínimo legal aplicável (referência: 5 anos no
+      art. 45, II da Res. 520, onde couber)?
+    justificativa: >
+      VI (a) IN 701; rastreabilidade para supervisão.
+    tags: [PLD, retencao]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_lp_art38
+    block: E
+    order: 110
+    type: yes_no
+    text: >
+      A VASP contrata provedor(es) de liquidez para o ambiente de negociação com contrato que preveja, no mínimo,
+      modelo de negócio, liquidação e transferência segura de custódia (art. 38 Res. 520)?
+    justificativa: >
+      Típico da intermediária com book ou roteamento; pasta de evidências para intermediação.
+    tags: [liquidez, art38]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_mm_art39
+    block: E
+    order: 120
+    type: yes_no
+    text: >
+      A VASP contrata formador(es) de mercado com parâmetros mínimos contratuais (frequência, spreads, equidade entre
+      participantes) conforme art. 39 Res. 520?
+    justificativa: >
+      Art. 7º §1º III e art. 39; ligação com conflito e conduta de mercado.
+    tags: [formador, art39]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_rfq_art67
+    block: E
+    order: 130
+    type: yes_no
+    text: >
+      A operação inclui negociação por cotação (RFQ / request for quote) com disclosure ao cliente dos elementos do
+      art. 67, §6º da Res. 520 (cotações, prazos, contraparte, riscos)?
+    justificativa: >
+      Transparência de preço na intermediação; art. 67 §6º.
+    tags: [RFQ, art67]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_listing_art64
+    block: E
+    order: 140
+    type: yes_no
+    text: >
+      Quando há catálogo ou listagem ao cliente (P_list distinto de execution_only), existe política ou comité
+      documentado para oferta, suspensão e deslistagem de AV, com critérios mínimos alinhados ao art. 64 Res. 520?
+    justificativa: >
+      Reforça IX (a) na prática documental; comitê e política §2º art. 64.
+    tags: [listagem, art64, IX_a]
     audit_only: true
     when_true: []
     when_false: []

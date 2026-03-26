@@ -4,7 +4,7 @@
 
 version: 1
 track: custodiante
-schema_version_questionnaire: 1
+schema_version_questionnaire: 2
 
 blocks:
   - id: diag
@@ -24,6 +24,11 @@ blocks:
   - id: D
     title: "Narrativa e transparência operacional"
     lead: "Fluxo ponta a ponta e compromissos públicos de reservas."
+  - id: E
+    title: "Custodiante — governança, continuidade e prova operacional"
+    lead: >
+      Modalidade custódia (Res. 520 arts. 8º–9º; Cap. X). Perguntas de maturidade para relatório;
+      em geral não alteram incisos (núcleo já obrigatório na trilha). Paridade de fluxo com a trilha corretora.
 
 questions:
   # ---------- Bloco diag ----------
@@ -270,6 +275,204 @@ questions:
     justificativa: >
       XIII já é obrigatório; maturidade operacional para Jornada 2.
     tags: [mercado, surveillance]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  # ---------- Bloco E (custodiante — paridade de fluxo com corretora, conteúdo adaptado) ----------
+  - id: cust_E_treasury_split
+    block: E
+    order: 10
+    type: yes_no
+    text: >
+      Existem controlos documentados que separem claramente ativos virtuais próprios da instituição dos
+      ativos virtuais de clientes (carteiras, políticas de tesouraria e de custódia), alinhados aos arts. 29–31
+      da Res. 520?
+    justificativa: >
+      Foco modalidade custódia: segregação patrimonial e vedação do art. 31; sustenta I (a) e inciso XV na prática.
+    tags: [segregacao, patrimonio, art29-31]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_E_proprietary_use_monitor
+    block: E
+    order: 20
+    type: yes_no
+    text: >
+      Existe monitoramento periódico (2ª linha, risco ou auditoria) para assegurar que AV de clientes não são
+      utilizados em operações próprias da instituição, salvo hipóteses expressamente admitidas na Res. 520?
+    justificativa: >
+      Art. 31 caput e §1º — mitigação de uso indevido de AV de titularidade de clientes.
+    tags: [vedacao, art31, risco]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_E_external_custody_review
+    block: E
+    order: 30
+    type: yes_no
+    text: >
+      Nos últimos dois anos, houve revisão ou auditoria independente sobre o serviço de custódia (contrato,
+      política de custódia, segregação ou controlos sobre chaves), com relatório arquivado?
+    justificativa: >
+      Arts. 73 (X, §4º–5º), 75 e 82 — evidência de supervisão e auditoria sobre custódia.
+    tags: [auditoria, custodia, art73-75]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_E_bcp_tested
+    block: E
+    order: 40
+    type: yes_no
+    text: >
+      Nos últimos 24 meses, executou teste ou exercício documentado de continuidade (BCP/DR) cobrindo falha de
+      subcustodiante, nuvem crítica ou indisponibilidade de instrumentos de controlo?
+    justificativa: >
+      IN 701 IV; Res. 520 art. 34, II e art. 43, IV e §4º; alinhado ao bloco E da trilha corretora.
+    tags: [continuidade, BCP]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_E_seg_policy_patrimonial
+    block: E
+    order: 50
+    type: yes_no
+    text: >
+      Existe política aprovada que descreva segregação de AV de clientes vs AV próprios, métodos de prova de
+      reservas e tratamento do limite de 5% (art. 30, §2º–3º), quando aplicável?
+    justificativa: >
+      Arts. 29–30 Res. 520 — documentação esperada pelo supervisor e pelo certificador.
+    tags: [politica, segregacao, art30]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_E_por_client_facing
+    block: E
+    order: 60
+    type: yes_no
+    text: >
+      A instituição divulga ao cliente ou ao público demonstrações ou attestations de reservas / reconciliação
+      com periodicidade definida?
+    justificativa: >
+      I (b) já obrigatório; mede maturidade de transparência além do controlo interno.
+    tags: [prova_reservas, transparencia]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_E_fgc_disclosure
+    block: E
+    order: 70
+    type: yes_no
+    text: >
+      Na oferta do serviço, o cliente é informado explicitamente sobre a ausência de cobertura FGC/FGCoop
+      (e fundos análogos, se aplicável) para os ativos virtuais?
+    justificativa: >
+      Res. 520 art. 68; alinha disclosure ao § 1º (I) IN 701.
+    tags: [disclosure, FGC, par1_I]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_E_position_report_contract
+    block: E
+    order: 80
+    type: yes_no
+    text: >
+      O contrato de custódia regula frequência, canal e conteúdo mínimo do relatório de posição em AV (extrato),
+      coerente com o art. 79 da Res. 520?
+    justificativa: >
+      § 1º (III) IN 701; posição tempestiva e fiel ao registo interno.
+    tags: [extrato, par1_III, art79]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_E_sanctions_workflow
+    block: E
+    order: 90
+    type: yes_no
+    text: >
+      O fluxo operacional inclui triagem de endereços e partes contra listas de sanções/restritivas, com registo
+      de exceções?
+    justificativa: >
+      Art. 34, III e art. 43 §2º V — coerente com serviços relevantes e PLD.
+    tags: [PLD, sancoes]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_E_pld_retention
+    block: E
+    order: 100
+    type: yes_no
+    text: >
+      Registos de operações e diligências PLD são mantidos pelo prazo mínimo legal aplicável (referência:
+      5 anos no art. 45, II da Res. 520, onde couber)?
+    justificativa: >
+      VI (a) IN 701; rastreabilidade para supervisão.
+    tags: [PLD, retencao]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_E_subcustody_art74
+    block: E
+    order: 110
+    type: yes_no
+    text: >
+      A instituição mantém programa documentado de supervisão de subcustodiantes (due diligence, planos,
+      monitoramento contínuo e comunicação de descumprimentos ao BCB), conforme art. 74 da Res. 520?
+    justificativa: >
+      Substitui, na modalidade custódia, o foco corretora em contratos de liquidez/formador; núcleo art. 74.
+    tags: [subcustodia, art74]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_E_stress_art82
+    block: E
+    order: 120
+    type: yes_no
+    text: >
+      Foram realizados testes de stress nos últimos 12 meses (art. 82), com método e resultados documentados e
+      arquivados para supervisão pelo período legal?
+    justificativa: >
+      Art. 82 caput e §1º–2º — capacidade dos sistemas de proteger AV custodiados.
+    tags: [stress, art82, supervisao]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_E_staking_bcb_notice
+    block: E
+    order: 130
+    type: yes_no
+    text: >
+      Se oferece staking a clientes (autorizado ao conjunto art. 9º, IV), foi cumprida a comunicação prévia ao
+      Banco Central com a antecedência legal (art. 82, §5º da Res. 520)?
+    justificativa: >
+      Condicionado à operação de staking; complementa cust_C_staking ao nível de supervisão BCB.
+    tags: [staking, BCB, art82-5]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: cust_E_instruction_event_logs
+    block: E
+    order: 140
+    type: yes_no
+    text: >
+      Os sistemas preservam, de forma auditável, instruções de movimentação dos clientes e registo de eventos
+      incidentes sobre AV custodiados (arts. 9º, III–IV e 80), com política de retenção definida?
+    justificativa: >
+      Deveres operacionais do custodiante; suporte a XV e contrato tipo art. 73.
+    tags: [instrucoes, eventos, art9]
     audit_only: true
     when_true: []
     when_false: []

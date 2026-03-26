@@ -1,0 +1,55 @@
+================================================================================
+MAPEAMENTO TEÓRICO — INFORMAÇÕES A CARACTERIZAR (TRILHA CUSTODIANTE)
+PSVAV modalidade II — Res. 520 art. 4º §1º II; objeto: **custódia** (arts. 8º–9º)
+Grelha IN 701: **idêntica** às trilhas custodiante/corretora (26 itens em incisos[])
+================================================================================
+Versão: 1 · Complementa a revisão em REVISAO_FLUXO_QUESTIONARIO_CUSTODIANTE.txt
+
+NOTA DE LEITURA
+---------------
+A lista **por inciso** com o mesmo nível de detalhe da corretora encontra-se conceptualmente no
+ficheiro `laws/tracks/corretora/MAPEAMENTO_INFORMACOES_TEORICAS_CORRETORA.txt`: a **grelha IN 701**
+é a mesma; o que muda é o **enquadramento Res. 520** (Cap. IV Seção II e Cap. X — custódia) e a
+**ausência** de obrigações típicas de **mesa/RFQ/formador** (arts. 67 §6º, 38, 39) **salvo** se a
+instituição, por perfil operacional, também prestar serviços de intermediação noutro enquadramento
+— situação a validar juridicamente (fora do desenho «puro custodiante» desta trilha).
+
+DOMÍNIOS PRIORITÁRIOS PARA CUSTODIANTE (Res. 520)
+-------------------------------------------------
+1) **Art. 9º** — atividades de custódia (guarda/controle chaves, posição, instruções, eventos, dados);
+   **§5º–6º** staking apenas se autorizado ao conjunto IV caput; **§6º–7º** terceiros tecnológicos
+   relevantes (ligação art. 33).
+2) **Arts. 28–31** — segregação patrimonial RF e AV; política documentada; prova de reservas;
+   auditoria bienal; vedação uso AV de clientes em operações próprias.
+3) **Arts. 32–42** — serviços relevantes (subcustódia, nuvem, etc.) sem ênfase em livro de ofertas.
+4) **Arts. 73–82** — contrato de custódia, política de custódia (75), deveres do custodiante (76),
+   histórico de posições (77), segregação carteiras (78), relatório de posição (79), eventos (80),
+   responsabilidade (81), **testes de stress (82)**, **comunicação prévia staking (82 §5º)**.
+5) **Arts. 83–84** — custódia com entidade no **exterior**.
+6) **Art. 43** — pacote de políticas à disposição do BCB (incl. chaves, continuidade, nuvem, PLD).
+7) **Art. 48** — segurança do ambiente computacional (incide em VI (b) IN 701).
+8) **Arts. 44–47** — PLD e monitoramento (VI (a)).
+
+CRUZAMENTO RÁPIDO — INCISOS IN 701 MAIS «CUSTÓDIA-PESADOS»
+------------------------------------------------------------
+· **I_a, I_b, VII–XVII, XIV, XV** — núcleo patrimonial e operacional de guarda (Cap. X, arts. 29–30,
+  73–76, 78–82).
+· **II, III, IV** — terceiros, exterior, continuidade (arts. 32–34, 74, 83).
+· **V** — art. 43.
+· **VI_a / VI_b** — PLD (44–47) e art. 48.
+· **X_a** — conflito na **custódia** e relação com IF; **X_b** — reforço 69/85 quando há atividades
+  híbridas (fiat em cust_A_fiat já aciona X_b_ii).
+· **IX_a / IX_b** — listagem e stablecoins se o custodiante **oferece** catálogo ao cliente.
+· **§1º I–III e par1_I_h** — transparência e staking (71, 79).
+
+IMPLEMENTAÇÃO NO QUESTIONÁRIO
+-----------------------------
+Bloco **E** (`cust_E_*`, schema_version_questionnaire: 2): 14 perguntas **audit_only** em
+`questionnaire.yaml`, espelhando a função do bloco E da corretora com conteúdo **custódia-pesado**
+(arts. 29–31, 74, 79, 82, 82 §5º, instruções art. 9º, etc.).
+
+Jornada 2: `evidence_requests._journey_2_custodiante_e_notas` para notas quando `cust_E_*` relevantes.
+
+================================================================================
+Fim — revisão jurídica recomendada antes de certificação formal
+================================================================================

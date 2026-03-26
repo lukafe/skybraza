@@ -20,6 +20,90 @@ EVIDENCE_PATH = PACKAGE_ROOT / "laws" / "AUDITOR_EVIDENCE_BY_INCISO.yaml"
 
 JOURNEY_2_SCHEMA_VERSION = "2"
 
+
+def _journey_2_corretora_e_notas(answers: dict[str, Any]) -> list[str]:
+    """Notas adicionais quando o questionário E (corretora) sinaliza intermediação ou produtos sensíveis."""
+    out: list[str] = []
+    if answers.get("corr_E_margin_product"):
+        out.append(
+            "Indicou produto de margem/alavancagem (corr_E_margin_product). Validar enquadramento na Res. 520 art. 72 "
+            "(elegibilidade da instituição) e compatibilidade com vedações do art. 12 — cruzar com jurídico/compliance "
+            "antes do relatório ao BCB."
+        )
+    if answers.get("corr_E_liquidity_provider_contract"):
+        out.append(
+            "Contrato com provedor de liquidez (corr_E_liquidity_provider_contract). Reunir cláusulas mínimas do "
+            "art. 38 Res. 520 (modelo de negócio, liquidação, transferência segura de custódia) para pasta de evidências."
+        )
+    if answers.get("corr_E_market_maker_contract"):
+        out.append(
+            "Formador de mercado contratado (corr_E_market_maker_contract). Documentar parâmetros contratuais do "
+            "art. 39 Res. 520 e equidade face a outros participantes."
+        )
+    if answers.get("corr_E_rfq_offering"):
+        out.append(
+            "RFQ / request for quote ativo (corr_E_rfq_offering). Confirmar disclosure ao cliente conforme Res. 520 "
+            "art. 67, §6º (cotações, prazos, contraparte, riscos)."
+        )
+    if answers.get("corr_E_conflict_units"):
+        out.append(
+            "Assinalou separação mesa vs custódia (corr_E_conflict_units). Incluir na evidência organograma/política "
+            "referenciando Res. 520 art. 85 e inciso X (a) IN 701."
+        )
+    return out
+
+
+def _journey_2_custodiante_e_notas(answers: dict[str, Any]) -> list[str]:
+    """Notas quando o questionário E (custodiante) sinaliza programas de custódia ou supervisão reforçada."""
+    out: list[str] = []
+    if answers.get("cust_E_treasury_split"):
+        out.append(
+            "Assinalou segregação documentada AV próprios vs clientes (cust_E_treasury_split). Juntar política "
+            "e organograma referenciando Res. 520 arts. 29–31 e incisos I (a), XV IN 701."
+        )
+    if answers.get("cust_E_subcustody_art74"):
+        out.append(
+            "Programa de subcustódia ativo (cust_E_subcustody_art74). Garantir evidências de monitoramento "
+            "contínuo e de comunicação tempestiva ao BCB em caso de descumprimento (Res. 520 art. 74, VI)."
+        )
+    if answers.get("cust_E_stress_art82"):
+        out.append(
+            "Testes de stress realizados (cust_E_stress_art82). Arquivar método e resultados pelo prazo legal "
+            "para supervisão (Res. 520 art. 82, §2º)."
+        )
+    if answers.get("cust_E_staking_bcb_notice"):
+        out.append(
+            "Indicou cumprimento de comunicação prévia ao BCB sobre oferta de staking (cust_E_staking_bcb_notice). "
+            "Confirmar data e protocolo face ao art. 82, §5º da Res. 520."
+        )
+    return out
+
+
+def _journey_2_intermediaria_e_notas(answers: dict[str, Any]) -> list[str]:
+    """Notas quando o bloco E (intermediária) sinaliza intermediação regulada ou produtos de mercado."""
+    out: list[str] = []
+    if answers.get("int_E_art69_controls"):
+        out.append(
+            "Assinalou controles de conflito art. 69 (int_E_art69_controls). Juntar política aprovada e evidências de "
+            "monitoramento independente ao dossiê — inciso X (a) IN 701."
+        )
+    if answers.get("int_E_lp_art38"):
+        out.append(
+            "Contrato com provedor de liquidez (int_E_lp_art38). Reunir cláusulas mínimas do art. 38 Res. 520 "
+            "(modelo de negócio, liquidação, custódia)."
+        )
+    if answers.get("int_E_mm_art39"):
+        out.append(
+            "Formador de mercado contratado (int_E_mm_art39). Documentar parâmetros do art. 39 Res. 520 e equidade "
+            "entre participantes."
+        )
+    if answers.get("int_E_rfq_art67"):
+        out.append(
+            "RFQ ativo (int_E_rfq_art67). Confirmar disclosure ao cliente conforme Res. 520 art. 67, §6º."
+        )
+    return out
+
+
 # Texto base quando o YAML não define ``documento_otimo`` por item.
 CRITERIOS_DOCUMENTO_OTIMO: dict[str, str] = {
     "politica": (
@@ -147,6 +231,13 @@ def build_journey_2_payload(answers: dict[str, Any], meta_scope: dict[str, Any])
             f"A operação indica staking/rendimento ({q_staking}). Confirme se existem smart contracts próprios ou "
             f"white-label on-chain não refletidos na pergunta correspondente ({q_sc})."
         )
+
+    if track == "corretora":
+        notas.extend(_journey_2_corretora_e_notas(answers))
+    elif track == "custodiante":
+        notas.extend(_journey_2_custodiante_e_notas(answers))
+    elif track == "intermediaria":
+        notas.extend(_journey_2_intermediaria_e_notas(answers))
 
     sc_block: dict[str, Any] = {
         "aplicavel": p_sc,
