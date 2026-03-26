@@ -30,6 +30,9 @@ def test_health_includes_api_schema_version(client: TestClient) -> None:
     assert data["status"] == "ok"
     assert data["api_schema_version"] == API_SCHEMA_VERSION
     assert data.get("api_rest_version") == "v1"
+    feat = data.get("features") or {}
+    assert "custodiante_track" in feat
+    assert isinstance(feat["custodiante_track"], bool)
 
 
 def test_v1_routes_mirror_legacy(client: TestClient) -> None:
@@ -51,6 +54,28 @@ def test_questions_includes_api_schema_version(client: TestClient) -> None:
     assert data["api_schema_version"] == API_SCHEMA_VERSION
     assert "blocks" in data
     assert len(data["blocks"]) >= 1
+
+
+def test_custodiante_track_disabled_returns_403(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("CERTIK_ENABLE_CUSTODIANTE_TRACK", "0")
+    r = client.get("/api/v1/questions?track=custodiante")
+    assert r.status_code == 403
+    assert r.json()["detail"]["code"] == "TRACK_DISABLED"
+    r2 = client.post("/api/v1/scope", json={"institution": "X", "answers": {}, "track": "custodiante"})
+    assert r2.status_code == 403
+    monkeypatch.delenv("CERTIK_ENABLE_CUSTODIANTE_TRACK", raising=False)
+
+
+def test_post_scope_custodiante_mandatory_count(client: TestClient) -> None:
+    from matrix_loader import build_mandatory_keys  # noqa: PLC0415
+
+    r = client.post("/api/scope", json={"institution": "Cust", "answers": {}, "track": "custodiante"})
+    assert r.status_code == 200
+    data = r.json()
+    assert data["track"] == "custodiante"
+    exp = len(build_mandatory_keys("custodiante"))
+    assert data["resumo"]["obrigatorios_matriz"] == exp
+    assert data["resumo"]["total_sujeitos_auditoria"] >= exp
 
 
 def test_post_scope_minimal_contract(client: TestClient) -> None:

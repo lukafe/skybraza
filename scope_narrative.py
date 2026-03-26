@@ -11,7 +11,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from typing import Any
 
-from matrix_loader import INCISOS_MATRIX, sort_scope_keys
+from matrix_loader import TRACK_DEFAULT, normalize_track, sort_scope_keys
 
 # Incisos típicos de «custódia operacional» de criptoativos de clientes (guarda de chaves, contrato de custódia, redundância).
 CUSTODY_CLUSTER = frozenset({"VII", "XIV", "XVI", "XVII"})
@@ -74,6 +74,33 @@ P_ARCH_BLURBS: dict[str, str] = {
     ),
 }
 
+CUST_ARCH_BLURBS: dict[str, str] = {
+    "inst_operates": (
+        "foi indicado que a instituição ou operador designado movimenta ativos custodiados em nome do cliente"
+    ),
+    "mpc_mixed": (
+        "foi indicado modelo MPC ou multipart com a instituição e terceiros com papéis de controlo sobre chaves"
+    ),
+    "full_subcustody": (
+        "foi indicada subcustódia integral por terceiro contratado, mantendo obrigações perante o cliente e o supervisor"
+    ),
+}
+
+CUST_QUESTION_BLURBS: dict[str, str] = {
+    "cust_A_transit": (
+        "foi indicado trânsito de ativos por omnibus ou carteiras de trânsito sob controlo da instituição ou subcustodiante"
+    ),
+    "cust_A_fiat": QUESTION_BLURBS["P3"],
+    "cust_B_exterior": (
+        "foram indicados fornecedores no exterior ou sem autorização BCB equivalente em papéis relevantes à custódia"
+    ),
+    "cust_B_cloud": QUESTION_BLURBS["P5"],
+    "cust_B_more_foreign": QUESTION_BLURBS["P6"],
+    "cust_C_stable": QUESTION_BLURBS["P7"],
+    "cust_C_staking": QUESTION_BLURBS["P8"],
+    "cust_C_catalog": QUESTION_BLURBS["P_list"],
+}
+
 
 def _p_tp_explanation(norm: dict[str, Any]) -> str:
     sel = norm.get("P_tp")
@@ -95,13 +122,41 @@ def _p_tp_explanation(norm: dict[str, Any]) -> str:
     return "no mapa de terceiros foram assinalados os seguintes papéis materialmente relevantes: " + ", ".join(bits)
 
 
+def _p_tp_explanation_cust(norm: dict[str, Any]) -> str:
+    sel = norm.get("cust_B_tp")
+    if not isinstance(sel, list):
+        sel = []
+    bits: list[str] = []
+    if "subcustody" in sel:
+        bits.append("subcustodiante de criptoativos")
+    if "cloud_infra" in sel:
+        bits.append("nuvem / sistemas críticos de custódia")
+    if "fiat_bank" in sel:
+        bits.append("instituição de pagamento ou banco para fiat")
+    if "kyc_vendor" in sel:
+        bits.append("fornecedor externo de KYC/PLD crítico")
+    if not bits:
+        return "foram assinalados papéis de terceiros na operação de custódia"
+    return "no mapa de terceiros (custódia) foram assinalados: " + ", ".join(bits)
+
+
 def _trigger_explanation_sentence(qid: str, norm: dict[str, Any]) -> str:
     if qid == "P_arch":
         key = str(norm.get("P_arch") or "")
         return P_ARCH_BLURBS.get(key, QUESTION_BLURBS.get("P_arch", f"o modelo arquitetural (P_arch={key!r})"))
+    if qid == "cust_A_model":
+        key = str(norm.get("cust_A_model") or "")
+        return CUST_ARCH_BLURBS.get(
+            key, f"o modelo de custódia declarado (cust_A_model={key!r})"
+        )
     if qid == "P_tp":
         return _p_tp_explanation(norm)
-    return QUESTION_BLURBS.get(qid, f"a resposta à pergunta {qid} entrou na lógica de escopo deste inciso")
+    if qid == "cust_B_tp":
+        return _p_tp_explanation_cust(norm)
+    return CUST_QUESTION_BLURBS.get(
+        qid,
+        QUESTION_BLURBS.get(qid, f"a resposta à pergunta {qid} entrou na lógica de escopo deste inciso"),
+    )
 
 
 def declares_exclusive_non_custodial_model(norm: dict[str, Any]) -> bool:
@@ -125,8 +180,12 @@ def suppress_custody_cluster_if_non_custodial(
     active_keys: set[str],
     triggered_by: dict[str, list[str]],
     norm: dict[str, Any],
+    track: str | None = None,
 ) -> None:
-    """Remove VII, XIV, XVI, XVII do escopo quando o modelo declarado é exclusivamente não custodial."""
+    """Remove VII, XIV, XVI, XVII do escopo quando o modelo declarado é exclusivamente não custodial (trilha intermediária)."""
+    t = normalize_track(track or TRACK_DEFAULT)
+    if t == "custodiante":
+        return
     if not declares_exclusive_non_custodial_model(norm):
         return
     for k in CUSTODY_CLUSTER:
@@ -134,22 +193,33 @@ def suppress_custody_cluster_if_non_custodial(
         triggered_by.pop(k, None)
 
 
-def _mandatory_why(inciso_id: str) -> str:
-    m = INCISOS_MATRIX[inciso_id]
+def _mandatory_why(inciso_id: str, inc_matrix: dict[str, dict[str, str]], track: str) -> str:
+    m = inc_matrix[inciso_id]
     item = m["item"]
     art = m["artigo_in701"]
     d = (m.get("descricao") or "").strip()
     if len(d) > 300:
         d = d[:297].rstrip() + "…"
-    return (
-        f"O inciso «{item}» ({art}) integra o pacote obrigatório da fase intermediária nesta matriz CertiK "
-        f"(IN 701 em articulação com a Res. nº 520). A auditoria deverá demonstrar, com políticas, processos e evidências, "
-        f"como a instituição atende a este requisito no contexto da intermediação. Âmbito normativo resumido: {d}"
-    )
+    t = normalize_track(track)
+    if t == "custodiante":
+        ctx = (
+            "o núcleo obrigatório da trilha custodiante nesta matriz CertiK (IN 701 e Res. nº 520). "
+            "A auditoria deverá demonstrar, com políticas, processos e evidências, como a instituição atende a este requisito "
+            "no contexto do serviço de custódia de ativos virtuais"
+        )
+    else:
+        ctx = (
+            "o pacote obrigatório da fase intermediária nesta matriz CertiK (IN 701 e Res. nº 520). "
+            "A auditoria deverá demonstrar, com políticas, processos e evidências, como a instituição atende a este requisito "
+            "no contexto da intermediação"
+        )
+    return f"O inciso «{item}» ({art}) integra {ctx}. Âmbito normativo resumido: {d}"
 
 
-def _conditional_why(inciso_id: str, qids: list[str], norm: dict[str, Any]) -> str:
-    m = INCISOS_MATRIX[inciso_id]
+def _conditional_why(
+    inciso_id: str, qids: list[str], norm: dict[str, Any], inc_matrix: dict[str, dict[str, str]]
+) -> str:
+    m = inc_matrix[inciso_id]
     item = m["item"]
     art = m["artigo_in701"]
     unique_q = sorted(set(qids))
@@ -168,20 +238,23 @@ def build_why_texts_for_scope(
     triggered_by: dict[str, list[str]],
     norm: dict[str, Any],
     mandatory_keys: frozenset[str],
+    inc_matrix: dict[str, dict[str, str]],
+    track: str | None = None,
 ) -> dict[str, str]:
+    t = normalize_track(track or TRACK_DEFAULT)
     out: dict[str, str] = {}
-    for key in sort_scope_keys(active_keys):
+    for key in sort_scope_keys(active_keys, t):
         is_m = key in mandatory_keys
         qids = triggered_by.get(key, [])
         if is_m:
-            out[key] = _mandatory_why(key)
+            out[key] = _mandatory_why(key, inc_matrix, t)
             if qids:
                 extra = "; ".join(_trigger_explanation_sentence(q, norm) for q in sorted(set(qids)))
                 out[key] = (
                     f"{out[key]} Além disso, as respostas também reforçaram este tema: {extra}"
                 )
         else:
-            out[key] = _conditional_why(key, qids, norm)
+            out[key] = _conditional_why(key, qids, norm, inc_matrix)
     return out
 
 
@@ -189,6 +262,8 @@ def try_enrich_why_with_llm(
     why_drafts: dict[str, str],
     norm: dict[str, Any],
     triggered_by: dict[str, list[str]],
+    inc_matrix: dict[str, dict[str, str]],
+    track: str | None = None,
 ) -> dict[str, str]:
     """
     Opcional: chama Gemini para reescrever cada narrativa (pt-BR), mantendo fidelidade.
@@ -208,21 +283,37 @@ def try_enrich_why_with_llm(
         return {}
 
     model_name = (os.environ.get("GEMINI_MODEL") or "gemini-1.5-flash").strip()
+    t = normalize_track(track or TRACK_DEFAULT)
     # Resumo seguro de respostas (sem PII longa)
-    snap = {
-        "P1": norm.get("P1"),
-        "P2": norm.get("P2"),
-        "P3": norm.get("P3"),
-        "P_arch": norm.get("P_arch"),
-        "P_tp": norm.get("P_tp"),
-        "P7": norm.get("P7"),
-        "P8": norm.get("P8"),
-        "P9": norm.get("P9"),
-    }
+    snap: dict[str, Any] = {"track": t}
+    if t == "custodiante":
+        snap.update(
+            {
+                "cust_A_transit": norm.get("cust_A_transit"),
+                "cust_A_fiat": norm.get("cust_A_fiat"),
+                "cust_A_model": norm.get("cust_A_model"),
+                "cust_B_tp": norm.get("cust_B_tp"),
+                "cust_C_stable": norm.get("cust_C_stable"),
+                "cust_C_staking": norm.get("cust_C_staking"),
+            }
+        )
+    else:
+        snap.update(
+            {
+                "P1": norm.get("P1"),
+                "P2": norm.get("P2"),
+                "P3": norm.get("P3"),
+                "P_arch": norm.get("P_arch"),
+                "P_tp": norm.get("P_tp"),
+                "P7": norm.get("P7"),
+                "P8": norm.get("P8"),
+                "P9": norm.get("P9"),
+            }
+        )
 
     incisos = []
     for iid, draft in why_drafts.items():
-        meta = INCISOS_MATRIX.get(iid, {})
+        meta = inc_matrix.get(iid, {})
         incisos.append(
             {
                 "id": iid,

@@ -13,7 +13,7 @@ from typing import Any
 
 import yaml
 
-from matrix_loader import INCISOS_MATRIX, sort_scope_keys
+from matrix_loader import build_incisos_matrix, normalize_track, sort_scope_keys
 
 PACKAGE_ROOT = Path(__file__).resolve().parent
 EVIDENCE_PATH = PACKAGE_ROOT / "laws" / "AUDITOR_EVIDENCE_BY_INCISO.yaml"
@@ -93,6 +93,8 @@ def evidence_inciso_keys_declared() -> frozenset[str]:
 
 
 def missing_evidence_yaml_incisos() -> list[str]:
+    from matrix_loader import INCISOS_MATRIX
+
     declared = evidence_inciso_keys_declared()
     return sorted(k for k in INCISOS_MATRIX if k not in declared)
 
@@ -109,9 +111,15 @@ def build_journey_2_payload(answers: dict[str, Any], meta_scope: dict[str, Any])
         meta_yaml.get("pentest_form_url_default") or ""
     ).strip()
 
-    p_sc = bool(answers.get("P_diag_sc"))
-    p_surf = bool(answers.get("P_diag_surface"))
-    p8 = bool(answers.get("P8"))
+    track = normalize_track(str(meta_scope.get("track") or "intermediaria"))
+    if track == "custodiante":
+        p_sc = bool(answers.get("cust_diag_sc"))
+        p_surf = bool(answers.get("cust_diag_surface"))
+        p8 = bool(answers.get("cust_C_staking"))
+    else:
+        p_sc = bool(answers.get("P_diag_sc"))
+        p_surf = bool(answers.get("P_diag_surface"))
+        p8 = bool(answers.get("P8"))
 
     notas: list[str] = []
     if p8 and not p_sc:
@@ -152,20 +160,21 @@ def build_journey_2_payload(answers: dict[str, Any], meta_scope: dict[str, Any])
         incisos_data = {}
 
     active_keys: set[str] = set(meta_scope.get("active_keys") or [])
+    inc_matrix = build_incisos_matrix(track)
     checklist: list[dict[str, Any]] = []
     total_pedidos = 0
 
-    for key in sort_scope_keys(active_keys):
+    for key in sort_scope_keys(active_keys, track):
         raw_items = incisos_data.get(key)
         items: list[dict[str, Any]]
         if isinstance(raw_items, list) and raw_items:
             items = _enrich_pedidos([dict(x) for x in raw_items if isinstance(x, dict)])
         else:
-            items = _enrich_pedidos(_fallback_pedidos_inciso(key))
+            items = _enrich_pedidos(_fallback_pedidos_inciso(key, inc_matrix))
         checklist.append(
             {
                 "inciso_id": key,
-                "item_in701": INCISOS_MATRIX.get(key, {}).get("item", key),
+                "item_in701": inc_matrix.get(key, {}).get("item", key),
                 "pedidos": items,
             }
         )
@@ -182,8 +191,8 @@ def build_journey_2_payload(answers: dict[str, Any], meta_scope: dict[str, Any])
     }
 
 
-def _fallback_pedidos_inciso(inciso_id: str) -> list[dict[str, Any]]:
-    rot = INCISOS_MATRIX.get(inciso_id, {}).get("item", inciso_id)
+def _fallback_pedidos_inciso(inciso_id: str, inc_matrix: dict[str, dict[str, str]]) -> list[dict[str, Any]]:
+    rot = inc_matrix.get(inciso_id, {}).get("item", inciso_id)
     return [
         {
             "id": f"ev_fallback_{inciso_id}_pol",

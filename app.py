@@ -1,8 +1,8 @@
 """
-CertiK — Ferramenta de Scoping IN 701 (VASP intermediária) / BCB Res. 520.
+CertiK — Ferramenta de Scoping IN 701 (trilhas intermediária e custodiante) / BCB Res. 520.
 
 UI Streamlit (este ficheiro): mesmo motor que a SPA em public/ + API FastAPI (main.py).
-Alterações ao questionário refletem automaticamente aqui; copy e layout podem divergir da web.
+Trilha custodiante pode ser ocultada com CERTIK_ENABLE_CUSTODIANTE_TRACK=0 (alinhado à API).
 """
 
 from __future__ import annotations
@@ -13,11 +13,21 @@ import os
 import pandas as pd
 import streamlit as st
 
-from questionnaire_loader import get_blocks
-from rules_engine import QUESTIONS, compute_scope, questions_by_block
+from questionnaire_loader import get_blocks, get_questions
+from rules_engine import compute_scope, questions_by_block
 
 # Opcional: chave via variável de ambiente (não commitar segredos no código)
 DEFAULT_GEMINI_ENV = "GEMINI_API_KEY"
+
+
+def _custodiante_ui_enabled() -> bool:
+    v = (os.environ.get("CERTIK_ENABLE_CUSTODIANTE_TRACK") or "").strip().lower()
+    return v not in ("0", "false", "no", "off")
+
+
+def _current_questions() -> list[dict]:
+    tr = st.session_state.get("scope_track", "intermediaria")
+    return get_questions(tr)
 
 
 def _j2_pedido_widget_key(inciso_id: str, pedido_id: str) -> str:
@@ -40,15 +50,20 @@ def _default_answer_for_q(q: dict) -> bool | str | list | None:
 
 def _ensure_answer_shape() -> None:
     """Completa chaves novas do questionário (sessões antigas da fase B)."""
-    full = {q["id"]: _default_answer_for_q(q) for q in QUESTIONS}
+    qs = _current_questions()
+    full = {q["id"]: _default_answer_for_q(q) for q in qs}
     for k, v in full.items():
         if k not in st.session_state.answers:
             st.session_state.answers[k] = v
+    for dead in list(st.session_state.answers.keys()):
+        if dead not in full:
+            del st.session_state.answers[dead]
 
 
-def _prime_question_widgets() -> None:
+def _prime_question_widgets(qs: list[dict] | None = None) -> None:
     """Garante chaves de widget alinhadas a `answers` (evita conflito value/key no Streamlit)."""
-    for q in QUESTIONS:
+    qs = qs or _current_questions()
+    for q in qs:
         qid = q["id"]
         t = q.get("type")
         a = st.session_state.answers.get(qid)
@@ -71,9 +86,12 @@ def _prime_question_widgets() -> None:
 
 
 def _init_session() -> None:
+    if "scope_track" not in st.session_state:
+        st.session_state.scope_track = "intermediaria"
+    qs0 = get_questions(st.session_state.scope_track)
     if "answers" not in st.session_state:
-        st.session_state.answers = {q["id"]: _default_answer_for_q(q) for q in QUESTIONS}
-        _prime_question_widgets()
+        st.session_state.answers = {q["id"]: _default_answer_for_q(q) for q in qs0}
+        _prime_question_widgets(qs0)
     if "scope_computed" not in st.session_state:
         st.session_state.scope_computed = False
     if "scope_df" not in st.session_state:
@@ -127,7 +145,7 @@ def _radio_to_bool(val: str) -> bool:
 
 def _build_answers_from_ui() -> dict:
     out: dict = {}
-    for q in QUESTIONS:
+    for q in _current_questions():
         qid = q["id"]
         t = q.get("type")
         if t == "yes_no":
@@ -185,19 +203,30 @@ def _style_scope_df(df: pd.DataFrame) -> pd.io.formats.style.Styler:
 
 def _resumo_text(vasp_name: str, meta: dict, df: pd.DataFrame) -> str:
     lines: list[str] = []
+    tr = str(meta.get("track") or "intermediaria")
     free_t = meta.get("free_text") or {}
     lines.append(f"**Instituição:** {vasp_name or '(não informado)'}")
     lines.append("")
-    lines.append("### Itens sempre no escopo (IN 701 — intermediária)")
-    lines.append(
-        "- Obrigatórios na matriz YAML: VI (a)(b), VIII, X (a) e X (b)(i), XI, XII, XIII, "
-        "§ 1º (I), (II) e (III); demais incisos conforme respostas (ver COVERAGE_MATRIX.yaml)."
-    )
+    if tr == "custodiante":
+        lines.append("### Núcleo obrigatório (trilha custodiante)")
+        lines.append(
+            "- Obrigatórios na matriz da trilha: segregação e guarda (I_a, I_b, VII–XVII), traves PLD/ciber/risco/práticas "
+            "(VI, VIII, X–XIII, §1º I–III), terceirização e continuidade (II, IV) e governança (V). "
+            "Condicionais: ver `laws/tracks/custodiante/COVERAGE_MATRIX.yaml` e respostas ao questionário."
+        )
+    else:
+        lines.append("### Itens sempre no escopo (IN 701 — intermediária)")
+        lines.append(
+            "- Obrigatórios na matriz YAML: VI (a)(b), VIII, X (a) e X (b)(i), XI, XII, XIII, "
+            "§ 1º (I), (II) e (III); demais incisos conforme respostas (ver COVERAGE_MATRIX.yaml)."
+        )
     lines.append("")
     lines.append("### Respostas relevantes por bloco")
     norm = meta.get("answers", {})
-    by_block: dict[str, list[str]] = {b["id"]: [] for b in get_blocks()}
-    for q in QUESTIONS:
+    blocks = get_blocks(tr)
+    qs_meta = get_questions(tr)
+    by_block: dict[str, list[str]] = {b["id"]: [] for b in blocks}
+    for q in qs_meta:
         bid = str(q.get("block", "A"))
         if bid not in by_block:
             by_block[bid] = []
@@ -206,8 +235,8 @@ def _resumo_text(vasp_name: str, meta: dict, df: pd.DataFrame) -> str:
             snippet = (txt[:120] + "…") if len(txt) > 120 else txt
             by_block[bid].append(f"**{q['id']}**: {snippet}")
 
-    block_titles = {str(b["id"]): (b.get("title") or b["id"]) for b in get_blocks()}
-    for b in get_blocks():
+    block_titles = {str(b["id"]): (b.get("title") or b["id"]) for b in blocks}
+    for b in blocks:
         bid = str(b["id"])
         title = block_titles.get(bid, bid)
         lines.append(f"- **Bloco {bid} — {title}**")
@@ -230,22 +259,36 @@ def _resumo_text(vasp_name: str, meta: dict, df: pd.DataFrame) -> str:
     lines.append("")
     lines.append("### Áreas de risco (síntese)")
     risks: list[str] = []
-    if norm.get("P1") or norm.get("P2"):
-        risks.append("Custódia, segregação patrimonial e trânsito de ativos.")
-    if norm.get("P3"):
-        risks.append("Recursos em BRL e limites/controles financeiros (Art. 85).")
-    if norm.get("P4") or norm.get("P5") or norm.get("P6"):
-        risks.append("Terceirização, nuvem e contrapartes no exterior ou não autorizadas.")
-    if norm.get("P7"):
-        risks.append("Stablecoins e critérios de seleção de ativos.")
-    if norm.get("P8"):
-        risks.append("Staking/rendimento e transparência ao cliente.")
-    if norm.get("P9"):
-        risks.append("APIs e interconectividade com IFs.")
-    if norm.get("P_reserves"):
-        risks.append("Compromisso ou evidência de reservas (prova de reservas / I (b)).")
-    if (free_t.get("P_narr") or "").strip():
-        risks.append("Fluxo narrado pelo cliente — confrontar com evidências de processo e terceiros.")
+    if tr == "custodiante":
+        if norm.get("cust_A_transit"):
+            risks.append("Trânsito/omnibus e movimentação sob controlo da instituição (I_a, I_b, XV).")
+        if norm.get("cust_A_fiat"):
+            risks.append("Contas em moeda fiduciária ligadas à custódia (Art. 85 / X (b) (ii)).")
+        if norm.get("cust_B_cloud") or norm.get("cust_B_exterior") or norm.get("cust_B_more_foreign"):
+            risks.append("Terceiros, nuvem ou prestadores no exterior — diligência e continuidade.")
+        if norm.get("cust_C_stable") or norm.get("cust_C_staking"):
+            risks.append("Stablecoins, staking ou produtos com exposição ao cliente — transparência e riscos.")
+        if norm.get("cust_C_if_api"):
+            risks.append("Interconectividade com IFs e superfície de integração.")
+        if (free_t.get("cust_D_narr") or "").strip():
+            risks.append("Narrativa operacional — validar com evidências e terceiros.")
+    else:
+        if norm.get("P1") or norm.get("P2"):
+            risks.append("Custódia, segregação patrimonial e trânsito de ativos.")
+        if norm.get("P3"):
+            risks.append("Recursos em BRL e limites/controles financeiros (Art. 85).")
+        if norm.get("P4") or norm.get("P5") or norm.get("P6"):
+            risks.append("Terceirização, nuvem e contrapartes no exterior ou não autorizadas.")
+        if norm.get("P7"):
+            risks.append("Stablecoins e critérios de seleção de ativos.")
+        if norm.get("P8"):
+            risks.append("Staking/rendimento e transparência ao cliente.")
+        if norm.get("P9"):
+            risks.append("APIs e interconectividade com IFs.")
+        if norm.get("P_reserves"):
+            risks.append("Compromisso ou evidência de reservas (prova de reservas / I (b)).")
+        if (free_t.get("P_narr") or "").strip():
+            risks.append("Fluxo narrado pelo cliente — confrontar com evidências de processo e terceiros.")
     if not risks:
         risks.append("Escopo mínimo obrigatório; revisar se respostas refletem a operação real.")
     for r in risks:
@@ -286,6 +329,7 @@ def _run_gemini_analysis(
     p1: bool,
     p2: bool,
     custody_items: list[str],
+    track: str = "intermediaria",
 ) -> str:
     try:
         import google.generativeai as genai
@@ -296,21 +340,30 @@ def _run_gemini_analysis(
     model_name = os.environ.get("GEMINI_MODEL", "gemini-1.5-flash")
     model = genai.GenerativeModel(model_name)
 
+    if track == "custodiante":
+        track_label = "trilha custodiante (núcleo de guarda)"
+        q1_label = "Trânsito/omnibus (cust_A_transit)"
+        q2_label = "Contas fiat ligadas à custódia (cust_A_fiat)"
+    else:
+        track_label = "fase intermediária"
+        q1_label = "P1 (controle de chaves / endereços / MPC)"
+        q2_label = "P2 (trânsito por carteira omnibus/transitória)"
+
     prompt = f"""Você é auditor técnico da CertiK (blockchain / VASP / BCB).
 
-Contexto: escopo IN 701, fase intermediária, alinhado à Resolução BCB nº 520.
+Contexto: escopo IN 701, {track_label}, alinhado à Resolução BCB nº 520.
 
 Instituição: {vasp_name or "Não informado"}
 
 Respostas do questionário de custódia e trânsito:
-- P1 (controle de chaves / endereços / MPC): {"Sim" if p1 else "Não"}
-- P2 (trânsito por carteira omnibus/transitória): {"Sim" if p2 else "Não"}
+- {q1_label}: {"Sim" if p1 else "Não"}
+- {q2_label}: {"Sim" if p2 else "Não"}
 
 Itens de escopo relacionados a custódia atualmente incluídos pelo motor de regras:
 {", ".join(custody_items) if custody_items else "(nenhum além dos obrigatórios gerais)"}
 
 Escreva em português do Brasil, 3 a 4 parágrafos curtos:
-1) Por que a inclusão ou exclusão de incisos de custódia faz sentido técnico frente ao BCB, dadas P1 e P2.
+1) Por que a inclusão ou exclusão de incisos de custódia faz sentido técnico frente ao BCB, dadas as duas respostas acima.
 2) Riscos residuais se a operação real divergir das respostas.
 3) Sugestão objetiva de evidências a coletar na fase de auditoria.
 
@@ -322,12 +375,48 @@ Tom: profissional, direto, sem repetir a legislação verbatim.
 
 def main() -> None:
     _init_session()
+    if st.session_state.scope_track == "custodiante" and not _custodiante_ui_enabled():
+        st.session_state.scope_track = "intermediaria"
+        qs_fix = get_questions("intermediaria")
+        st.session_state.answers = {q["id"]: _default_answer_for_q(q) for q in qs_fix}
+        _prime_question_widgets(qs_fix)
+        st.session_state.scope_computed = False
+        st.session_state.scope_df = pd.DataFrame()
+        st.session_state.scope_meta = {}
+        st.session_state.gemini_cache = ""
+        st.session_state.gemini_last_key = ""
     _ensure_answer_shape()
     _prime_question_widgets()
     _certik_css()
 
     st.sidebar.markdown("### CertiK")
-    st.sidebar.caption("Scoping IN 701 · VASP intermediária")
+
+    opts = ["intermediaria"] + (["custodiante"] if _custodiante_ui_enabled() else [])
+    if st.session_state.scope_track not in opts:
+        st.session_state.scope_track = "intermediaria"
+    ix = opts.index(st.session_state.scope_track)
+    sel = st.sidebar.selectbox(
+        "Trilha IN 701",
+        opts,
+        index=ix,
+        format_func=lambda x: "Intermediário (tipos mistos)" if x == "intermediaria" else "Custodiante",
+    )
+    if sel != st.session_state.scope_track:
+        st.session_state.scope_track = sel
+        qs = get_questions(sel)
+        st.session_state.answers = {q["id"]: _default_answer_for_q(q) for q in qs}
+        _prime_question_widgets(qs)
+        st.session_state.scope_computed = False
+        st.session_state.scope_df = pd.DataFrame()
+        st.session_state.scope_meta = {}
+        st.session_state.gemini_cache = ""
+        st.session_state.gemini_last_key = ""
+        st.rerun()
+
+    trk = st.session_state.scope_track
+    st.sidebar.caption(
+        "Scoping IN 701 · trilha custodiante" if trk == "custodiante" else "Scoping IN 701 · VASP intermediária"
+    )
 
     secrets_key = ""
     try:
@@ -351,7 +440,7 @@ def main() -> None:
     )
 
     st.markdown('<span class="certik-badge">INTERNAL · AUDIT SCOPING</span>', unsafe_allow_html=True)
-    st.title("Escopo IN 701 — VASP intermediária")
+    st.title("Escopo IN 701 — VASP custodiante" if trk == "custodiante" else "Escopo IN 701 — VASP intermediária")
     st.caption("Questionário interativo · Motor de regras · Dashboard · Resumo executivo · Análise Gemini (opcional)")
 
     tab_q, tab_dash, tab_resumo, tab_gemini = st.tabs(
@@ -425,14 +514,21 @@ def main() -> None:
         st.divider()
 
     with tab_q:
-        st.subheader("Delimitação técnica (Fase intermediária — tipos mistos)")
-        st.write(
-            "Itens **obrigatórios** permanecem sempre no escopo. Perguntas **Sim/Não**, escolha única, "
-            "múltipla escolha e texto livre (onde indicado) definem incisos condicionais."
-        )
+        if trk == "custodiante":
+            st.subheader("Delimitação técnica (trilha custodiante)")
+            st.write(
+                "Núcleo **obrigatório** de custódia e correlatos permanece no escopo. Perguntas **Sim/Não**, escolha única, "
+                "múltipla escolha e texto livre acionam incisos condicionais adicionais."
+            )
+        else:
+            st.subheader("Delimitação técnica (Fase intermediária — tipos mistos)")
+            st.write(
+                "Itens **obrigatórios** permanecem sempre no escopo. Perguntas **Sim/Não**, escolha única, "
+                "múltipla escolha e texto livre (onde indicado) definem incisos condicionais."
+            )
 
-        by_block = questions_by_block()
-        block_list = list(get_blocks())
+        by_block = questions_by_block(trk)
+        block_list = list(get_blocks(trk))
         for i, mb in enumerate(block_list):
             bid = str(mb["id"])
             title = mb.get("title", bid)
@@ -448,7 +544,7 @@ def main() -> None:
             if st.button("Gerar escopo", type="primary", use_container_width=True):
                 answers = _build_answers_from_ui()
                 st.session_state.answers = answers
-                df, meta = compute_scope(answers)
+                df, meta = compute_scope(answers, track=trk)
                 st.session_state.scope_df = df
                 st.session_state.scope_meta = meta
                 st.session_state.scope_computed = True
@@ -457,8 +553,9 @@ def main() -> None:
                 st.success("Escopo calculado. Abra as abas **Dashboard** e **Resumo Executivo**.")
         with col2:
             if st.button("Redefinir respostas", use_container_width=True):
-                st.session_state.answers = {q["id"]: _default_answer_for_q(q) for q in QUESTIONS}
-                for q in QUESTIONS:
+                qs_reset = _current_questions()
+                st.session_state.answers = {q["id"]: _default_answer_for_q(q) for q in qs_reset}
+                for q in qs_reset:
                     qid = q["id"]
                     t = q.get("type")
                     if t == "yes_no":
@@ -479,7 +576,7 @@ def main() -> None:
         if st.session_state.scope_computed:
             return st.session_state.scope_df, st.session_state.scope_meta
         live = _build_answers_from_ui()
-        return compute_scope(live)
+        return compute_scope(live, track=st.session_state.scope_track)
 
     df_default, meta_default = _scope_snapshot()
 
@@ -612,7 +709,11 @@ def main() -> None:
             )
         else:
             norm = meta_default.get("answers", {})
-            p1, p2 = bool(norm.get("P1")), bool(norm.get("P2"))
+            tr_gem = str(meta_default.get("track") or st.session_state.scope_track)
+            if tr_gem == "custodiante":
+                p1, p2 = bool(norm.get("cust_A_transit")), bool(norm.get("cust_A_fiat"))
+            else:
+                p1, p2 = bool(norm.get("P1")), bool(norm.get("P2"))
             custody_labels: list[str] = []
             if df_default is not None and not df_default.empty:
                 custody_items = {"VII", "XIV", "XVI", "XVII", "I (a)", "I (b)", "XV"}
@@ -621,10 +722,12 @@ def main() -> None:
                     if item in custody_items:
                         custody_labels.append(item)
 
-            if st.button("Gerar análise de custódia (P1/P2)", type="primary"):
+            if st.button("Gerar análise de custódia (Gemini)", type="primary"):
                 with st.spinner("Consultando Gemini…"):
                     try:
-                        out = _run_gemini_analysis(api, vasp_name, p1, p2, custody_labels)
+                        out = _run_gemini_analysis(
+                            api, vasp_name, p1, p2, custody_labels, track=tr_gem
+                        )
                         st.session_state.gemini_cache = out
                         st.session_state.gemini_last_key = api[:8] + "…"
                     except Exception as e:

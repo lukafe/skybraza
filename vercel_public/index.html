@@ -12,7 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/css/styles.css?v=23" />
+    <link rel="stylesheet" href="/static/css/styles.css?v=25" />
   </head>
   <body class="sk-app app-view-intro">
     <noscript>
@@ -64,6 +64,22 @@
                 <strong>CertiK</strong> — escopo de conformidade com o Banco Central (IN 701).
               </p>
               <p class="intro-landing__desc-line intro-landing__desc-line--muted">Orientação indicativa.</p>
+            </div>
+            <div class="intro-track" role="group" aria-labelledby="intro-track-label">
+              <p id="intro-track-label" class="intro-track__label">Tipo de operação (IN 701)</p>
+              <div class="intro-track__buttons">
+                <button
+                  type="button"
+                  class="intro-track__btn intro-track__btn--active"
+                  id="track-intermediaria"
+                  data-track="intermediaria"
+                >
+                  Intermediário
+                </button>
+                <button type="button" class="intro-track__btn" id="track-custodiante" data-track="custodiante">
+                  Custodiante
+                </button>
+              </div>
             </div>
             <div class="intro-landing__cta">
               <label class="field">
@@ -173,6 +189,6 @@
 
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-    <script src="/static/js/app.js?v=23" type="module"></script>
+    <script src="/static/js/app.js?v=25" type="module"></script>
   </body>
 </html>

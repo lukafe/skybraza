@@ -1659,6 +1659,52 @@ body.app-view-intro .sk-main {
   color: #6b6b70;
 }
 
+.intro-track {
+  width: 100%;
+  max-width: 22rem;
+  margin-top: 0.15rem;
+}
+
+.intro-track__label {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #9a9aa3;
+  text-align: center;
+}
+
+.intro-track__buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.intro-track__btn {
+  flex: 1;
+  padding: 0.55rem 0.65rem;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(36, 36, 42, 0.85);
+  color: #a1a1aa;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.intro-track__btn:hover {
+  border-color: rgba(255, 59, 71, 0.35);
+  color: #e4e4e7;
+}
+
+.intro-track__btn--active {
+  border-color: rgba(255, 75, 85, 0.55);
+  background: rgba(255, 59, 71, 0.12);
+  color: #f4f4f5;
+}
+
 .intro-landing__cta {
   width: 100%;
   max-width: 22rem;

@@ -80,3 +80,22 @@ incisos:
   par1_I_h: |
     Para staking/rendimento: divulgação de riscos, contraparte, smart contracts relevantes e alinhamento ao
     art. 71 da Res. 520, com linguagem clara ao investidor.
+
+# Overrides por trilha (opcional): substituem o texto global do mesmo inciso só nessa trilha.
+tracks:
+  custodiante:
+    VII: |
+      Como custodiante, detalhe governança de chaves e instrumentos de controle (MPC, HSM, políticas de assinatura,
+      rotação e segregação de funções), com evidências de revisões periódicas e de quem pode movimentar ativos em nome do cliente.
+    XIV: |
+      Priorize o contrato-tipo de custódia e anexos operacionais (arts. 73, 75 e 78): segregação patrimonial, limites de responsabilidade,
+      comunicação de incidentes e alterações contratuais — com exemplos reais anonimizados quando possível.
+    XV: |
+      Demonstre cumprimento dos deveres do custodiante (art. 76, I a XII): inventário, reconciliação, continuidade operacional da guarda
+      e coordenação com subcustodiantes, com KPIs e registos de exceção.
+    XVI: |
+      Explique redundância de instrumentos de controle sobre os ativos custodiados e como a continuidade da guarda é assegurada
+      perante falhas de um canal (ex.: indisponibilidade de um HSM ou de um fornecedor crítico).
+    XVII: |
+      Descreva recuperação de material criptográfico e de credenciais para supervisão do BCB: procedimentos, testes, logs e responsáveis,
+      sem expor segredos operacionais no relatório público.

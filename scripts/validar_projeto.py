@@ -28,7 +28,7 @@ def main() -> int:
     try:
         from bcb_hints_loader import missing_explicit_bcb_hints
         from evidence_requests import missing_evidence_yaml_incisos
-        from matrix_loader import INCISOS_MATRIX, MANDATORY_KEYS, get_coverage_meta
+        from matrix_loader import INCISOS_MATRIX, MANDATORY_KEYS, TRACK_IDS, get_coverage_meta
         from questionnaire_loader import get_blocks, get_questions
         from readiness import build_export_package
         from rules_engine import compute_scope
@@ -63,9 +63,10 @@ def main() -> int:
         if k not in INCISOS_MATRIX:
             errors.append(f"Obrigatório ausente na matriz: {k}")
 
-    miss_hints = missing_explicit_bcb_hints()
-    if miss_hints:
-        errors.append(f"BCB_REPORT_HINTS sem texto para incisos: {', '.join(miss_hints)}")
+    for tr in sorted(TRACK_IDS):
+        miss_hints = missing_explicit_bcb_hints(tr)
+        if miss_hints:
+            errors.append(f"BCB_REPORT_HINTS sem texto para incisos [{tr}]: {', '.join(miss_hints)}")
 
     miss_ev = missing_evidence_yaml_incisos()
     if miss_ev:

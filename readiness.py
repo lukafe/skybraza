@@ -13,7 +13,13 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
-from matrix_loader import INCISOS_MATRIX, sort_scope_keys, get_coverage_meta
+from matrix_loader import (
+    TRACK_DEFAULT,
+    build_incisos_matrix,
+    get_coverage_meta,
+    normalize_track,
+    sort_scope_keys,
+)
 
 EXPORT_SCHEMA_VERSION = "1"
 
@@ -25,16 +31,18 @@ def _norm_status(raw: str) -> str:
     return "outro"
 
 
-def corpus_readiness_for_scope(active_keys: set[str]) -> dict[str, Any]:
+def corpus_readiness_for_scope(active_keys: set[str], track: str | None = None) -> dict[str, Any]:
     """
     Resume cobertura do corpus na matriz para os incisos atualmente no escopo.
     """
+    t = normalize_track(track or TRACK_DEFAULT)
+    inc_matrix = build_incisos_matrix(t)
     counts: dict[str, int] = {"completo": 0, "parcial": 0, "incompleto": 0, "outro": 0}
     items: list[dict[str, Any]] = []
     stub_refs: list[dict[str, Any]] = []
 
-    for k in sort_scope_keys(active_keys):
-        m = INCISOS_MATRIX[k]
+    for k in sort_scope_keys(active_keys, t):
+        m = inc_matrix[k]
         files = str(m.get("ficheiros_corpus") or "")
         st = _norm_status(str(m.get("corpus_status") or ""))
         counts[st] = counts.get(st, 0) + 1
@@ -102,7 +110,8 @@ def build_export_package(
     elif ak is not None:
         meta_public["active_keys"] = list(ak)
 
-    cov = get_coverage_meta()
+    tr = meta.get("track")
+    cov = get_coverage_meta(tr if isinstance(tr, str) else None)
     return {
         "export_schema_version": EXPORT_SCHEMA_VERSION,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),

@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from fastapi import APIRouter, FastAPI, HTTPException, Request, Response  # noqa: E402
+from fastapi import APIRouter, FastAPI, HTTPException, Query, Request, Response  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
@@ -43,6 +43,12 @@ configure_logging()
 _ON_VERCEL = bool(os.environ.get("VERCEL"))
 
 
+def custodiante_track_enabled() -> bool:
+    """Trilha custodiante na API/UI. Desative com CERTIK_ENABLE_CUSTODIANTE_TRACK=0|false|off."""
+    v = (os.environ.get("CERTIK_ENABLE_CUSTODIANTE_TRACK") or "").strip().lower()
+    return v not in ("0", "false", "no", "off")
+
+
 def _web_root() -> Path:
     """Raiz do SPA/CSS/JS servidos por esta app (incl. na Vercel dentro do bundle)."""
     vp = ROOT / "vercel_public"
@@ -54,7 +60,7 @@ def _web_root() -> Path:
 PUBLIC_DIR = _web_root()
 STATIC_DIR = PUBLIC_DIR / "static"
 
-API_SCHEMA_VERSION = "2"
+API_SCHEMA_VERSION = "3"
 API_REST_VERSION = "v1"
 
 logger = logging.getLogger(__name__)
@@ -134,30 +140,53 @@ def _serialize_question(q: dict[str, Any]) -> dict[str, Any]:
 class ScopeRequest(BaseModel):
     institution: str = Field(default="", max_length=500)
     answers: dict[str, Any] = Field(default_factory=dict)
+    track: str = Field(default="intermediaria", description="intermediaria | custodiante")
 
 
 api_router = APIRouter(tags=["scope"])
 
 
 @api_router.get("/health")
-def health() -> dict[str, str]:
+def health() -> dict[str, Any]:
     return {
         "status": "ok",
         "phase": "E",
         "api_schema_version": API_SCHEMA_VERSION,
         "api_rest_version": API_REST_VERSION,
+        "features": {"custodiante_track": custodiante_track_enabled()},
     }
 
 
 @api_router.get("/questions")
-def get_questions(response: Response) -> dict[str, Any]:
+def get_questions(
+    response: Response,
+    track: str = Query(default="intermediaria", description="intermediaria | custodiante"),
+) -> dict[str, Any]:
+    from matrix_loader import MatrixLoadError, normalize_track
     from questionnaire_loader import get_blocks
     from rules_engine import questions_by_block
 
+    try:
+        t = normalize_track(track)
+    except MatrixLoadError as e:
+        raise HTTPException(
+            status_code=400,
+            detail={"code": "INVALID_TRACK", "message": str(e)},
+        ) from e
+
+    if t == "custodiante" and not custodiante_track_enabled():
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "code": "TRACK_DISABLED",
+                "message": "Trilha custodiante desativada neste ambiente (CERTIK_ENABLE_CUSTODIANTE_TRACK).",
+            },
+        )
+
     response.headers["Cache-Control"] = "public, max-age=300"
-    by_block = questions_by_block()
+    by_block = questions_by_block(t)
     blocks_out: list[dict[str, Any]] = []
-    for mb in get_blocks():
+    for mb in get_blocks(t):
         bid = str(mb["id"])
         qs = by_block.get(bid, [])
         blocks_out.append(
@@ -168,15 +197,33 @@ def get_questions(response: Response) -> dict[str, Any]:
                 "questions": [_serialize_question(q) for q in qs],
             }
         )
-    return {"blocks": blocks_out, "api_schema_version": API_SCHEMA_VERSION}
+    return {"blocks": blocks_out, "api_schema_version": API_SCHEMA_VERSION, "track": t}
 
 
 @api_router.post("/scope")
 def post_scope(body: ScopeRequest) -> dict[str, Any]:
+    from matrix_loader import MatrixLoadError, normalize_track
     from rules_engine import compute_scope
 
     try:
-        _, meta = compute_scope(body.answers)
+        t = normalize_track(body.track)
+    except MatrixLoadError as e:
+        raise HTTPException(
+            status_code=400,
+            detail={"code": "INVALID_TRACK", "message": str(e)},
+        ) from e
+
+    if t == "custodiante" and not custodiante_track_enabled():
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "code": "TRACK_DISABLED",
+                "message": "Trilha custodiante desativada neste ambiente (CERTIK_ENABLE_CUSTODIANTE_TRACK).",
+            },
+        )
+
+    try:
+        _, meta = compute_scope(body.answers, track=t)
     except Exception:
         logger.exception("compute_scope failed")
         raise HTTPException(
@@ -190,6 +237,7 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
     inst = body.institution.strip()
     return {
         "api_schema_version": API_SCHEMA_VERSION,
+        "track": t,
         "institution": inst,
         "incisos_sujeitos_auditoria": meta["incisos_sujeitos_auditoria"],
         "incisos_fora_escopo_auditoria": meta["incisos_fora_escopo_auditoria"],

@@ -1,9 +1,8 @@
 """
-Motor de regras IN 701 / Resolução BCB nº 520 — escopo intermediário CertiK.
+Motor de regras IN 701 / Resolução BCB nº 520 — escopo por trilha (intermediária | custodiante).
 
-Incisos e obrigatórios: laws/COVERAGE_MATRIX.yaml (matrix_loader).
-Gatilhos e questionário: laws/questionnaire.yaml (questionnaire_loader, Fase C).
-Orientação relatório BCB: laws/BCB_REPORT_HINTS.yaml (bcb_hints_loader).
+Incisos: laws/COVERAGE_MATRIX.yaml ou laws/tracks/custodiante/COVERAGE_MATRIX.yaml
+Gatilhos: questionnaire por trilha (questionnaire_loader).
 """
 
 from __future__ import annotations
@@ -13,12 +12,18 @@ from typing import Any
 import pandas as pd
 
 from bcb_hints_loader import get_bcb_report_hint
-from matrix_loader import INCISOS_MATRIX, MANDATORY_KEYS, sort_scope_keys
+from matrix_loader import (
+    TRACK_DEFAULT,
+    build_incisos_matrix,
+    build_mandatory_keys,
+    normalize_track,
+    sort_scope_keys,
+)
 from questionnaire_loader import (
     QUESTIONS,
     normalize_answers,
     potential_triggers_per_inciso,
-    questions_by_block,
+    questions_by_block as _questionnaire_questions_by_block,
     resolve_triggers,
 )
 from evidence_requests import build_journey_2_payload
@@ -46,7 +51,7 @@ SCOPE_COLUMNS: tuple[str, ...] = (
 
 def _why_out_of_scope(potential: list[str]) -> str:
     base = (
-        "Não integra o escopo de auditoria desta delimitação: não é obrigatório fixo na fase intermediária "
+        "Não integra o escopo de auditoria desta delimitação: não é obrigatório fixo na matriz desta trilha "
         "para o modelo atual e nenhuma resposta dada acionou este inciso."
     )
     if potential:
@@ -57,40 +62,46 @@ def _why_out_of_scope(potential: list[str]) -> str:
     return f"{base} Não há gatilho mapeado no questionário atual para este inciso."
 
 
-def compute_scope(answers: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]:
+def compute_scope(
+    answers: dict[str, Any],
+    track: str | None = None,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
     """
     Retorna (dataframe só com incisos sujeitos a auditoria, metadados).
 
-    Metadados incluem ``incisos_fora_escopo_auditoria`` com incisos da matriz que,
-    nesta configuração de respostas, não entram no escopo.
+    ``track``: ``intermediaria`` (default) ou ``custodiante``.
     """
-    norm = normalize_answers(answers)
-    triggered_by, free_text, audit_only = resolve_triggers(answers)
-    pot_rev = potential_triggers_per_inciso()
+    t = normalize_track(track or TRACK_DEFAULT)
+    inc_matrix = build_incisos_matrix(t)
+    mandatory = build_mandatory_keys(t)
 
-    active_keys: set[str] = set(MANDATORY_KEYS)
+    norm = normalize_answers(answers, t)
+    triggered_by, free_text, audit_only = resolve_triggers(answers, t)
+    pot_rev = potential_triggers_per_inciso(t)
+
+    active_keys: set[str] = set(mandatory)
     for inc in triggered_by:
         active_keys.add(inc)
 
-    suppress_custody_cluster_if_non_custodial(active_keys, triggered_by, norm)
+    suppress_custody_cluster_if_non_custodial(active_keys, triggered_by, norm, t)
 
-    why_by_key = build_why_texts_for_scope(active_keys, triggered_by, norm, MANDATORY_KEYS)
-    llm_whys = try_enrich_why_with_llm(why_by_key, norm, triggered_by)
+    why_by_key = build_why_texts_for_scope(active_keys, triggered_by, norm, mandatory, inc_matrix, t)
+    llm_whys = try_enrich_why_with_llm(why_by_key, norm, triggered_by, inc_matrix, t)
     why_by_key = merge_llm_whys(why_by_key, llm_whys)
 
-    all_matrix_keys = set(INCISOS_MATRIX.keys())
+    all_matrix_keys = set(inc_matrix.keys())
     inactive_keys = all_matrix_keys - active_keys
 
     incisos_auditar: list[dict[str, Any]] = []
     rows: list[dict[str, str]] = []
 
-    for key in sort_scope_keys(active_keys):
-        meta = INCISOS_MATRIX[key]
-        is_mandatory = key in MANDATORY_KEYS
+    for key in sort_scope_keys(active_keys, t):
+        meta = inc_matrix[key]
+        is_mandatory = key in mandatory
         qids = triggered_by.get(key, [])
         origem = "Obrigatório (matriz)" if is_mandatory else "Acionado por respostas"
         why = why_by_key.get(key) or "Escopo alinhado à matriz IN 701 e às respostas ao questionário."
-        hint = get_bcb_report_hint(key)
+        hint = get_bcb_report_hint(key, track=t)
 
         row = {
             "Item IN 701": meta["item"],
@@ -122,8 +133,8 @@ def compute_scope(answers: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]
         )
 
     incisos_fora: list[dict[str, Any]] = []
-    for key in sort_scope_keys(inactive_keys):
-        meta = INCISOS_MATRIX[key]
+    for key in sort_scope_keys(inactive_keys, t):
+        meta = inc_matrix[key]
         pot = pot_rev.get(key, [])
         incisos_fora.append(
             {
@@ -139,11 +150,12 @@ def compute_scope(answers: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]
     if not df.empty:
         df = df.drop(columns=["_key"], errors="ignore")
 
-    mandatory_count = sum(1 for k in active_keys if k in MANDATORY_KEYS)
+    mandatory_count = sum(1 for k in active_keys if k in mandatory)
     conditional_count = len(active_keys) - mandatory_count
-    corpus_readiness = corpus_readiness_for_scope(active_keys)
+    corpus_readiness = corpus_readiness_for_scope(active_keys, t)
 
-    meta_out = {
+    meta_out: dict[str, Any] = {
+        "track": t,
         "answers": norm,
         "active_keys": active_keys,
         "triggered_by": triggered_by,
@@ -159,6 +171,10 @@ def compute_scope(answers: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]
     }
     meta_out["journey_2"] = build_journey_2_payload(norm, meta_out)
     return df, meta_out
+
+
+def questions_by_block(track: str | None = None) -> dict[str, list[dict[str, Any]]]:
+    return _questionnaire_questions_by_block(track)
 
 
 __all__ = [

@@ -5,12 +5,52 @@
 
 const $ = (sel, root = document) => root.querySelector(sel);
 
+const TRACK_STORAGE_KEY = "certik701_scope_track";
+
 const state = {
   blocks: [],
   step: 0,
+  /** intermediaria | custodiante */
+  track: "intermediaria",
+  /** @type {{ custodiante_track: boolean }} */
+  features: { custodiante_track: true },
   /** @type {Record<string, unknown>} */
   answers: {},
 };
+
+function loadTrackFromStorage() {
+  try {
+    const s = sessionStorage.getItem(TRACK_STORAGE_KEY);
+    if (s === "custodiante" || s === "intermediaria") return s;
+  } catch {
+    /* ignore */
+  }
+  return "intermediaria";
+}
+
+function saveTrackToStorage() {
+  try {
+    sessionStorage.setItem(TRACK_STORAGE_KEY, state.track);
+  } catch {
+    /* ignore */
+  }
+}
+
+function syncTrackButtonsUI() {
+  document.querySelectorAll(".intro-track__btn").forEach((btn) => {
+    const t = btn.getAttribute("data-track");
+    const on = t === state.track;
+    btn.classList.toggle("intro-track__btn--active", on);
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    if (t === "custodiante" && state.features.custodiante_track === false) {
+      btn.classList.add("hidden");
+      btn.setAttribute("aria-hidden", "true");
+    } else if (t === "custodiante") {
+      btn.classList.remove("hidden");
+      btn.removeAttribute("aria-hidden");
+    }
+  });
+}
 
 /** Prefixo REST versionado (recomendado). */
 function apiBase() {
@@ -613,6 +653,7 @@ async function submitScope() {
   const institution = ($("#institution").value || "").trim();
   const payload = {
     institution,
+    track: state.track,
     answers: { ...state.answers },
   };
 
@@ -652,7 +693,8 @@ async function submitScope() {
   }
 
   const nome = institution ? `<strong>${escapeHtml(institution)}</strong> — ` : "";
-  elSummary.innerHTML = `${nome}<strong>${na}</strong> inciso(s) no <strong>escopo de auditoria</strong> e <strong>${nf}</strong> <strong>fora deste escopo</strong> (matriz IN 701 · fase intermediária).`;
+  const trk = data.track === "custodiante" ? "trilha custodiante" : "fase intermediária";
+  elSummary.innerHTML = `${nome}<strong>${na}</strong> inciso(s) no <strong>escopo de auditoria</strong> e <strong>${nf}</strong> <strong>fora deste escopo</strong> (matriz IN 701 · ${trk}).`;
 
   elMetrics.innerHTML = `
     <div class="metric"><div class="metric-value">${na}</div><div class="metric-label">No escopo</div></div>
@@ -704,20 +746,44 @@ async function submitScope() {
   });
 }
 
-async function boot() {
+async function loadFeaturesFromHealth() {
   try {
-    const data = await fetchJSON("/questions");
-    state.blocks = data.blocks || [];
-    if (!state.blocks.length) throw new Error("Nenhum bloco de perguntas retornado.");
-  } catch (e) {
-    const msg =
-      String(e.message || e) +
-      " — Confirme que está a usar o URL do site (mesmo domínio) e que a API responde em /api/v1/questions (ex.: python serve_web.py ou deploy na Vercel). Não abra o HTML em file://.";
-    showToast(msg);
-    return;
+    const h = await fetch(`${apiBase()}/health`, { headers: { Accept: "application/json" } });
+    if (!h.ok) return;
+    const j = await h.json();
+    const f = j.features || {};
+    if (typeof f.custodiante_track === "boolean") {
+      state.features.custodiante_track = f.custodiante_track;
+    }
+  } catch {
+    /* offline / CORS — manter default */
   }
+}
 
-  $("#btn-start").addEventListener("click", () => {
+async function boot() {
+  await loadFeaturesFromHealth();
+  state.track = loadTrackFromStorage();
+  if (state.features.custodiante_track === false && state.track === "custodiante") {
+    state.track = "intermediaria";
+    try {
+      sessionStorage.setItem(TRACK_STORAGE_KEY, "intermediaria");
+    } catch {
+      /* ignore */
+    }
+  }
+  syncTrackButtonsUI();
+
+  document.querySelectorAll(".intro-track__btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const t = btn.getAttribute("data-track");
+      if (t !== "intermediaria" && t !== "custodiante") return;
+      state.track = t;
+      saveTrackToStorage();
+      syncTrackButtonsUI();
+    });
+  });
+
+  $("#btn-start").addEventListener("click", async () => {
     const inst = $("#institution");
     const name = (inst.value || "").trim();
     if (!name) {
@@ -725,6 +791,22 @@ async function boot() {
       inst.focus();
       return;
     }
+    let data;
+    try {
+      data = await fetchJSON(`/questions?track=${encodeURIComponent(state.track)}`);
+    } catch (e) {
+      showToast(
+        String(e.message || e) +
+          " — Confirme a API em /api/v1/questions?track=… (serve_web.py ou Vercel).",
+      );
+      return;
+    }
+    state.blocks = data.blocks || [];
+    if (!state.blocks.length) {
+      showToast("Nenhum bloco de perguntas retornado para esta trilha.");
+      return;
+    }
+    if (data.track && data.track !== state.track) state.track = data.track;
     initAnswersFromBlocks();
     state.step = 0;
     setView("wizard");
@@ -758,8 +840,16 @@ async function boot() {
 
   $("#btn-restart").addEventListener("click", () => {
     $("#institution").value = "";
-    initAnswersFromBlocks();
+    state.blocks = [];
     state.step = 0;
+    state.track = "intermediaria";
+    try {
+      sessionStorage.removeItem(TRACK_STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+    syncTrackButtonsUI();
+    initAnswersFromBlocks();
     $("#journey-2-panel")?.classList.add("hidden");
     sessionStorage.removeItem(J2_PEDIDO_STORAGE_KEY);
     setView("intro");
