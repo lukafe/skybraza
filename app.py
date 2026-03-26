@@ -127,12 +127,13 @@ def _certik_css() -> None:
     st.markdown(
         """
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@500;600&display=swap');
         html, body, [class*="css"]  {
             font-family: 'Inter', 'Segoe UI', sans-serif;
         }
         .block-container { padding-top: 1.35rem; max-width: 1180px; }
         h1 { letter-spacing: -0.03em; color: #f4f4f5 !important; }
+        [data-testid="stAppViewContainer"] { background: #0b0e11; }
         .certik-badge {
             display: inline-block;
             padding: 0.28rem 0.7rem;
@@ -147,8 +148,11 @@ def _certik_css() -> None:
             margin-bottom: 0.55rem;
         }
         div[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #0c0c0e 0%, #050506 100%);
-            border-right: 1px solid #2a2a30;
+            background: linear-gradient(180deg, #0f1218 0%, #0b0e11 100%);
+            border-right: 1px solid #2d3139;
+        }
+        button[kind="secondary"], button[kind="primary"] {
+            transition: color 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
         }
         </style>
         """,
@@ -206,16 +210,16 @@ def _style_scope_df(df: pd.DataFrame) -> pd.io.formats.style.Styler:
     def color_origem(val: str) -> str:
         s = str(val)
         if "Obrigatório" in s:
-            return "color: #2EE6B6; font-weight: 600;"
+            return "color: #4ade80; font-weight: 600;"
         if "Acionado" in s:
-            return "color: #5C9DFF; font-weight: 600;"
+            return "color: #facc15; font-weight: 600;"
         return ""
 
     if "Origem no escopo" in df.columns:
         styler = df.style.map(color_origem, subset=["Origem no escopo"])
     else:
         styler = df.style
-    return styler.set_properties(**{"background-color": "#0c0e14", "color": "#EEF1F6"})
+    return styler.set_properties(**{"background-color": "#12151c", "color": "#EEF1F6"})
 
 
 def _resumo_text(vasp_name: str, meta: dict, df: pd.DataFrame) -> str:

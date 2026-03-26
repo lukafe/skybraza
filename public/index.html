@@ -3,16 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0D0D0F" />
+    <meta name="theme-color" content="#0b0e11" />
     <meta name="description" content="CertiK — escopo IN 701 (Banco Central). Questionário rápido." />
     <title>Prepare o escopo da sua operação — CertiK</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Roboto+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/css/styles.css?v=25" />
+    <link rel="stylesheet" href="/static/css/styles.css?v=26" />
   </head>
   <body class="sk-app app-view-intro">
     <noscript>
@@ -127,25 +127,68 @@
         </div>
       </section>
 
-      <section id="results" class="results hidden" aria-labelledby="results-title">
-        <div class="panel results-hero">
-          <span class="pill pill-ok">Resumo</span>
-          <h2 id="results-title">Painel de escopo</h2>
-          <p id="results-summary" class="summary-line"></p>
-          <div class="metrics metrics-results" id="metrics"></div>
-          <div class="results-actions">
-            <button type="button" class="btn btn-ghost" id="btn-restart">Novo questionário</button>
+      <section id="results" class="results results-dashboard hidden" aria-labelledby="results-title">
+        <div class="panel results-hero dashboard-hero">
+          <div class="dashboard-hero-grid">
+            <div class="dashboard-hero-kpi">
+              <span class="pill pill-ok">Dashboard</span>
+              <p class="dashboard-entity-label">Instituição</p>
+              <h2 id="results-entity-name" class="dashboard-entity-name">—</h2>
+              <p id="results-track-badge" class="dashboard-track-pill" aria-live="polite"></p>
+              <p id="results-summary" class="summary-line dashboard-summary-line"></p>
+              <div class="metrics kpi-strip metrics-results" id="metrics"></div>
+              <div class="results-actions">
+                <button type="button" class="btn btn-ghost" id="btn-restart">Novo questionário</button>
+              </div>
+            </div>
+            <aside class="dashboard-chart-card" aria-labelledby="chart-title">
+              <h3 id="chart-title" class="dashboard-chart-title">Cobertura da matriz IN 701</h3>
+              <p class="dashboard-chart-sub">Distribuição por origem no universo de incisos da trilha</p>
+              <div class="donut-block">
+                <div class="donut-ring-wrap">
+                  <div id="compliance-donut" class="donut-ring" role="presentation"></div>
+                  <div class="donut-hole">
+                    <span id="donut-pct" class="donut-pct tabular-nums">0%</span>
+                    <span class="donut-hole-label">no escopo</span>
+                  </div>
+                </div>
+                <ul class="donut-legend">
+                  <li>
+                    <span class="donut-legend-swatch donut-legend-swatch--mandatory"></span>
+                    <span>Obrigatórios (matriz)</span>
+                    <strong id="leg-mand" class="donut-legend-val tabular-nums">0</strong>
+                  </li>
+                  <li>
+                    <span class="donut-legend-swatch donut-legend-swatch--triggered"></span>
+                    <span>Acionados por respostas</span>
+                    <strong id="leg-cond" class="donut-legend-val tabular-nums">0</strong>
+                  </li>
+                  <li>
+                    <span class="donut-legend-swatch donut-legend-swatch--out"></span>
+                    <span>Fora deste escopo</span>
+                    <strong id="leg-fora" class="donut-legend-val tabular-nums">0</strong>
+                  </li>
+                </ul>
+              </div>
+            </aside>
           </div>
+          <h2 id="results-title" class="sr-only">Painel de escopo</h2>
         </div>
 
-        <div id="journey-2-panel" class="panel journey-2-panel journey-2-panel--compact hidden" aria-labelledby="j2-title">
-          <h3 id="j2-title" class="j2-heading">Serviços técnicos CertiK</h3>
-          <p id="j2-lead" class="j2-lead"></p>
-          <div id="j2-streams" class="j2-streams"></div>
+        <div
+          id="journey-2-panel"
+          class="panel journey-2-panel j2-activation-master journey-2-panel--compact hidden"
+          aria-labelledby="j2-title"
+        >
+          <div class="j2-activation-head">
+            <h3 id="j2-title" class="j2-heading">Ativação de serviços — Jornada 2</h3>
+            <p id="j2-lead" class="j2-lead"></p>
+          </div>
+          <div id="j2-streams" class="j2-product-grid"></div>
           <p id="j2-notes" class="j2-notes hidden"></p>
         </div>
 
-        <div class="results-body" id="results-body">
+        <div class="results-body dashboard-lists-layout" id="results-body">
           <section class="results-section results-section--audit" aria-labelledby="sec-audit-title">
             <div class="results-section-head">
               <h3 class="results-section-title" id="sec-audit-title">
@@ -192,6 +235,6 @@
 
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-    <script src="/static/js/app.js?v=27" type="module"></script>
+    <script src="/static/js/app.js?v=28" type="module"></script>
   </body>
 </html>

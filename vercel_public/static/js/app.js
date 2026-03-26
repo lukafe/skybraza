@@ -362,6 +362,58 @@ function escapeHtml(s) {
   return d.innerHTML;
 }
 
+/** Classe CSS do emblema de origem (matriz vs gatilhos). */
+function origemPillClass(origem) {
+  const o = String(origem || "");
+  if (o.includes("Obrigatório")) return "dash-inciso-pill dash-inciso-pill--mandatory";
+  if (o.includes("Acionado")) return "dash-inciso-pill dash-inciso-pill--triggered";
+  return "dash-inciso-pill dash-inciso-pill--neutral";
+}
+
+/**
+ * Rosca de cobertura: obrigatórios + acionados + fora = universo da matriz na trilha.
+ * @param {number} mand
+ * @param {number} cond
+ * @param {number} nf
+ */
+function renderComplianceDonut(mand, cond, nf) {
+  const ring = $("#compliance-donut");
+  const pctEl = $("#donut-pct");
+  const legM = $("#leg-mand");
+  const legC = $("#leg-cond");
+  const legF = $("#leg-fora");
+  const total = mand + cond + nf;
+  const na = mand + cond;
+
+  if (legM) legM.textContent = String(mand);
+  if (legC) legC.textContent = String(cond);
+  if (legF) legF.textContent = String(nf);
+
+  if (pctEl) {
+    if (total > 0) {
+      const p = Math.round((na / total) * 1000) / 10;
+      pctEl.textContent = `${Number.isInteger(p) ? p : p.toFixed(1)}%`;
+    } else {
+      pctEl.textContent = "0%";
+    }
+  }
+
+  if (!ring) return;
+  if (total <= 0) {
+    ring.style.background = "conic-gradient(#4b5563 0% 100%)";
+    return;
+  }
+  const pM = (mand / total) * 100;
+  const pC = (cond / total) * 100;
+  const a1 = pM;
+  const a2 = pM + pC;
+  ring.style.background = `conic-gradient(
+    #22c55e 0% ${a1}%,
+    #ca8a04 ${a1}% ${a2}%,
+    #4b5563 ${a2}% 100%
+  )`;
+}
+
 const J2_PEDIDO_STORAGE_KEY = "certik_vasp_j2_pedido_status";
 
 function loadJ2PedidoStatuses() {
@@ -507,7 +559,8 @@ function renderDashAuditInciso(row, checklistBloc, index, getNextPedidoIndex) {
 
   const sum = document.createElement("summary");
   sum.className = "dash-inciso-summary";
-  sum.innerHTML = `<span class="dash-inciso-pill">${escapeHtml(row.origem_escopo || "")}</span><span class="dash-inciso-heading"><span class="dash-inciso-item">${escapeHtml(row.item || "")}</span><span class="dash-inciso-meta"><code>${escapeHtml(row.inciso_id || "")}</code> · ${escapeHtml(row.artigo_in701 || "")}</span></span><span class="dash-inciso-docs-n" aria-hidden="true">${nDocs} doc.</span>`;
+  const pillCls = origemPillClass(row.origem_escopo);
+  sum.innerHTML = `<span class="${pillCls}">${escapeHtml(row.origem_escopo || "")}</span><span class="dash-inciso-heading"><span class="dash-inciso-item">${escapeHtml(row.item || "")}</span><span class="dash-inciso-meta"><code>${escapeHtml(row.inciso_id || "")}</code> · ${escapeHtml(row.artigo_in701 || "")}</span></span><span class="dash-inciso-docs-n" aria-hidden="true">${nDocs} doc.</span>`;
 
   const body = document.createElement("div");
   body.className = "dash-inciso-body";
@@ -623,21 +676,29 @@ function renderJourney2(j2) {
   const formUrl = typeof pt.formulario_url === "string" ? pt.formulario_url.trim() : "";
 
   streams.innerHTML = `
-    <div class="j2-stream ${scOn ? "j2-stream--on" : "j2-stream--off"}">
-      <h5 class="j2-stream-title">Smart contract audit</h5>
-      <p class="j2-stream-status">${scOn ? "Aplicável nesta configuração" : "Não indicado no diagnóstico"}</p>
-      <p class="j2-stream-body">${escapeHtml(sc.acao_cliente || "")}</p>
-    </div>
-    <div class="j2-stream ${ptOn ? "j2-stream--on" : "j2-stream--off"}">
-      <h5 class="j2-stream-title">Penetration test</h5>
-      <p class="j2-stream-status">${ptOn ? "Aplicável (superfície exposta indicada)" : "Não aplicável por defeito — confirmar com a CertiK se tiver dúvida"}</p>
-      <p class="j2-stream-body">${escapeHtml(pt.acao_cliente || "")}</p>
+    <article class="j2-product ${scOn ? "j2-product--active" : "j2-product--inactive"}">
+      <div class="j2-product-head">
+        <span class="j2-product-name">Smart contract audit</span>
+        <span class="j2-product-status">${scOn ? "Ativo" : "Inativo"}</span>
+      </div>
+      <p class="j2-product-tagline">${scOn ? "Aplicável nesta configuração" : "Não indicado no diagnóstico"}</p>
+      <p class="j2-product-body">${escapeHtml(sc.acao_cliente || "")}</p>
+    </article>
+    <article class="j2-product ${ptOn ? "j2-product--active" : "j2-product--inactive"}">
+      <div class="j2-product-head">
+        <span class="j2-product-name">Penetration test</span>
+        <span class="j2-product-status">${ptOn ? "Ativo" : "Inativo"}</span>
+      </div>
+      <p class="j2-product-tagline">${
+        ptOn ? "Superfície exposta indicada — confirmar âmbito com a CertiK" : "Não aplicável por defeito — confirmar com a CertiK se tiver dúvida"
+      }</p>
+      <p class="j2-product-body">${escapeHtml(pt.acao_cliente || "")}</p>
       ${
         ptOn && formUrl
-          ? `<p class="j2-form-link"><a href="${escapeHtml(formUrl)}" target="_blank" rel="noopener noreferrer" title="CertiK Application Penetration Testing Questionnaire">Abrir formulário de pentest (Google Forms)</a></p>`
+          ? `<p class="j2-product-form"><a href="${escapeHtml(formUrl)}" target="_blank" rel="noopener noreferrer" title="CertiK Application Penetration Testing Questionnaire">Abrir formulário de pentest</a></p>`
           : ""
       }
-    </div>
+    </article>
   `;
 
   const nh = Array.isArray(j2.notas_heuristica) ? j2.notas_heuristica : [];
@@ -704,6 +765,21 @@ async function submitScope() {
     return;
   }
 
+  const elEntity = $("#results-entity-name");
+  const elTrackPill = $("#results-track-badge");
+  if (elEntity) {
+    elEntity.textContent = institution || "—";
+  }
+  const trkLabel =
+    data.track === "custodiante"
+      ? "Trilha custodiante"
+      : data.track === "corretora"
+        ? "Trilha corretora"
+        : "Fase intermediária";
+  if (elTrackPill) {
+    elTrackPill.textContent = `${trkLabel} · IN 701`;
+  }
+
   const nome = institution ? `<strong>${escapeHtml(institution)}</strong> — ` : "";
   const trk =
     data.track === "custodiante"
@@ -714,11 +790,13 @@ async function submitScope() {
   elSummary.innerHTML = `${nome}<strong>${na}</strong> inciso(s) no <strong>escopo de auditoria</strong> e <strong>${nf}</strong> <strong>fora deste escopo</strong> (matriz IN 701 · ${trk}).`;
 
   elMetrics.innerHTML = `
-    <div class="metric"><div class="metric-value">${na}</div><div class="metric-label">No escopo</div></div>
-    <div class="metric"><div class="metric-value">${mand}</div><div class="metric-label">Obrigatórios</div></div>
-    <div class="metric"><div class="metric-value">${cond}</div><div class="metric-label">Por respostas</div></div>
-    <div class="metric metric--muted"><div class="metric-value">${nf}</div><div class="metric-label">Fora do escopo</div></div>
+    <div class="metric kpi-card"><div class="metric-value">${na}</div><div class="metric-label">No escopo</div></div>
+    <div class="metric kpi-card"><div class="metric-value">${mand}</div><div class="metric-label">Obrigatórios</div></div>
+    <div class="metric kpi-card"><div class="metric-value">${cond}</div><div class="metric-label">Por respostas</div></div>
+    <div class="metric metric--muted kpi-card"><div class="metric-value">${nf}</div><div class="metric-label">Fora do escopo</div></div>
   `;
+
+  renderComplianceDonut(mand, cond, nf);
 
   elCountA.textContent = String(sujeitos.length);
   elCountS.textContent = String(fora.length);
