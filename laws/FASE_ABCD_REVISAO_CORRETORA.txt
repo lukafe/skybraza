@@ -1,0 +1,32 @@
+================================================================================
+Revisão pós-implementação — trilha «corretora» (Fases A–D + UI E)
+================================================================================
+Última verificação técnica automatizada: pytest + validar_projeto (trilha corretora).
+
+Fase A–C (artefatos)
+--------------------
+[x] laws/tracks/corretora/COVERAGE_MATRIX.yaml — meta.track=corretora, escopo_corretora coerente com baseline custodiante.
+[x] laws/tracks/corretora/questionnaire.yaml — ids corr_*, blocos e gatilhos espelham custodiante onde aplicável.
+
+Fase D (motor)
+--------------
+[x] matrix_loader: TRACK_IDS inclui corretora; paths e escopo YAML corretos.
+[x] questionnaire_loader aponta para tracks/corretora/questionnaire.yaml.
+[x] scope_narrative / evidence_requests: ramos corretora e supressões (não aplicar supressão de custódia a corretora).
+[x] main.py: corretora_track em /health; 403 quando CERTIK_ENABLE_CORRETORA_TRACK=0.
+
+Fase E (UI e docs)
+------------------
+[x] public/: terceiro botão Corretora; app.js lê features.corretora_track e oculta se desativado.
+[x] app.py Streamlit: opção corretora + env CERTIK_ENABLE_CORRETORA_TRACK.
+[x] laws/SERVIDOR_API.txt e laws/ROTEIRO_FASES.txt mencionam corretora e env.
+[x] laws/BCB_REPORT_HINTS.yaml: tracks.corretora com overrides onde faz sentido.
+
+Testes
+------
+[x] pytest tests/ — contrato API, BCB hints, maximize/journey2/mpc_mixed para corretora.
+
+Pendência legal (Fase 0)
+------------------------
+[ ] Revisão humana do MAPEAMENTO_IN701_REF_RES520.txt (linhas geradas automaticamente).
+[ ] Parecer jurídico sobre lista fechada de obrigatórios da trilha corretora face à IN 701 (baseline atual = custodiante).

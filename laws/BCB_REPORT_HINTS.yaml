@@ -99,3 +99,18 @@ tracks:
     XVII: |
       Descreva recuperação de material criptográfico e de credenciais para supervisão do BCB: procedimentos, testes, logs e responsáveis,
       sem expor segredos operacionais no relatório público.
+
+  corretora:
+    VII: |
+      Como corretora (modalidade Res. 520 art. 10 — intermediação e custódia), detalhe governança de chaves e instrumentos de controlo
+      (MPC, HSM, políticas de assinatura), com evidências de revisões e de quem pode movimentar ativos em nome do cliente na mesa/plataforma.
+    XIV: |
+      Priorize contrato de prestação de serviços e anexos que cubram negociação e guarda (arts. 73, 75 e 78 onde aplicáveis): segregação,
+      responsabilidade, incidentes e alterações — exemplos anonimizados quando possível.
+    XV: |
+      Demonstre cumprimento dos deveres de custódia operacional (art. 76, I a XII) no contexto de corretora: inventário, reconciliação,
+      continuidade e coordenação com subcustodiantes ou fornecedores críticos.
+    XVI: |
+      Explique redundância de controlos sobre AV de clientes e continuidade da guarda perante falha de canal (HSM, nuvem, parceiro).
+    XVII: |
+      Recuperação de material para supervisão do BCB: procedimentos, testes e logs, sem expor segredos no relatório público.

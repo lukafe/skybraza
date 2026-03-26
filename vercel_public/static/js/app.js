@@ -10,10 +10,10 @@ const TRACK_STORAGE_KEY = "certik701_scope_track";
 const state = {
   blocks: [],
   step: 0,
-  /** intermediaria | custodiante */
+  /** intermediaria | custodiante | corretora */
   track: "intermediaria",
-  /** @type {{ custodiante_track: boolean }} */
-  features: { custodiante_track: true },
+  /** @type {{ custodiante_track: boolean; corretora_track: boolean }} */
+  features: { custodiante_track: true, corretora_track: true },
   /** @type {Record<string, unknown>} */
   answers: {},
 };
@@ -21,7 +21,7 @@ const state = {
 function loadTrackFromStorage() {
   try {
     const s = sessionStorage.getItem(TRACK_STORAGE_KEY);
-    if (s === "custodiante" || s === "intermediaria") return s;
+    if (s === "custodiante" || s === "corretora" || s === "intermediaria") return s;
   } catch {
     /* ignore */
   }
@@ -42,10 +42,12 @@ function syncTrackButtonsUI() {
     const on = t === state.track;
     btn.classList.toggle("intro-track__btn--active", on);
     btn.setAttribute("aria-pressed", on ? "true" : "false");
-    if (t === "custodiante" && state.features.custodiante_track === false) {
+    const disabledCust = t === "custodiante" && state.features.custodiante_track === false;
+    const disabledCorr = t === "corretora" && state.features.corretora_track === false;
+    if (disabledCust || disabledCorr) {
       btn.classList.add("hidden");
       btn.setAttribute("aria-hidden", "true");
-    } else if (t === "custodiante") {
+    } else if (t === "custodiante" || t === "corretora") {
       btn.classList.remove("hidden");
       btn.removeAttribute("aria-hidden");
     }
@@ -703,7 +705,12 @@ async function submitScope() {
   }
 
   const nome = institution ? `<strong>${escapeHtml(institution)}</strong> — ` : "";
-  const trk = data.track === "custodiante" ? "trilha custodiante" : "fase intermediária";
+  const trk =
+    data.track === "custodiante"
+      ? "trilha custodiante"
+      : data.track === "corretora"
+        ? "trilha corretora (intermediação e custódia)"
+        : "fase intermediária";
   elSummary.innerHTML = `${nome}<strong>${na}</strong> inciso(s) no <strong>escopo de auditoria</strong> e <strong>${nf}</strong> <strong>fora deste escopo</strong> (matriz IN 701 · ${trk}).`;
 
   elMetrics.innerHTML = `
@@ -765,6 +772,9 @@ async function loadFeaturesFromHealth() {
     if (typeof f.custodiante_track === "boolean") {
       state.features.custodiante_track = f.custodiante_track;
     }
+    if (typeof f.corretora_track === "boolean") {
+      state.features.corretora_track = f.corretora_track;
+    }
   } catch {
     /* offline / CORS — manter default */
   }
@@ -781,12 +791,20 @@ async function boot() {
       /* ignore */
     }
   }
+  if (state.features.corretora_track === false && state.track === "corretora") {
+    state.track = "intermediaria";
+    try {
+      sessionStorage.setItem(TRACK_STORAGE_KEY, "intermediaria");
+    } catch {
+      /* ignore */
+    }
+  }
   syncTrackButtonsUI();
 
   document.querySelectorAll(".intro-track__btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const t = btn.getAttribute("data-track");
-      if (t !== "intermediaria" && t !== "custodiante") return;
+      if (t !== "intermediaria" && t !== "custodiante" && t !== "corretora") return;
       state.track = t;
       saveTrackToStorage();
       syncTrackButtonsUI();

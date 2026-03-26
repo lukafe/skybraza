@@ -12,7 +12,8 @@ Após editar public/, execute: python scripts/sync_vercel_public.py
 Rotas versionadas: /api/v1/* (recomendado). Legado: /api/* (mesmo comportamento).
 
 Env: LOG_LEVEL, LOG_FORMAT=text|json, RATE_LIMIT_* (ver rate_limit.py), RATE_LIMIT_DISABLED=1,
-     CORS_ALLOWED_ORIGINS (lista CSV; omissão = *), CERTIK_ENABLE_CUSTODIANTE_TRACK
+     CORS_ALLOWED_ORIGINS (lista CSV; omissão = *),
+     CERTIK_ENABLE_CUSTODIANTE_TRACK, CERTIK_ENABLE_CORRETORA_TRACK (0|false|off desativa a trilha)
 
 Local: uvicorn main:app --reload --host 127.0.0.1 --port 8000
 """
@@ -48,6 +49,31 @@ def custodiante_track_enabled() -> bool:
     """Trilha custodiante na API/UI. Desative com CERTIK_ENABLE_CUSTODIANTE_TRACK=0|false|off."""
     v = (os.environ.get("CERTIK_ENABLE_CUSTODIANTE_TRACK") or "").strip().lower()
     return v not in ("0", "false", "no", "off")
+
+
+def corretora_track_enabled() -> bool:
+    """Trilha corretora na API/UI. Desative com CERTIK_ENABLE_CORRETORA_TRACK=0|false|off."""
+    v = (os.environ.get("CERTIK_ENABLE_CORRETORA_TRACK") or "").strip().lower()
+    return v not in ("0", "false", "no", "off")
+
+
+def _raise_if_track_disabled(t: str) -> None:
+    if t == "custodiante" and not custodiante_track_enabled():
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "code": "TRACK_DISABLED",
+                "message": "Trilha custodiante desativada neste ambiente (CERTIK_ENABLE_CUSTODIANTE_TRACK).",
+            },
+        )
+    if t == "corretora" and not corretora_track_enabled():
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "code": "TRACK_DISABLED",
+                "message": "Trilha corretora desativada neste ambiente (CERTIK_ENABLE_CORRETORA_TRACK).",
+            },
+        )
 
 
 def _web_root() -> Path:
@@ -151,7 +177,7 @@ def _serialize_question(q: dict[str, Any]) -> dict[str, Any]:
 class ScopeRequest(BaseModel):
     institution: str = Field(default="", max_length=500)
     answers: dict[str, Any] = Field(default_factory=dict)
-    track: str = Field(default="intermediaria", description="intermediaria | custodiante")
+    track: str = Field(default="intermediaria", description="intermediaria | custodiante | corretora")
 
 
 api_router = APIRouter(tags=["scope"])
@@ -164,14 +190,17 @@ def health() -> dict[str, Any]:
         "phase": "E",
         "api_schema_version": API_SCHEMA_VERSION,
         "api_rest_version": API_REST_VERSION,
-        "features": {"custodiante_track": custodiante_track_enabled()},
+        "features": {
+            "custodiante_track": custodiante_track_enabled(),
+            "corretora_track": corretora_track_enabled(),
+        },
     }
 
 
 @api_router.get("/questions")
 def get_questions(
     response: Response,
-    track: str = Query(default="intermediaria", description="intermediaria | custodiante"),
+    track: str = Query(default="intermediaria", description="intermediaria | custodiante | corretora"),
 ) -> dict[str, Any]:
     from matrix_loader import MatrixLoadError, normalize_track
     from questionnaire_loader import get_blocks
@@ -185,14 +214,7 @@ def get_questions(
             detail={"code": "INVALID_TRACK", "message": str(e)},
         ) from e
 
-    if t == "custodiante" and not custodiante_track_enabled():
-        raise HTTPException(
-            status_code=403,
-            detail={
-                "code": "TRACK_DISABLED",
-                "message": "Trilha custodiante desativada neste ambiente (CERTIK_ENABLE_CUSTODIANTE_TRACK).",
-            },
-        )
+    _raise_if_track_disabled(t)
 
     response.headers["Cache-Control"] = "public, max-age=300"
     by_block = questions_by_block(t)
@@ -224,14 +246,7 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
             detail={"code": "INVALID_TRACK", "message": str(e)},
         ) from e
 
-    if t == "custodiante" and not custodiante_track_enabled():
-        raise HTTPException(
-            status_code=403,
-            detail={
-                "code": "TRACK_DISABLED",
-                "message": "Trilha custodiante desativada neste ambiente (CERTIK_ENABLE_CUSTODIANTE_TRACK).",
-            },
-        )
+    _raise_if_track_disabled(t)
 
     try:
         _, meta = compute_scope(body.answers, track=t)

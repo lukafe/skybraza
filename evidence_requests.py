@@ -130,6 +130,11 @@ def build_journey_2_payload(answers: dict[str, Any], meta_scope: dict[str, Any])
         p_surf = bool(answers.get("cust_diag_surface"))
         p_staking = bool(answers.get("cust_C_staking"))
         q_staking, q_sc = "cust_C_staking", "cust_diag_sc"
+    elif track == "corretora":
+        p_sc = bool(answers.get("corr_diag_sc"))
+        p_surf = bool(answers.get("corr_diag_surface"))
+        p_staking = bool(answers.get("corr_C_staking"))
+        q_staking, q_sc = "corr_C_staking", "corr_diag_sc"
     else:
         p_sc = bool(answers.get("P_diag_sc"))
         p_surf = bool(answers.get("P_diag_surface"))

@@ -1,5 +1,5 @@
 """
-Fase C — carrega questionário por trilha (intermediária | custodiante) e resolve gatilhos.
+Fase C — carrega questionário por trilha (intermediária | custodiante | corretora) e resolve gatilhos.
 """
 
 from __future__ import annotations
@@ -19,6 +19,7 @@ QUESTIONNAIRE_PATH = PACKAGE_ROOT / "laws" / "questionnaire.yaml"
 _QUESTIONNAIRE_PATH_BY_TRACK: dict[str, Path] = {
     "intermediaria": PACKAGE_ROOT / "laws" / "questionnaire.yaml",
     "custodiante": PACKAGE_ROOT / "laws" / "tracks" / "custodiante" / "questionnaire.yaml",
+    "corretora": PACKAGE_ROOT / "laws" / "tracks" / "corretora" / "questionnaire.yaml",
 }
 
 

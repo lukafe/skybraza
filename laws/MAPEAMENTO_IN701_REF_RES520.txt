@@ -17,7 +17,38 @@ Exemplo (ilustrativo, não substitui revisão jurídica)
 Tabela — a completar na Fase 0
 --------------------------------------------------------------------------------
 
-  (Adicionar uma linha por cada id em ordem_exibicao / incisos[] das matrizes.)
+  (Gerado automaticamente a partir de laws/COVERAGE_MATRIX.yaml — revisão jurídica pendente.)
+  Formato: inciso_id | artigo_IN701 | resumo | refs_yaml (eco IN701→Res520)
+
+  I_a | 4º, I, alínea a | Mecanismos e procedimentos que permitam demonstrar a efetiva segregação entre AV da prestadora e ... | Res. 520 — segregação patrimonial / carteiras (Cap. IX, Seção II — confirmar arts. na versão oficial)
+  I_b | 4º, I, alínea b | Mecanismos destinados à asseguração da prova de reservas dos ativos virtuais. | Res. 520 — prova de reservas / comprovação de saldos (localizar capítulo pertinente na Res. 520)
+  II | 4º, II | Serviços relevantes contratados (Cap. IX, Seção IV, Res. 520), em especial arts. 32 e 33; adequaç... | Res. 520, Cap. IX, Seção IV Res. 520, arts. 32 e 33
+  III | 4º, III | Capacidade técnica, operacional e legal das empresas contratadas para serviços relevantes; presta... | Res. 520, art. 83
+  IV | 4º, IV | Planos de recuperação de posições e controlo de AV e recursos financeiros de clientes, e planos d... | Res. 520 — continuidade de negócios / recuperação (localizar arts. correlatos ao tema)
+  V | 4º, V | Políticas e procedimentos do art. 43 da Res. 520 e regramentos de governança das atividades. | Res. 520, art. 43
+  VI_a | 4º, VI, alínea a | Processos voltados à legislação de PLD/FTP e combate à utilização criminosa do SFN. | Legislação PLD/FTP aplicável às PSVAV (citar na certificação conforme modelo da instituição)
+  VI_b | 4º, VI, alínea b | Segurança, resiliência e funcionamento do ambiente computacional; mínimo art. 48, I a VIII, Res. ... | Res. 520, art. 48, incisos I a VIII
+  VII | 4º, VII | Requisitos para políticas de guarda e proteção dos instrumentos de controle dos AV de clientes/us... | Res. 520 — políticas de chaves / instrumentos de controle (localizar capítulo e arts.)
+  VIII | 4º, VIII | Mecanismos de monitoramento contínuo de segurança institucional e avaliação de riscos (detetar, p... | Res. 520 — monitoramento e gestão de riscos operacionais (localizar arts.)
+  IX_a | 4º, IX, alínea a | Políticas de oferta, listagem, suspensão e deslistagem de ativos virtuais selecionados. | Res. 520 — listagem / oferta de AV (ex.: art. 64 e correlatos — confirmar na versão oficial)
+  IX_b | 4º, IX, alínea b | Seleção de AV referenciados em moeda fiduciária — art. 65, I a IX, Res. 520. | Res. 520, art. 65, incisos I a IX
+  X_a | 4º, X, alínea a | Controlo interno — segregação de funções da governança com conflito de interesses potencial ou ef... | Res. 520, art. 69 (contexto conflito de interesse)
+  X_b_i | 4º, X, b, i | Regulamentação de sistemas de controles internos das IF e demais instituições autorizadas BCB. | Regulamentação de controles internos (IF/autorizadas) — corpus externo à pasta
+  X_b_ii | 4º, X, b, ii | Condições dos arts. 69 (I a IX) e 85 (I a XX), Res. 520. | Res. 520, art. 69, incisos I a IX Res. 520, art. 85, incisos I a XX
+  XI | 4º, XI | Estruturas de gestão de risco e capital, compliance e auditoria interna na forma aplicável a IF/a... | Regulamentação aplicável a IF e autorizadas BCB (corpus externo)
+  XII | 4º, XII | Políticas de segurança cibernética e plano de ação e resposta a incidentes, na forma da regulamen... | Regulamentação de cibersegurança e nuvem em vigor para instituições autorizadas BCB
+  XIII | 4º, XIII | Políticas e mecanismos para identificar, monitorar e evitar práticas espúrias no mercado de AV. | Res. 520 — conduta de mercado / práticas espúrias (localizar arts.)
+  XIV | 4º, XIV | Contrato de custódia de AV conforme arts. 73 (inc. VIII), 75 e 78, Res. 520. | Res. 520, art. 73, inciso VIII Res. 520, arts. 75 e 78
+  XV | 4º, XV | Medidas/planos do custodiante conforme art. 76, I a XII, Res. 520. | Res. 520, art. 76, incisos I a XII
+  XVI | 4º, XVI | Mecanismos de redundância para instrumentos de controle sobre os ativos virtuais. | Res. 520 — redundância (ligado ao art. 76, XII e §s — cruzar com inciso XVII)
+  XVII | 4º, XVII | Procedimentos de recuperação do material sujeito à redundância (inciso XVI), para supervisão do BCB. | Res. 520 — recuperação para supervisão (cruzar com art. 76, XII e §s)
+  par1_I | 4º, § 1º, I (a–h) | Informações claras e precisas ao cliente/usuário (instituição, canais, contratadas, seguros art. ... | Res. 520, art. 68 Res. 520, art. 67, incisos I a VIII Res. 520, art. 71
+  par1_II | 4º, § 1º, II | Conteúdos informativos sobre boas práticas e riscos nas operações no mercado de AV. | Res. 520 / IN 701 — divulgação ao cliente (localizar arts. de conduta e transparência)
+  par1_III | 4º, § 1º, III | Relatório atualizado de posição em AV detida pelo cliente ou usuário. | Res. 520 — informações de posição / extratos (localizar arts.)
+  par1_I_h | 4º, § 1º, I, alínea h | Operações de staking de ativos virtuais — riscos e informações dispostos no art. 71, Res. 520. | Res. 520, art. 71
+
+  Total linhas de dados:
+  26
 
 ================================================================================
 Referência integral Res. 520 no repositório: ../RES520BCB.txt (raiz do projeto)

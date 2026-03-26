@@ -19,9 +19,9 @@ Estáticos: após editar public/, execute python scripts/sync_vercel_public.py e
 Endpoints JSON (versão REST recomendada: /api/v1/*; /api/* espelha o mesmo)
 ----------------------------------------------------------------------------
   GET  /api/v1/health
-       — status, api_schema_version (atual: 3), api_rest_version, features.custodiante_track
+       — status, api_schema_version (atual: 3), api_rest_version, features.custodiante_track, features.corretora_track
 
-  GET  /api/v1/questions?track=intermediaria|custodiante
+  GET  /api/v1/questions?track=intermediaria|custodiante|corretora
        — blocos e perguntas da trilha; Cache-Control público (5 min)
 
   POST /api/v1/scope
@@ -29,15 +29,17 @@ Endpoints JSON (versão REST recomendada: /api/v1/*; /api/* espelha o mesmo)
          {
            "institution": "...",
            "answers": { ... },
-           "track": "intermediaria"   // opcional; default intermediaria; ou "custodiante"
+           "track": "intermediaria"   // opcional; default intermediaria; ou "custodiante" | "corretora"
          }
        — resposta inclui track, incisos sujeitos / fora de escopo, resumo, corpus_readiness, journey_2
 
-Trilha custodiante (feature flag)
----------------------------------
-  Por omissão a trilha custodiante está ativa.
-  Para desativar (API devolve 403 em track=custodiante):
+Trilhas custodiante e corretora (feature flags)
+-----------------------------------------------
+  Por omissão ambas estão ativas.
+  Para desativar custodiante (API devolve 403 em track=custodiante):
     CERTIK_ENABLE_CUSTODIANTE_TRACK=0   (ou false, no, off)
+  Para desativar corretora (API devolve 403 em track=corretora):
+    CERTIK_ENABLE_CORRETORA_TRACK=0   (ou false, no, off)
 
 CORS
 ----

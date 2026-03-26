@@ -1,8 +1,8 @@
 ================================================================================
-ROTEIRO DE FASES — CertiK VASP · Escopo IN 701 (trilhas intermediária e custodiante)
+ROTEIRO DE FASES — CertiK VASP · Escopo IN 701 (trilhas intermediária, custodiante e corretora)
 ================================================================================
 Ordem de execução e ficheiros de referência (estado: A–E concluídos no código;
-trilha custodiante em laws/tracks/custodiante/).
+trilhas custodiante e corretora em laws/tracks/{custodiante,corretora}/).
 
   Fase A — Inventário corpus laws/
     laws/FASE_A_INVENTARIO.txt
@@ -14,10 +14,12 @@ trilha custodiante em laws/tracks/custodiante/).
     matrix_loader.py → build_incisos_matrix(track), build_mandatory_keys(track),
     INCISOS_MATRIX / MANDATORY_KEYS (default intermediária), ordem_exibicao, get_coverage_meta(track)
     Trilha custodiante: laws/tracks/custodiante/COVERAGE_MATRIX.yaml
+    Trilha corretora: laws/tracks/corretora/COVERAGE_MATRIX.yaml
 
   Fase C — Questionário declarativo e gatilhos por tipo de pergunta
     laws/questionnaire.yaml (intermediária)
     laws/tracks/custodiante/questionnaire.yaml (custodiante)
+    laws/tracks/corretora/questionnaire.yaml (corretora)
     questionnaire_loader.py → resolve_triggers(), normalize_answers(…, track), TRIGGER_MAP (legado default)
 
   Fase D — Prontidão do corpus no escopo + pacote JSON de exportação
@@ -37,7 +39,7 @@ Interfaces:
 
 API: laws/SERVIDOR_API.txt (schema, track, feature flag, CORS)
 
-  Trilha «corretora» (planeada): laws/FASE_CORRETORA_PLANO_ACAO.txt (v2 — ler Fase 0 antes do código)
+  Trilha corretora: laws/tracks/corretora/ (matriz + questionário); plano histórico: laws/FASE_CORRETORA_PLANO_ACAO.txt
   Mapeamento IN↔Res.520 (Fase 0): laws/MAPEAMENTO_IN701_REF_RES520.txt
   Texto integral Res. 520 (referência): RES520BCB.txt na raiz do repositório
 

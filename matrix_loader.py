@@ -1,5 +1,5 @@
 """
-Fase B — carrega a matriz normativa por trilha (intermediária | custodiante)
+Fase B — carrega a matriz normativa por trilha (intermediária | custodiante | corretora)
 e expõe INCISOS_MATRIX / MANDATORY_KEYS default (intermediária) para compatibilidade.
 """
 
@@ -14,18 +14,20 @@ import yaml
 PACKAGE_ROOT = Path(__file__).resolve().parent
 
 TRACK_DEFAULT = "intermediaria"
-TRACK_IDS: frozenset[str] = frozenset({"intermediaria", "custodiante"})
+TRACK_IDS: frozenset[str] = frozenset({"intermediaria", "custodiante", "corretora"})
 
 MATRIX_PATH = PACKAGE_ROOT / "laws" / "COVERAGE_MATRIX.yaml"
 
 _MATRIX_PATH_BY_TRACK: dict[str, Path] = {
     "intermediaria": PACKAGE_ROOT / "laws" / "COVERAGE_MATRIX.yaml",
     "custodiante": PACKAGE_ROOT / "laws" / "tracks" / "custodiante" / "COVERAGE_MATRIX.yaml",
+    "corretora": PACKAGE_ROOT / "laws" / "tracks" / "corretora" / "COVERAGE_MATRIX.yaml",
 }
 
 _SCOPE_YAML_KEY_BY_TRACK: dict[str, str] = {
     "intermediaria": "escopo_intermediario",
     "custodiante": "escopo_custodiante",
+    "corretora": "escopo_corretora",
 }
 
 

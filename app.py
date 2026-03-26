@@ -1,8 +1,8 @@
 """
-CertiK — Ferramenta de Scoping IN 701 (trilhas intermediária e custodiante) / BCB Res. 520.
+CertiK — Ferramenta de Scoping IN 701 (trilhas intermediária, custodiante e corretora) / BCB Res. 520.
 
 UI Streamlit (este ficheiro): mesmo motor que a SPA em public/ + API FastAPI (main.py).
-Trilha custodiante pode ser ocultada com CERTIK_ENABLE_CUSTODIANTE_TRACK=0 (alinhado à API).
+Trilhas custodiante e corretora podem ser ocultadas com CERTIK_ENABLE_*_TRACK=0 (alinhado à API).
 """
 
 from __future__ import annotations
@@ -23,6 +23,23 @@ DEFAULT_GEMINI_ENV = "GEMINI_API_KEY"
 def _custodiante_ui_enabled() -> bool:
     v = (os.environ.get("CERTIK_ENABLE_CUSTODIANTE_TRACK") or "").strip().lower()
     return v not in ("0", "false", "no", "off")
+
+
+def _corretora_ui_enabled() -> bool:
+    v = (os.environ.get("CERTIK_ENABLE_CORRETORA_TRACK") or "").strip().lower()
+    return v not in ("0", "false", "no", "off")
+
+
+def _reset_session_to_track(sel: str) -> None:
+    qs = get_questions(sel)
+    st.session_state.scope_track = sel
+    st.session_state.answers = {q["id"]: _default_answer_for_q(q) for q in qs}
+    _prime_question_widgets(qs)
+    st.session_state.scope_computed = False
+    st.session_state.scope_df = pd.DataFrame()
+    st.session_state.scope_meta = {}
+    st.session_state.gemini_cache = ""
+    st.session_state.gemini_last_key = ""
 
 
 def _current_questions() -> list[dict]:
@@ -214,6 +231,12 @@ def _resumo_text(vasp_name: str, meta: dict, df: pd.DataFrame) -> str:
             "(VI, VIII, X–XIII, §1º I–III), terceirização e continuidade (II, IV) e governança (V). "
             "Condicionais: ver `laws/tracks/custodiante/COVERAGE_MATRIX.yaml` e respostas ao questionário."
         )
+    elif tr == "corretora":
+        lines.append("### Núcleo obrigatório (trilha corretora — Res. 520 art. 10)")
+        lines.append(
+            "- Mesma base de obrigatórios que custodiante na matriz desta trilha (intermediação **e** custódia operacional). "
+            "Condicionais: ver `laws/tracks/corretora/COVERAGE_MATRIX.yaml` e respostas ao questionário."
+        )
     else:
         lines.append("### Itens sempre no escopo (IN 701 — intermediária)")
         lines.append(
@@ -271,6 +294,19 @@ def _resumo_text(vasp_name: str, meta: dict, df: pd.DataFrame) -> str:
         if norm.get("cust_C_if_api"):
             risks.append("Interconectividade com IFs e superfície de integração.")
         if (free_t.get("cust_D_narr") or "").strip():
+            risks.append("Narrativa operacional — validar com evidências e terceiros.")
+    elif tr == "corretora":
+        if norm.get("corr_A_transit"):
+            risks.append("Trânsito/omnibus e movimentação sob controlo da instituição (I_a, I_b, XV).")
+        if norm.get("corr_A_fiat"):
+            risks.append("Contas em moeda fiduciária ligadas à custódia (Art. 85 / X (b) (ii)).")
+        if norm.get("corr_B_cloud") or norm.get("corr_B_exterior") or norm.get("corr_B_more_foreign"):
+            risks.append("Terceiros, nuvem ou prestadores no exterior — diligência e continuidade.")
+        if norm.get("corr_C_stable") or norm.get("corr_C_staking"):
+            risks.append("Stablecoins, staking ou produtos com exposição ao cliente — transparência e riscos.")
+        if norm.get("corr_C_if_api"):
+            risks.append("Interconectividade com IFs e superfície de integração.")
+        if (free_t.get("corr_D_narr") or "").strip():
             risks.append("Narrativa operacional — validar com evidências e terceiros.")
     else:
         if norm.get("P1") or norm.get("P2"):
@@ -344,6 +380,10 @@ def _run_gemini_analysis(
         track_label = "trilha custodiante (núcleo de guarda)"
         q1_label = "Trânsito/omnibus (cust_A_transit)"
         q2_label = "Contas fiat ligadas à custódia (cust_A_fiat)"
+    elif track == "corretora":
+        track_label = "trilha corretora (intermediação e custódia, Res. 520 art. 10)"
+        q1_label = "Trânsito/omnibus (corr_A_transit)"
+        q2_label = "Contas fiat ligadas à custódia (corr_A_fiat)"
     else:
         track_label = "fase intermediária"
         q1_label = "P1 (controle de chaves / endereços / MPC)"
@@ -376,47 +416,51 @@ Tom: profissional, direto, sem repetir a legislação verbatim.
 def main() -> None:
     _init_session()
     if st.session_state.scope_track == "custodiante" and not _custodiante_ui_enabled():
-        st.session_state.scope_track = "intermediaria"
-        qs_fix = get_questions("intermediaria")
-        st.session_state.answers = {q["id"]: _default_answer_for_q(q) for q in qs_fix}
-        _prime_question_widgets(qs_fix)
-        st.session_state.scope_computed = False
-        st.session_state.scope_df = pd.DataFrame()
-        st.session_state.scope_meta = {}
-        st.session_state.gemini_cache = ""
-        st.session_state.gemini_last_key = ""
+        _reset_session_to_track("intermediaria")
+    if st.session_state.scope_track == "corretora" and not _corretora_ui_enabled():
+        _reset_session_to_track("intermediaria")
     _ensure_answer_shape()
     _prime_question_widgets()
     _certik_css()
 
     st.sidebar.markdown("### CertiK")
 
-    opts = ["intermediaria"] + (["custodiante"] if _custodiante_ui_enabled() else [])
+    opts = ["intermediaria"]
+    if _custodiante_ui_enabled():
+        opts.append("custodiante")
+    if _corretora_ui_enabled():
+        opts.append("corretora")
     if st.session_state.scope_track not in opts:
         st.session_state.scope_track = "intermediaria"
     ix = opts.index(st.session_state.scope_track)
+
+    def _fmt_track_opt(x: str) -> str:
+        if x == "intermediaria":
+            return "Intermediário (tipos mistos)"
+        if x == "custodiante":
+            return "Custodiante"
+        if x == "corretora":
+            return "Corretora (intermediação e custódia)"
+        return x
+
     sel = st.sidebar.selectbox(
         "Trilha IN 701",
         opts,
         index=ix,
-        format_func=lambda x: "Intermediário (tipos mistos)" if x == "intermediaria" else "Custodiante",
+        format_func=_fmt_track_opt,
     )
     if sel != st.session_state.scope_track:
-        st.session_state.scope_track = sel
-        qs = get_questions(sel)
-        st.session_state.answers = {q["id"]: _default_answer_for_q(q) for q in qs}
-        _prime_question_widgets(qs)
-        st.session_state.scope_computed = False
-        st.session_state.scope_df = pd.DataFrame()
-        st.session_state.scope_meta = {}
-        st.session_state.gemini_cache = ""
-        st.session_state.gemini_last_key = ""
+        _reset_session_to_track(sel)
         st.rerun()
 
     trk = st.session_state.scope_track
-    st.sidebar.caption(
-        "Scoping IN 701 · trilha custodiante" if trk == "custodiante" else "Scoping IN 701 · VASP intermediária"
-    )
+    if trk == "custodiante":
+        side_cap = "Scoping IN 701 · trilha custodiante"
+    elif trk == "corretora":
+        side_cap = "Scoping IN 701 · trilha corretora (Res. 520 art. 10)"
+    else:
+        side_cap = "Scoping IN 701 · VASP intermediária"
+    st.sidebar.caption(side_cap)
 
     secrets_key = ""
     try:
@@ -440,7 +484,13 @@ def main() -> None:
     )
 
     st.markdown('<span class="certik-badge">INTERNAL · AUDIT SCOPING</span>', unsafe_allow_html=True)
-    st.title("Escopo IN 701 — VASP custodiante" if trk == "custodiante" else "Escopo IN 701 — VASP intermediária")
+    if trk == "custodiante":
+        page_title = "Escopo IN 701 — VASP custodiante"
+    elif trk == "corretora":
+        page_title = "Escopo IN 701 — VASP corretora (intermediação e custódia)"
+    else:
+        page_title = "Escopo IN 701 — VASP intermediária"
+    st.title(page_title)
     st.caption("Questionário interativo · Motor de regras · Dashboard · Resumo executivo · Análise Gemini (opcional)")
 
     tab_q, tab_dash, tab_resumo, tab_gemini = st.tabs(
@@ -519,6 +569,12 @@ def main() -> None:
             st.write(
                 "Núcleo **obrigatório** de custódia e correlatos permanece no escopo. Perguntas **Sim/Não**, escolha única, "
                 "múltipla escolha e texto livre acionam incisos condicionais adicionais."
+            )
+        elif trk == "corretora":
+            st.subheader("Delimitação técnica (trilha corretora)")
+            st.write(
+                "Modalidade **intermediação e custódia** (Res. 520 art. 10): núcleo obrigatório alinhado à matriz desta trilha. "
+                "Perguntas acionam incisos condicionais adicionais."
             )
         else:
             st.subheader("Delimitação técnica (Fase intermediária — tipos mistos)")
@@ -712,6 +768,8 @@ def main() -> None:
             tr_gem = str(meta_default.get("track") or st.session_state.scope_track)
             if tr_gem == "custodiante":
                 p1, p2 = bool(norm.get("cust_A_transit")), bool(norm.get("cust_A_fiat"))
+            elif tr_gem == "corretora":
+                p1, p2 = bool(norm.get("corr_A_transit")), bool(norm.get("corr_A_fiat"))
             else:
                 p1, p2 = bool(norm.get("P1")), bool(norm.get("P2"))
             custody_labels: list[str] = []

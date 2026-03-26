@@ -33,6 +33,8 @@ def test_health_includes_api_schema_version(client: TestClient) -> None:
     feat = data.get("features") or {}
     assert "custodiante_track" in feat
     assert isinstance(feat["custodiante_track"], bool)
+    assert "corretora_track" in feat
+    assert isinstance(feat["corretora_track"], bool)
 
 
 def test_v1_routes_mirror_legacy(client: TestClient) -> None:
@@ -56,6 +58,15 @@ def test_questions_includes_api_schema_version(client: TestClient) -> None:
     assert len(data["blocks"]) >= 1
 
 
+def test_questions_corretora_returns_track_and_blocks(client: TestClient) -> None:
+    r = client.get("/api/v1/questions?track=corretora")
+    assert r.status_code == 200
+    data = r.json()
+    assert data["track"] == "corretora"
+    assert data["api_schema_version"] == API_SCHEMA_VERSION
+    assert len(data.get("blocks") or []) >= 1
+
+
 def test_custodiante_track_disabled_returns_403(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("CERTIK_ENABLE_CUSTODIANTE_TRACK", "0")
     r = client.get("/api/v1/questions?track=custodiante")
@@ -66,6 +77,16 @@ def test_custodiante_track_disabled_returns_403(client: TestClient, monkeypatch:
     monkeypatch.delenv("CERTIK_ENABLE_CUSTODIANTE_TRACK", raising=False)
 
 
+def test_corretora_track_disabled_returns_403(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("CERTIK_ENABLE_CORRETORA_TRACK", "0")
+    r = client.get("/api/v1/questions?track=corretora")
+    assert r.status_code == 403
+    assert r.json()["detail"]["code"] == "TRACK_DISABLED"
+    r2 = client.post("/api/v1/scope", json={"institution": "X", "answers": {}, "track": "corretora"})
+    assert r2.status_code == 403
+    monkeypatch.delenv("CERTIK_ENABLE_CORRETORA_TRACK", raising=False)
+
+
 def test_post_scope_custodiante_mandatory_count(client: TestClient) -> None:
     from matrix_loader import build_mandatory_keys  # noqa: PLC0415
 
@@ -74,6 +95,18 @@ def test_post_scope_custodiante_mandatory_count(client: TestClient) -> None:
     data = r.json()
     assert data["track"] == "custodiante"
     exp = len(build_mandatory_keys("custodiante"))
+    assert data["resumo"]["obrigatorios_matriz"] == exp
+    assert data["resumo"]["total_sujeitos_auditoria"] >= exp
+
+
+def test_post_scope_corretora_mandatory_count(client: TestClient) -> None:
+    from matrix_loader import build_mandatory_keys  # noqa: PLC0415
+
+    r = client.post("/api/scope", json={"institution": "Corr", "answers": {}, "track": "corretora"})
+    assert r.status_code == 200
+    data = r.json()
+    assert data["track"] == "corretora"
+    exp = len(build_mandatory_keys("corretora"))
     assert data["resumo"]["obrigatorios_matriz"] == exp
     assert data["resumo"]["total_sujeitos_auditoria"] >= exp
 

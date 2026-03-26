@@ -25,3 +25,12 @@ def test_custodiante_track_override_changes_hint_vii() -> None:
     b = get_bcb_report_hint("VII", track="custodiante")
     assert a != b
     assert "custodiante" in b.lower() or "MPC" in b or "HSM" in b
+
+
+def test_corretora_track_override_changes_hint_vii() -> None:
+    from bcb_hints_loader import get_bcb_report_hint  # noqa: PLC0415
+
+    a = get_bcb_report_hint("VII", track="intermediaria")
+    c = get_bcb_report_hint("VII", track="corretora")
+    assert a != c
+    assert "corretora" in c.lower() or "MPC" in c or "HSM" in c

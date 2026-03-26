@@ -2,7 +2,8 @@
 PLANO DE AÇÃO — TRILHA «CORRETORA» + ALINHAMENTO NORMATIVO (IN 701 · Res. 520)
 Projeto: CertiK VASP — escopo declarativo multi-trilha
 ================================================================================
-Versão: 2 · Estado: planeamento (foco de auditoria: **estritamente IN 701**)
+Versão: 2.1 · Estado: **trilha corretora implementada no código** (matriz, questionário, API, SPA, Streamlit, testes).
+        Pendentes: revisão humana do mapeamento IN↔Res.520 e parecer jurídico sobre obrigatórios finais.
 
 --------------------------------------------------------------------------------
 HIERARQUIA DE FONTES (acordada com o produto)
@@ -59,7 +60,7 @@ HIERARQUIA DE FONTES (acordada com o produto)
 --------------------------------------------------------------------------------
 
   **2.1 O que o código faz (resumo técnico)**
-    · Duas trilhas: `intermediaria` e `custodiante`, cada uma com `COVERAGE_MATRIX` +
+    · Três trilhas: `intermediaria`, `custodiante` e `corretora`, cada uma com `COVERAGE_MATRIX` +
       `questionnaire`, `escopo_* .obrigatorios` e gatilhos declarativos.
     · `resolve_triggers`: yes_no / single_choice / multi_choice / text_short; `audit_only`
       não altera conjunto de incisos; chaves validadas contra a matriz da trilha na importação.
@@ -180,9 +181,10 @@ HIERARQUIA DE FONTES (acordada com o produto)
 
   [ ] `MAPEAMENTO_IN701_REF_RES520.txt` (ou equivalente) criado e revisto internamente
   [ ] Parecer jurídico sobre obrigatórios intermediária, custodiante e **proposta** corretora
-  [ ] Matriz corretora + questionário + testes + API/UI (como na v1 do plano técnico)
-  [ ] `pytest` e `validar_projeto` verdes
+  [x] Matriz corretora + questionário + testes + API/UI (como na v1 do plano técnico)
+  [x] `pytest` e `validar_projeto` verdes
 
 ================================================================================
-Fim do plano v2 — executar **Fase 0** antes de qualquer YAML `tracks/corretora/`
+Fim do plano v2.1 — YAML `laws/tracks/corretora/` e motor em produção no repositório;
+revisão jurídica da Fase 0 continua recomendada antes de uso regulatório definitivo.
 ================================================================================

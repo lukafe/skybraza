@@ -1,0 +1,19 @@
+================================================================================
+REVISÃO — Fase 0 (após geração do mapeamento mecânico)
+================================================================================
+Data: execução automática + checklist humano
+
+Verificações realizadas (mecânico):
+  [x] 26 incisos extraídos de laws/COVERAGE_MATRIX.yaml para MAPEAMENTO_IN701_REF_RES520.txt
+  [x] Cada linha inclui artigo_in701 e resumo_certificacao_pt tal como na matriz YAML
+  [x] Coluna «refs» reproduz refs_explicitas_na_in701 (ligação IN → trechos Res. 520 citados na matriz)
+
+Pendente (humano / jurídico — antes de produção corretora):
+  [ ] Validar se cada inciso reflete corretamente a redação atual da IN 701
+  [ ] Cruzar obrigatórios intermediária vs custodiante vs proposta corretora com parecer BCB
+  [ ] Preencher coluna explícita «Res.520 art.» onde a matriz só tiver nota genérica
+
+Próxima fase (técnica): concluída — matriz e questionário em laws/tracks/corretora/ (baseline = custodiante
+por conservadorismo face ao art. 10 da Res. 520). Ver laws/FASE_ABCD_REVISAO_CORRETORA.txt.
+
+================================================================================

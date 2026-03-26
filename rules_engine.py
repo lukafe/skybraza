@@ -1,7 +1,7 @@
 """
-Motor de regras IN 701 / Resolução BCB nº 520 — escopo por trilha (intermediária | custodiante).
+Motor de regras IN 701 / Resolução BCB nº 520 — escopo por trilha (intermediária | custodiante | corretora).
 
-Incisos: laws/COVERAGE_MATRIX.yaml ou laws/tracks/custodiante/COVERAGE_MATRIX.yaml
+Incisos: laws/COVERAGE_MATRIX.yaml ou laws/tracks/{custodiante,corretora}/COVERAGE_MATRIX.yaml
 Gatilhos: questionnaire por trilha (questionnaire_loader).
 """
 

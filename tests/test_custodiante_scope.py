@@ -1,4 +1,4 @@
-"""Trilha custodiante — evidências, Jornada 2 e gatilhos críticos."""
+"""Trilhas custodiante e corretora — evidências, Jornada 2 e gatilhos críticos."""
 
 from __future__ import annotations
 
@@ -26,6 +26,12 @@ def test_maximize_scope_custodiante_covers_matrix() -> None:
     assert meta["active_keys"] == keys
 
 
+def test_maximize_scope_corretora_covers_matrix() -> None:
+    keys = set(build_incisos_matrix("corretora").keys())
+    _, meta = compute_scope(maximize_scope_answers("corretora"), track="corretora")
+    assert meta["active_keys"] == keys
+
+
 def test_journey_2_custodiante_staking_note_mentions_question_ids() -> None:
     answers = {
         "cust_diag_sc": False,
@@ -38,6 +44,21 @@ def test_journey_2_custodiante_staking_note_mentions_question_ids() -> None:
     joined = " ".join(notas)
     assert "cust_C_staking" in joined
     assert "cust_diag_sc" in joined
+    assert "P8" not in joined
+
+
+def test_journey_2_corretora_staking_note_mentions_question_ids() -> None:
+    answers = {
+        "corr_diag_sc": False,
+        "corr_diag_surface": False,
+        "corr_C_staking": True,
+    }
+    _, meta = compute_scope(answers, track="corretora")
+    notas = meta["journey_2"].get("notas_heuristica") or []
+    assert notas, "esperada nota heurística staking + ausência de SC"
+    joined = " ".join(notas)
+    assert "corr_C_staking" in joined
+    assert "corr_diag_sc" in joined
     assert "P8" not in joined
 
 
@@ -64,6 +85,32 @@ def test_mpc_mixed_adds_inciso_iii() -> None:
     _, meta = compute_scope(base, track="custodiante")
     assert "III" in meta["active_keys"]
     mand = build_mandatory_keys("custodiante")
+    extra = meta["active_keys"] - mand
+    assert "III" in extra
+
+
+def test_corretora_mpc_mixed_adds_inciso_iii() -> None:
+    base = {
+        "corr_diag_sc": False,
+        "corr_diag_surface": False,
+        "corr_A_transit": False,
+        "corr_A_fiat": False,
+        "corr_B_exterior": False,
+        "corr_B_cloud": False,
+        "corr_B_more_foreign": False,
+        "corr_B_tp": [],
+        "corr_C_stable": False,
+        "corr_C_staking": False,
+        "corr_C_if_api": False,
+        "corr_C_catalog": "closed_set",
+        "corr_D_narr": "",
+        "corr_D_attestation": False,
+        "corr_D_surveillance": False,
+    }
+    base["corr_A_model"] = "mpc_mixed"
+    _, meta = compute_scope(base, track="corretora")
+    assert "III" in meta["active_keys"]
+    mand = build_mandatory_keys("corretora")
     extra = meta["active_keys"] - mand
     assert "III" in extra
 

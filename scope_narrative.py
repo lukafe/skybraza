@@ -101,6 +101,10 @@ CUST_QUESTION_BLURBS: dict[str, str] = {
     "cust_C_catalog": QUESTION_BLURBS["P_list"],
 }
 
+CORR_QUESTION_BLURBS: dict[str, str] = {
+    k.replace("cust_", "corr_", 1): v for k, v in CUST_QUESTION_BLURBS.items()
+}
+
 
 def _p_tp_explanation(norm: dict[str, Any]) -> str:
     sel = norm.get("P_tp")
@@ -140,6 +144,24 @@ def _p_tp_explanation_cust(norm: dict[str, Any]) -> str:
     return "no mapa de terceiros (custódia) foram assinalados: " + ", ".join(bits)
 
 
+def _p_tp_explanation_corr(norm: dict[str, Any]) -> str:
+    sel = norm.get("corr_B_tp")
+    if not isinstance(sel, list):
+        sel = []
+    bits: list[str] = []
+    if "subcustody" in sel:
+        bits.append("subcustodiante de criptoativos")
+    if "cloud_infra" in sel:
+        bits.append("nuvem / sistemas críticos de custódia")
+    if "fiat_bank" in sel:
+        bits.append("instituição de pagamento ou banco para fiat")
+    if "kyc_vendor" in sel:
+        bits.append("fornecedor externo de KYC/PLD crítico")
+    if not bits:
+        return "foram assinalados papéis de terceiros na operação (corretora)"
+    return "no mapa de terceiros (corretora) foram assinalados: " + ", ".join(bits)
+
+
 def _trigger_explanation_sentence(qid: str, norm: dict[str, Any]) -> str:
     if qid == "P_arch":
         key = str(norm.get("P_arch") or "")
@@ -149,13 +171,23 @@ def _trigger_explanation_sentence(qid: str, norm: dict[str, Any]) -> str:
         return CUST_ARCH_BLURBS.get(
             key, f"o modelo de custódia declarado (cust_A_model={key!r})"
         )
+    if qid == "corr_A_model":
+        key = str(norm.get("corr_A_model") or "")
+        return CUST_ARCH_BLURBS.get(
+            key, f"o modelo de custódia declarado (corr_A_model={key!r})"
+        )
     if qid == "P_tp":
         return _p_tp_explanation(norm)
     if qid == "cust_B_tp":
         return _p_tp_explanation_cust(norm)
-    return CUST_QUESTION_BLURBS.get(
+    if qid == "corr_B_tp":
+        return _p_tp_explanation_corr(norm)
+    return CORR_QUESTION_BLURBS.get(
         qid,
-        QUESTION_BLURBS.get(qid, f"a resposta à pergunta {qid} entrou na lógica de escopo deste inciso"),
+        CUST_QUESTION_BLURBS.get(
+            qid,
+            QUESTION_BLURBS.get(qid, f"a resposta à pergunta {qid} entrou na lógica de escopo deste inciso"),
+        ),
     )
 
 
@@ -182,9 +214,9 @@ def suppress_custody_cluster_if_non_custodial(
     norm: dict[str, Any],
     track: str | None = None,
 ) -> None:
-    """Remove VII, XIV, XVI, XVII do escopo quando o modelo declarado é exclusivamente não custodial (trilha intermediária)."""
+    """Remove VII, XIV, XVI, XVII do escopo quando o modelo declarado é exclusivamente não custodial (só trilha intermediária)."""
     t = normalize_track(track or TRACK_DEFAULT)
-    if t == "custodiante":
+    if t != "intermediaria":
         return
     if not declares_exclusive_non_custodial_model(norm):
         return
@@ -206,6 +238,12 @@ def _mandatory_why(inciso_id: str, inc_matrix: dict[str, dict[str, str]], track:
             "o núcleo obrigatório da trilha custodiante nesta matriz CertiK (IN 701 e Res. nº 520). "
             "A auditoria deverá demonstrar, com políticas, processos e evidências, como a instituição atende a este requisito "
             "no contexto do serviço de custódia de ativos virtuais"
+        )
+    elif t == "corretora":
+        ctx = (
+            "o núcleo obrigatório da trilha corretora nesta matriz CertiK (IN 701; modalidade Res. 520 art. 10 — intermediação e custódia). "
+            "A auditoria deverá demonstrar, com políticas, processos e evidências, como a instituição atende a este requisito "
+            "no contexto de intermediação e custódia de ativos virtuais"
         )
     else:
         ctx = (
@@ -295,6 +333,17 @@ def try_enrich_why_with_llm(
                 "cust_B_tp": norm.get("cust_B_tp"),
                 "cust_C_stable": norm.get("cust_C_stable"),
                 "cust_C_staking": norm.get("cust_C_staking"),
+            }
+        )
+    elif t == "corretora":
+        snap.update(
+            {
+                "corr_A_transit": norm.get("corr_A_transit"),
+                "corr_A_fiat": norm.get("corr_A_fiat"),
+                "corr_A_model": norm.get("corr_A_model"),
+                "corr_B_tp": norm.get("corr_B_tp"),
+                "corr_C_stable": norm.get("corr_C_stable"),
+                "corr_C_staking": norm.get("corr_C_staking"),
             }
         )
     else:
