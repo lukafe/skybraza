@@ -49,6 +49,7 @@ API: laws/SERVIDOR_API.txt (schema, track, feature flag, CORS)
   Mapeamento teórico (intermediária): laws/MAPEAMENTO_INFORMACOES_TEORICAS_INTERMEDIARIA.txt
   Bloco E (intermediária, audit_only): laws/questionnaire.yaml (IDs int_E_*); Jornada 2: evidence_requests._journey_2_intermediaria_e_notas
   Mapeamento IN↔Res.520 (Fase 0): laws/MAPEAMENTO_IN701_REF_RES520.txt
+  Plano sequencial revisão código + lógica de incisos: laws/PLANO_REVISAO_COMPLETA_ESCOPO_IN701.txt
   Texto integral Res. 520 (referência): RES520BCB.txt na raiz do repositório
 
 ================================================================================
