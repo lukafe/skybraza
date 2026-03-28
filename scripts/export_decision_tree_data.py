@@ -104,10 +104,13 @@ def main() -> int:
         "version": 1,
         "tracks": {},
         "notes": {
-            "suppress_custody_intermediaria": (
-                "Na trilha intermediária, se o modelo for exclusivamente não custodial (pergunta P_arch = apenas carteira do cliente) "
-                "e não houver custódia institucional declarada em P_tp, o motor pode remover do escopo os incisos VII, XIV, XVI e XVII "
-                "mesmo que P1 ou P2 tenham sido respondidos de forma a acioná-los — regra em scope_narrative.suppress_custody_cluster_if_non_custodial."
+            "suppress_custody_non_custodial": (
+                "Em qualquer trilha, se o modelo declarado for exclusivamente não custodial — intermediária: P1 = Não, "
+                "P_arch = client_only, P_tp sem custody_inst; custodiante: cust_A_model = client_only, cust_A_transit = Não, "
+                "cust_B_tp sem subcustody; corretora: corr_A_model = client_only, corr_A_transit = Não, corr_B_tp sem subcustody — "
+                "o motor remove VII, XIV, XVI e XVII do escopo. Nas trilhas custodiante e corretora remove também XV. "
+                "Regra: scope_narrative.suppress_custody_cluster_if_non_custodial. Respostas contraditórias (ex.: trânsito Sim com "
+                "«Apenas o cliente») devem ser corrigidas pelo utilizador; não há resolução automática de conflito."
             ),
         },
     }

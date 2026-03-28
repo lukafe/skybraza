@@ -15,6 +15,8 @@ from matrix_loader import TRACK_DEFAULT, normalize_track, sort_scope_keys
 
 # Incisos típicos de «custódia operacional» de criptoativos de clientes (guarda de chaves, contrato de custódia, redundância).
 CUSTODY_CLUSTER = frozenset({"VII", "XIV", "XVI", "XVII"})
+# Na trilha custodiante/corretora, XV (deveres no trânsito/guarda ativa) sai junto quando o modelo declarado é só cliente.
+NON_CUSTODIAL_EXTRA_BY_TRACK = frozenset({"XV"})
 
 QUESTION_BLURBS: dict[str, str] = {
     "P1": (
@@ -191,21 +193,47 @@ def _trigger_explanation_sentence(qid: str, norm: dict[str, Any]) -> str:
     )
 
 
-def declares_exclusive_non_custodial_model(norm: dict[str, Any]) -> bool:
+def declares_exclusive_non_custodial_model(norm: dict[str, Any], track: str | None = None) -> bool:
     """
-    Modelo em que o cliente é o único a movimentar fundos on-chain, a VASP não detém chaves operacionais (P1 = Não)
-    e não há custódia institucional de terceiro assinalada em P_tp.
+    Modelo em que o cliente é o único a movimentar fundos on-chain e não há trânsito omnibus nem subcustódia
+    operacional declarada. Trilha intermediária: P1, P_arch, P_tp. Custodiante/corretora: cust_A_model / corr_A_model,
+    trânsito e cust_B_tp / corr_B_tp.
     """
-    if norm.get("P1") is True:
-        return False
-    if str(norm.get("P_arch") or "") != "client_only":
-        return False
-    ptp = norm.get("P_tp")
-    if not isinstance(ptp, list):
-        ptp = []
-    if "custody_inst" in ptp:
-        return False
-    return True
+    t = normalize_track(track or TRACK_DEFAULT)
+    if t == "intermediaria":
+        if norm.get("P1") is True:
+            return False
+        if str(norm.get("P_arch") or "") != "client_only":
+            return False
+        ptp = norm.get("P_tp")
+        if not isinstance(ptp, list):
+            ptp = []
+        if "custody_inst" in ptp:
+            return False
+        return True
+    if t == "custodiante":
+        if str(norm.get("cust_A_model") or "") != "client_only":
+            return False
+        if norm.get("cust_A_transit"):
+            return False
+        ptp = norm.get("cust_B_tp")
+        if not isinstance(ptp, list):
+            ptp = []
+        if "subcustody" in ptp:
+            return False
+        return True
+    if t == "corretora":
+        if str(norm.get("corr_A_model") or "") != "client_only":
+            return False
+        if norm.get("corr_A_transit"):
+            return False
+        ptp = norm.get("corr_B_tp")
+        if not isinstance(ptp, list):
+            ptp = []
+        if "subcustody" in ptp:
+            return False
+        return True
+    return False
 
 
 def suppress_custody_cluster_if_non_custodial(
@@ -214,13 +242,18 @@ def suppress_custody_cluster_if_non_custodial(
     norm: dict[str, Any],
     track: str | None = None,
 ) -> None:
-    """Remove VII, XIV, XVI, XVII do escopo quando o modelo declarado é exclusivamente não custodial (só trilha intermediária)."""
+    """
+    Remove do escopo o cluster de custódia operacional (VII, XIV, XVI, XVII) quando o modelo declarado é
+    exclusivamente não custodial. Nas trilhas custodiante e corretora remove também XV (trânsito/guarda ativa),
+    coerente com «sem omnibus» e sem subcustódia em B_tp.
+    """
     t = normalize_track(track or TRACK_DEFAULT)
-    if t != "intermediaria":
+    if not declares_exclusive_non_custodial_model(norm, t):
         return
-    if not declares_exclusive_non_custodial_model(norm):
-        return
-    for k in CUSTODY_CLUSTER:
+    remove = set(CUSTODY_CLUSTER)
+    if t in ("custodiante", "corretora"):
+        remove |= set(NON_CUSTODIAL_EXTRA_BY_TRACK)
+    for k in remove:
         active_keys.discard(k)
         triggered_by.pop(k, None)
 

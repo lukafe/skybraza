@@ -14,7 +14,9 @@ blocks:
       checklist de evidências). Adequado também a corretoras com contratos ou integrações on-chain.
   - id: A
     title: "Guarda, segregação e trânsito de ativos"
-    lead: "Chaves, omnibus, prova de reservas e contas fiduciárias do cliente."
+    lead: >
+      Modelo de chaves e trânsito (corr_A_model, corr_A_transit). Se «Apenas o cliente» for coerente com trânsito «Não»
+      e sem subcustódia em corr_B_tp, o motor remove VII, XIV, XVI, XVII e XV do escopo (paridade com a trilha custodiante).
   - id: B
     title: "Terceiros, infraestrutura e subcustódia"
     lead: "Nuvem, fornecedores no exterior, subcustodiantes e serviços críticos."
@@ -69,7 +71,8 @@ questions:
       Além da guarda estática, os ativos dos clientes passam por carteiras de trânsito ou omnibus
       sob controlo da instituição (ou de subcustodiante agindo em seu nome) antes do destino final?
     justificativa: >
-      Reforça segregação e prova de reservas em movimento (I_a, I_b); XV correlaciona a deveres de custódia (Res. 520).
+      Reforça I_a, I_b e XV. Com corr_A_model «Apenas o cliente», corr_A_transit «Não» e sem subcustódia em corr_B_tp,
+      o cluster VII/XIV/XVI/XVII e XV pode sair do escopo. «Sim» em trânsito é incompatível com «Apenas o cliente».
     tags: [transito, segregacao]
     when_true: [I_a, I_b, XV]
     when_false: []
@@ -95,10 +98,16 @@ questions:
       Qual modelo descreve melhor quem pode iniciar ou autorizar movimentações on-chain dos ativos custodiados
       na prática predominante?
     justificativa: >
-      Qualifica subcustódia e terceirização. VII–XVII já são obrigatórios na trilha corretora (baseline); MPC implica
-      terceiros com papéis de controlo — aciona III (diligência) além de II (já obrigatório na matriz).
+      «Apenas o cliente» exige corr_A_transit = Não e sem «Subcustodiante» em corr_B_tp; caso contrário escolha MPC,
+      subcustódia integral ou instituição operando. O motor pode retirar VII, XIV, XVI, XVII e XV só nesse conjunto
+      coerente (validar modalidade Res. 520 art. 10 com jurídico).
     tags: [custodia, modelo]
     options:
+      - id: client_only
+        label: >
+          Apenas o cliente autoriza on-chain; a instituição não detém chaves operacionais nem omnibus próprio
+          (intermediação sem custódia técnica de AV, ou encaminhamento a terceiro sem controlo de chaves).
+        add_incisos: []
       - id: inst_operates
         label: "A instituição ou operador designado movimenta em nome do cliente (hot, cold rotacionada, políticas internas)."
         add_incisos: []
@@ -155,7 +164,8 @@ questions:
     type: multi_choice
     text: "Selecione terceiros materialmente relevantes na operação de custódia:"
     justificativa: >
-      Mapa de outsourcing; opções somam incisos já obrigatórios ou condicionais conforme caso.
+      «Subcustodiante» com corr_A_model «Apenas o cliente» é contraditório para supressão do cluster — ajuste o modelo
+      ou as opções de terceiros para refletir controlo operacional real.
     tags: [terceiros, mapa]
     options:
       - id: subcustody
@@ -206,10 +216,9 @@ questions:
       A instituição integra-se a instituições financeiras ou prestadores de pagamento via APIs/SDKs
       (on/off-ramp, Open Finance, liquidação)?
     justificativa: >
-      V é obrigatório na trilha; pergunta documenta intensidade para relatório (pode não alterar conjunto).
+      V já é obrigatório na trilha; «Sim» aciona o mesmo inciso por esta pergunta (paridade com P9 na intermediária).
     tags: [api, if]
-    audit_only: true
-    when_true: []
+    when_true: [V]
     when_false: []
 
   - id: corr_C_catalog

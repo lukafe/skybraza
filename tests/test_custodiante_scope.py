@@ -120,3 +120,58 @@ def test_maximize_scope_default_track_is_intermediaria() -> None:
 
     _, meta = compute_scope(maximize_scope_answers())
     assert meta["active_keys"] == set(INCISOS_MATRIX.keys())
+
+
+def _cust_minimal_non_custodial() -> dict:
+    """Respostas coerentes com modelo exclusivamente não custodial na trilha custodiante."""
+    return {
+        "cust_diag_sc": False,
+        "cust_diag_surface": False,
+        "cust_A_transit": False,
+        "cust_A_fiat": False,
+        "cust_A_model": "client_only",
+        "cust_B_exterior": False,
+        "cust_B_cloud": False,
+        "cust_B_more_foreign": False,
+        "cust_B_tp": [],
+        "cust_C_stable": False,
+        "cust_C_staking": False,
+        "cust_C_if_api": False,
+        "cust_C_catalog": "closed_set",
+        "cust_D_narr": "",
+        "cust_D_attestation": False,
+        "cust_D_surveillance": False,
+    }
+
+
+def test_custodiante_client_only_suprime_cluster_custodia_e_xv() -> None:
+    mand = build_mandatory_keys("custodiante")
+    removed = frozenset({"VII", "XIV", "XVI", "XVII", "XV"})
+    _, meta = compute_scope(_cust_minimal_non_custodial(), track="custodiante")
+    assert not (set(meta["active_keys"]) & removed)
+    assert meta["active_keys"] == mand - removed
+
+
+def test_custodiante_subcustody_em_b_tp_impede_supressao() -> None:
+    ans = _cust_minimal_non_custodial()
+    ans["cust_B_tp"] = ["subcustody"]
+    _, meta = compute_scope(ans, track="custodiante")
+    assert "VII" in meta["active_keys"]
+    assert "XV" in meta["active_keys"]
+
+
+def test_corretora_client_only_suprime_cluster_custodia_e_xv() -> None:
+    mand = build_mandatory_keys("corretora")
+    removed = frozenset({"VII", "XIV", "XVI", "XVII", "XV"})
+    ans = {k.replace("cust_", "corr_", 1): v for k, v in _cust_minimal_non_custodial().items()}
+    _, meta = compute_scope(ans, track="corretora")
+    assert not (set(meta["active_keys"]) & removed)
+    assert meta["active_keys"] == mand - removed
+
+
+def test_cust_if_api_sim_marca_gatilho_em_v() -> None:
+    ans = _cust_minimal_non_custodial()
+    ans["cust_C_if_api"] = True
+    _, meta = compute_scope(ans, track="custodiante")
+    assert "V" in meta["triggered_by"]
+    assert "cust_C_if_api" in meta["triggered_by"]["V"]

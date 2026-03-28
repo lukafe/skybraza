@@ -15,7 +15,10 @@ blocks:
       (smart contract audit, pentest e checklist de documentação por inciso).
   - id: A
     title: "Fluxo de valor, custódia e reservas"
-    lead: "Modelo de chaves, trânsito de ativos, saldos em fiat e comprovação de reservas."
+    lead: >
+      P1, P2, P3 e P_arch definem custódia e trânsito. Com P_arch «Apenas o cliente», P1 «Não» e sem «custódia
+      institucional» em P_tp, o motor remove VII, XIV, XVI e XVII (paridade conceitual com cust_A_model/corr_A_model
+      nas outras trilhas).
   - id: B
     title: "Parceiros, infraestrutura e terceiros"
     lead: "Liquidez, nuvem, custódia por terceiros e contrapartes no exterior."
@@ -116,9 +119,9 @@ questions:
       Qual cenário descreve melhor quem pode iniciar ou autorizar movimentações on-chain dos
       fundos do cliente na prática predominante da operação?
     justificativa: >
-      Objetivo: qualificar o modelo (custodial da VASP, MPC misto, terceiro integral ou não custodial).
-      Apenas o cliente assinando, com P1 = Não e sem custódia institucional em P_tp, não aciona VII/XIV/XVI/XVII.
-      Demais opções refletem custódia ou terceirização com impacto nos incisos indicados.
+      Qualifica o modelo. «Apenas o cliente» deve ser coerente com P1 = Não (sem depósito/chaves operacionais da VASP);
+      se P2 = Sim (omnibus), não use esta opção. Sem «custódia institucional» em P_tp, o motor retira VII/XIV/XVI/XVII.
+      Nas trilhas custodiante/corretora, equivalente: cust_A_model / corr_A_model «Apenas o cliente» + trânsito «Não» + sem subcustódia em B_tp.
     tags: [custodia, modelo]
     options:
       - id: client_only

@@ -12,7 +12,7 @@
         {
           "id": "A",
           "title": "Guarda, segregação e trânsito de ativos",
-          "lead": "Chaves, omnibus, prova de reservas e contas fiduciárias do cliente."
+          "lead": "Modelo de chaves e trânsito (corr_A_model, corr_A_transit). Se «Apenas o cliente» for coerente com trânsito «Não» e sem subcustódia em corr_B_tp, o motor remove VII, XIV, XVI, XVII e XV do escopo (paridade com a trilha custodiante)."
         },
         {
           "id": "B",
@@ -203,7 +203,7 @@
           "order": 10,
           "type": "yes_no",
           "text": "Além da guarda estática, os ativos dos clientes passam por carteiras de trânsito ou omnibus sob controlo da instituição (ou de subcustodiante agindo em seu nome) antes do destino final?",
-          "justificativa": "Reforça segregação e prova de reservas em movimento (I_a, I_b); XV correlaciona a deveres de custódia (Res. 520).",
+          "justificativa": "Reforça I_a, I_b e XV. Com corr_A_model «Apenas o cliente», corr_A_transit «Não» e sem subcustódia em corr_B_tp, o cluster VII/XIV/XVI/XVII e XV pode sair do escopo. «Sim» em trânsito é incompatível com «Apenas o cliente».",
           "audit_only": false,
           "edges": [
             {
@@ -251,9 +251,14 @@
           "order": 30,
           "type": "single_choice",
           "text": "Qual modelo descreve melhor quem pode iniciar ou autorizar movimentações on-chain dos ativos custodiados na prática predominante?",
-          "justificativa": "Qualifica subcustódia e terceirização. VII–XVII já são obrigatórios na trilha corretora (baseline); MPC implica terceiros com papéis de controlo — aciona III (diligência) além de II (já obrigatório na matriz).",
+          "justificativa": "«Apenas o cliente» exige corr_A_transit = Não e sem «Subcustodiante» em corr_B_tp; caso contrário escolha MPC, subcustódia integral ou instituição operando. O motor pode retirar VII, XIV, XVI, XVII e XV só nesse conjunto coerente (validar modalidade Res. 520 art. 10 com jurídico).",
           "audit_only": false,
           "edges": [
+            {
+              "condition": "Opção: «Apenas o cliente autoriza on-chain; a instituição não detém chaves operacionais nem omnibus próprio (intermediação sem custódia técnica de AV, ou encaminhamento a terceiro sem controlo de chaves).\n» (client_only)",
+              "incisos": [],
+              "note": "Esta opção não acrescenta incisos."
+            },
             {
               "condition": "Opção: «A instituição ou operador designado movimenta em nome do cliente (hot, cold rotacionada, políticas internas).» (inst_operates)",
               "incisos": [],
@@ -355,7 +360,7 @@
           "order": 40,
           "type": "multi_choice",
           "text": "Selecione terceiros materialmente relevantes na operação de custódia:",
-          "justificativa": "Mapa de outsourcing; opções somam incisos já obrigatórios ou condicionais conforme caso.",
+          "justificativa": "«Subcustodiante» com corr_A_model «Apenas o cliente» é contraditório para supressão do cluster — ajuste o modelo ou as opções de terceiros para refletir controlo operacional real.",
           "audit_only": false,
           "edges": [
             {
@@ -444,13 +449,20 @@
           "order": 30,
           "type": "yes_no",
           "text": "A instituição integra-se a instituições financeiras ou prestadores de pagamento via APIs/SDKs (on/off-ramp, Open Finance, liquidação)?",
-          "justificativa": "V é obrigatório na trilha; pergunta documenta intensidade para relatório (pode não alterar conjunto).",
-          "audit_only": true,
+          "justificativa": "V já é obrigatório na trilha; «Sim» aciona o mesmo inciso por esta pergunta (paridade com P9 na intermediária).",
+          "audit_only": false,
           "edges": [
             {
-              "condition": "—",
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "V"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
               "incisos": [],
-              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+              "note": "Não acrescenta incisos com «Não»."
             }
           ]
         },
@@ -778,7 +790,7 @@
         {
           "id": "A",
           "title": "Guarda, segregação e trânsito de ativos",
-          "lead": "Chaves, omnibus, prova de reservas e contas fiduciárias do cliente."
+          "lead": "Modelo de chaves e trânsito (cust_A_model, cust_A_transit). Se «Apenas o cliente» for coerente com trânsito «Não» e sem subcustódia em cust_B_tp, o motor remove do escopo o cluster VII, XIV, XVI, XVII e XV (alinhado à lógica da trilha intermediária com P_arch client_only)."
         },
         {
           "id": "B",
@@ -969,7 +981,7 @@
           "order": 10,
           "type": "yes_no",
           "text": "Além da guarda estática, os ativos dos clientes passam por carteiras de trânsito ou omnibus sob controlo da instituição (ou de subcustodiante agindo em seu nome) antes do destino final?",
-          "justificativa": "Reforça segregação e prova de reservas em movimento (I_a, I_b); XV já correlaciona a deveres do custodiante.",
+          "justificativa": "Reforça segregação e prova de reservas em movimento (I_a, I_b) e XV. Se marcar «Não» e cust_A_model for «Apenas o cliente» sem subcustódia em cust_B_tp, o cluster de custódia operacional pode sair do escopo (VII, XIV, XVI, XVII, XV). Se «Sim», não use «Apenas o cliente» em cust_A_model — responda de forma coerente.",
           "audit_only": false,
           "edges": [
             {
@@ -1017,9 +1029,14 @@
           "order": 30,
           "type": "single_choice",
           "text": "Qual modelo descreve melhor quem pode iniciar ou autorizar movimentações on-chain dos ativos custodiados na prática predominante?",
-          "justificativa": "Qualifica subcustódia e terceirização. VII–XVII já são obrigatórios na trilha custodiante; MPC implica terceiros com papéis de controlo — aciona III (diligência) além de II (já obrigatório na matriz).",
+          "justificativa": "«Apenas o cliente» = interface não custodial: a instituição não detém chaves operacionais nem omnibus próprio; deve combinar com cust_A_transit = Não e sem opção «Subcustodiante» em cust_B_tp — caso contrário escolha outro modelo. MPC/subcustódia integral aciona III (diligência) além de II. VII–XVII e XV vêm da matriz fixa; o motor pode retirá-los do escopo só no conjunto «exclusivamente não custodial» acima (validar trilha e enquadramento com jurídico).",
           "audit_only": false,
           "edges": [
+            {
+              "condition": "Opção: «Apenas o cliente autoriza on-chain; a instituição não detém chaves operacionais nem trânsito omnibus próprio (agenciamento, custódia meramente documental ou integração sem movimentação de AV de clientes).\n» (client_only)",
+              "incisos": [],
+              "note": "Esta opção não acrescenta incisos."
+            },
             {
               "condition": "Opção: «A instituição ou operador designado movimenta em nome do cliente (hot, cold rotacionada, políticas internas).» (inst_operates)",
               "incisos": [],
@@ -1121,7 +1138,7 @@
           "order": 40,
           "type": "multi_choice",
           "text": "Selecione terceiros materialmente relevantes na operação de custódia:",
-          "justificativa": "Mapa de outsourcing; opções somam incisos já obrigatórios ou condicionais conforme caso.",
+          "justificativa": "Mapa de outsourcing. «Subcustodiante de criptoativos» impede a supressão do cluster de custódia se combinar com cust_A_model = «Apenas o cliente» — reveja coerência das respostas (há controlo operacional de terceiro).",
           "audit_only": false,
           "edges": [
             {
@@ -1210,13 +1227,20 @@
           "order": 30,
           "type": "yes_no",
           "text": "A instituição integra-se a instituições financeiras ou prestadores de pagamento via APIs/SDKs (on/off-ramp, Open Finance, liquidação)?",
-          "justificativa": "V é obrigatório na trilha; pergunta documenta intensidade para relatório (pode não alterar conjunto).",
-          "audit_only": true,
+          "justificativa": "V já é obrigatório na trilha; «Sim» marca o inciso também como acionado por esta pergunta (paridade com P9 na intermediária), útil para texto «por que» e rastreio de integrações no relatório.",
+          "audit_only": false,
           "edges": [
             {
-              "condition": "—",
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "V"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
               "incisos": [],
-              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+              "note": "Não acrescenta incisos com «Não»."
             }
           ]
         },
@@ -1544,7 +1568,7 @@
         {
           "id": "A",
           "title": "Fluxo de valor, custódia e reservas",
-          "lead": "Modelo de chaves, trânsito de ativos, saldos em fiat e comprovação de reservas."
+          "lead": "P1, P2, P3 e P_arch definem custódia e trânsito. Com P_arch «Apenas o cliente», P1 «Não» e sem «custódia institucional» em P_tp, o motor remove VII, XIV, XVI e XVII (paridade conceitual com cust_A_model/corr_A_model nas outras trilhas)."
         },
         {
           "id": "B",
@@ -1799,7 +1823,7 @@
           "order": 40,
           "type": "single_choice",
           "text": "Qual cenário descreve melhor quem pode iniciar ou autorizar movimentações on-chain dos fundos do cliente na prática predominante da operação?",
-          "justificativa": "Objetivo: qualificar o modelo (custodial da VASP, MPC misto, terceiro integral ou não custodial). Apenas o cliente assinando, com P1 = Não e sem custódia institucional em P_tp, não aciona VII/XIV/XVI/XVII. Demais opções refletem custódia ou terceirização com impacto nos incisos indicados.",
+          "justificativa": "Qualifica o modelo. «Apenas o cliente» deve ser coerente com P1 = Não (sem depósito/chaves operacionais da VASP); se P2 = Sim (omnibus), não use esta opção. Sem «custódia institucional» em P_tp, o motor retira VII/XIV/XVI/XVII. Nas trilhas custodiante/corretora, equivalente: cust_A_model / corr_A_model «Apenas o cliente» + trânsito «Não» + sem subcustódia em B_tp.",
           "audit_only": false,
           "edges": [
             {
@@ -2355,6 +2379,6 @@
     }
   },
   "notes": {
-    "suppress_custody_intermediaria": "Na trilha intermediária, se o modelo for exclusivamente não custodial (pergunta P_arch = apenas carteira do cliente) e não houver custódia institucional declarada em P_tp, o motor pode remover do escopo os incisos VII, XIV, XVI e XVII mesmo que P1 ou P2 tenham sido respondidos de forma a acioná-los — regra em scope_narrative.suppress_custody_cluster_if_non_custodial."
+    "suppress_custody_non_custodial": "Em qualquer trilha, se o modelo declarado for exclusivamente não custodial — intermediária: P1 = Não, P_arch = client_only, P_tp sem custody_inst; custodiante: cust_A_model = client_only, cust_A_transit = Não, cust_B_tp sem subcustody; corretora: corr_A_model = client_only, corr_A_transit = Não, corr_B_tp sem subcustody — o motor remove VII, XIV, XVI e XVII do escopo. Nas trilhas custodiante e corretora remove também XV. Regra: scope_narrative.suppress_custody_cluster_if_non_custodial. Respostas contraditórias (ex.: trânsito Sim com «Apenas o cliente») devem ser corrigidas pelo utilizador; não há resolução automática de conflito."
   }
 }

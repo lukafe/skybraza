@@ -14,7 +14,10 @@ blocks:
       checklist de evidências). Adequado também a custodiantes com contratos ou integrações on-chain.
   - id: A
     title: "Guarda, segregação e trânsito de ativos"
-    lead: "Chaves, omnibus, prova de reservas e contas fiduciárias do cliente."
+    lead: >
+      Modelo de chaves e trânsito (cust_A_model, cust_A_transit). Se «Apenas o cliente» for coerente com
+      trânsito «Não» e sem subcustódia em cust_B_tp, o motor remove do escopo o cluster VII, XIV, XVI, XVII e XV
+      (alinhado à lógica da trilha intermediária com P_arch client_only).
   - id: B
     title: "Terceiros, infraestrutura e subcustódia"
     lead: "Nuvem, fornecedores no exterior, subcustodiantes e serviços críticos."
@@ -69,7 +72,9 @@ questions:
       Além da guarda estática, os ativos dos clientes passam por carteiras de trânsito ou omnibus
       sob controlo da instituição (ou de subcustodiante agindo em seu nome) antes do destino final?
     justificativa: >
-      Reforça segregação e prova de reservas em movimento (I_a, I_b); XV já correlaciona a deveres do custodiante.
+      Reforça segregação e prova de reservas em movimento (I_a, I_b) e XV. Se marcar «Não» e cust_A_model for
+      «Apenas o cliente» sem subcustódia em cust_B_tp, o cluster de custódia operacional pode sair do escopo
+      (VII, XIV, XVI, XVII, XV). Se «Sim», não use «Apenas o cliente» em cust_A_model — responda de forma coerente.
     tags: [transito, segregacao]
     when_true: [I_a, I_b, XV]
     when_false: []
@@ -95,10 +100,17 @@ questions:
       Qual modelo descreve melhor quem pode iniciar ou autorizar movimentações on-chain dos ativos custodiados
       na prática predominante?
     justificativa: >
-      Qualifica subcustódia e terceirização. VII–XVII já são obrigatórios na trilha custodiante; MPC implica
-      terceiros com papéis de controlo — aciona III (diligência) além de II (já obrigatório na matriz).
+      «Apenas o cliente» = interface não custodial: a instituição não detém chaves operacionais nem omnibus próprio;
+      deve combinar com cust_A_transit = Não e sem opção «Subcustodiante» em cust_B_tp — caso contrário escolha outro modelo.
+      MPC/subcustódia integral aciona III (diligência) além de II. VII–XVII e XV vêm da matriz fixa; o motor pode
+      retirá-los do escopo só no conjunto «exclusivamente não custodial» acima (validar trilha e enquadramento com jurídico).
     tags: [custodia, modelo]
     options:
+      - id: client_only
+        label: >
+          Apenas o cliente autoriza on-chain; a instituição não detém chaves operacionais nem trânsito omnibus próprio
+          (agenciamento, custódia meramente documental ou integração sem movimentação de AV de clientes).
+        add_incisos: []
       - id: inst_operates
         label: "A instituição ou operador designado movimenta em nome do cliente (hot, cold rotacionada, políticas internas)."
         add_incisos: []
@@ -155,7 +167,8 @@ questions:
     type: multi_choice
     text: "Selecione terceiros materialmente relevantes na operação de custódia:"
     justificativa: >
-      Mapa de outsourcing; opções somam incisos já obrigatórios ou condicionais conforme caso.
+      Mapa de outsourcing. «Subcustodiante de criptoativos» impede a supressão do cluster de custódia se combinar
+      com cust_A_model = «Apenas o cliente» — reveja coerência das respostas (há controlo operacional de terceiro).
     tags: [terceiros, mapa]
     options:
       - id: subcustody
@@ -206,10 +219,10 @@ questions:
       A instituição integra-se a instituições financeiras ou prestadores de pagamento via APIs/SDKs
       (on/off-ramp, Open Finance, liquidação)?
     justificativa: >
-      V é obrigatório na trilha; pergunta documenta intensidade para relatório (pode não alterar conjunto).
+      V já é obrigatório na trilha; «Sim» marca o inciso também como acionado por esta pergunta (paridade com P9 na intermediária),
+      útil para texto «por que» e rastreio de integrações no relatório.
     tags: [api, if]
-    audit_only: true
-    when_true: []
+    when_true: [V]
     when_false: []
 
   - id: cust_C_catalog

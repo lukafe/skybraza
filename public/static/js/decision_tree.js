@@ -3,7 +3,7 @@
  * Dados: /static/data/decision_tree.json (gerado por scripts/export_decision_tree_data.py)
  */
 
-const DT_JSON_VER = "1";
+const DT_JSON_VER = "2";
 
 /** @type {Record<string, unknown> | null} */
 let _dtCache = null;
@@ -107,10 +107,11 @@ export async function renderDecisionTree(track) {
 
   const noteSuppress = $("#dt-note-suppress");
   if (noteSuppress) {
-    const isInt = track === "intermediaria";
-    noteSuppress.classList.toggle("hidden", !isInt);
-    if (isInt && data.notes?.suppress_custody_intermediaria) {
-      noteSuppress.innerHTML = `<p class="dt-suppress-text"><strong>Regra especial (intermediária):</strong> ${escapeHtml(data.notes.suppress_custody_intermediaria)}</p>`;
+    const suppressText = data.notes?.suppress_custody_non_custodial;
+    const showSuppress = Boolean(suppressText);
+    noteSuppress.classList.toggle("hidden", !showSuppress);
+    if (showSuppress) {
+      noteSuppress.innerHTML = `<p class="dt-suppress-text"><strong>Modelo não custodial (todas as trilhas):</strong> ${escapeHtml(suppressText)}</p>`;
     }
   }
 

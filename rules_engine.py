@@ -69,7 +69,7 @@ def compute_scope(
     """
     Retorna (dataframe só com incisos sujeitos a auditoria, metadados).
 
-    ``track``: ``intermediaria`` (default) ou ``custodiante``.
+    ``track``: ``intermediaria`` (default), ``custodiante`` ou ``corretora``.
     """
     t = normalize_track(track or TRACK_DEFAULT)
     inc_matrix = build_incisos_matrix(t)
