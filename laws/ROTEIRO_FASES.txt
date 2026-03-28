@@ -36,6 +36,7 @@ Motor unificado:
 
 Interfaces:
   app.py (Streamlit) · main.py (FastAPI) + public/ + vercel_public/ · scripts/simular_empresa.py
+  Árvore de decisão (SPA): public/static/data/decision_tree.json — gerar com scripts/export_decision_tree_data.py após alterar questionários
 
 API: laws/SERVIDOR_API.txt (schema, track, feature flag, CORS)
 

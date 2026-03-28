@@ -1,0 +1,2360 @@
+{
+  "version": 1,
+  "tracks": {
+    "corretora": {
+      "label": "Corretora — intermediação e custódia (art. 10)",
+      "blocks": [
+        {
+          "id": "diag",
+          "title": "Diagnóstico — serviços técnicos CertiK (Jornada 2)",
+          "lead": "Estas perguntas não alteram o escopo IN 701; preparam a Jornada 2 (smart contract audit, pentest, checklist de evidências). Adequado também a corretoras com contratos ou integrações on-chain."
+        },
+        {
+          "id": "A",
+          "title": "Guarda, segregação e trânsito de ativos",
+          "lead": "Chaves, omnibus, prova de reservas e contas fiduciárias do cliente."
+        },
+        {
+          "id": "B",
+          "title": "Terceiros, infraestrutura e subcustódia",
+          "lead": "Nuvem, fornecedores no exterior, subcustodiantes e serviços críticos."
+        },
+        {
+          "id": "C",
+          "title": "Universo de ativos, produtos e integrações",
+          "lead": "Listagem ao cliente, stablecoins, staking e conexões com IF/pagamentos."
+        },
+        {
+          "id": "D",
+          "title": "Narrativa e transparência operacional",
+          "lead": "Fluxo ponta a ponta e compromissos públicos de reservas."
+        },
+        {
+          "id": "E",
+          "title": "Corretora — governança, continuidade e camada de intermediação",
+          "lead": "Res. 520 art. 10 (intermediação e custódia) e art. 85 (mitigação de conflitos na cumulação). Perguntas de maturidade para relatório; a maioria não altera incisos (já obrigatórios na trilha)."
+        }
+      ],
+      "mandatory_incisos": [
+        "II",
+        "IV",
+        "I_a",
+        "I_b",
+        "V",
+        "VII",
+        "VIII",
+        "VI_a",
+        "VI_b",
+        "XI",
+        "XII",
+        "XIII",
+        "XIV",
+        "XV",
+        "XVI",
+        "XVII",
+        "X_a",
+        "X_b_i",
+        "par1_I",
+        "par1_II",
+        "par1_III"
+      ],
+      "incisos_catalog": {
+        "I_a": {
+          "item": "I (a)",
+          "artigo": "4º, I, alínea a"
+        },
+        "I_b": {
+          "item": "I (b)",
+          "artigo": "4º, I, alínea b"
+        },
+        "II": {
+          "item": "II",
+          "artigo": "4º, II"
+        },
+        "III": {
+          "item": "III",
+          "artigo": "4º, III"
+        },
+        "IV": {
+          "item": "IV",
+          "artigo": "4º, IV"
+        },
+        "V": {
+          "item": "V",
+          "artigo": "4º, V"
+        },
+        "VI_a": {
+          "item": "VI (a)",
+          "artigo": "4º, VI, alínea a"
+        },
+        "VI_b": {
+          "item": "VI (b)",
+          "artigo": "4º, VI, alínea b"
+        },
+        "VII": {
+          "item": "VII",
+          "artigo": "4º, VII"
+        },
+        "VIII": {
+          "item": "VIII",
+          "artigo": "4º, VIII"
+        },
+        "IX_a": {
+          "item": "IX (a)",
+          "artigo": "4º, IX, alínea a"
+        },
+        "IX_b": {
+          "item": "IX (b)",
+          "artigo": "4º, IX, alínea b"
+        },
+        "X_a": {
+          "item": "X (a)",
+          "artigo": "4º, X, alínea a"
+        },
+        "X_b_i": {
+          "item": "X (b) (i)",
+          "artigo": "4º, X, b, i"
+        },
+        "X_b_ii": {
+          "item": "X (b) (ii)",
+          "artigo": "4º, X, b, ii"
+        },
+        "XI": {
+          "item": "XI",
+          "artigo": "4º, XI"
+        },
+        "XII": {
+          "item": "XII",
+          "artigo": "4º, XII"
+        },
+        "XIII": {
+          "item": "XIII",
+          "artigo": "4º, XIII"
+        },
+        "XIV": {
+          "item": "XIV",
+          "artigo": "4º, XIV"
+        },
+        "XV": {
+          "item": "XV",
+          "artigo": "4º, XV"
+        },
+        "XVI": {
+          "item": "XVI",
+          "artigo": "4º, XVI"
+        },
+        "XVII": {
+          "item": "XVII",
+          "artigo": "4º, XVII"
+        },
+        "par1_I": {
+          "item": "§ 1º (I)",
+          "artigo": "4º, § 1º, I (a–h)"
+        },
+        "par1_II": {
+          "item": "§ 1º (II)",
+          "artigo": "4º, § 1º, II"
+        },
+        "par1_III": {
+          "item": "§ 1º (III)",
+          "artigo": "4º, § 1º, III"
+        },
+        "par1_I_h": {
+          "item": "§ 1º (I) (h)",
+          "artigo": "4º, § 1º, I, alínea h"
+        }
+      },
+      "questions": [
+        {
+          "id": "corr_diag_sc",
+          "block": "diag",
+          "order": 1,
+          "type": "yes_no",
+          "text": "A instituição desenvolve, faz deploy ou contrata smart contracts próprios em produção (vaults de custódia on-chain, lógica de permissões, bridges ou protocolos sob sua responsabilidade)?",
+          "justificativa": "Jornada 2 — possível trilha de smart contract audit. Não altera incisos.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_diag_surface",
+          "block": "diag",
+          "order": 2,
+          "type": "yes_no",
+          "text": "A instituição opera sistemas próprios expostos à internet (portal de cliente, API de custódia, painel administrativo, webhooks) para clientes ou parceiros?",
+          "justificativa": "Jornada 2 — superfície para pentest. Não altera incisos.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_A_transit",
+          "block": "A",
+          "order": 10,
+          "type": "yes_no",
+          "text": "Além da guarda estática, os ativos dos clientes passam por carteiras de trânsito ou omnibus sob controlo da instituição (ou de subcustodiante agindo em seu nome) antes do destino final?",
+          "justificativa": "Reforça segregação e prova de reservas em movimento (I_a, I_b); XV correlaciona a deveres de custódia (Res. 520).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "I_a",
+                "I_b",
+                "XV"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "corr_A_fiat",
+          "block": "A",
+          "order": 20,
+          "type": "yes_no",
+          "text": "A instituição mantém contas de pagamento ou saldo em moeda fiduciária (ex.: BRL) em nome do cliente vinculado à operação de custódia de ativos virtuais (pré-conversão, saque fiat, ou conta reserva)?",
+          "justificativa": "Aciona condições dos arts. 69 e 85 da Res. 520 (inciso X (b) (ii)).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "X_b_ii"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "corr_A_model",
+          "block": "A",
+          "order": 30,
+          "type": "single_choice",
+          "text": "Qual modelo descreve melhor quem pode iniciar ou autorizar movimentações on-chain dos ativos custodiados na prática predominante?",
+          "justificativa": "Qualifica subcustódia e terceirização. VII–XVII já são obrigatórios na trilha corretora (baseline); MPC implica terceiros com papéis de controlo — aciona III (diligência) além de II (já obrigatório na matriz).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Opção: «A instituição ou operador designado movimenta em nome do cliente (hot, cold rotacionada, políticas internas).» (inst_operates)",
+              "incisos": [],
+              "note": "Esta opção não acrescenta incisos."
+            },
+            {
+              "condition": "Opção: «MPC ou multipartição: a instituição e terceiros detêm fragmentos ou papéis de controlo.» (mpc_mixed)",
+              "incisos": [
+                "II",
+                "III"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Opção: «Subcustódia integral por terceiro contratado (a instituição não detém chaves sozinha, mas responde perante o cliente).» (full_subcustody)",
+              "incisos": [
+                "II",
+                "III"
+              ],
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "corr_B_exterior",
+          "block": "B",
+          "order": 10,
+          "type": "yes_no",
+          "text": "Fornecedores relevantes (subcustódia, nuvem, pagamentos, processamento) incluem entidade sediada no exterior ou sem autorização direta do Banco Central do Brasil para atividade equivalente no País?",
+          "justificativa": "Terceirização com exposição internacional; arts. 32–33, 83 e continuidade (II, III, IV).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "II",
+                "III",
+                "IV"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "corr_B_cloud",
+          "block": "B",
+          "order": 20,
+          "type": "yes_no",
+          "text": "Ledger de saldos, cofre de chaves, HSM, ou sistemas críticos de custódia residem em nuvem ou datacenter de terceiro, com contrato alinhado às exigências do BCB?",
+          "justificativa": "Outsourcing de tecnologia e continuidade (II, IV).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "II",
+                "IV"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "corr_B_more_foreign",
+          "block": "B",
+          "order": 30,
+          "type": "yes_no",
+          "text": "Existem outros parceiros estrangeiros ou não autorizados pelo BCB em papéis relevantes além dos já cobertos (ex.: KYC como serviço crítico, mensageria de assinaturas)?",
+          "justificativa": "Reforça diligência sobre prestador no exterior (art. 83) — III.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "III"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "corr_B_tp",
+          "block": "B",
+          "order": 40,
+          "type": "multi_choice",
+          "text": "Selecione terceiros materialmente relevantes na operação de custódia:",
+          "justificativa": "Mapa de outsourcing; opções somam incisos já obrigatórios ou condicionais conforme caso.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Se marcar «Subcustodiante de criptoativos (cold, MPC, institucional)»",
+              "incisos": [
+                "II",
+                "III"
+              ],
+              "note": "Pode combinar várias opções; incisos são unidos."
+            },
+            {
+              "condition": "Se marcar «Nuvem / hospedagem de sistemas críticos de custódia»",
+              "incisos": [
+                "II",
+                "IV"
+              ],
+              "note": "Pode combinar várias opções; incisos são unidos."
+            },
+            {
+              "condition": "Se marcar «Instituição de pagamento ou banco para fiat (Pix, TED, contas)»",
+              "incisos": [
+                "II",
+                "V"
+              ],
+              "note": "Pode combinar várias opções; incisos são unidos."
+            },
+            {
+              "condition": "Se marcar «Fornecedor externo de KYC / PLD como serviço crítico»",
+              "incisos": [
+                "II",
+                "VI_a"
+              ],
+              "note": "Pode combinar várias opções; incisos são unidos."
+            }
+          ]
+        },
+        {
+          "id": "corr_C_stable",
+          "block": "C",
+          "order": 10,
+          "type": "yes_no",
+          "text": "A custódia inclui ativos com paridade ou referência explícita a moeda fiduciária (stablecoins, tokenizado lastreado, etc.) expostos ao cliente?",
+          "justificativa": "Seleção e divulgação de AV referenciados (IX (b), art. 65 Res. 520).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "IX_b"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "corr_C_staking",
+          "block": "C",
+          "order": 20,
+          "type": "yes_no",
+          "text": "A instituição oferece staking, rendimento, travamento ou produto equivalente sobre ativos custodiados (direto ou com parceiro)?",
+          "justificativa": "§ 1º (I) (h) e art. 71 Res. 520.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "par1_I_h"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "corr_C_if_api",
+          "block": "C",
+          "order": 30,
+          "type": "yes_no",
+          "text": "A instituição integra-se a instituições financeiras ou prestadores de pagamento via APIs/SDKs (on/off-ramp, Open Finance, liquidação)?",
+          "justificativa": "V é obrigatório na trilha; pergunta documenta intensidade para relatório (pode não alterar conjunto).",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_C_catalog",
+          "block": "C",
+          "order": 40,
+          "type": "single_choice",
+          "text": "Como o cliente acessa o universo de ativos virtuais que podem ser custodiados? (Distinto de usar internamente um ativo só para liquidação técnica sem catálogo ao cliente.)",
+          "justificativa": "IX (a) quando há política de oferta/listagem/suspensão ao cliente; IX (b) acoplado a stablecoins em corr_C_stable.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Opção: «Conjunto fechado: o cliente não escolhe entre catálogo ampliável; apenas ativos/pares definidos contratualmente.\n» (closed_set)",
+              "incisos": [],
+              "note": "Esta opção não acrescenta incisos."
+            },
+            {
+              "condition": "Opção: «Catálogo amplo espelhado de terceiros (subcustodiante ou parceiro), sem comitê próprio de listagem.» (wide_mirror)",
+              "incisos": [
+                "IX_a"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Opção: «A instituição aplica critérios próprios para admitir, suspender ou retirar ativos custodiáveis.» (own_policy)",
+              "incisos": [
+                "IX_a",
+                "IX_b"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Opção: «Híbrido: base de terceiros mais camada interna de aprovação de risco.» (hybrid)",
+              "incisos": [
+                "IX_a",
+                "IX_b"
+              ],
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "corr_D_narr",
+          "block": "D",
+          "order": 10,
+          "type": "text_short",
+          "text": "Descreva o fluxo: onboarding → depósito/guarda → autorização de movimentação → saque (atores, sistemas e terceiros). Opcional, recomendado para o auditor.",
+          "justificativa": "Contexto qualitativo; não altera gatilhos.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Texto livre",
+              "incisos": [],
+              "note": "Não aciona incisos por si. Usado para contexto, narrativa e regras especiais (ex.: supressão do cluster de custódia na intermediária)."
+            }
+          ]
+        },
+        {
+          "id": "corr_D_attestation",
+          "block": "D",
+          "order": 20,
+          "type": "yes_no",
+          "text": "A instituição publica ou contrata auditoria/attestation de reservas (proof of reserves ou equivalente) além dos controlos internos mínimos?",
+          "justificativa": "I_b já é obrigatório; resposta Sim reforça narrativa de comprovação explícita ao mercado.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_D_surveillance",
+          "block": "D",
+          "order": 30,
+          "type": "yes_no",
+          "text": "Existem processos documentados para monitorar abusos no âmbito dos serviços oferecidos ao cliente (ex.: sinais de manipulação ligados a APIs ou operações assistidas)?",
+          "justificativa": "XIII já é obrigatório; maturidade operacional para Jornada 2.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_conflict_units",
+          "block": "E",
+          "order": 10,
+          "type": "yes_no",
+          "text": "Existem unidades ou linhas de reporte distintas entre a operação de intermediação/negociação (mesa, RFQ, OTC) e a operação de custódia/guarda de AV, com regras escritas para reduzir conflito de interesses (Res. 520 art. 85)?",
+          "justificativa": "Art. 85, I — separação explícita entre intermediação e custódia; reforça X (a) e incisos de controlo interno.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_conflict_monitor",
+          "block": "E",
+          "order": 20,
+          "type": "yes_no",
+          "text": "Existe monitoramento independente (2ª linha, compliance ou auditoria) sobre conflitos entre mesa/execução e custódia, com registo de achados e plano de remediação?",
+          "justificativa": "Art. 85, II — monitoramento independente da conformidade operacional em conflitos potenciais.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_conflict_external_review",
+          "block": "E",
+          "order": 30,
+          "type": "yes_no",
+          "text": "Nos últimos dois anos, houve revisão ou avaliação por entidade qualificada independente sobre estrutura e mitigação de conflitos (intermediação + custódia)?",
+          "justificativa": "Art. 85, IV — verificação bienal por entidade independente (quando aplicável à operação).",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_bcp_tested",
+          "block": "E",
+          "order": 40,
+          "type": "yes_no",
+          "text": "Nos últimos 24 meses, a instituição executou teste ou exercício documentado de continuidade (BCP/DR) que cubra falha de custodiante/subcustodiante, nuvem crítica ou indisponibilidade de chaves?",
+          "justificativa": "IN 701 IV; Res. 520 art. 34, II e art. 43, IV e §4º — planos de recuperação e prazos de reinício.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_seg_policy_patrimonial",
+          "block": "E",
+          "order": 50,
+          "type": "yes_no",
+          "text": "Existe política documentada e aprovada que descreva a segregação patrimonial dos AV dos clientes face aos AV próprios (carteiras, omnibus, prova de reservas, exceções legais), alinhada ao Cap. IX da Res. 520?",
+          "justificativa": "Arts. 29–30 Res. 520; reforça evidência para I (a) e I (b) na prática documental.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_por_client_facing",
+          "block": "E",
+          "order": 60,
+          "type": "yes_no",
+          "text": "A instituição divulga ao cliente ou ao público (site, app, relatório) demonstrações ou attestations de reservas / reconciliação de saldos com periodicidade definida?",
+          "justificativa": "I (b) já obrigatório; documenta maturidade de transparência além do mínimo interno.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_fgc_disclosure",
+          "block": "E",
+          "order": 70,
+          "type": "yes_no",
+          "text": "Nas jornadas de oferta e contratação, o cliente é informado de forma explícita sobre a ausência de cobertura FGC/FGCoop (e fundos análogos, se aplicável) para os AV ofertados?",
+          "justificativa": "Res. 520 art. 68; alinha disclosure ao § 1º (I) IN 701 e transparência ao investidor.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_position_report_contract",
+          "block": "E",
+          "order": 80,
+          "type": "yes_no",
+          "text": "O contrato ou termos regulamentam frequência, canal e conteúdo mínimo do relatório de posição em AV do cliente (extrato), incluindo após movimentações relevantes?",
+          "justificativa": "§ 1º (III) IN 701; Res. 520 art. 79 — relatório tempestivo e fiel à posição interna.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_sanctions_workflow",
+          "block": "E",
+          "order": 90,
+          "type": "yes_no",
+          "text": "O fluxo operacional inclui triagem de endereços de carteira e partes contra listas de sanções / restritivas, com registo de exceções tratadas?",
+          "justificativa": "Res. 520 art. 34, III e art. 43 §2º V — integração a PLD e serviços relevantes.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_pld_retention",
+          "block": "E",
+          "order": 100,
+          "type": "yes_no",
+          "text": "Registos de operações e diligências PLD (incl. identificação e monitoramento) são mantidos pelo prazo mínimo legal aplicável (referência: 5 anos na Res. 520 art. 45, II, onde couber)?",
+          "justificativa": "VI (a) IN 701; prazo de guarda para supervisão e órgãos competentes.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_liquidity_provider_contract",
+          "block": "E",
+          "order": 110,
+          "type": "yes_no",
+          "text": "A instituição contrata provedor de liquidez para o ambiente de negociação (formação de preço, cotações), com contrato que preveja modelo de negócio, liquidação e transferência de custódia conforme Res. 520?",
+          "justificativa": "Art. 38 Res. 520; documenta cadeia de intermediação além da custódia.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_market_maker_contract",
+          "block": "E",
+          "order": 120,
+          "type": "yes_no",
+          "text": "A instituição contrata formador de mercado para o seu book ou ambiente de negociação, com parâmetros mínimos de atuação contratuais (frequência, spreads, equidade entre participantes)?",
+          "justificativa": "Art. 39 Res. 520; relevante para conflito e conduta de mercado (XIII, 69, 70).",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_margin_product",
+          "block": "E",
+          "order": 130,
+          "type": "yes_no",
+          "text": "A instituição oferece ou planeja oferecer financiamento para compra de AV (conta margem / alavancagem ao retalho), sujeito a limites e elegibilidade da Res. 520 (art. 72 e vedações do art. 12)?",
+          "justificativa": "Art. 72 — apenas para perfis institucionais elegíveis; documentar se o produto existe para auditor evitar incumprimento.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "corr_E_rfq_offering",
+          "block": "E",
+          "order": 140,
+          "type": "yes_no",
+          "text": "Além de livro de ordens ou matching tradicional, a instituição oferece negociação por cotação (RFQ / request for quote) a clientes, com disclosure das condições exigidas pela Res. 520 (art. 67, §6º)?",
+          "justificativa": "Transparência de preço e contraparte na intermediação; liga a § 1º (I) e art. 67.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        }
+      ]
+    },
+    "custodiante": {
+      "label": "Custodiante — modalidade II (arts. 8º–9º)",
+      "blocks": [
+        {
+          "id": "diag",
+          "title": "Diagnóstico — serviços técnicos CertiK (Jornada 2)",
+          "lead": "Estas perguntas não alteram o escopo IN 701; preparam a Jornada 2 (smart contract audit, pentest, checklist de evidências). Adequado também a custodiantes com contratos ou integrações on-chain."
+        },
+        {
+          "id": "A",
+          "title": "Guarda, segregação e trânsito de ativos",
+          "lead": "Chaves, omnibus, prova de reservas e contas fiduciárias do cliente."
+        },
+        {
+          "id": "B",
+          "title": "Terceiros, infraestrutura e subcustódia",
+          "lead": "Nuvem, fornecedores no exterior, subcustodiantes e serviços críticos."
+        },
+        {
+          "id": "C",
+          "title": "Universo de ativos, produtos e integrações",
+          "lead": "Listagem ao cliente, stablecoins, staking e conexões com IF/pagamentos."
+        },
+        {
+          "id": "D",
+          "title": "Narrativa e transparência operacional",
+          "lead": "Fluxo ponta a ponta e compromissos públicos de reservas."
+        },
+        {
+          "id": "E",
+          "title": "Custodiante — governança, continuidade e prova operacional",
+          "lead": "Modalidade custódia (Res. 520 arts. 8º–9º; Cap. X). Perguntas de maturidade para relatório; em geral não alteram incisos (núcleo já obrigatório na trilha). Paridade de fluxo com a trilha corretora."
+        }
+      ],
+      "mandatory_incisos": [
+        "II",
+        "IV",
+        "I_a",
+        "I_b",
+        "V",
+        "VII",
+        "VIII",
+        "VI_a",
+        "VI_b",
+        "XI",
+        "XII",
+        "XIII",
+        "XIV",
+        "XV",
+        "XVI",
+        "XVII",
+        "X_a",
+        "X_b_i",
+        "par1_I",
+        "par1_II",
+        "par1_III"
+      ],
+      "incisos_catalog": {
+        "I_a": {
+          "item": "I (a)",
+          "artigo": "4º, I, alínea a"
+        },
+        "I_b": {
+          "item": "I (b)",
+          "artigo": "4º, I, alínea b"
+        },
+        "II": {
+          "item": "II",
+          "artigo": "4º, II"
+        },
+        "III": {
+          "item": "III",
+          "artigo": "4º, III"
+        },
+        "IV": {
+          "item": "IV",
+          "artigo": "4º, IV"
+        },
+        "V": {
+          "item": "V",
+          "artigo": "4º, V"
+        },
+        "VI_a": {
+          "item": "VI (a)",
+          "artigo": "4º, VI, alínea a"
+        },
+        "VI_b": {
+          "item": "VI (b)",
+          "artigo": "4º, VI, alínea b"
+        },
+        "VII": {
+          "item": "VII",
+          "artigo": "4º, VII"
+        },
+        "VIII": {
+          "item": "VIII",
+          "artigo": "4º, VIII"
+        },
+        "IX_a": {
+          "item": "IX (a)",
+          "artigo": "4º, IX, alínea a"
+        },
+        "IX_b": {
+          "item": "IX (b)",
+          "artigo": "4º, IX, alínea b"
+        },
+        "X_a": {
+          "item": "X (a)",
+          "artigo": "4º, X, alínea a"
+        },
+        "X_b_i": {
+          "item": "X (b) (i)",
+          "artigo": "4º, X, b, i"
+        },
+        "X_b_ii": {
+          "item": "X (b) (ii)",
+          "artigo": "4º, X, b, ii"
+        },
+        "XI": {
+          "item": "XI",
+          "artigo": "4º, XI"
+        },
+        "XII": {
+          "item": "XII",
+          "artigo": "4º, XII"
+        },
+        "XIII": {
+          "item": "XIII",
+          "artigo": "4º, XIII"
+        },
+        "XIV": {
+          "item": "XIV",
+          "artigo": "4º, XIV"
+        },
+        "XV": {
+          "item": "XV",
+          "artigo": "4º, XV"
+        },
+        "XVI": {
+          "item": "XVI",
+          "artigo": "4º, XVI"
+        },
+        "XVII": {
+          "item": "XVII",
+          "artigo": "4º, XVII"
+        },
+        "par1_I": {
+          "item": "§ 1º (I)",
+          "artigo": "4º, § 1º, I (a–h)"
+        },
+        "par1_II": {
+          "item": "§ 1º (II)",
+          "artigo": "4º, § 1º, II"
+        },
+        "par1_III": {
+          "item": "§ 1º (III)",
+          "artigo": "4º, § 1º, III"
+        },
+        "par1_I_h": {
+          "item": "§ 1º (I) (h)",
+          "artigo": "4º, § 1º, I, alínea h"
+        }
+      },
+      "questions": [
+        {
+          "id": "cust_diag_sc",
+          "block": "diag",
+          "order": 1,
+          "type": "yes_no",
+          "text": "A instituição desenvolve, faz deploy ou contrata smart contracts próprios em produção (vaults de custódia on-chain, lógica de permissões, bridges ou protocolos sob sua responsabilidade)?",
+          "justificativa": "Jornada 2 — possível trilha de smart contract audit. Não altera incisos.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_diag_surface",
+          "block": "diag",
+          "order": 2,
+          "type": "yes_no",
+          "text": "A instituição opera sistemas próprios expostos à internet (portal de cliente, API de custódia, painel administrativo, webhooks) para clientes ou parceiros?",
+          "justificativa": "Jornada 2 — superfície para pentest. Não altera incisos.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_A_transit",
+          "block": "A",
+          "order": 10,
+          "type": "yes_no",
+          "text": "Além da guarda estática, os ativos dos clientes passam por carteiras de trânsito ou omnibus sob controlo da instituição (ou de subcustodiante agindo em seu nome) antes do destino final?",
+          "justificativa": "Reforça segregação e prova de reservas em movimento (I_a, I_b); XV já correlaciona a deveres do custodiante.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "I_a",
+                "I_b",
+                "XV"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "cust_A_fiat",
+          "block": "A",
+          "order": 20,
+          "type": "yes_no",
+          "text": "A instituição mantém contas de pagamento ou saldo em moeda fiduciária (ex.: BRL) em nome do cliente vinculado à operação de custódia de ativos virtuais (pré-conversão, saque fiat, ou conta reserva)?",
+          "justificativa": "Aciona condições dos arts. 69 e 85 da Res. 520 (inciso X (b) (ii)).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "X_b_ii"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "cust_A_model",
+          "block": "A",
+          "order": 30,
+          "type": "single_choice",
+          "text": "Qual modelo descreve melhor quem pode iniciar ou autorizar movimentações on-chain dos ativos custodiados na prática predominante?",
+          "justificativa": "Qualifica subcustódia e terceirização. VII–XVII já são obrigatórios na trilha custodiante; MPC implica terceiros com papéis de controlo — aciona III (diligência) além de II (já obrigatório na matriz).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Opção: «A instituição ou operador designado movimenta em nome do cliente (hot, cold rotacionada, políticas internas).» (inst_operates)",
+              "incisos": [],
+              "note": "Esta opção não acrescenta incisos."
+            },
+            {
+              "condition": "Opção: «MPC ou multipartição: a instituição e terceiros detêm fragmentos ou papéis de controlo.» (mpc_mixed)",
+              "incisos": [
+                "II",
+                "III"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Opção: «Subcustódia integral por terceiro contratado (a instituição não detém chaves sozinha, mas responde perante o cliente).» (full_subcustody)",
+              "incisos": [
+                "II",
+                "III"
+              ],
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "cust_B_exterior",
+          "block": "B",
+          "order": 10,
+          "type": "yes_no",
+          "text": "Fornecedores relevantes (subcustódia, nuvem, pagamentos, processamento) incluem entidade sediada no exterior ou sem autorização direta do Banco Central do Brasil para atividade equivalente no País?",
+          "justificativa": "Terceirização com exposição internacional; arts. 32–33, 83 e continuidade (II, III, IV).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "II",
+                "III",
+                "IV"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "cust_B_cloud",
+          "block": "B",
+          "order": 20,
+          "type": "yes_no",
+          "text": "Ledger de saldos, cofre de chaves, HSM, ou sistemas críticos de custódia residem em nuvem ou datacenter de terceiro, com contrato alinhado às exigências do BCB?",
+          "justificativa": "Outsourcing de tecnologia e continuidade (II, IV).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "II",
+                "IV"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "cust_B_more_foreign",
+          "block": "B",
+          "order": 30,
+          "type": "yes_no",
+          "text": "Existem outros parceiros estrangeiros ou não autorizados pelo BCB em papéis relevantes além dos já cobertos (ex.: KYC como serviço crítico, mensageria de assinaturas)?",
+          "justificativa": "Reforça diligência sobre prestador no exterior (art. 83) — III.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "III"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "cust_B_tp",
+          "block": "B",
+          "order": 40,
+          "type": "multi_choice",
+          "text": "Selecione terceiros materialmente relevantes na operação de custódia:",
+          "justificativa": "Mapa de outsourcing; opções somam incisos já obrigatórios ou condicionais conforme caso.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Se marcar «Subcustodiante de criptoativos (cold, MPC, institucional)»",
+              "incisos": [
+                "II",
+                "III"
+              ],
+              "note": "Pode combinar várias opções; incisos são unidos."
+            },
+            {
+              "condition": "Se marcar «Nuvem / hospedagem de sistemas críticos de custódia»",
+              "incisos": [
+                "II",
+                "IV"
+              ],
+              "note": "Pode combinar várias opções; incisos são unidos."
+            },
+            {
+              "condition": "Se marcar «Instituição de pagamento ou banco para fiat (Pix, TED, contas)»",
+              "incisos": [
+                "II",
+                "V"
+              ],
+              "note": "Pode combinar várias opções; incisos são unidos."
+            },
+            {
+              "condition": "Se marcar «Fornecedor externo de KYC / PLD como serviço crítico»",
+              "incisos": [
+                "II",
+                "VI_a"
+              ],
+              "note": "Pode combinar várias opções; incisos são unidos."
+            }
+          ]
+        },
+        {
+          "id": "cust_C_stable",
+          "block": "C",
+          "order": 10,
+          "type": "yes_no",
+          "text": "A custódia inclui ativos com paridade ou referência explícita a moeda fiduciária (stablecoins, tokenizado lastreado, etc.) expostos ao cliente?",
+          "justificativa": "Seleção e divulgação de AV referenciados (IX (b), art. 65 Res. 520).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "IX_b"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "cust_C_staking",
+          "block": "C",
+          "order": 20,
+          "type": "yes_no",
+          "text": "A instituição oferece staking, rendimento, travamento ou produto equivalente sobre ativos custodiados (direto ou com parceiro)?",
+          "justificativa": "§ 1º (I) (h) e art. 71 Res. 520.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "par1_I_h"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "cust_C_if_api",
+          "block": "C",
+          "order": 30,
+          "type": "yes_no",
+          "text": "A instituição integra-se a instituições financeiras ou prestadores de pagamento via APIs/SDKs (on/off-ramp, Open Finance, liquidação)?",
+          "justificativa": "V é obrigatório na trilha; pergunta documenta intensidade para relatório (pode não alterar conjunto).",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_C_catalog",
+          "block": "C",
+          "order": 40,
+          "type": "single_choice",
+          "text": "Como o cliente acessa o universo de ativos virtuais que podem ser custodiados? (Distinto de usar internamente um ativo só para liquidação técnica sem catálogo ao cliente.)",
+          "justificativa": "IX (a) quando há política de oferta/listagem/suspensão ao cliente; IX (b) acoplado a stablecoins em cust_C_stable.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Opção: «Conjunto fechado: o cliente não escolhe entre catálogo ampliável; apenas ativos/pares definidos contratualmente.\n» (closed_set)",
+              "incisos": [],
+              "note": "Esta opção não acrescenta incisos."
+            },
+            {
+              "condition": "Opção: «Catálogo amplo espelhado de terceiros (subcustodiante ou parceiro), sem comitê próprio de listagem.» (wide_mirror)",
+              "incisos": [
+                "IX_a"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Opção: «A instituição aplica critérios próprios para admitir, suspender ou retirar ativos custodiáveis.» (own_policy)",
+              "incisos": [
+                "IX_a",
+                "IX_b"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Opção: «Híbrido: base de terceiros mais camada interna de aprovação de risco.» (hybrid)",
+              "incisos": [
+                "IX_a",
+                "IX_b"
+              ],
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "cust_D_narr",
+          "block": "D",
+          "order": 10,
+          "type": "text_short",
+          "text": "Descreva o fluxo: onboarding → depósito/guarda → autorização de movimentação → saque (atores, sistemas e terceiros). Opcional, recomendado para o auditor.",
+          "justificativa": "Contexto qualitativo; não altera gatilhos.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Texto livre",
+              "incisos": [],
+              "note": "Não aciona incisos por si. Usado para contexto, narrativa e regras especiais (ex.: supressão do cluster de custódia na intermediária)."
+            }
+          ]
+        },
+        {
+          "id": "cust_D_attestation",
+          "block": "D",
+          "order": 20,
+          "type": "yes_no",
+          "text": "A instituição publica ou contrata auditoria/attestation de reservas (proof of reserves ou equivalente) além dos controlos internos mínimos?",
+          "justificativa": "I_b já é obrigatório; resposta Sim reforça narrativa de comprovação explícita ao mercado.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_D_surveillance",
+          "block": "D",
+          "order": 30,
+          "type": "yes_no",
+          "text": "Existem processos documentados para monitorar abusos no âmbito dos serviços oferecidos ao cliente (ex.: sinais de manipulação ligados a APIs ou operações assistidas)?",
+          "justificativa": "XIII já é obrigatório; maturidade operacional para Jornada 2.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_treasury_split",
+          "block": "E",
+          "order": 10,
+          "type": "yes_no",
+          "text": "Existem controlos documentados que separem claramente ativos virtuais próprios da instituição dos ativos virtuais de clientes (carteiras, políticas de tesouraria e de custódia), alinhados aos arts. 29–31 da Res. 520?",
+          "justificativa": "Foco modalidade custódia: segregação patrimonial e vedação do art. 31; sustenta I (a) e inciso XV na prática.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_proprietary_use_monitor",
+          "block": "E",
+          "order": 20,
+          "type": "yes_no",
+          "text": "Existe monitoramento periódico (2ª linha, risco ou auditoria) para assegurar que AV de clientes não são utilizados em operações próprias da instituição, salvo hipóteses expressamente admitidas na Res. 520?",
+          "justificativa": "Art. 31 caput e §1º — mitigação de uso indevido de AV de titularidade de clientes.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_external_custody_review",
+          "block": "E",
+          "order": 30,
+          "type": "yes_no",
+          "text": "Nos últimos dois anos, houve revisão ou auditoria independente sobre o serviço de custódia (contrato, política de custódia, segregação ou controlos sobre chaves), com relatório arquivado?",
+          "justificativa": "Arts. 73 (X, §4º–5º), 75 e 82 — evidência de supervisão e auditoria sobre custódia.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_bcp_tested",
+          "block": "E",
+          "order": 40,
+          "type": "yes_no",
+          "text": "Nos últimos 24 meses, executou teste ou exercício documentado de continuidade (BCP/DR) cobrindo falha de subcustodiante, nuvem crítica ou indisponibilidade de instrumentos de controlo?",
+          "justificativa": "IN 701 IV; Res. 520 art. 34, II e art. 43, IV e §4º; alinhado ao bloco E da trilha corretora.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_seg_policy_patrimonial",
+          "block": "E",
+          "order": 50,
+          "type": "yes_no",
+          "text": "Existe política aprovada que descreva segregação de AV de clientes vs AV próprios, métodos de prova de reservas e tratamento do limite de 5% (art. 30, §2º–3º), quando aplicável?",
+          "justificativa": "Arts. 29–30 Res. 520 — documentação esperada pelo supervisor e pelo certificador.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_por_client_facing",
+          "block": "E",
+          "order": 60,
+          "type": "yes_no",
+          "text": "A instituição divulga ao cliente ou ao público demonstrações ou attestations de reservas / reconciliação com periodicidade definida?",
+          "justificativa": "I (b) já obrigatório; mede maturidade de transparência além do controlo interno.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_fgc_disclosure",
+          "block": "E",
+          "order": 70,
+          "type": "yes_no",
+          "text": "Na oferta do serviço, o cliente é informado explicitamente sobre a ausência de cobertura FGC/FGCoop (e fundos análogos, se aplicável) para os ativos virtuais?",
+          "justificativa": "Res. 520 art. 68; alinha disclosure ao § 1º (I) IN 701.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_position_report_contract",
+          "block": "E",
+          "order": 80,
+          "type": "yes_no",
+          "text": "O contrato de custódia regula frequência, canal e conteúdo mínimo do relatório de posição em AV (extrato), coerente com o art. 79 da Res. 520?",
+          "justificativa": "§ 1º (III) IN 701; posição tempestiva e fiel ao registo interno.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_sanctions_workflow",
+          "block": "E",
+          "order": 90,
+          "type": "yes_no",
+          "text": "O fluxo operacional inclui triagem de endereços e partes contra listas de sanções/restritivas, com registo de exceções?",
+          "justificativa": "Art. 34, III e art. 43 §2º V — coerente com serviços relevantes e PLD.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_pld_retention",
+          "block": "E",
+          "order": 100,
+          "type": "yes_no",
+          "text": "Registos de operações e diligências PLD são mantidos pelo prazo mínimo legal aplicável (referência: 5 anos no art. 45, II da Res. 520, onde couber)?",
+          "justificativa": "VI (a) IN 701; rastreabilidade para supervisão.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_subcustody_art74",
+          "block": "E",
+          "order": 110,
+          "type": "yes_no",
+          "text": "A instituição mantém programa documentado de supervisão de subcustodiantes (due diligence, planos, monitoramento contínuo e comunicação de descumprimentos ao BCB), conforme art. 74 da Res. 520?",
+          "justificativa": "Substitui, na modalidade custódia, o foco corretora em contratos de liquidez/formador; núcleo art. 74.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_stress_art82",
+          "block": "E",
+          "order": 120,
+          "type": "yes_no",
+          "text": "Foram realizados testes de stress nos últimos 12 meses (art. 82), com método e resultados documentados e arquivados para supervisão pelo período legal?",
+          "justificativa": "Art. 82 caput e §1º–2º — capacidade dos sistemas de proteger AV custodiados.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_staking_bcb_notice",
+          "block": "E",
+          "order": 130,
+          "type": "yes_no",
+          "text": "Se oferece staking a clientes (autorizado ao conjunto art. 9º, IV), foi cumprida a comunicação prévia ao Banco Central com a antecedência legal (art. 82, §5º da Res. 520)?",
+          "justificativa": "Condicionado à operação de staking; complementa cust_C_staking ao nível de supervisão BCB.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "cust_E_instruction_event_logs",
+          "block": "E",
+          "order": 140,
+          "type": "yes_no",
+          "text": "Os sistemas preservam, de forma auditável, instruções de movimentação dos clientes e registo de eventos incidentes sobre AV custodiados (arts. 9º, III–IV e 80), com política de retenção definida?",
+          "justificativa": "Deveres operacionais do custodiante; suporte a XV e contrato tipo art. 73.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        }
+      ]
+    },
+    "intermediaria": {
+      "label": "Intermediária — modalidade I (Res. 520 arts. 6º–7º)",
+      "blocks": [
+        {
+          "id": "diag",
+          "title": "Diagnóstico — serviços técnicos CertiK (Jornada 2)",
+          "lead": "Estas perguntas não alteram o escopo IN 701; servem para preparar a segunda parte da jornada (smart contract audit, pentest e checklist de documentação por inciso)."
+        },
+        {
+          "id": "A",
+          "title": "Fluxo de valor, custódia e reservas",
+          "lead": "Modelo de chaves, trânsito de ativos, saldos em fiat e comprovação de reservas."
+        },
+        {
+          "id": "B",
+          "title": "Parceiros, infraestrutura e terceiros",
+          "lead": "Liquidez, nuvem, custódia por terceiros e contrapartes no exterior."
+        },
+        {
+          "id": "C",
+          "title": "Produto, oferta e conectividade",
+          "lead": "Listagem, stablecoins, staking e APIs com instituições financeiras."
+        },
+        {
+          "id": "D",
+          "title": "Governança, mercado e detalhamento operacional",
+          "lead": "Mapa de terceiros, narrativa do fluxo e práticas de mercado."
+        },
+        {
+          "id": "E",
+          "title": "Intermediária — governança, intermediação e maturidade regulatória",
+          "lead": "Modalidade intermediação (Res. 520 arts. 6º–7º). Perguntas de maturidade para relatório e Jornada 2; em geral não alteram incisos (paridade com blocos E das trilhas custodiante e corretora)."
+        }
+      ],
+      "mandatory_incisos": [
+        "VIII",
+        "VI_a",
+        "VI_b",
+        "XI",
+        "XII",
+        "XIII",
+        "X_a",
+        "X_b_i",
+        "par1_I",
+        "par1_II",
+        "par1_III"
+      ],
+      "incisos_catalog": {
+        "I_a": {
+          "item": "I (a)",
+          "artigo": "4º, I, alínea a"
+        },
+        "I_b": {
+          "item": "I (b)",
+          "artigo": "4º, I, alínea b"
+        },
+        "II": {
+          "item": "II",
+          "artigo": "4º, II"
+        },
+        "III": {
+          "item": "III",
+          "artigo": "4º, III"
+        },
+        "IV": {
+          "item": "IV",
+          "artigo": "4º, IV"
+        },
+        "V": {
+          "item": "V",
+          "artigo": "4º, V"
+        },
+        "VI_a": {
+          "item": "VI (a)",
+          "artigo": "4º, VI, alínea a"
+        },
+        "VI_b": {
+          "item": "VI (b)",
+          "artigo": "4º, VI, alínea b"
+        },
+        "VII": {
+          "item": "VII",
+          "artigo": "4º, VII"
+        },
+        "VIII": {
+          "item": "VIII",
+          "artigo": "4º, VIII"
+        },
+        "IX_a": {
+          "item": "IX (a)",
+          "artigo": "4º, IX, alínea a"
+        },
+        "IX_b": {
+          "item": "IX (b)",
+          "artigo": "4º, IX, alínea b"
+        },
+        "X_a": {
+          "item": "X (a)",
+          "artigo": "4º, X, alínea a"
+        },
+        "X_b_i": {
+          "item": "X (b) (i)",
+          "artigo": "4º, X, b, i"
+        },
+        "X_b_ii": {
+          "item": "X (b) (ii)",
+          "artigo": "4º, X, b, ii"
+        },
+        "XI": {
+          "item": "XI",
+          "artigo": "4º, XI"
+        },
+        "XII": {
+          "item": "XII",
+          "artigo": "4º, XII"
+        },
+        "XIII": {
+          "item": "XIII",
+          "artigo": "4º, XIII"
+        },
+        "XIV": {
+          "item": "XIV",
+          "artigo": "4º, XIV"
+        },
+        "XV": {
+          "item": "XV",
+          "artigo": "4º, XV"
+        },
+        "XVI": {
+          "item": "XVI",
+          "artigo": "4º, XVI"
+        },
+        "XVII": {
+          "item": "XVII",
+          "artigo": "4º, XVII"
+        },
+        "par1_I": {
+          "item": "§ 1º (I)",
+          "artigo": "4º, § 1º, I (a–h)"
+        },
+        "par1_II": {
+          "item": "§ 1º (II)",
+          "artigo": "4º, § 1º, II"
+        },
+        "par1_III": {
+          "item": "§ 1º (III)",
+          "artigo": "4º, § 1º, III"
+        },
+        "par1_I_h": {
+          "item": "§ 1º (I) (h)",
+          "artigo": "4º, § 1º, I, alínea h"
+        }
+      },
+      "questions": [
+        {
+          "id": "P_diag_sc",
+          "block": "diag",
+          "order": 1,
+          "type": "yes_no",
+          "text": "A instituição desenvolve, faz deploy ou contrata o desenvolvimento de smart contracts próprios em produção (tokens, vaults, staking on-chain, bridges ou lógica de protocolo sob sua responsabilidade)?",
+          "justificativa": "Objetivo: saber se haverá trilha de smart contract audit (repositório Git ou convite ao utilizador Certik4audit). Não altera incisos IN 701.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "P_diag_surface",
+          "block": "diag",
+          "order": 2,
+          "type": "yes_no",
+          "text": "A VASP opera sistemas próprios expostos à internet para clientes ou parceiros (site, aplicativo móvel, APIs REST/GraphQL, painel administrativo, webhooks)?",
+          "justificativa": "Objetivo: indicar se costuma aplicar-se penetration test em superfície própria. Operações apenas white-label sem infraestrutura própria podem ser exceção — confirmar com a CertiK.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "P1",
+          "block": "A",
+          "order": 10,
+          "type": "yes_no",
+          "text": "A plataforma gera endereços de depósito exclusivos por cliente e a VASP, parceiro MPC ou outro terceiro detém ou compartilha controle operacional sobre as chaves privadas associadas (incluindo coassinatura ou fragmentos que permitam movimentação)?",
+          "justificativa": "Objetivo: identificar custódia operacional de chaves ou equivalente (depositário ativo). Se Sim, aciona o cluster VII, XIV, XVI e XVII. Se Não e o modelo for apenas cliente assinando (P_arch client_only), a ferramenta não deve tratar como custódia da VASP os incisos desse cluster — salvo se marcar custódia institucional em P_tp.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "VII",
+                "XIV",
+                "XVI",
+                "XVII"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "P2",
+          "block": "A",
+          "order": 20,
+          "type": "yes_no",
+          "text": "Durante ordens de compra ou venda, os ativos passam por carteira transitória ou omnibus sob controle da VASP (ou de parceiro agindo em seu nome) antes do destino final ao cliente?",
+          "justificativa": "Objetivo: captar trânsito de ativos sob controle da intermediária (segregação em movimento). Gatilhos típicos: I (a), I (b) e XV.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "I_a",
+                "I_b",
+                "XV"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "P3",
+          "block": "A",
+          "order": 30,
+          "type": "yes_no",
+          "text": "A instituição mantém contas de pagamento ou saldo em BRL (ou outra moeda fiduciária) em nome do cliente aguardando ordens de compra de ativos virtuais?",
+          "justificativa": "Objetivo: identificar recurso fiduciário do cliente na intermediária antes da conversão em AV. Gatilho típico: X (b) (ii), alinhado ao art. 85 da Res. 520.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "X_b_ii"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "P_arch",
+          "block": "A",
+          "order": 40,
+          "type": "single_choice",
+          "text": "Qual cenário descreve melhor quem pode iniciar ou autorizar movimentações on-chain dos fundos do cliente na prática predominante da operação?",
+          "justificativa": "Objetivo: qualificar o modelo (custodial da VASP, MPC misto, terceiro integral ou não custodial). Apenas o cliente assinando, com P1 = Não e sem custódia institucional em P_tp, não aciona VII/XIV/XVI/XVII. Demais opções refletem custódia ou terceirização com impacto nos incisos indicados.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Opção: «Apenas o cliente (interface não custodial ou equivalente; a VASP não movimenta fundos).» (client_only)",
+              "incisos": [],
+              "note": "Esta opção não acrescenta incisos."
+            },
+            {
+              "condition": "Opção: «A VASP ou operador designado movimenta em nome do cliente (hot wallet, omnibus, etc.).» (vasp_operates)",
+              "incisos": [
+                "VII",
+                "XIV",
+                "XVI",
+                "XVII"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Opção: «MPC ou multipart assinatura em que a VASP e terceiros têm papéis de controle.» (mpc_mixed)",
+              "incisos": [
+                "VII",
+                "XIV",
+                "XVI",
+                "XVII",
+                "II"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Opção: «Custódia integral por terceiro contratado (a VASP não detém chaves, mas contrata o serviço).» (full_third_custody)",
+              "incisos": [
+                "VII",
+                "XIV",
+                "II",
+                "III"
+              ],
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "P4",
+          "block": "B",
+          "order": 10,
+          "type": "yes_no",
+          "text": "Os parceiros que executam ordens (provedores de liquidez) incluem entidade sediada no exterior ou sem autorização direta do Banco Central do Brasil para atividade equivalente no País?",
+          "justificativa": "Objetivo: mapear contraparte e terceirização com exposição internacional ou não regulada localmente. Gatilhos típicos: II, III e IV.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "II",
+                "III",
+                "IV"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "P5",
+          "block": "B",
+          "order": 20,
+          "type": "yes_no",
+          "text": "O ledger de saldos, a base de clientes ou o motor de roteamento de ordens reside em nuvem ou em datacenter de terceiro, com contrato de acesso ou auditoria alinhado às normas do BCB?",
+          "justificativa": "Objetivo: identificar outsourcing relevante de tecnologia e continuidade. Gatilhos típicos: II e IV (arts. 32 e 33 e continuidade).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "II",
+                "IV"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "P6",
+          "block": "B",
+          "order": 30,
+          "type": "yes_no",
+          "text": "Existem parceiros estrangeiros ou não autorizados pelo BCB em papéis relevantes além da liquidez (por exemplo: custódia institucional, pagamentos, KYC como serviço crítico)?",
+          "justificativa": "Objetivo: captar risco de prestador no exterior e diligências (ex.: art. 83 da Res. 520). Gatilho típico: III.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "III"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "P_tp",
+          "block": "B",
+          "order": 40,
+          "type": "multi_choice",
+          "text": "Selecione todos os papéis de terceiros materialmente relevantes na operação hoje:",
+          "justificativa": "Objetivo: aprofundar o mapa de terceiros (liquidez, custódia institucional, nuvem, fiat, KYC). A opção «custódia institucional» aciona VII e XIV mesmo que P1 seja Não — indica uso de custodiante de criptoativos.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Se marcar «Provedor de liquidez / market maker»",
+              "incisos": [
+                "II",
+                "IV"
+              ],
+              "note": "Pode combinar várias opções; incisos são unidos."
+            },
+            {
+              "condition": "Se marcar «Custódia institucional de criptoativos (cold, MPC, custodiante regulado ou não)»",
+              "incisos": [
+                "VII",
+                "XIV",
+                "II"
+              ],
+              "note": "Pode combinar várias opções; incisos são unidos."
+            },
+            {
+              "condition": "Se marcar «Computação em nuvem / hospedagem de sistemas críticos»",
+              "incisos": [
+                "II",
+                "IV"
+              ],
+              "note": "Pode combinar várias opções; incisos são unidos."
+            },
+            {
+              "condition": "Se marcar «Instituição de pagamento / banco para fiat (contas, Pix, TED)»",
+              "incisos": [
+                "II",
+                "V"
+              ],
+              "note": "Pode combinar várias opções; incisos são unidos."
+            },
+            {
+              "condition": "Se marcar «Fornecedor externo de KYC / PLD como serviço crítico»",
+              "incisos": [
+                "II",
+                "VI_a"
+              ],
+              "note": "Pode combinar várias opções; incisos são unidos."
+            }
+          ]
+        },
+        {
+          "id": "P7",
+          "block": "C",
+          "order": 10,
+          "type": "yes_no",
+          "text": "A plataforma permite negociação de ativos com paridade ou referência explícita a moedas fiduciárias (stablecoins, tokenizado, USD, BRL)?",
+          "justificativa": "Objetivo: identificar ativos referenciados em moeda fiduciária e divulgação ao cliente. Gatilho típico: IX (b) / art. 65 da Res. 520.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "IX_b"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "P8",
+          "block": "C",
+          "order": 20,
+          "type": "yes_no",
+          "text": "A VASP oferece staking, rendimento, travamento ou produtos equivalentes ao cliente (direto ou white-label com parceiro)?",
+          "justificativa": "Objetivo: captar produtos de rendimento sobre AV e transparência ao investidor. Gatilho típico: § 1º (I) (h) / art. 71 da Res. 520.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "par1_I_h"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "P9",
+          "block": "C",
+          "order": 30,
+          "type": "yes_no",
+          "text": "A VASP fornece ou utiliza APIs ou SDKs para se interconectar a outras instituições financeiras ou a prestadores de pagamento (on/off-ramp, Open Finance, etc.)?",
+          "justificativa": "Objetivo: mapear interconectividade regulada (governança de integrações). Gatilho típico: V / art. 43 da Res. 520.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "V"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "P_list",
+          "block": "C",
+          "order": 40,
+          "type": "single_choice",
+          "text": "Na prática, como a intermediária expõe ao cliente o universo de ativos virtuais negociáveis? (Isto é distinto de usar internamente um ou outro ativo só para roteamento, liquidação ou integração técnica, sem que o cliente escolha entre um catálogo ou oferta ampliável de AV.)",
+          "justificativa": "Objetivo: alinhar IX (a) a situações em que há oferta, catálogo ou política de listagem/suspensão/deslistagem perante o cliente. Modelos de conjunto fechado só para execução (sem catálogo ampliável) não acionam IX (a). IX (b) continua a depender sobretudo de ativos referenciados em moeda fiduciária (pergunta sobre stablecoins).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Opção: «Conjunto fechado para execução: o cliente não escolhe entre catálogo ampliável de AV; a operação limita-se a um ou poucos ativos/pares fixos (ex.: produto único, roteamento contratual, liquidação em AV específico sem política própria nem espelhamento amplo de catálogo).\n» (execution_only)",
+              "incisos": [],
+              "note": "Esta opção não acrescenta incisos."
+            },
+            {
+              "condition": "Opção: «Catálogo amplo espelhado: o cliente acessa múltiplos ativos reproduzidos do(s) parceiro(s) de liquidez, ainda que a VASP não tenha comitê próprio de listagem.\n» (mirror_lp)",
+              "incisos": [
+                "IX_a"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Opção: «A VASP aplica critérios próprios (comitê, política escrita) para listar, suspender ou deslistar ativos.» (own_committee)",
+              "incisos": [
+                "IX_a",
+                "IX_b"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Opção: «Híbrido: base do parceiro mais camada de aprovação ou de risco interna da VASP sobre o que é ofertado.» (hybrid_list)",
+              "incisos": [
+                "IX_a",
+                "IX_b"
+              ],
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "P_narr",
+          "block": "D",
+          "order": 10,
+          "type": "text_short",
+          "text": "Descreva em poucas linhas o fluxo ponta a ponta: depósito → negociação → saque (atores, sistemas e terceiros envolvidos). Opcional, porém recomendado para o auditor.",
+          "justificativa": "Objetivo: contexto qualitativo para o relatório; não altera gatilhos automáticos.",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Texto livre",
+              "incisos": [],
+              "note": "Não aciona incisos por si. Usado para contexto, narrativa e regras especiais (ex.: supressão do cluster de custódia na intermediária)."
+            }
+          ]
+        },
+        {
+          "id": "P_reserves",
+          "block": "D",
+          "order": 20,
+          "type": "yes_no",
+          "text": "A instituição publica ou se compromete a auditar ou comprovar reservas dos criptoativos sob responsabilidade da plataforma (proof of reserves, attestation ou relatório equivalente)?",
+          "justificativa": "Objetivo: identificar compromisso explícito com comprovação de reservas além do trânsito (P2). Gatilho típico: I (b).",
+          "audit_only": false,
+          "edges": [
+            {
+              "condition": "Resposta: Sim",
+              "incisos": [
+                "I_b"
+              ],
+              "note": ""
+            },
+            {
+              "condition": "Resposta: Não",
+              "incisos": [],
+              "note": "Não acrescenta incisos com «Não»."
+            }
+          ]
+        },
+        {
+          "id": "P_surveillance",
+          "block": "D",
+          "order": 30,
+          "type": "yes_no",
+          "text": "Existem sistemas ou processos documentados para monitorar práticas espúrias no ambiente da plataforma (spoofing, wash trading, manipulação de preço)?",
+          "justificativa": "Objetivo: maturidade operacional de vigilância de mercado; o inciso XIII já é obrigatório na matriz intermediária.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_art69_controls",
+          "block": "E",
+          "order": 10,
+          "type": "yes_no",
+          "text": "Existem políticas e controles documentados para mitigar conflitos de interesse na intermediação (separação de funções, melhor execução, tratamento quando a VASP ou partes relacionadas são contraparte), alinhados ao art. 69 da Res. 520?",
+          "justificativa": "Intermediação com múltiplas atividades (art. 7º); reforça evidência para inciso X (a) IN 701.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_operations_segregation",
+          "block": "E",
+          "order": 20,
+          "type": "yes_no",
+          "text": "Quando a operação combina negociação para clientes e gestão de ativos próprios (ou de treasury), existem regras escritas e controles que separem claramente interesses próprios e de clientes (incluindo informação privilegiada)?",
+          "justificativa": "Arts. 69 e 70 Res. 520; complementa P1/P2/P_arch ao nível de governança.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_market_conduct_review",
+          "block": "E",
+          "order": 30,
+          "type": "yes_no",
+          "text": "Nos últimos dois anos, houve avaliação independente (auditoria, consultoria regulatória ou revisão externa) sobre práticas de mercado, conflitos ou surveillance alinhada aos arts. 69–70 da Res. 520?",
+          "justificativa": "Maturidade para inciso XIII e conduta de mercado; não substitui obrigação contínua de monitoramento.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_bcp_tested",
+          "block": "E",
+          "order": 40,
+          "type": "yes_no",
+          "text": "Nos últimos 24 meses, executou teste ou exercício documentado de continuidade (BCP/DR) cobrindo indisponibilidade de parceiros de liquidez, nuvem, custodiante ou APIs críticas?",
+          "justificativa": "IN 701 IV quando acionado; Res. 520 art. 34, II e art. 43, IV — paridade com outras trilhas.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_custody_model_documented",
+          "block": "E",
+          "order": 50,
+          "type": "yes_no",
+          "text": "A instituição mantém documentação atualizada que explique o modelo de custódia/trânsito perante o cliente (quem detém chaves, omnibus, MPC, terceiros), coerente com as respostas operacionais às perguntas P1, P2 e P_arch?",
+          "justificativa": "Suporte a disclosure § 1º (I) e a coerência com supressão ou inclusão do cluster VII/XIV/XVI/XVII.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_por_disclosure",
+          "block": "E",
+          "order": 60,
+          "type": "yes_no",
+          "text": "A VASP divulga periodicamente ao cliente ou ao público demonstrações de reservas, reconciliação ou attestation quando mantém ou rotula saldos agregados de clientes?",
+          "justificativa": "Complementa P_reserves e I (b); transparência além do mínimo declaratório.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_fgc_disclosure",
+          "block": "E",
+          "order": 70,
+          "type": "yes_no",
+          "text": "Na oferta de produtos, o cliente é informado explicitamente sobre a ausência de cobertura FGC/FGCoop (e fundos análogos, se aplicável) para os ativos virtuais?",
+          "justificativa": "Res. 520 art. 68; alinha ao § 1º (I) IN 701.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_position_report_custodial",
+          "block": "E",
+          "order": 80,
+          "type": "yes_no",
+          "text": "Quando há custódia ou trânsito sob responsabilidade da VASP (P1 ou P2), o contrato ou termos regulam relatório ou extrato de posição em AV com frequência e canal definidos?",
+          "justificativa": "§ 1º (III) IN 701; art. 79 Res. 520 onde há relação de custódia com cliente.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_sanctions_workflow",
+          "block": "E",
+          "order": 90,
+          "type": "yes_no",
+          "text": "O fluxo operacional inclui triagem de endereços e partes contra listas de sanções/restritivas, com registro de exceções?",
+          "justificativa": "Art. 34, III e art. 43 §2º V Res. 520; coerente com PLD (VI_a).",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_pld_retention",
+          "block": "E",
+          "order": 100,
+          "type": "yes_no",
+          "text": "Registros de operações e diligências PLD são mantidos pelo prazo mínimo legal aplicável (referência: 5 anos no art. 45, II da Res. 520, onde couber)?",
+          "justificativa": "VI (a) IN 701; rastreabilidade para supervisão.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_lp_art38",
+          "block": "E",
+          "order": 110,
+          "type": "yes_no",
+          "text": "A VASP contrata provedor(es) de liquidez para o ambiente de negociação com contrato que preveja, no mínimo, modelo de negócio, liquidação e transferência segura de custódia (art. 38 Res. 520)?",
+          "justificativa": "Típico da intermediária com book ou roteamento; pasta de evidências para intermediação.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_mm_art39",
+          "block": "E",
+          "order": 120,
+          "type": "yes_no",
+          "text": "A VASP contrata formador(es) de mercado com parâmetros mínimos contratuais (frequência, spreads, equidade entre participantes) conforme art. 39 Res. 520?",
+          "justificativa": "Art. 7º §1º III e art. 39; ligação com conflito e conduta de mercado.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_rfq_art67",
+          "block": "E",
+          "order": 130,
+          "type": "yes_no",
+          "text": "A operação inclui negociação por cotação (RFQ / request for quote) com disclosure ao cliente dos elementos do art. 67, §6º da Res. 520 (cotações, prazos, contraparte, riscos)?",
+          "justificativa": "Transparência de preço na intermediação; art. 67 §6º.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        },
+        {
+          "id": "int_E_listing_art64",
+          "block": "E",
+          "order": 140,
+          "type": "yes_no",
+          "text": "Quando há catálogo ou listagem ao cliente (P_list distinto de execution_only), existe política ou comité documentado para oferta, suspensão e deslistagem de AV, com critérios mínimos alinhados ao art. 64 Res. 520?",
+          "justificativa": "Reforça IX (a) na prática documental; comitê e política §2º art. 64.",
+          "audit_only": true,
+          "edges": [
+            {
+              "condition": "—",
+              "incisos": [],
+              "note": "Não altera o conjunto de incisos do escopo IN 701. Serve para relatório, maturidade ou Jornada 2 (ex.: pentest, smart contract audit)."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "notes": {
+    "suppress_custody_intermediaria": "Na trilha intermediária, se o modelo for exclusivamente não custodial (pergunta P_arch = apenas carteira do cliente) e não houver custódia institucional declarada em P_tp, o motor pode remover do escopo os incisos VII, XIV, XVI e XVII mesmo que P1 ou P2 tenham sido respondidos de forma a acioná-los — regra em scope_narrative.suppress_custody_cluster_if_non_custodial."
+  }
+}

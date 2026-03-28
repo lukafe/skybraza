@@ -12,7 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Roboto+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/css/styles.css?v=26" />
+    <link rel="stylesheet" href="/static/css/styles.css?v=28" />
   </head>
   <body class="sk-app app-view-intro">
     <noscript>
@@ -102,10 +102,63 @@
                 Continuar
               </button>
             </div>
+            <div class="intro-landing__tree-wrap">
+              <button type="button" class="btn btn-secondary intro-landing__tree-btn" id="btn-open-decision-tree">
+                Árvore de decisão dos incisos
+              </button>
+              <p class="intro-landing__tree-hint">
+                Ver, por trilha, cada pergunta do questionário e que incisos da IN 701 pode ativar — mapa didático interativo.
+              </p>
+            </div>
             <p class="intro-landing__certik-foot">
               <a href="https://www.certik.com" target="_blank" rel="noopener noreferrer">certik.com</a>
             </p>
           </div>
+        </div>
+      </section>
+
+      <section id="decision-tree-view" class="decision-tree-view hidden" aria-labelledby="dt-main-title">
+        <div class="wrap dt-wrap">
+          <div class="dt-toolbar">
+            <button type="button" class="btn btn-ghost dt-back" id="btn-dt-back">← Voltar ao início</button>
+            <div class="dt-heading-block">
+              <h2 id="dt-main-title" class="dt-main-title">Árvore de decisão — perguntas e incisos</h2>
+              <p class="dt-lead">
+                Escolha a trilha regulatória, filtre por texto e expanda cada pergunta para ver as <strong>ramificações</strong> (Sim/Não,
+                opções) e os <strong>incisos</strong> que entram no escopo. Clique num inciso para ver o rótulo do art. 4º da IN 701.
+              </p>
+            </div>
+          </div>
+
+          <div class="dt-track-bar">
+            <p class="dt-track-label" id="dt-track-label">Trilha</p>
+            <div class="dt-track-pills" id="dt-track-pills" role="tablist" aria-labelledby="dt-track-label"></div>
+          </div>
+
+          <div class="dt-search-row">
+            <label class="dt-filter-label">
+              <span class="dt-filter-text">Filtrar perguntas</span>
+              <input
+                type="search"
+                id="dt-filter"
+                class="dt-filter-input"
+                placeholder="Id (ex. P1) ou palavra no enunciado…"
+                autocomplete="off"
+              />
+            </label>
+          </div>
+
+          <div class="dt-mandatory-card panel">
+            <h3 class="dt-mandatory-title">Incisos sempre no escopo nesta trilha</h3>
+            <p class="dt-mandatory-lead">
+              Obrigatórios fixos na matriz CertiK — <strong>não dependem</strong> das respostas ao questionário declarativo.
+            </p>
+            <div class="dt-inciso-chip-row" id="dt-mandatory-chips"></div>
+          </div>
+
+          <div class="dt-note-suppress panel hidden" id="dt-note-suppress" role="note"></div>
+
+          <div class="dt-blocks-root" id="dt-blocks-root"></div>
         </div>
       </section>
 
@@ -235,6 +288,6 @@
 
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-    <script src="/static/js/app.js?v=28" type="module"></script>
+    <script src="/static/js/app.js?v=29" type="module"></script>
   </body>
 </html>

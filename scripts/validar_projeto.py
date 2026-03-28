@@ -56,6 +56,21 @@ def main() -> int:
     for e in sync_errs:
         errors.append(f"[public↔vercel_public] {e}")
 
+    dt_json = ROOT / "public" / "static" / "data" / "decision_tree.json"
+    if not dt_json.is_file():
+        errors.append(
+            "Falta public/static/data/decision_tree.json — execute: python scripts/export_decision_tree_data.py"
+        )
+    else:
+        try:
+            dt_data = json.loads(dt_json.read_text(encoding="utf-8"))
+            tr_map = dt_data.get("tracks") or {}
+            for tr in sorted(TRACK_IDS):
+                if tr not in tr_map:
+                    errors.append(f"decision_tree.json sem trilha {tr!r}")
+        except Exception as e:
+            errors.append(f"decision_tree.json inválido: {e}")
+
     meta_yaml = get_coverage_meta()
     if meta_yaml.get("fase") != "E":
         errors.append(f"meta.fase esperado 'E', veio {meta_yaml.get('fase')!r}")

@@ -3,6 +3,8 @@
  * Legado /api/* mantido no servidor para integrações antigas.
  */
 
+import { wireDecisionTreeUI } from "./decision_tree.js?v=1";
+
 const $ = (sel, root = document) => root.querySelector(sel);
 
 const TRACK_STORAGE_KEY = "certik701_scope_track";
@@ -94,10 +96,11 @@ function showToast(msg) {
 }
 
 function setView(view) {
-  document.body.classList.toggle("app-view-intro", view === "intro");
+  document.body.classList.toggle("app-view-intro", view === "intro" || view === "decisionTree");
   $("#intro").classList.toggle("hidden", view !== "intro");
   $("#wizard").classList.toggle("hidden", view !== "wizard");
   $("#results").classList.toggle("hidden", view !== "results");
+  $("#decision-tree-view")?.classList.toggle("hidden", view !== "decisionTree");
 }
 
 function qType(q) {
@@ -878,6 +881,11 @@ async function boot() {
     }
   }
   syncTrackButtonsUI();
+
+  wireDecisionTreeUI({
+    setView,
+    getTrack: () => state.track,
+  });
 
   document.querySelectorAll(".intro-track__btn").forEach((btn) => {
     btn.addEventListener("click", () => {

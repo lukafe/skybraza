@@ -1,0 +1,261 @@
+================================================================================
+EXPLICAÇÃO DA APLICAÇÃO — CertiK VASP / Skybraza (escopo IN 701)
+================================================================================
+Documento de referência técnica e funcional. Última revisão alinhada ao código
+na raiz do repositório (FastAPI, Streamlit, SPA, laws/).
+
+--------------------------------------------------------------------------------
+1. OBJETIVO DO PRODUTO
+--------------------------------------------------------------------------------
+
+A aplicação ajuda instituições (VASP) a DELIMITAR, de forma declarativa, o
+ESCOPO DE AUDITORIA / CONFORMIDADE alinhado à Instrução Normativa BCB nº 701
+(IN 701) e à Resolução BCB nº 520 (atividades de prestadores de serviços de
+ativos virtuais — PSVAV), com três PERFILS DE TRILHA:
+
+  · intermediaria  — modalidade I (arts. 6º–7º da Res. 520), matriz em
+                     laws/COVERAGE_MATRIX.yaml
+  · custodiante    — modalidade II (custódia), matriz em
+                     laws/tracks/custodiante/COVERAGE_MATRIX.yaml
+  · corretora      — intermediação e custódia (art. 10), matriz em
+                     laws/tracks/corretora/COVERAGE_MATRIX.yaml
+
+O resultado NÃO substitui parecer jurídico nem o processo formal perante o BCB;
+é orientação para alinhamento com a CertiK e preparação de documentação.
+
+--------------------------------------------------------------------------------
+2. ARQUITETURA EM CAMADAS
+--------------------------------------------------------------------------------
+
+  [Utilizador]
+       │
+       ├─► SPA (HTML/CSS/JS) — public/  [ou vercel_public/ na Vercel]
+       │        Consumo: GET /api/v1/questions, POST /api/v1/scope
+       │
+       ├─► Streamlit — app.py (mesmo motor de regras, UI alternativa)
+       │
+       └─► Integrações — qualquer cliente HTTP para /api/v1/*
+
+       ▼
+  [FastAPI] — main.py
+       · CORS, rate limit opcional, logging
+       · Montagem de estáticos em /static
+       · Rotas /api e /api/v1 (equivalentes)
+
+       ▼
+  [Motor] — rules_engine.compute_scope()
+       · matrix_loader     → incisos obrigatórios + matriz por trilha
+       · questionnaire_loader → perguntas + gatilhos (when_true, add_incisos)
+       · scope_narrative   → textos “porquê”, supressão custódia não custodial
+       · bcb_hints_loader  → orientação indicativa relatório BCB por inciso
+       · readiness         → prontidão do corpus laws/ no escopo
+       · evidence_requests → Jornada 2 (checklist evidências, SC audit, pentest)
+
+       ▼
+  [Dados normativos] — laws/
+       · COVERAGE_MATRIX.yaml, questionnaire.yaml (intermediária)
+       · tracks/custodiante/*, tracks/corretora/*
+       · BCB_REPORT_HINTS.yaml, AUDITOR_EVIDENCE_BY_INCISO.yaml, STUBs, etc.
+
+--------------------------------------------------------------------------------
+3. FICHEIROS EXECUTÁVEIS E ENTRADAS
+--------------------------------------------------------------------------------
+
+main.py
+  Aplicação ASGI FastAPI. Expõe health, questions por trilha, scope (POST).
+  Em produção na Vercel usa vercel_public/ se existir index.html aí.
+
+app.py
+  Interface Streamlit: questionário por blocos, cálculo de escopo, tabelas,
+  exportação/resumo em Markdown, integração opcional Gemini (variável de
+  ambiente). Respeita CERTIK_ENABLE_*_TRACK como na API.
+
+serve_web.py
+  Arranque local: uvicorn + abre browser; serve a pasta public/.
+
+scripts/validar_projeto.py
+  Validação offline: matrizes, questionários, BCB hints, evidence YAML,
+  escopo máximo por trilha, sync public↔vercel_public.
+
+scripts/sync_vercel_public.py
+  Copia public/ → vercel_public/ (obrigatório após alterar o front para deploy
+  Vercel com o bundle Python).
+
+scripts/simular_empresa.py
+  Simulação em consola com perfil fictício de intermediária.
+
+--------------------------------------------------------------------------------
+4. MOTOR DE ESCOPO (rules_engine.py)
+--------------------------------------------------------------------------------
+
+Função central: compute_scope(answers, track)
+
+Passos resumidos:
+  1. Carrega a matriz de incisos da trilha (ids alfanuméricos: I_a, VI_a, …).
+  2. Obtém o conjunto de incisos OBRIGATÓRIOS FIXOS (mandatory) dessa matriz.
+  3. Normaliza respostas (normalize_answers) e resolve gatilhos
+     (resolve_triggers): cada pergunta pode acrescentar incisos ao escopo
+     quando certas condições se verificam (yes_no, single_choice, multi_choice,
+     text_short).
+  4. Incisos ativos = obrigatórios ∪ acionados pelas respostas.
+  5. suppress_custody_cluster_if_non_custodial: na trilha intermediária, se o
+     modelo declarado for exclusivamente não custodial, remove do escopo o
+     cluster de custódia (VII, XIV, XVI, XVII) quando aplicável às regras.
+  6. Gera textos “por que será auditado”, hints BCB, linhas fora do escopo
+     com explicação indicativa.
+  7. Agrega metadados: contagens obrigatório vs condicional, journey_2,
+     corpus_readiness.
+  8. Devolve (DataFrame pandas dos incisos NO ESCOPO, dict meta).
+
+Colunas principais do DataFrame exportável: item, artigo IN 701, descrição,
+ref. Res. 520, corpus, status corpus, origem no escopo (Obrigatório (matriz) /
+Acionado por respostas), porquê, orientação relatório BCB.
+
+--------------------------------------------------------------------------------
+5. QUESTIONÁRIO (questionnaire_loader.py + YAML)
+--------------------------------------------------------------------------------
+
+Cada trilha tem um questionnaire.yaml com:
+  · blocks (diag, A, B, C, D, E) — títulos e leads
+  · questions — id, block, order, type, text, justificativa, tags
+  · when_true / when_false / add_incisos — ligação aos ids da matriz
+  · audit_only: true — pergunta NÃO altera incisos; alimenta relatório e
+    Jornada 2 (bloco E nas três trilhas: int_E_*, cust_E_*, corr_E_*)
+
+Prefixos de id: P_* (intermediária), cust_* (custodiante), corr_* (corretora)
+para evitar colisões se o runtime carregar metadados de várias trilhas.
+
+--------------------------------------------------------------------------------
+6. MATRIZ NORMATIVA (matrix_loader.py + COVERAGE_MATRIX.yaml)
+--------------------------------------------------------------------------------
+
+Define incisos (id, item, artigo_in701, descricao, ref_resolucao, ficheiros
+corpus, status). Lista escopo_* indica obrigatórios fixos por trilha.
+
+INCISOS_MATRIX e MANDATORY_KEYS em memória usam a trilha “intermediaria” como
+default de importação para compatibilidade com código legado; o motor sempre
+usa build_incisos_matrix(track) e build_mandatory_keys(track) por trilha.
+
+--------------------------------------------------------------------------------
+7. JORNADA 2 — EVIDÊNCIAS E SERVIÇOS TÉCNICOS (evidence_requests.py)
+--------------------------------------------------------------------------------
+
+build_journey_2_payload(answers, meta_scope) monta JSON consumido pela SPA:
+
+  · smart_contract_audit — aplicável conforme pergunta de diagnóstico SC
+  · penetration_test — aplicável conforme superfície exposta
+  · checklist_por_inciso — pedidos de documentação por inciso ativo, a partir
+    de laws/AUDITOR_EVIDENCE_BY_INCISO.yaml
+  · notas_heuristica — notas quando respostas dos blocos E (corr_E_*, cust_E_*,
+    int_E_*) sinalizam temas sensíveis (LP, MM, RFQ, subcustódia, etc.)
+
+Schema version interna: JOURNEY_2_SCHEMA_VERSION = "2".
+
+--------------------------------------------------------------------------------
+8. OUTROS MÓDULOS RELEVANTES
+--------------------------------------------------------------------------------
+
+bcb_hints_loader.py
+  Textos indicativos por inciso e trilha; overrides em tracks/<trilha>/.
+
+readiness.py
+  Índice de prontidão dos ficheiros laws/ referenciados no escopo ativo.
+
+scope_narrative.py
+  Narrativas “porquê no escopo”; hooks opcionais LLM (enriquecimento).
+
+scope_fixtures.py
+  Respostas máximas para testes (maximize_scope_answers por trilha).
+
+rate_limit.py + logging_config.py
+  Limite de pedidos configurável por env; logs texto ou JSON.
+
+--------------------------------------------------------------------------------
+9. API REST (main.py) — RESUMO
+--------------------------------------------------------------------------------
+
+Prefixos: /api/v1/* (recomendado) e /api/* (legado, igual).
+
+GET  /api/v1/health
+     Estado do serviço, versão, features (custodiante_track, corretora_track).
+
+GET  /api/v1/questions?track=intermediaria|custodiante|corretora
+     Blocos e perguntas serializadas para o wizard.
+
+POST /api/v1/scopes
+     Corpo: { institution, track, answers }
+     Resposta: incisos no escopo e fora, resumo numérico, corpus_readiness,
+     journey_2.
+
+Trilhas custodiante/corretora podem ser desativadas na API com
+CERTIK_ENABLE_CUSTODIANTE_TRACK=0 ou CERTIK_ENABLE_CORRETORA_TRACK=0
+(resposta 403 se pedido explicitamente).
+
+CORS: CORS_ALLOWED_ORIGINS (CSV); omissão = *.
+
+Detalhe adicional: laws/SERVIDOR_API.txt
+
+--------------------------------------------------------------------------------
+10. INTERFACE WEB (SPA — public/)
+--------------------------------------------------------------------------------
+
+index.html + static/css/styles.css + static/js/app.js
+
+Fluxo: landing (nome da empresa + trilha) → wizard por blocos → painel de
+resultados (dashboard: KPIs, rosca de cobertura da matriz, listas colapsáveis
+por inciso, Jornada 2 como cartões de “ativação” de serviços).
+
+Persistência leve: sessionStorage para trilha e estado de pedidos J2.
+
+Após editar public/, executar: python scripts/sync_vercel_public.py
+
+--------------------------------------------------------------------------------
+11. TESTES E QUALIDADE
+--------------------------------------------------------------------------------
+
+tests/ — pytest (motor, API, matriz, journey_2, rate limit, hints BCB, etc.)
+
+python scripts/validar_projeto.py — gate de consistência projeto (Fase E).
+
+python scripts/check_public_bundle_sync.py — public/ vs vercel_public/ byte a
+byte.
+
+--------------------------------------------------------------------------------
+12. DEPENDÊNCIAS E AMBIENTE
+--------------------------------------------------------------------------------
+
+requirements.txt — FastAPI, uvicorn, Streamlit, pandas, PyYAML, pydantic, etc.
+
+Variáveis úteis (lista não exaustiva):
+  GEMINI_API_KEY / GEMINI_MODEL — opcional no Streamlit
+  CERTIK_PENTEST_FORM_URL — URL do formulário pentest na Jornada 2
+  LOG_LEVEL, LOG_FORMAT, RATE_LIMIT_*, RATE_LIMIT_DISABLED
+  VERCEL — detetado em runtime para escolher vercel_public
+  CORS_ALLOWED_ORIGINS
+  CERTIK_ENABLE_CUSTODIANTE_TRACK, CERTIK_ENABLE_CORRETORA_TRACK
+
+--------------------------------------------------------------------------------
+13. DOCUMENTAÇÃO EM laws/
+--------------------------------------------------------------------------------
+
+ROTEIRO_FASES.txt — fases A–E do projeto e ficheiros de referência.
+MAPEAMENTO_IN701_REF_RES520.txt — cruzamento IN 701 ↔ Res. 520.
+REVISAO_FLUXO_QUESTIONARIO_INTERMEDIARIA.txt e mapeamentos por trilha.
+FASE_*.txt, JORNADA_2_EVIDENCIAS_PLANO.txt — planos e consolidação.
+
+RES520BCB.txt (raiz) — texto de referência da Res. 520 (uso interno).
+
+--------------------------------------------------------------------------------
+14. LIMITAÇÕES
+--------------------------------------------------------------------------------
+
+· A ferramenta reflete a modelagem CertiK em YAML; alterações à IN 701 ou à
+  interpretação exigem revisão jurídica e atualização das matrizes.
+· Conteúdo STUB em laws/ marca corpus incompleto até substituição por texto
+  integral onde aplicável.
+· O dashboard e os hints BCB são INDICATIVOS para preparação de trabalho e
+  relatórios; não vinculam o Banco Central nem a CertiK em processo formal.
+
+================================================================================
+Fim do documento
+================================================================================
