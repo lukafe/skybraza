@@ -75,6 +75,25 @@ export function wireDecisionTreeUI({ setView, getTrack }) {
   if (filter) {
     filter.addEventListener("input", () => applyDtFilter(filter.value || ""));
   }
+
+  const ex = $("#dt-expand-all");
+  const col = $("#dt-collapse-all");
+  const rootBlocks = $("#dt-blocks-root");
+  if (ex && rootBlocks) {
+    ex.addEventListener("click", () => {
+      rootBlocks.querySelectorAll("details.dt-q").forEach((d) => {
+        d.open = true;
+      });
+    });
+  }
+  if (col && rootBlocks) {
+    col.addEventListener("click", () => {
+      rootBlocks.querySelectorAll("details.dt-q").forEach((d) => {
+        d.open = false;
+      });
+      rootBlocks.querySelectorAll(".dt-flow-rail--focus").forEach((r) => r.classList.remove("dt-flow-rail--focus"));
+    });
+  }
 }
 
 /**
@@ -169,15 +188,41 @@ export async function renderDecisionTree(track) {
 
   blocksRoot.innerHTML = html.join("");
 
-  blocksRoot.querySelectorAll(".dt-inciso-chip").forEach((chip) => {
+  blocksRoot.querySelectorAll(".dt-inciso-chip, .dt-flow-result-btn").forEach((chip) => {
     chip.addEventListener("click", (ev) => {
       ev.stopPropagation();
       showIncisoPopover(chip, cat);
     });
   });
 
+  wireFlowRailUX(blocksRoot);
+
   const f = $("#dt-filter");
   if (f && f.value) applyDtFilter(f.value);
+}
+
+/**
+ * Ramos clicáveis: realce fixo (toggle); teclado Enter/Espaço.
+ * @param {HTMLElement} host
+ */
+function wireFlowRailUX(host) {
+  host.querySelectorAll(".dt-flow-rail").forEach((rail) => {
+    rail.setAttribute("tabindex", "0");
+    if (!rail.getAttribute("aria-label")) {
+      rail.setAttribute("aria-label", "Ramo de decisão — clique para destacar ou use Enter");
+    }
+    rail.addEventListener("click", (ev) => {
+      if (ev.target.closest("button")) return;
+      const was = rail.classList.contains("dt-flow-rail--focus");
+      host.querySelectorAll(".dt-flow-rail--focus").forEach((r) => r.classList.remove("dt-flow-rail--focus"));
+      if (!was) rail.classList.add("dt-flow-rail--focus");
+    });
+    rail.addEventListener("keydown", (ev) => {
+      if (ev.key !== "Enter" && ev.key !== " ") return;
+      ev.preventDefault();
+      rail.click();
+    });
+  });
 }
 
 /**
@@ -237,7 +282,7 @@ function renderFlowDiagramHTML(q, cat) {
           </div>`;
       }
 
-      return `<div class="dt-flow-rail" role="group">
+      return `<div class="dt-flow-rail">
         <div class="dt-flow-rail-head">
           <div class="dt-flow-edge-labels">
             <span class="dt-flow-lbl-main">${cond}</span>
@@ -259,7 +304,11 @@ function renderFlowDiagramHTML(q, cat) {
     .join("");
 
   return `<div class="dt-flow-canvas" role="region" aria-label="Diagrama de decisão horizontal">
-    <p class="dt-flow-legend">Fluxo ao estilo árvore de decisão: cada ramo mostra a condição, o ponto azul e os incisos IN 701 (triângulo laranja) ativados.</p>
+    <ul class="dt-flow-micro-legend">
+      <li><span class="dt-micro-ico dt-micro-ico--bar" aria-hidden="true"></span> Esta barra = <strong>esta pergunta</strong></li>
+      <li><span class="dt-micro-ico dt-micro-ico--dot" aria-hidden="true"></span> Cada coluna = uma <strong>condição</strong> possível</li>
+      <li><span class="dt-micro-ico dt-micro-ico--tri" aria-hidden="true"></span> Triângulos = <strong>incisos</strong> acrescentados ao escopo</li>
+    </ul>
     <div class="dt-flow-h-rail">
       <div class="dt-flow-root" title="Pergunta">
         <span class="dt-flow-root-label">${id}</span>

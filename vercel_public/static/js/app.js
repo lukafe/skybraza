@@ -3,7 +3,7 @@
  * Legado /api/* mantido no servidor para integrações antigas.
  */
 
-import { wireDecisionTreeUI } from "./decision_tree.js?v=2";
+import { wireDecisionTreeUI } from "./decision_tree.js?v=3";
 
 const $ = (sel, root = document) => root.querySelector(sel);
 
