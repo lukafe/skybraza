@@ -3,7 +3,7 @@
  * Dados: /static/data/decision_tree.json (gerado por scripts/export_decision_tree_data.py)
  */
 
-const DT_JSON_VER = "2";
+const DT_JSON_VER = "3";
 
 /** @type {Record<string, unknown> | null} */
 let _dtCache = null;

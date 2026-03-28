@@ -3,6 +3,8 @@ Motor de regras IN 701 / Resolução BCB nº 520 — escopo por trilha (intermed
 
 Incisos: laws/COVERAGE_MATRIX.yaml ou laws/tracks/{custodiante,corretora}/COVERAGE_MATRIX.yaml
 Gatilhos: questionnaire por trilha (questionnaire_loader).
+Pós-gatilhos: scope_narrative.suppress_custody_cluster_if_non_custodial — retira VII, XIV, XVI, XVII em qualquer trilha
+quando o declarado for exclusivamente não custodial; em custodiante/corretora retira também XV (ver declares_exclusive_non_custodial_model).
 """
 
 from __future__ import annotations
@@ -83,6 +85,7 @@ def compute_scope(
     for inc in triggered_by:
         active_keys.add(inc)
 
+    # Ajuste declarativo: modelo exclusivamente não custodial (condições por trilha em scope_narrative).
     suppress_custody_cluster_if_non_custodial(active_keys, triggered_by, norm, t)
 
     why_by_key = build_why_texts_for_scope(active_keys, triggered_by, norm, mandatory, inc_matrix, t)

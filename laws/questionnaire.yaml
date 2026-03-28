@@ -389,7 +389,9 @@ questions:
       A instituição mantém documentação atualizada que explique o modelo de custódia/trânsito perante o cliente
       (quem detém chaves, omnibus, MPC, terceiros), coerente com as respostas operacionais às perguntas P1, P2 e P_arch?
     justificativa: >
-      Suporte a disclosure § 1º (I) e a coerência com supressão ou inclusão do cluster VII/XIV/XVI/XVII.
+      Suporte a disclosure § 1º (I) e coerência com supressão ou inclusão do cluster VII/XIV/XVI/XVII no motor.
+      Nas trilhas custodiante/corretora, o equivalente operacional está em cust_A_transit, cust_A_model / corr_* e cust_B_tp/corr_B_tp
+      (incl. opção «Apenas o cliente» e retirada de VII, XIV, XVI, XVII, XV quando aplicável).
     tags: [custodia, disclosure, P_arch]
     audit_only: true
     when_true: []

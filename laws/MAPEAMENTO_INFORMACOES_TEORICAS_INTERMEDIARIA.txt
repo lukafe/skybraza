@@ -8,9 +8,10 @@ Versão: 1 · Complementa REVISAO_FLUXO_QUESTIONARIO_INTERMEDIARIA.txt
 DIFERENÇA ESTRUTURAL FACE ÀS OUTRAS TRILHAS
 ------------------------------------------
 · **Menos obrigatórios fixos** na YAML: I–V, VII, IX, X_b_ii, par1_I_h e cluster de custódia entram sob **respostas**.
-· **Supressão declarativa**: se o cliente declara modelo **não custodial** (P_arch `client_only` e sem custódia
-  institucional em P_tp), o motor retira **VII, XIV, XVI, XVII** — coerente com ausência de guarda operacional da VASP,
-  sujeito a validação jurídica caso a caso.
+· **Supressão declarativa** (`scope_narrative.suppress_custody_cluster_if_non_custodial`): nesta trilha, P_arch
+  `client_only`, P1 Não e P_tp sem `custody_inst` → retira **VII, XIV, XVI, XVII**. Nas trilhas custodiante/corretora,
+  critérios paralelos (`client_only` em A_model, sem trânsito omnibus, sem subcustódia em B_tp) retiram o mesmo cluster
+  **e** **XV**; I_a/I_b permanecem na matriz fixa dessas trilhas até revisão jurídica separada.
 
 DOMÍNIOS PRIORITÁRIOS (Res. 520 — intermediária)
 -------------------------------------------------

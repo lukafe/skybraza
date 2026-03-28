@@ -1,6 +1,7 @@
 """
-Narrativas «por que será auditado», supressão lógica do cluster de custódia (VII, XIV, XVI, XVII)
-quando o modelo declarado é exclusivamente não custodial, e enriquecimento opcional via Gemini.
+Narrativas «por que será auditado», supressão lógica do cluster de custódia operacional (VII, XIV, XVI, XVII)
+em todas as trilhas quando o modelo declarado é exclusivamente não custodial; nas trilhas custodiante e corretora
+remove também XV. Enriquecimento opcional de textos via Gemini.
 """
 
 from __future__ import annotations
@@ -77,6 +78,11 @@ P_ARCH_BLURBS: dict[str, str] = {
 }
 
 CUST_ARCH_BLURBS: dict[str, str] = {
+    "client_only": (
+        "foi indicado modelo em que apenas o cliente autoriza movimentações on-chain (interface não custodial), "
+        "sem trânsito omnibus próprio nem subcustódia operacional declarada em B_tp — coerente com supressão do "
+        "cluster VII/XIV/XVI/XVII e XV no motor, sujeito a validação da modalidade regulatória"
+    ),
     "inst_operates": (
         "foi indicado que a instituição ou operador designado movimenta ativos custodiados em nome do cliente"
     ),
@@ -478,6 +484,7 @@ def merge_llm_whys(drafts: dict[str, str], llm: dict[str, str]) -> dict[str, str
 
 __all__ = [
     "CUSTODY_CLUSTER",
+    "NON_CUSTODIAL_EXTRA_BY_TRACK",
     "build_why_texts_for_scope",
     "declares_exclusive_non_custodial_model",
     "merge_llm_whys",

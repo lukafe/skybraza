@@ -33,6 +33,7 @@ trilhas custodiante e corretora em laws/tracks/{custodiante,corretora}/).
 
 Motor unificado:
   rules_engine.py → compute_scope(answers, track=…)
+  scope_narrative.py → supressão declarativa não custodial (3 trilhas; cust/corr também retiram XV)
 
 Interfaces:
   app.py (Streamlit) · main.py (FastAPI) + public/ + vercel_public/ · scripts/simular_empresa.py

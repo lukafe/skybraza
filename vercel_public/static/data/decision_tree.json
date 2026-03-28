@@ -517,7 +517,7 @@
             {
               "condition": "Texto livre",
               "incisos": [],
-              "note": "Não aciona incisos por si. Usado para contexto, narrativa e regras especiais (ex.: supressão do cluster de custódia na intermediária)."
+              "note": "Não aciona incisos por si. Contexto e narrativa; coerência com P_narr/cust_D_narr/corr_D_narr e revisão humana. A supressão do cluster de custódia depende de outras perguntas (P_arch/cust_A_model/corr_A_model, etc.)."
             }
           ]
         },
@@ -1295,7 +1295,7 @@
             {
               "condition": "Texto livre",
               "incisos": [],
-              "note": "Não aciona incisos por si. Usado para contexto, narrativa e regras especiais (ex.: supressão do cluster de custódia na intermediária)."
+              "note": "Não aciona incisos por si. Contexto e narrativa; coerência com P_narr/cust_D_narr/corr_D_narr e revisão humana. A supressão do cluster de custódia depende de outras perguntas (P_arch/cust_A_model/corr_A_model, etc.)."
             }
           ]
         },
@@ -2108,7 +2108,7 @@
             {
               "condition": "Texto livre",
               "incisos": [],
-              "note": "Não aciona incisos por si. Usado para contexto, narrativa e regras especiais (ex.: supressão do cluster de custódia na intermediária)."
+              "note": "Não aciona incisos por si. Contexto e narrativa; coerência com P_narr/cust_D_narr/corr_D_narr e revisão humana. A supressão do cluster de custódia depende de outras perguntas (P_arch/cust_A_model/corr_A_model, etc.)."
             }
           ]
         },
@@ -2221,7 +2221,7 @@
           "order": 50,
           "type": "yes_no",
           "text": "A instituição mantém documentação atualizada que explique o modelo de custódia/trânsito perante o cliente (quem detém chaves, omnibus, MPC, terceiros), coerente com as respostas operacionais às perguntas P1, P2 e P_arch?",
-          "justificativa": "Suporte a disclosure § 1º (I) e a coerência com supressão ou inclusão do cluster VII/XIV/XVI/XVII.",
+          "justificativa": "Suporte a disclosure § 1º (I) e coerência com supressão ou inclusão do cluster VII/XIV/XVI/XVII no motor. Nas trilhas custodiante/corretora, o equivalente operacional está em cust_A_transit, cust_A_model / corr_* e cust_B_tp/corr_B_tp (incl. opção «Apenas o cliente» e retirada de VII, XIV, XVI, XVII, XV quando aplicável).",
           "audit_only": true,
           "edges": [
             {

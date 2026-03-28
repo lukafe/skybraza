@@ -40,6 +40,9 @@ LEGENDA DE APLICABILIDADE NA MATRIZ CERTIK (trilha corretora)
 · **[C]** — típico condicional por questionário (III, IX_a, IX_b, X_b_ii, par1_I_h); pode
   entrar no escopo com respostas ou outros gatilhos.
 · **[G]** — na grelha de 26 itens; sempre avaliar se resposta ou serviço efetivo aciona.
+· **Supressão não custodial** — alguns **[O]** da custódia operacional (VII, XIV, XVI, XVII, XV) podem sair do
+  `active_keys` se `corr_A_model` = `client_only`, `corr_A_transit` Não e `corr_B_tp` sem `subcustody`
+  (`scope_narrative.suppress_custody_cluster_if_non_custodial`), sujeito a coerência e validação da modalidade art. 10.
 
 -------------------------------------------------------------------------------
 1. INCISO I (a) — IN 701 art. 4º, I, al. a [O]

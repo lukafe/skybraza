@@ -86,7 +86,7 @@ def _edges_for_question(q: dict[str, Any]) -> list[dict[str, Any]]:
             {
                 "condition": "Texto livre",
                 "incisos": [],
-                "note": "Não aciona incisos por si. Usado para contexto, narrativa e regras especiais (ex.: supressão do cluster de custódia na intermediária).",
+                "note": "Não aciona incisos por si. Contexto e narrativa; coerência com P_narr/cust_D_narr/corr_D_narr e revisão humana. A supressão do cluster de custódia depende de outras perguntas (P_arch/cust_A_model/corr_A_model, etc.).",
             }
         ]
 

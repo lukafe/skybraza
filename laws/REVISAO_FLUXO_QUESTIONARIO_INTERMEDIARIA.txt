@@ -14,8 +14,9 @@ Artefactos: laws/questionnaire.yaml + laws/COVERAGE_MATRIX.yaml (sem subpasta tr
 · Blocos A–D + diag; **17** perguntas (P_*); sem `schema_version_questionnaire` explícito no YAML raiz
 · **Obrigatórios fixos menores** que custodiante/corretora (`escopo_intermediario`); incisos I–V, VII, IX, X_b_ii,
   par1_I_h sob **gatilhos** (P1, P2, P_arch, P_list, etc.)
-· **suppress_custody_cluster_if_non_custodial**: modelo exclusivamente não custodial (P_arch client_only sem
-  custódia institucional em P_tp) retira VII, XIV, XVI, XVII do escopo calculado — premissa própria desta trilha
+· **suppress_custody_cluster_if_non_custodial** (motor comum às 3 trilhas): nesta trilha, P_arch `client_only`,
+  P1 Não e P_tp sem `custody_inst` retira VII, XIV, XVI, XVII. Em custodiante/corretora: `cust_A_model`/`corr_A_model`
+  `client_only`, trânsito Não e B_tp sem `subcustody` retira o mesmo cluster **e** XV — ver `scope_narrative.py`.
 
 3. Alterações nesta entrega
 ----------------------------

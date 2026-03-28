@@ -27,6 +27,8 @@ Trilha CUSTODIANTE (PSVAV modalidade II — Res. 520 art. 4º §1º II; arts. 8�
 [x] evidence_requests — _journey_2_custodiante_e_notas + chamada em build_journey_2_payload
 [x] Teste journey_2 para heurísticas custodiante
 [x] ROTEIRO_FASES — linha de referência ao mapeamento custodiante
+[x] Opção **client_only** em cust_A_model + supressão motor VII, XIV, XVI, XVII, XV quando coerente
+    (paridade com intermediária / corretora; ver scope_narrative.declares_exclusive_non_custodial_model)
 
 4. Checklist de revisão das perguntas (A–D inalteradas neste passo)
 -------------------------------------------------------------------

@@ -64,10 +64,12 @@ HIERARQUIA DE FONTES (acordada com o produto)
       `questionnaire`, `escopo_* .obrigatorios` e gatilhos declarativos.
     · `resolve_triggers`: yes_no / single_choice / multi_choice / text_short; `audit_only`
       não altera conjunto de incisos; chaves validadas contra a matriz da trilha na importação.
-    · `suppress_custody_cluster_if_non_custodial` (trilha **intermediária**): retira VII,
-      XIV, XVI, XVII do escopo quando o modelo declarado é **exclusivamente não custodial**
-      (ex.: P_arch `client_only` sem exceção institucional). Na trilha **custodiante** a
-      supressão **não** corre (núcleo de custódia é premissa da matriz).
+    · `suppress_custody_cluster_if_non_custodial` (**três trilhas**): retira VII, XIV, XVI, XVII
+      quando o declarado é **exclusivamente não custodial** — intermediária: P_arch `client_only`,
+      P1 Não, P_tp sem `custody_inst`; custodiante/corretora: A_model `client_only`, A_transit Não,
+      B_tp sem `subcustody`. Nas trilhas **custodiante** e **corretora** retira também **XV**.
+      A matriz YAML mantém esses ids em `obrigatorios` até decisão jurídica de os rebaixar; o motor
+      remove-os do **conjunto ativo** quando as condições se verificam.
 
   **2.2 Coerência com a IN 701 (art. 4º como grelha única)**
     · A IN 701 lista **itens de certificação** (art. 4º + § 1º etc.); a **aplicabilidade
@@ -77,13 +79,14 @@ HIERARQUIA DE FONTES (acordada com o produto)
       custodiante e **acréscimos** por respostas (custódia, trânsito, fiat, listagem, …) —
       **coerente** com a ideia de intermediária com atividades variáveis (Res. 520 art. 7º),
       desde que o **mínimo fixo** esteja validado juridicamente face à IN 701.
-    · A **supressão** do cluster VII/XIV/XVI/XVII é **instrumento de escopo declarativo**:
-      se o cliente declara modelo não custodial, a ferramenta **retira** esses incisos do
-      escopo calculado. Isto é **consistente** com uma delimitação de certificação **baseada
-      em representações do cliente**, mas:
-        — **não** dispensa confirmação** de que, nos factos, a IN 701 não imponha na mesma
-          aqueles itens (revisão jurídica por caso);
-        — na trilha **custodiante**, não suprimir é **coerente** com Res. 520 art. 8º–9º.
+    · A **supressão** do cluster VII/XIV/XVI/XVII (e XV em custodiante/corretora) é **instrumento
+      de escopo declarativo**: se o questionário descreve modelo **exclusivamente** não custodial
+      de forma **coerente**, a ferramenta **retira** esses incisos do escopo calculado. Isto é
+      **consistente** com delimitação baseada em representações do cliente, mas:
+        — **não** dispensa confirmação de que, nos factos e na **modalidade** regulatória, a IN 701
+          não imponha na mesma aqueles itens (revisão jurídica por caso);
+        — na **custodiante** e **corretora**, a **premissa** normativa típica é custódia (arts. 8º–9º,
+          art. 10); usar `client_only` exige **alinhar** perfil real da instituição ao enquadramento.
 
   **2.3 Cruzamento com Res. 520 (sanidade, não substitui IN)**
     · **Intermediária** Res. 520 pode incluir administração de carteiras (art. 7º, III) —
@@ -122,8 +125,9 @@ HIERARQUIA DE FONTES (acordada com o produto)
        **fundamento** (IN obrigatória) + **referência Res. 520** onde ajude (capítulos/arts.).
     2) Rever **escopo_intermediario.obrigatorios** e **escopo_custodiante.obrigatorios**
        face a essa tabela; registar **lacunas** ou **sobreposições** para parecer jurídico.
-    3) Rever **gatilhos e supressão** da intermediária: documentar premissa de negócio
-       («declaração não custodial») vs. risco de **subdeclaração** na auditoria real.
+    3) Rever **gatilhos e supressão** nas **três** trilhas: documentar premissa de negócio
+       («declaração não custodial») vs. risco de **subdeclaração** na auditoria real; paridade
+       P_arch ↔ cust_A_model/corr_A_model.
     4) Fixar **hipótese** para **corretora** (art. 10 Res. 520): conjunto de obrigatórios
        **mínimos** na IN 701 — candidato inicial: **não** copiar a intermediária «leve»;
        comparar com custodiante e art. 7º + 9º em conjunto, **antes** de escrever YAML.

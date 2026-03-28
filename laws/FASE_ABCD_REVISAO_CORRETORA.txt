@@ -12,7 +12,8 @@ Fase D (motor)
 --------------
 [x] matrix_loader: TRACK_IDS inclui corretora; paths e escopo YAML corretos.
 [x] questionnaire_loader aponta para tracks/corretora/questionnaire.yaml.
-[x] scope_narrative / evidence_requests: ramos corretora e supressões (não aplicar supressão de custódia a corretora).
+[x] scope_narrative / evidence_requests: ramos corretora; supressão de custódia **aplica-se** à corretora quando
+    corr_A_model = client_only + corr_A_transit Não + corr_B_tp sem subcustody (VII, XIV, XVI, XVII, XV).
 [x] main.py: corretora_track em /health; 403 quando CERTIK_ENABLE_CORRETORA_TRACK=0.
 
 Fase E (UI e docs)

@@ -48,6 +48,10 @@ Bloco **E** (`cust_E_*`, schema_version_questionnaire: 2): 14 perguntas **audit_
 `questionnaire.yaml`, espelhando a função do bloco E da corretora com conteúdo **custódia-pesado**
 (arts. 29–31, 74, 79, 82, 82 §5º, instruções art. 9º, etc.).
 
+**Supressão declarativa (motor):** se `cust_A_model` = `client_only`, `cust_A_transit` = Não e `cust_B_tp` sem
+`subcustody`, `compute_scope` retira do escopo ativo **VII, XIV, XVI, XVII** e **XV** (núcleo ainda listado como
+obrigatório na matriz YAML até revisão jurídica). **I_a, I_b** e restantes fixos mantêm-se no escopo.
+
 Jornada 2: `evidence_requests._journey_2_custodiante_e_notas` para notas quando `cust_E_*` relevantes.
 
 ================================================================================

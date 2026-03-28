@@ -15,7 +15,9 @@ A fonte normativa é `laws/AUDITOR_EVIDENCE_BY_INCISO.yaml`:
 - Cada chave é um `inciso_id` idêntico a `COVERAGE_MATRIX.yaml` (ex.: `I_a`, `VII`, `par1_I_h`).
 - Cada inciso lista **itens** com: `id`, `titulo`, `detalhe`, `categoria`
   (`politica`, `procedimento`, `evidencia`, `contrato`, `diagrama`, `organizacional`).
-- O motor agrega apenas os incisos presentes em `active_keys` após `compute_scope()`.
+- O motor agrega apenas os incisos presentes em `active_keys` após `compute_scope()` (inclui o passo
+  `suppress_custody_cluster_if_non_custodial`: o checklist Jornada 2 segue o escopo **efetivo**, não a lista
+  bruta de obrigatórios da YAML quando há supressão).
 
 Diagnóstico na primeira fase do questionário (bloco **diag**)
 -------------------------------------------------------------

@@ -46,7 +46,7 @@ O resultado NÃO substitui parecer jurídico nem o processo formal perante o BCB
   [Motor] — rules_engine.compute_scope()
        · matrix_loader     → incisos obrigatórios + matriz por trilha
        · questionnaire_loader → perguntas + gatilhos (when_true, add_incisos)
-       · scope_narrative   → textos “porquê”, supressão custódia não custodial
+       · scope_narrative   → textos “porquê”, supressão do cluster de custódia se modelo exclusivamente não custodial (3 trilhas)
        · bcb_hints_loader  → orientação indicativa relatório BCB por inciso
        · readiness         → prontidão do corpus laws/ no escopo
        · evidence_requests → Jornada 2 (checklist evidências, SC audit, pentest)
@@ -98,9 +98,11 @@ Passos resumidos:
      quando certas condições se verificam (yes_no, single_choice, multi_choice,
      text_short).
   4. Incisos ativos = obrigatórios ∪ acionados pelas respostas.
-  5. suppress_custody_cluster_if_non_custodial: na trilha intermediária, se o
-     modelo declarado for exclusivamente não custodial, remove do escopo o
-     cluster de custódia (VII, XIV, XVI, XVII) quando aplicável às regras.
+  5. suppress_custody_cluster_if_non_custodial: nas três trilhas, se o modelo
+     declarado for exclusivamente não custodial (intermediária: P1, P_arch, P_tp;
+     custodiante/corretora: A_model «Apenas o cliente», A_transit Não, B_tp sem
+     subcustody), remove VII, XIV, XVI, XVII; nas trilhas custodiante e corretora
+     remove também XV. Sujeito a respostas coerentes — ver scope_narrative.py.
   6. Gera textos “por que será auditado”, hints BCB, linhas fora do escopo
      com explicação indicativa.
   7. Agrega metadados: contagens obrigatório vs condicional, journey_2,
