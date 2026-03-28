@@ -1,0 +1,128 @@
+================================================================================
+ATA — FASE 1 concluída (Mapa do sistema e contratos de dados)
+Data: 2026-03-27 · Plano: laws/PLANO_REVISAO_COMPLETA_ESCOPO_IN701.txt
+================================================================================
+
+1.1 ENTRADA E SAÍDA DO MOTOR (`rules_engine.compute_scope`)
+--------------------------------------------------------------------------------
+Entrada:
+  · `answers: dict[str, Any]` — chaves = ids de perguntas do questionário da trilha;
+    valores conforme tipo (bool, str, list, texto).
+  · `track: str | None` — `intermediaria` (default), `custodiante`, `corretora`
+    (`matrix_loader.normalize_track`).
+
+Saída:
+  · `DataFrame` — uma linha por inciso em `active_keys`, colunas em `SCOPE_COLUMNS`.
+  · `meta: dict` com as chaves abaixo (contrato interno; nem todas vão à API pública).
+
+Chaves de `meta` (produzidas em `compute_scope`):
+  · `track` — trilha normalizada
+  · `answers` — respostas normalizadas (`normalize_answers`)
+  · `active_keys` — `set[str]` de ids de inciso no escopo **após** supressão
+  · `triggered_by` — `dict[inciso_id, list[qid]]` (perguntas que acionaram cada inciso)
+  · `free_text` — textos curtos (`text_short`)
+  · `audit_only` — flags de perguntas só Jornada 2 / relatório
+  · `mandatory_count` — incisos em escopo que pertencem a `obrigatorios` da matriz
+  · `conditional_count` — `len(active_keys) - mandatory_count`
+  · `total_count` — `len(active_keys)`
+  · `total_fora_escopo_auditoria` — cardinal de `incisos_fora_escopo_auditoria`
+  · `corpus_readiness` — resultado de `readiness.corpus_readiness_for_scope`
+  · `incisos_sujeitos_auditoria` — lista de dicts (UI, export, API)
+  · `incisos_fora_escopo_auditoria` — lista de dicts com `por_que_nao_neste_escopo`
+  · `journey_2` — `evidence_requests.build_journey_2_payload(norm, meta)`
+
+
+1.2 FLUXO (passos reais no código; alinhado ao plano 1.2)
+--------------------------------------------------------------------------------
+
+  [A] Matriz e obrigatórios
+        build_incisos_matrix(track)
+        build_mandatory_keys(track)
+        potential_triggers_per_inciso(track)  ← usado só para texto “fora do escopo”
+
+  [B] Normalização e gatilhos
+        norm = normalize_answers(answers, track)
+        triggered_by, free_text, audit_only = resolve_triggers(answers, track)
+
+  [C] União
+        active_keys = mandatory ∪ keys(triggered_by)
+
+  [D] Supressão declarativa
+        suppress_custody_cluster_if_non_custodial(active_keys, triggered_by, norm, track)
+
+  [E] Narrativas e enriquecimento
+        why_by_key = build_why_texts_for_scope(...)
+        llm_whys = try_enrich_why_with_llm(...)
+        why_by_key = merge_llm_whys(...)
+
+  [F] Linhas de escopo / fora
+        Por cada key em sort_scope_keys(active_keys): get_bcb_report_hint(key, track)
+        idem inactive_keys → incisos_fora
+
+  [G] Agregados
+        corpus_readiness_for_scope(active_keys, track)
+        meta_out[...] ; journey_2 = build_journey_2_payload(norm, meta_out)
+
+Diagrama ASCII resumido:
+
+  answers,track → [matriz+mandatory] → [normalize+triggers] → ∪ active_keys
+                        → [suppress custódia] → [why+LLM] → [rows+fora] → [readiness+J2]
+                                                              → DataFrame, meta
+
+
+1.3 CONSUMIDORES DE `meta` / `active_keys` / DERIVADOS
+--------------------------------------------------------------------------------
+Ficheiro                          Uso principal
+--------------------------------------------------------------------------------
+rules_engine.py                   Produtor de `meta`; usa `inc_matrix`, `mandatory`,
+                                  `get_bcb_report_hint`, `corpus_readiness`, `build_journey_2_payload`
+
+scope_narrative.py                Altera `active_keys`/`triggered_by` (supressão);
+                                  gera textos “por que” por inciso
+
+evidence_requests.py              `build_journey_2_payload`: lê `active_keys`, `track`, `answers`
+
+readiness.py                      `corpus_readiness_for_scope(active_keys)`;
+                                  `build_export_package` serializa `meta` (sem set bruto em JSON)
+
+bcb_hints_loader.py               Indireto: `get_bcb_report_hint` por linha de inciso
+
+main.py POST /api/scope           Expõe: incisos sujeitos/fora, resumo, corpus_readiness,
+                                  journey_2 — **não** expõe `answers`/`active_keys`/`triggered_by`
+
+app.py (Streamlit)                `compute_scope`; usa `corpus_readiness`, `journey_2`,
+                                  `incisos_sujeitos_auditoria`, etc.
+
+public/static/js/app.js           Consome JSON da API: sujeitos, fora, journey_2, resumo
+
+scripts/validar_projeto.py        `active_keys` vs chaves da matriz (maximize_scope)
+
+scripts/simular_empresa.py        `total_count`, mandatory_count, conditional_count
+
+tests/test_*.py                   Dezenas de asserts sobre `active_keys`, listas, journey_2
+
+scripts/export_decision_tree_data.py  Não chama `compute_scope`; só matriz + YAML (árvore didática)
+
+
+1.4 ACHADOS E RISCOS (para fases seguintes)
+--------------------------------------------------------------------------------
+· API não devolve `active_keys` nem `triggered_by`: a SPA não pode mostrar gatilhos sem
+  duplicar lógica ou estender o contrato (Fase 8).
+· `origem_escopo` usa “Obrigatório (matriz)” mesmo que o inciso tenha sido removido e
+  reintroduzido só por gatilho? — Não: se saiu de `active_keys` por supressão, não aparece;
+  se está em `mandatory` ∩ `active_keys`, marca obrigatório mesmo após ter estado em
+  `triggered_by` antes da supressão (limpar `triggered_by` na supressão) — validar na Fase 4.
+· Dependência opcional Gemini em `try_enrich_why_with_llm`: falhas devem ser silenciosas
+  (confirmar na Fase 5).
+
+
+1.5 CRITÉRIO DE SAÍDA FASE 1
+--------------------------------------------------------------------------------
+[x] Contrato `meta` inventariado
+[x] Fluxo alinhado ao código (incl. subpassos E/F/G)
+[x] Consumidores listados
+[x] Achados iniciais registados
+
+Próximo passo sequencial: FASE 2 (matrizes) — ver laws/REVISAO_EXEC_FASE2_MATRIZES.txt
+
+================================================================================

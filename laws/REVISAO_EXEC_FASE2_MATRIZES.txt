@@ -1,0 +1,43 @@
+================================================================================
+ATA — FASE 2 (parcial automática) — Matrizes normativas
+Data: 2026-03-27 · Plano: laws/PLANO_REVISAO_COMPLETA_ESCOPO_IN701.txt
+================================================================================
+
+2.1 CHECAGENS AUTOMÁTICAS (executadas)
+--------------------------------------------------------------------------------
+Ferramenta: `matrix_loader.validate_matrix_consistency(track)` para cada trilha.
+
+Resultado:
+  · intermediaria — OK (sem avisos)
+  · custodiante     — OK
+  · corretora       — OK
+
+Implica (já coberto pelo validador):
+  · cada id em `escopo_*.obrigatorios` existe em `incisos[].id`
+  · `ordem_exibicao` contém apenas incisos da matriz e todos os incisos têm ordem
+
+Cobertura “alcançável” (script ad hoc, mesmo dia):
+  · Para cada trilha: `incisos_matriz ⊆ obrigatorios ∪ (união de todos add_incisos/when_true/when_false)`
+  · intermediaria — 0 incisos inalcançáveis
+  · custodiante     — 0
+  · corretora       — 0
+
+
+2.2 E 2.3 — PENDENTE (humano / jurídico)
+--------------------------------------------------------------------------------
+[ ] Cruzamento IN 701 × obrigatórios por modalidade (tabela obrigatório × trilha × nota)
+[ ] Decisão documentada sobre tensão YAML `obrigatorios` vs remoção por `suppress_*`
+    (ids que deixam de estar em `active_keys` mas permanecem na lista YAML)
+
+Recomendação: usar `laws/MAPEAMENTO_IN701_REF_RES520.txt` + parecer jurídico (Fase 0 do
+FASE_CORRETORA_PLANO_ACAO.txt).
+
+
+2.5 CRITÉRIO DE SAÍDA FASE 2
+--------------------------------------------------------------------------------
+[x] 2.1 estrutural e alcançabilidade automáticos — sem problemas
+[ ] 2.2–2.3 — aguarda revisão humana
+
+Próximo passo sequencial: FASE 3 (questionários e gatilhos)
+
+================================================================================

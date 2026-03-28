@@ -9,6 +9,11 @@ problemas e melhorias, implementar por prioridade.
 Como usar: executar as fases **na ordem**; só avançar quando a fase anterior tiver
 ata curta (achados + decisão: corrigir agora / backlog / aceitar risco documentado).
 
+REGISTO DE EXECUÇÃO (atas)
+--------------------------------------------------------------------------------
+· Fase 1 — 2026-03-27 — laws/REVISAO_EXEC_FASE1_MAPA_SISTEMA.txt (concluída)
+· Fase 2 — 2026-03-27 — laws/REVISAO_EXEC_FASE2_MATRIZES.txt (2.1 OK; 2.2–2.3 pendentes)
+
 --------------------------------------------------------------------------------
 FASE 1 — Mapa do sistema e contratos de dados
 --------------------------------------------------------------------------------
