@@ -181,6 +181,95 @@ export async function renderDecisionTree(track) {
 }
 
 /**
+ * Subtítulo curto para a aresta (estilo «Descrição» sob «Decisão A»).
+ * @param {Record<string, unknown>} e
+ * @param {string} whyPlain
+ */
+function edgeSubtitle(e, whyPlain) {
+  const n = String(e.note || "").trim();
+  if (n) return n.length > 100 ? `${n.slice(0, 97)}…` : n;
+  if (whyPlain) return whyPlain.length > 90 ? `${whyPlain.slice(0, 87)}…` : whyPlain;
+  return "Ramificação declarada no questionário";
+}
+
+/**
+ * Diagrama horizontal: raiz cinza → ramos com rótulo → círculo azul → triângulos laranja (incisos).
+ * @param {Record<string, unknown>} q
+ * @param {Record<string, {item?: string, artigo?: string}>} cat
+ */
+function renderFlowDiagramHTML(q, cat) {
+  const edges = Array.isArray(q.edges) ? q.edges : [];
+  const id = escapeHtml(String(q.id));
+  const whyPlain = String(q.justificativa || "").replace(/\s+/g, " ").trim();
+
+  const rails = edges
+    .map((e) => {
+      const cond = escapeHtml(String(e.condition || "—"));
+      const sub = escapeHtml(edgeSubtitle(e, whyPlain));
+      const incs = Array.isArray(e.incisos) ? e.incisos : [];
+      const noteHtml =
+        incs.length > 0 && e.note
+          ? `<p class="dt-flow-rail-footnote">${escapeHtml(String(e.note))}</p>`
+          : "";
+
+      let outcomesHtml;
+      if (incs.length > 0) {
+        outcomesHtml = incs
+          .map((inc) => {
+            const sid = String(inc);
+            const meta = cat[sid] || {};
+            const title = `${meta.item || sid} — ${meta.artigo || ""}`.trim();
+            return `<div class="dt-flow-outcome">
+              <span class="dt-flow-h-line" aria-hidden="true"></span>
+              <span class="dt-flow-triangle" aria-hidden="true"></span>
+              <button type="button" class="dt-inciso-chip dt-flow-result-btn" data-inciso="${escapeHtml(sid)}" title="${escapeHtml(title)}">${escapeHtml(sid)}</button>
+            </div>`;
+          })
+          .join("");
+      } else {
+        const emptyLabel = e.note
+          ? escapeHtml(String(e.note).slice(0, 120)) + (String(e.note).length > 120 ? "…" : "")
+          : "Nenhum inciso por esta ramificação";
+        outcomesHtml = `<div class="dt-flow-outcome dt-flow-outcome--empty">
+            <span class="dt-flow-h-line" aria-hidden="true"></span>
+            <span class="dt-flow-triangle dt-flow-triangle--muted" aria-hidden="true"></span>
+            <span class="dt-flow-result-text">${emptyLabel}</span>
+          </div>`;
+      }
+
+      return `<div class="dt-flow-rail" role="group">
+        <div class="dt-flow-rail-head">
+          <div class="dt-flow-edge-labels">
+            <span class="dt-flow-lbl-main">${cond}</span>
+            <span class="dt-flow-lbl-sub">${sub}</span>
+          </div>
+          <div class="dt-flow-rail-track">
+            <div class="dt-flow-line-diag-wrap" aria-hidden="true">
+              <div class="dt-flow-line-diag"></div>
+            </div>
+            <div class="dt-flow-node-circle" title="Ponto de decisão"></div>
+          </div>
+        </div>
+        <div class="dt-flow-rail-tail">
+          <div class="dt-flow-outcomes">${outcomesHtml}</div>
+          ${noteHtml}
+        </div>
+      </div>`;
+    })
+    .join("");
+
+  return `<div class="dt-flow-canvas" role="region" aria-label="Diagrama de decisão horizontal">
+    <p class="dt-flow-legend">Fluxo ao estilo árvore de decisão: cada ramo mostra a condição, o ponto azul e os incisos IN 701 (triângulo laranja) ativados.</p>
+    <div class="dt-flow-h-rail">
+      <div class="dt-flow-root" title="Pergunta">
+        <span class="dt-flow-root-label">${id}</span>
+      </div>
+      <div class="dt-flow-rails">${rails}</div>
+    </div>
+  </div>`;
+}
+
+/**
  * @param {Record<string, unknown>} q
  * @param {Record<string, {item?: string, artigo?: string}>} cat
  */
@@ -191,30 +280,7 @@ function renderQuestionCard(q, cat) {
   const text = escapeHtml(q.text || "");
   const why = escapeHtml(q.justificativa || "");
 
-  const branches = (q.edges || [])
-    .map((e) => {
-      const cond = escapeHtml(e.condition || "");
-      const incs = e.incisos || [];
-      const note = e.note ? `<p class="dt-branch-note">${escapeHtml(e.note)}</p>` : "";
-      const chips =
-        incs.length > 0
-          ? incs
-              .map((inc) => {
-                const meta = cat[inc] || {};
-                const title = `${meta.item || inc} — ${meta.artigo || ""}`.trim();
-                return `<button type="button" class="dt-inciso-chip" data-inciso="${escapeHtml(String(inc))}" title="${escapeHtml(title)}">${escapeHtml(String(inc))}</button>`;
-              })
-              .join("")
-          : `<span class="dt-no-incisos">Nenhum inciso por esta ramificação</span>`;
-      return `
-        <div class="dt-branch">
-          <div class="dt-branch-condition">${cond}</div>
-          <div class="dt-branch-arrow" aria-hidden="true">→</div>
-          <div class="dt-branch-target">${chips}</div>
-          ${note}
-        </div>`;
-    })
-    .join("");
+  const flowHtml = renderFlowDiagramHTML(q, cat);
 
   const searchPlain = `${q.id} ${String(q.text || "").replace(/\s+/g, " ")}`.trim().toLowerCase();
   return `
@@ -229,8 +295,8 @@ function renderQuestionCard(q, cat) {
       <div class="dt-q-body">
         <p class="dt-q-text">${text}</p>
         <p class="dt-q-why"><strong>Objetivo / ligação ao escopo:</strong> ${why || "—"}</p>
-        <div class="dt-branches" role="group" aria-label="Gatilhos para incisos">
-          ${branches}
+        <div class="dt-flow-wrap" role="group" aria-label="Mapa visual de gatilhos para incisos">
+          ${flowHtml}
         </div>
       </div>
     </details>`;

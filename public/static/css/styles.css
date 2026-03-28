@@ -2581,58 +2581,243 @@ body.app-view-intro .sk-main {
   color: var(--text-muted);
 }
 
-.dt-branches {
+.dt-flow-wrap {
+  margin-top: 0.35rem;
+}
+
+/* Árvore de decisão — padrão visual claro (retângulo cinza, círculos azuis, triângulos laranja, linhas cinza) */
+.dt-flow-canvas {
+  --dt-root-gray: #d3d3d3;
+  --dt-line: #cccccc;
+  --dt-blue: #4a90e2;
+  --dt-orange: #ff8c42;
+  --dt-text: #111111;
+  --dt-text-sub: #5c5c5c;
+  background: #ffffff;
+  border: 1px solid #e2e2e2;
+  border-radius: 12px;
+  padding: 1rem 1.15rem 1.25rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.dt-flow-legend {
+  margin: 0 0 1rem;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--dt-text-sub);
+}
+
+.dt-flow-h-rail {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 0.35rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dt-flow-root {
+  flex: 0 0 auto;
+  width: 32px;
+  min-height: 140px;
+  margin-right: 8px;
+  background: var(--dt-root-gray);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.dt-flow-root-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #3a3a3a;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  letter-spacing: 0.04em;
+  max-height: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dt-flow-rails {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1.75rem 2.25rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 0.25rem 0.5rem 0.5rem;
+}
+
+.dt-flow-rail {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  align-items: center;
+  min-width: min(200px, 100%);
+  max-width: 340px;
 }
 
-.dt-branch {
-  display: grid;
-  grid-template-columns: minmax(100px, 1.1fr) auto minmax(120px, 2fr);
-  gap: 0.5rem 0.75rem;
-  align-items: start;
-  padding: 0.55rem 0;
-  border-bottom: 1px solid rgba(45, 49, 57, 0.75);
+.dt-flow-rail-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
-.dt-branch:last-child {
-  border-bottom: none;
+.dt-flow-edge-labels {
+  text-align: center;
+  margin-bottom: 0.35rem;
+  max-width: 280px;
 }
 
-.dt-branch-condition {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: #facc15;
+.dt-flow-lbl-main {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--dt-text);
+  line-height: 1.3;
+}
+
+.dt-flow-lbl-sub {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.68rem;
+  color: var(--dt-text-sub);
   line-height: 1.35;
 }
 
-.dt-branch-arrow {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  align-self: center;
+.dt-flow-rail-track {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 44px;
 }
 
-.dt-branch-target {
+.dt-flow-line-diag-wrap {
+  position: relative;
+  width: 44px;
+  height: 36px;
+  flex-shrink: 0;
+  margin-right: -4px;
+}
+
+.dt-flow-line-diag {
+  position: absolute;
+  left: 0;
+  bottom: 4px;
+  width: 56px;
+  height: 2px;
+  background: var(--dt-line);
+  transform-origin: left center;
+  transform: rotate(-42deg);
+  border-radius: 1px;
+}
+
+.dt-flow-node-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--dt-blue);
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.45);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+}
+
+.dt-flow-rail-tail {
+  width: 100%;
+  padding-top: 0.5rem;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
+  flex-direction: column;
   align-items: center;
 }
 
-.dt-branch-note {
-  grid-column: 1 / -1;
-  margin: 0;
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  font-style: italic;
-  line-height: 1.4;
+.dt-flow-outcomes {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.65rem 0.85rem;
+  justify-content: center;
+  align-items: center;
 }
 
-.dt-no-incisos {
-  font-size: 0.74rem;
-  color: var(--text-muted);
+.dt-flow-outcome {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+}
+
+.dt-flow-h-line {
+  display: inline-block;
+  width: 22px;
+  height: 2px;
+  background: var(--dt-line);
+  flex-shrink: 0;
+  border-radius: 1px;
+}
+
+.dt-flow-triangle {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 7px 0 7px 11px;
+  border-color: transparent transparent transparent var(--dt-orange);
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 1px rgba(255, 140, 66, 0.35));
+}
+
+.dt-flow-triangle--muted {
+  border-left-color: #b0b8c4;
+  filter: none;
+}
+
+.dt-flow-result-btn {
+  margin-left: 0.35rem;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  color: var(--dt-text) !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px dashed transparent !important;
+  padding: 0.1rem 0.2rem !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.dt-flow-result-btn:hover {
+  color: var(--dt-blue) !important;
+  border-bottom-color: var(--dt-blue) !important;
+}
+
+.dt-flow-result-text {
+  margin-left: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--dt-text-sub);
+  max-width: 160px;
+  line-height: 1.35;
+}
+
+.dt-flow-outcome--empty .dt-flow-result-text {
+  font-style: italic;
+}
+
+.dt-flow-rail-footnote {
+  margin: 0.5rem 0 0;
+  font-size: 0.68rem;
+  color: var(--dt-text-sub);
+  font-style: italic;
+  line-height: 1.4;
+  text-align: center;
+  max-width: 260px;
 }
 
 .dt-inciso-chip {
@@ -2709,11 +2894,29 @@ body.app-view-intro .sk-main {
 }
 
 @media (max-width: 640px) {
-  .dt-branch {
-    grid-template-columns: 1fr;
+  .dt-flow-h-rail {
+    flex-direction: column;
+    align-items: stretch;
   }
-  .dt-branch-arrow {
-    display: none;
+  .dt-flow-root {
+    width: 100%;
+    min-height: 36px;
+    margin-right: 0;
+    margin-bottom: 0.75rem;
+  }
+  .dt-flow-root-label {
+    writing-mode: horizontal-tb;
+    transform: none;
+    max-height: none;
+    font-size: 0.72rem;
+  }
+  .dt-flow-rails {
+    padding-left: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .dt-flow-rail {
+    max-width: none;
   }
   .dt-q-summary {
     grid-template-columns: 1rem 1fr;
