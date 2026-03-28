@@ -175,3 +175,12 @@ def test_cust_if_api_sim_marca_gatilho_em_v() -> None:
     _, meta = compute_scope(ans, track="custodiante")
     assert "V" in meta["triggered_by"]
     assert "cust_C_if_api" in meta["triggered_by"]["V"]
+
+
+def test_inciso_obrigatorio_suprimido_texto_for_nao_diz_obrigatorio_matriz() -> None:
+    """VII é obrigatório na YAML custodiante mas sai do active_keys com client_only — texto 'fora' não deve negar obrigatoriedade."""
+    _, meta = compute_scope(_cust_minimal_non_custodial(), track="custodiante")
+    row = next(x for x in meta["incisos_fora_escopo_auditoria"] if x["inciso_id"] == "VII")
+    why = row["por_que_nao_neste_escopo"]
+    assert "obrigatório fixo" in why.lower()
+    assert "não é obrigatório fixo" not in why.lower()

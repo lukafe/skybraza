@@ -51,16 +51,35 @@ SCOPE_COLUMNS: tuple[str, ...] = (
 )
 
 
-def _why_out_of_scope(potential: list[str]) -> str:
+def _why_out_of_scope(potential: list[str], *, mandatory_in_yaml: bool) -> str:
+    """Texto para incisos fora do ``active_keys`` (inclui supressão de ids ainda obrigatórios na YAML)."""
+    tail = ""
+    if potential:
+        t = "; ".join(potential[:8])
+        if len(potential) > 8:
+            t += "…"
+        tail = f" Se a operação evoluir, condições indicativas na ferramenta incluem: {t}"
+
+    if mandatory_in_yaml:
+        base = (
+            "Não consta no escopo ativo calculado nesta submissão: o inciso é obrigatório fixo na matriz YAML desta "
+            "trilha, mas foi excluído por regra declarativa (por exemplo, modelo exclusivamente não custodial) ou não "
+            "se mantém na delimitação face às respostas."
+        )
+        if not potential:
+            return (
+                base
+                + " Não há perguntas condicionais que listem este id; em geral a exclusão segue a supressão não custodial "
+                "— validar enquadramento com compliance ou jurídico."
+            )
+        return base + tail
+
     base = (
         "Não integra o escopo de auditoria desta delimitação: não é obrigatório fixo na matriz desta trilha "
         "para o modelo atual e nenhuma resposta dada acionou este inciso."
     )
     if potential:
-        tail = "; ".join(potential[:8])
-        if len(potential) > 8:
-            tail += "…"
-        return f"{base} Se a operação evoluir, condições indicativas na ferramenta incluem: {tail}"
+        return base + tail
     return f"{base} Não há gatilho mapeado no questionário atual para este inciso."
 
 
@@ -145,7 +164,7 @@ def compute_scope(
                 "item": meta["item"],
                 "artigo_in701": meta["artigo_in701"],
                 "descricao": meta["descricao"],
-                "por_que_nao_neste_escopo": _why_out_of_scope(pot),
+                "por_que_nao_neste_escopo": _why_out_of_scope(pot, mandatory_in_yaml=key in mandatory),
             }
         )
 

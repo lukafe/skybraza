@@ -1,0 +1,53 @@
+================================================================================
+ATA — FASE 3 concluída (Questionários e gatilhos)
+Data: 2026-03-27 · Plano: laws/PLANO_REVISAO_COMPLETA_ESCOPO_IN701.txt
+================================================================================
+
+3.1 `questionnaire_loader.py`
+--------------------------------------------------------------------------------
+· Validação na importação: `assert_questionnaire_incisos_align_with_matrix` por trilha
+  (ids de gatilhos ⊆ matriz da trilha).
+· `normalize_answers({}, track)` cobre **todas** as perguntas da trilha (chaves = ids completos).
+· `resolve_triggers`: yes_no / single_choice / multi_choice; `audit_only` e `text_short` ignorados
+  para conjunto de incisos — coerente com o plano.
+
+Testes novos: `tests/test_questionnaire_invariants.py` (parametrizado por `TRACK_IDS`).
+
+
+3.2 YAML por trilha
+--------------------------------------------------------------------------------
+· Nenhuma pergunta `yes_no` com `when_true` e `when_false` vazios (pergunta morta para escopo).
+· Cada `block` referenciado por perguntas existe na lista `blocks` do mesmo YAML — OK.
+· **Redundância intencional:** vários incisos (II, III, IV, V, IX_b, VII…) têm **mais de um**
+  caminho no questionário (modelo A, exterior, nuvem, P_tp, etc.) — esperado para narrativa
+  e `perguntas_gatilho`; não é bug.
+· Coerência «Apenas o cliente» + trânsito Sim: política atual = **avisos nas justificativas**
+  YAML (não bloqueio no motor); backlog opcional: validador de consistência ou aviso na UI.
+
+Documentação UI (audit_only / text_short): parcial na SPA — backlog Fase 9 (não bloqueante).
+
+
+3.3 `potential_triggers_per_inciso` e texto «fora do escopo»
+--------------------------------------------------------------------------------
+· Incisos **só obrigatórios** na matriz (sem entrada no questionário) — em corretora/custodiante
+  há 14 ids sem linhas em `potential_triggers` (ex.: VII, VIII, par1_* entre outros).
+· Texto genérico «Não há gatilho mapeado…» era **incorreto** quando o inciso saía do escopo por
+  **supressão** mas continuava obrigatório na YAML (cust/corr + client_only).
+
+**Correção aplicada (rules_engine._why_out_of_scope):** distingue `mandatory_in_yaml` e explica
+  exclusão do escopo **ativo** por supressão declarativa, sem negar obrigatoriedade na matriz.
+
+Teste: `test_inciso_obrigatorio_suprimido_texto_for_nao_diz_obrigatorio_matriz` em
+`tests/test_custodiante_scope.py`.
+
+
+3.5 CRITÉRIO DE SAÍDA FASE 3
+--------------------------------------------------------------------------------
+[x] 3.1 revisto + testes de invariante
+[x] 3.2 inventário YAML + notas de redundância / UI
+[x] 3.3 corrigido texto enganoso para obrigatórios suprimidos
+[ ] Aviso UI bloqueante para respostas contraditórias — backlog
+
+Próximo passo sequencial: FASE 4 (invariantes `compute_scope` e testes parametrizados)
+
+================================================================================
