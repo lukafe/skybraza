@@ -1,0 +1,101 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Arts. 73 (caput e inc. VIII), 75 e 78
+Mapeado para: IN 701, Art. 4º, Inciso XIV
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso XIV
+Contrato de custódia de AV conforme arts. 73 (inc. VIII), 75 e 78, Res. 520.
+
+--------------------------------------------------------------------------------
+ART. 73 — CONTRATO DE CUSTÓDIA DE ATIVOS VIRTUAIS
+--------------------------------------------------------------------------------
+
+O contrato de custódia celebrado entre a PSVAV e o cliente deve prever no mínimo:
+
+CAPUT — CLÁUSULAS OBRIGATÓRIAS (I a X):
+I.   Identificação das partes e objeto: tipo de ativos virtuais sujeitos à custódia,
+     endereços ou identificadores relevantes, e modelo operacional de guarda.
+II.  Direitos e obrigações do custodiante: guarda, segregação, reconciliação periódica
+     e devolução dos AV na forma e prazo acordados.
+III. Direitos e obrigações do cliente: comunicação de instruções, responsabilidade por
+     endereços de destino, atualização cadastral.
+IV.  Remuneração e tarifas: tabela de preços, forma de cobrança e condições de alteração.
+V.   Prazo e rescisão: condições de resilição, prazos de devolução dos AV e de liquidação.
+VI.  Responsabilidade e excludentes: limites de responsabilidade do custodiante, força maior,
+     falhas técnicas de blockchain não imputáveis ao custodiante.
+VII. Proteção e segregação: reafirmação do direito de propriedade do cliente sobre os AV
+     custodiados e das obrigações do custodiante decorrentes dos arts. 29–31 Res. 520.
+VIII.Subcustódia: condições em que o custodiante pode subcontratar a guarda a terceiro
+     (subcustodiante), com manutenção das obrigações perante o cliente e comunicação prévia.
+IX.  Comunicação de incidentes: obrigação do custodiante de notificar o cliente em prazo
+     definido sobre eventos que afetem os AV custodiados (ex.: tentativa de acesso não
+     autorizado, falha de sistema, incidente de segurança).
+X.   Foro e lei aplicável: jurisdição brasileira e aplicação da regulamentação BCB.
+
+ART. 73, INCISO VIII (subcustódia — detalhe):
+A cláusula de subcustódia deve especificar:
+- Identidade do subcustodiante ou critérios para sua seleção;
+- Modalidades de custódia aceitas (cold, MPC, HSM, multisig);
+- Manutenção pelo custodiante principal da responsabilidade integral perante o cliente;
+- Direito do cliente de ser informado sobre mudanças no subcustodiante.
+
+--------------------------------------------------------------------------------
+ART. 75 — SEGREGAÇÃO E DIREITO DE PROPRIEDADE DO CLIENTE
+--------------------------------------------------------------------------------
+
+Os ativos virtuais mantidos em custódia pertencem ao cliente e não se comunicam com
+o patrimônio do custodiante, observando:
+
+I.   Segregação patrimonial: AV dos clientes devem ser mantidos em carteiras ou
+     registros distintos dos AV próprios da PSVAV (arts. 29–31).
+II.  Direito de preferência: em caso de insolvência do custodiante, os AV dos clientes
+     não integram a massa falida, sendo restituídos prioritariamente.
+III. Identificação: cada AV custodiado deve ser identificável e rastreável ao cliente
+     titular, podendo ser por carteira individual, por registro interno com reconciliação
+     ou por modelo omnibus com rastreabilidade segregada.
+IV.  Reconciliação: o custodiante deve conciliar saldos internos com posições on-chain
+     em frequência definida (mínimo mensal) e manter registro das reconciliações.
+
+--------------------------------------------------------------------------------
+ART. 78 — ALTERAÇÕES CONTRATUAIS E CONDIÇÕES DE CONTINUIDADE
+--------------------------------------------------------------------------------
+
+I.   Alterações do contrato de custódia devem ser comunicadas ao cliente com antecedência
+     mínima de 30 dias, salvo alterações de natureza regulatória exigidas pelo BCB.
+II.  O cliente deve ter direito de rescisão sem penalidade quando discordar de alterações
+     materiais do contrato, com prazo adequado para transferência dos AV.
+III. O custodiante deve manter condições de continuidade que assegurem ao cliente o
+     acesso ou a transferência dos seus AV mesmo em caso de encerramento das atividades
+     do custodiante, com plano de encerramento ordenado (wind-down plan) arquivado no BCB.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- XIV: arts. 73, 75 e 78 → contrato de custódia (direto).
+- XV: art. 76 (I–XII) → deveres operacionais do custodiante (execução do contrato).
+- I_a: arts. 29–31 → segregação patrimonial (pré-contratual).
+- XVI/XVII: arts. 76, XII e §s → redundância e recuperação (operacional).
+- par1_I: art. 68 → divulgação de informações ao cliente no momento da contratação.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Modelo de contrato de custódia (versão atual, com cláusulas dos arts. 73, 75 e 78).
+2. Política ou procedimento de subcustódia (art. 73, VIII) — se aplicável.
+3. Política de reconciliação e extrato de posição (art. 75, IV + par1_III).
+4. Procedimento de alteração contratual e comunicação ao cliente (art. 78, I–II).
+5. Wind-down plan ou plano de encerramento ordenado (art. 78, III).
+6. Exemplo anonimizado de notificação de incidente ao cliente (art. 73, IX).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base nos arts. 73 (caput e inc. VIII), 75 e 78 da Res. 520.
+Art. 73 caput (incisos I–X): todos os requisitos mínimos do contrato de custódia.
+Verificar redação oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

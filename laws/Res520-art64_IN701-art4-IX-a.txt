@@ -1,0 +1,92 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Art. 64 (Listagem e Oferta de AV)
+Mapeado para: IN 701, Art. 4º, Inciso IX (a)
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso IX (a)
+Políticas de oferta, listagem, suspensão e deslistagem de ativos virtuais selecionados.
+
+--------------------------------------------------------------------------------
+ART. 64 — LISTAGEM, OFERTA, SUSPENSÃO E DESLISTAGEM DE ATIVOS VIRTUAIS
+--------------------------------------------------------------------------------
+
+A PSVAV que oferta um catálogo de ativos virtuais ao cliente deve manter política
+formal de oferta/listagem, suspensão e deslistagem de AV, contemplando:
+
+I.   CRITÉRIOS DE LISTAGEM / ADMISSÃO:
+     (a) Avaliação jurídica do ativo: não ser classificado como valor mobiliário
+         sujeito à regulamentação CVM sem a devida autorização;
+     (b) Avaliação técnica: funcionalidade da rede, liquidez de mercado, histórico
+         de incidentes de segurança no protocolo ou nos contratos inteligentes;
+     (c) Avaliação de risco de PLD: perfil de risco do ativo (privacidade, mixer,
+         histórico de uso em atividades ilícitas);
+     (d) Revisão de smart contracts (quando aplicável): auditoria de código para
+         ativos com lógica on-chain relevante;
+     (e) Avaliação de liquidez: spreads, volumes e depth de mercado compatíveis com
+         a operação da VASP.
+
+II.  PROCESSO DE APROVAÇÃO:
+     (a) Instância formal de aprovação (comitê de listagem, diretoria ou equivalente);
+     (b) Documentação da decisão com registro de avaliações realizadas e aprovadores;
+     (c) Prazo mínimo de avaliação antes de disponibilizar o ativo ao cliente.
+
+III. MONITORAMENTO PÓS-LISTAGEM:
+     (a) Revisão periódica dos AV listados (ao menos anualmente) quanto aos critérios
+         de admissão;
+     (b) Processo de alertas para eventos materiais: fork, ataque à rede, mudança de
+         regulação, indícios de manipulação de mercado.
+
+IV.  SUSPENSÃO TEMPORÁRIA:
+     (a) Critérios objetivos de suspensão: evento de segurança, manipulação de mercado,
+         indisponibilidade de liquidez, decisão regulatória;
+     (b) Comunicação tempestiva ao cliente sobre a suspensão e prazo estimado de retomada;
+     (c) Gestão das posições dos clientes durante a suspensão (ordens pendentes, saques).
+
+V.   DESLISTAGEM / REMOÇÃO:
+     (a) Critérios objetivos de deslistagem: risco regulatório confirmado (classificação
+         como valor mobiliário), falha de segurança material, liquidez insuficiente por
+         período prolongado, decisão estratégica;
+     (b) Pré-aviso ao cliente com antecedência mínima definida (ex.: 30 dias) salvo
+         risco imediato que justifique deslistagem de emergência;
+     (c) Garantia de liquidação ou saque dos AV deslistados pelo cliente pelo prazo
+         comunicado;
+     (d) Registro da decisão de deslistagem com justificativa documentada.
+
+§ 1º A política de listagem deve ser disponibilizada ao cliente ou ao público.
+
+§ 2º Para catálogos espelhados de parceiros de liquidez (sem comitê próprio), a PSVAV
+deve assegurar que os critérios mínimos de admissão do parceiro sejam compatíveis com
+os requisitos regulatórios brasileiros.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- IX_a: art. 64 → listagem, suspensão e deslistagem (direto).
+- IX_b: art. 65 → seleção específica de AV referenciados em moeda fiduciária.
+- XIII: práticas espúrias → monitoramento de manipulação de preço pós-listagem.
+- par1_I: art. 67 → divulgação ao cliente sobre os AV ofertados.
+- VII: chaves → smart contracts de AV listados podem ter instrumentos de controle.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Política de listagem aprovada com critérios de admissão, suspensão e deslistagem.
+2. Processo ou checklist de avaliação de novo ativo (exemplo anonimizado).
+3. Ata ou registro de comitê de listagem de decisão recente (anonimizado).
+4. Procedimento de suspensão e comunicação ao cliente.
+5. Histórico de revisões periódicas de AV listados (último ciclo).
+6. Exemplo de comunicação ao cliente sobre suspensão ou deslistagem (se ocorrida).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base no art. 64 da Res. 520 (políticas de oferta/listagem).
+O inciso IX_a é condicional na trilha intermediária (gatilho P_list ≠ execution_only)
+e também condicional nas trilhas custodiante e corretora (gatilho cust_C_catalog / corr_C_catalog).
+Verificar redação oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

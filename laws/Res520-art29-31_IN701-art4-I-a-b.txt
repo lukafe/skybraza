@@ -1,0 +1,97 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Arts. 29–31 (Segregação e Prova de Reservas)
+Mapeado para: IN 701, Art. 4º, Inciso I (alíneas a e b)
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso I
+(a) Efetiva segregação entre AV da prestadora e AV de clientes/usuários.
+(b) Mecanismos destinados à asseguração da prova de reservas dos ativos virtuais.
+
+--------------------------------------------------------------------------------
+ART. 29 — PATRIMÔNIO SEPARADO E SEGREGAÇÃO DE ATIVOS VIRTUAIS
+--------------------------------------------------------------------------------
+
+Os ativos virtuais mantidos pelas PSVAVs em benefício de clientes constituem
+patrimônio separado, não se comunicando com o patrimônio da própria PSVAV:
+
+I.   Os AV de clientes não respondem por obrigações da PSVAV ou de seus controladores,
+     administradores ou colaboradores.
+II.  Em caso de insolvência ou liquidação da PSVAV, os AV dos clientes são restituídos
+     prioritariamente e não integram a massa da insolvência.
+III. A PSVAV deve manter registros que permitam identificar, a qualquer momento, quais
+     AV pertencem a cada cliente, seja por carteira individual, por registro interno com
+     reconciliação ou por modelo omnibus com rastreabilidade segregada.
+
+ART. 30 — LIMITES PARA UTILIZAÇÃO DE AV DOS CLIENTES
+
+§ 1º É vedado à PSVAV utilizar AV de clientes em operações próprias, salvo mediante
+     consentimento expresso e por escrito do cliente, nas hipóteses previstas na Res. 520.
+
+§ 2º Quando autorizada a utilização de AV de clientes, a PSVAV não pode aplicar mais
+     de 5% (cinco por cento) do total dos AV sob custódia sem garantias adicionais.
+
+§ 3º A PSVAV deve manter documentação que demonstre a observância dos limites,
+     disponível para supervisão do BCB.
+
+ART. 31 — VEDAÇÕES RELACIONADAS AO USO DE AV DOS CLIENTES
+
+É expressamente vedado à PSVAV:
+
+I.   Utilizar AV de clientes para financiar suas próprias operações, pagar dívidas ou
+     remunerar terceiros, salvo nas hipóteses expressamente autorizadas e com consentimento.
+II.  Pignorar, caucionar ou onerar AV de clientes sem autorização expressa do cliente.
+III. Misturar AV de clientes com AV próprios em carteiras ou registros que não
+     permitam identificação individual da titularidade.
+
+--------------------------------------------------------------------------------
+PROVA DE RESERVAS — MECANISMOS (INCISO I b)
+--------------------------------------------------------------------------------
+
+Além da segregação patrimonial (art. 29–31), o inciso I (b) da IN 701 exige que a PSVAV
+mantenha mecanismos que demonstrem a prova de reservas:
+
+1. ATTESTATION INTERNA: reconciliação documentada entre saldos registrados
+   internamente e posições on-chain, com frequência mínima mensal.
+
+2. ATTESTATION EXTERNA (quando aplicável): contratação de auditor independente para
+   verificação periódica das reservas, com publicação do relatório.
+
+3. METODOLOGIA: definição clara do método de cálculo das reservas (incluindo liabilities
+   vs. on-chain holdings) e dos ativos considerados como reserva elegível.
+
+4. DIVULGAÇÃO: política de divulgação dos resultados de prova de reservas ao cliente
+   e/ou ao público (frequência, canal, formato).
+
+5. CONGRUÊNCIA: coerência entre os AV declarados nos extratos de clientes (par1_III)
+   e os AV efetivamente detidos on-chain pela PSVAV ou por subcustodiante em seu nome.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- I_a: arts. 29–31 → segregação (direto).
+- I_b: prova de reservas → metodologia e attestation.
+- XIV: art. 73 → contrato de custódia (obrigações contratuais de segregação).
+- XV: art. 76, I–III → inventário, reconciliação e relatório ao cliente.
+- par1_III: relatório de posição → extrato de AV por cliente (decorrência da segregação).
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Política de segregação patrimonial aprovada (incluindo procedimentos arts. 29–31).
+2. Diagrama de fluxo de fundos mostrando separação entre AV próprios e de clientes.
+3. Amostra de reconciliação (saldo interno vs. on-chain) — período recente, anonimizada.
+4. Relatório de prova de reservas mais recente (interno ou externo, conforme política).
+5. Procedimento de identificação individual de AV por cliente (modelo omnibus ou carteiras nominativas).
+6. Evidência de controle do limite de 5% do art. 30, §2º (se aplicável).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base nos arts. 29, 30 e 31 da Res. 520.
+Verificar redação oficial (texto consolidado):
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

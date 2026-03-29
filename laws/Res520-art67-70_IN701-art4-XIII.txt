@@ -1,0 +1,97 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Arts. 67–70 (Práticas Espúrias e Conduta de Mercado)
+Mapeado para: IN 701, Art. 4º, Inciso XIII
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso XIII
+Políticas e mecanismos para identificar, monitorar e evitar práticas espúrias no mercado de AV.
+
+--------------------------------------------------------------------------------
+PRÁTICAS ESPÚRIAS — DEFINIÇÃO E ESCOPO
+--------------------------------------------------------------------------------
+
+Para fins da IN 701 e da Res. 520, práticas espúrias no mercado de AV incluem:
+
+(a) Spoofing: colocação e cancelamento de ordens sem intenção de execução para
+    manipular o livro de ordens e o preço percebido;
+(b) Wash trading: compra e venda de AV entre partes coordenadas para criar
+    volume artificial e enganar investidores;
+(c) Pump and dump: inflação artificial do preço seguida de venda coordenada;
+(d) Layering: criação de camadas de ordens falsas para distorcer o carnet;
+(e) Insider trading: uso de informações privilegiadas sobre o AV ou sobre a
+    própria plataforma para operar com vantagem ilícita;
+(f) Front-running: execução de ordens próprias antes de ordens de clientes com
+    base em conhecimento prévio das intenções do cliente;
+(g) Manipulação de oráculo: influência artificial sobre preços de referência usados
+    em smart contracts ou em produtos derivados;
+(h) Engenharia social e phishing contra clientes da plataforma.
+
+--------------------------------------------------------------------------------
+POLÍTICAS E MECANISMOS DE PREVENÇÃO (REFERÊNCIA ARTS. 67–70 RES. 520)
+--------------------------------------------------------------------------------
+
+ART. 67 — TRANSPARÊNCIA E CONDUTA NA NEGOCIAÇÃO:
+
+I.   A PSVAV deve operar com transparência, divulgando ao cliente:
+     (a) Método de formação de preço (book de ordens, RFQ, OTC, CEX integrado);
+     (b) Posições proprietárias da VASP quando for contraparte do cliente;
+     (c) Tarifas e spreads aplicados;
+     (d) Regras de matching e prioridade de execução de ordens.
+II.  Proibição de uso de informações do fluxo de ordens de clientes em benefício
+     de posições proprietárias (art. 85, IV para corretoras).
+
+ART. 68 — DIVULGAÇÃO DE RISCOS:
+I.   Divulgar ao cliente, antes da contratação, os principais riscos do mercado de AV,
+     incluindo volatilidade, risco de custódia, risco regulatório e ausência de FGC.
+II.  Ausência de garantia ou seguro equivalente ao FGC/FGCoop para AV.
+
+ART. 69 — CONFLITO DE INTERESSES (aplicável também ao XIII):
+(ver Res520-art69_IN701-art4-X-a.txt para detalhes — inclui vedação de práticas
+que favoreçam a VASP em detrimento do cliente, como front-running e insider trading).
+
+ART. 70 — MONITORAMENTO DE CONDUTA DE MERCADO:
+I.   A PSVAV deve manter sistemas ou processos de vigilância de mercado (market surveillance)
+     adequados à sua escala operacional, para detectar:
+     (a) Padrões de wash trading em sua plataforma;
+     (b) Comportamento de spoofing no livro de ordens;
+     (c) Concentração de negociação por cliente que possa indicar manipulação;
+     (d) Operações suspeitas com potencial enquadramento em PLD (art. 44).
+II.  Os alertas de vigilância de mercado devem ser revisados por equipe competente
+     com protocolo de escalonamento e registro de resolução.
+III. Incidentes confirmados de práticas espúrias de clientes devem ser comunicados
+     ao COAF quando configurarem operação suspeita de PLD.
+IV.  Revisão independente periódica (auditoria ou consultoria especializada) do
+     programa de vigilância de mercado, ao menos bienalmente.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- XIII: práticas espúrias e conduta de mercado (direto).
+- VI_a: PLD/FTP → comunicação ao COAF de operações suspeitas detectadas pelo XIII.
+- VIII: monitoramento contínuo → inclui monitoramento de mercado (subconjunto).
+- X_a: art. 69 → conflito de interesse (front-running, insider).
+- IX_a: art. 64 → listagem (impacto de práticas espúrias em AV específicos).
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Política de conduta e prevenção de práticas espúrias aprovada.
+2. Descrição técnica dos mecanismos de vigilância de mercado (ferramenta, escopo,
+   alertas configurados — sem revelar regras de detecção confidenciais).
+3. Amostra de casos de alerta de vigilância tratados (anonimizados — últimos 6 meses).
+4. Regras e limites de negociação que previnam wash trading e spoofing.
+5. Procedimento de escalonamento e comunicação ao COAF (quando aplicável).
+6. Relatório de revisão independente do programa de vigilância (se realizada).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base nos arts. 67–70 da Res. 520 sobre conduta de mercado.
+XIII é obrigatório fixo em todas as trilhas.
+Verificar redação oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

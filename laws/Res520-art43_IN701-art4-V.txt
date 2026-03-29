@@ -1,0 +1,91 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Art. 43
+Mapeado para: IN 701, Art. 4º, Inciso V
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso V
+Políticas e procedimentos do art. 43 da Res. 520 e regramentos de governança das atividades.
+
+--------------------------------------------------------------------------------
+ART. 43 — POLÍTICAS E PROCEDIMENTOS DE GOVERNANÇA OPERACIONAL
+--------------------------------------------------------------------------------
+
+A PSVAV deve elaborar, implementar e manter atualizadas políticas e procedimentos que
+assegurem o funcionamento adequado das suas atividades, contemplando no mínimo:
+
+I.   Governança corporativa: estrutura de responsabilidades, poderes e mandatos dos órgãos
+     de administração (conselho, diretoria ou equivalente), com papéis claros para gestão
+     de riscos e compliance.
+
+II.  Gestão de riscos operacionais: identificação, avaliação, monitoramento e mitigação
+     de riscos inerentes às atividades de ativos virtuais, incluindo riscos tecnológicos,
+     de liquidez, de custódia e de mercado.
+
+III. Controles internos: políticas de controle que cubram segregação de funções, alçadas
+     de aprovação, trilha de auditoria e prevenção de fraudes e erros materiais.
+
+IV.  Continuidade de negócios: planos documentados para garantir a disponibilidade e
+     recuperação dos serviços essenciais diante de falhas, desastres ou incidentes,
+     com testes periódicos.
+
+V.   Conformidade regulatória (compliance): estrutura dedicada para monitorar, identificar
+     e reportar descumprimentos de obrigações legais e regulatórias, incluindo PLD/FTP
+     e proteção de dados.
+
+VI.  Tecnologia da informação e segurança cibernética: políticas de segurança, gestão de
+     acessos, proteção de dados e resposta a incidentes, complementadas pelo art. 48.
+
+VII. Atendimento e proteção ao cliente: mecanismos para reclamações, reembolsos, cancelamentos
+     e comunicação de incidentes que afetem os clientes.
+
+VIII.Terceirização: regras para seleção, contratação e monitoramento de prestadores de
+     serviços relevantes (arts. 32 e 33).
+
+§ 1º As políticas e procedimentos devem ser:
+- Aprovadas pela diretoria ou órgão equivalente;
+- Revisadas periodicamente (pelo menos anualmente ou quando houver alteração material);
+- Comunicadas e treinadas junto aos colaboradores responsáveis;
+- Mantidas em repositório acessível para fins de supervisão do BCB.
+
+§ 2º A PSVAV deve designar responsável pelo cumprimento das políticas e procedimentos,
+com autoridade e independência adequadas.
+
+§ 3º A PSVAV que contrate API ou SDK de terceiro para interconexão com IF ou
+prestadores de pagamento deve assegurar que a governança dessas integrações esteja
+contemplada nas políticas do caput.
+
+§ 4º Planos de continuidade de negócios devem ser testados e documentados, com
+periodicidade mínima anual, cobrindo indisponibilidade de parceiros críticos.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- V: art. 43 caput — governança geral das atividades.
+- VI_b: art. 48 — segurança cibernética como componente das políticas.
+- X_a: art. 69 — conflito de interesse (dimensão específica do art. 43, III).
+- XI: regulamentação de risco/capital/compliance — complementa art. 43 para IF.
+- XII: política de cibersegurança (regulamentação específica BCB).
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Conjunto de políticas corporativas aprovadas (governança, risco, compliance, TI,
+   continuidade, cliente, terceirização) com data de aprovação e próxima revisão.
+2. Organograma com linhas de reporte e mandatos dos órgãos de administração.
+3. Programa de treinamento em compliance e atas de disseminação de políticas.
+4. Calendário de revisões de políticas (últimos 24 meses e próximas previstas).
+5. Designação formal do responsável de compliance.
+6. Evidência de teste de continuidade (ata, relatório de exercício) — art. 43, IV e §4º.
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base no texto de referência da Res. 520, Art. 43.
+V é inciso obrigatório fixo em todas as trilhas (intermediária, custodiante, corretora).
+Verificar redação oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

@@ -1,0 +1,76 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Arts. 32 e 33 (Cap. IX, Seção IV)
+Mapeado para: IN 701, Art. 4º, Inciso II
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso II
+Serviços relevantes contratados (Cap. IX, Seção IV, Res. 520), em especial arts. 32 e 33;
+adequação da contratação de processamento, armazenamento e nuvem (regramento IF/autorizadas BCB).
+
+--------------------------------------------------------------------------------
+CAP. IX — GESTÃO DE RISCOS OPERACIONAIS E CONTINUIDADE
+Seção IV — Serviços Relevantes e Terceirização
+--------------------------------------------------------------------------------
+
+ART. 32 — SERVIÇOS RELEVANTES DE TERCEIROS
+
+A PSVAV deve manter inventário atualizado dos serviços relevantes prestados por terceiros,
+compreendendo:
+
+I.   Identificação do prestador (razão social, sede, regulação aplicável, país de domicílio).
+II.  Descrição do serviço e grau de criticidade para as atividades da PSVAV.
+III. Avaliação prévia da capacidade técnica, operacional e de segurança do prestador.
+IV.  Cláusulas contratuais que assegurem:
+     (a) Acesso para auditoria interna e supervisão do BCB;
+     (b) Nível de serviço (SLA) e penalidades por descumprimento;
+     (c) Planos de continuidade e saída do prestador;
+     (d) Confidencialidade e proteção de dados dos clientes;
+     (e) Subcontratação: proibição ou condicionamento a aprovação prévia da PSVAV.
+V.   Registro de revisões periódicas da contratação, ao menos anualmente.
+
+ART. 33 — CONTRATAÇÃO DE PROCESSAMENTO, ARMAZENAMENTO E NUVEM
+
+Para serviços de computação em nuvem, processamento e armazenamento de dados que suportem
+atividades de ativos virtuais, a PSVAV deve:
+
+I.   Garantir que os dados de clientes e de operações permaneçam acessíveis ao BCB para
+     fins de supervisão, independentemente do local de armazenamento físico (nacional ou exterior).
+II.  Contratar provedores de nuvem ou datacenter que atendam à regulamentação aplicável às
+     instituições autorizadas a funcionar pelo BCB (Resolução BCB sobre nuvem e cibersegurança).
+III. Assegurar a portabilidade e recuperabilidade dos dados em cenário de descontinuidade
+     do prestador, com prazos documentados de recuperação (RTO/RPO).
+IV.  Classificar as informações processadas ou armazenadas por terceiros conforme política
+     interna de segurança da informação, alinhada ao art. 48 (VI_b).
+V.   Manter documentação contratual e técnica suficiente para suportar testes de continuidade
+     (IV) e auditorias regulatórias.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- II: ancoragem nos arts. 32 e 33 → inventário, contratação, acesso.
+- III: art. 83 → prestador no exterior (capacidade legal e operacional).
+- IV: continuidade → planos de saída e recuperação de prestadores.
+- VI_b: art. 48 → segurança do ambiente computacional, incl. nuvem.
+- XII: política de cibersegurança → alinhamento contratual com prestadores.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Inventário de prestadores relevantes (função, criticidade, sede, data de revisão).
+2. Amostras de contratos com cláusulas de auditoria, SLA e saída (partes protegidas).
+3. Política ou procedimento de gestão de fornecedores críticos.
+4. Relatório de revisão anual de prestadores.
+5. Diagrama de dependências de sistemas críticos e respectivos prestadores.
+6. Evidência de due diligence realizada antes da contratação (últimos 24 meses, amostra).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base no texto de referência da Res. 520, Cap. IX, Seção IV.
+Verificar artigos 32 e 33 no texto oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

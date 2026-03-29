@@ -1,0 +1,113 @@
+================================================================================
+CORPUS — PLD/FTP: Legislação Aplicável às PSVAVs (Res. 520 + Lei 14.478/2022)
+Mapeado para: IN 701, Art. 4º, Inciso VI (a)
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso VI (a)
+Processos voltados à legislação de PLD/FTP e combate à utilização criminosa do SFN.
+
+--------------------------------------------------------------------------------
+LEGISLAÇÃO E REGULAMENTAÇÃO PRIMÁRIA
+--------------------------------------------------------------------------------
+
+1. Lei nº 9.613/1998 (Lei de Lavagem de Dinheiro) — alterada pela Lei nº 12.683/2012:
+   - Criminaliza a lavagem de dinheiro;
+   - Obrigações de identificação de clientes, registro e comunicação ao COAF;
+   - Aplicável às PSVAVs como "pessoas obrigadas" a partir da Lei nº 14.478/2022.
+
+2. Lei nº 14.478/2022 (Marco Legal dos Ativos Virtuais):
+   - Enquadra as PSVAVs como sujeitas à regulamentação BCB e PLD.
+
+3. Resolução BCB nº 520, Arts. 44–46 (PLD/FTP específico para PSVAVs):
+   - Art. 44: programa de prevenção à lavagem de dinheiro e financiamento ao terrorismo.
+   - Art. 45: obrigações de registro, identificação e comunicação.
+   - Art. 46: restrições operacionais e sanções.
+
+4. Circular BCB (ou equivalente) sobre PLD aplicável a autorizadas:
+   - Deveres de know-your-customer (KYC), know-your-transaction (KYT) e know-your-address (KYA).
+   - Comunicações ao COAF (operações suspeitas, operações em espécie, etc.).
+
+--------------------------------------------------------------------------------
+ART. 44 — PROGRAMA DE PLD/FTP (REFERÊNCIA ESTRUTURADA)
+--------------------------------------------------------------------------------
+
+A PSVAV deve manter programa de prevenção à lavagem de dinheiro e ao financiamento
+do terrorismo e da proliferação (PLD/FTP), contemplando:
+
+I.   Política de PLD/FTP aprovada pela alta administração, com:
+     (a) Apetite a risco de PLD/FTP definido;
+     (b) Papéis e responsabilidades (diretor responsável, compliance, negócio);
+     (c) Revisão periódica mínima anual.
+
+II.  Identificação e verificação de clientes (KYC):
+     (a) Pessoa física: CPF, identidade, renda/patrimônio, PEP;
+     (b) Pessoa jurídica: CNPJ, beneficiários finais (UBO), PEP associado;
+     (c) Atualização cadastral periódica e em mudanças relevantes;
+     (d) Triagem em listas sancionatórias nacionais e internacionais (OFAC, ONU, CSNU).
+
+III. Monitoramento de operações:
+     (a) Sistemas de monitoramento transacional (rule-based e/ou ML);
+     (b) Análise de blockchain (KYT/KYA): triagem de endereços contra bases de dados
+         de risco (Chainalysis, Elliptic, TRM Labs ou equivalente);
+     (c) Detecção de padrões suspeitos: fragmentação, uso de mixers, endereços sancionados,
+         darknet, ransomware, scam.
+
+IV.  Comunicação de operações suspeitas:
+     (a) Fluxo interno de geração e aprovação de ROS (Relatório de Operação Suspeita);
+     (b) Submissão ao COAF via SISCOAF dentro dos prazos legais;
+     (c) Sigilo da comunicação (não alertar o cliente — tipping off vedado).
+
+V.   Treinamento: programa periódico de capacitação para colaboradores sobre PLD/FTP,
+     com registro de participação e avaliação de aproveitamento.
+
+VI.  Avaliação de risco de clientes e produtos: metodologia documentada de classificação
+     de risco (baixo, médio, alto) aplicada a clientes, produtos e canais de distribuição.
+
+VII. Retenção de registros: manter todos os documentos e registros de PLD por prazo mínimo
+     de 5 anos (art. 45, II), acessíveis para supervisão BCB e COAF.
+
+--------------------------------------------------------------------------------
+ART. 45 — REGISTROS E COMUNICAÇÕES (REFERÊNCIA ESTRUTURADA)
+--------------------------------------------------------------------------------
+
+I.   Registrar todas as operações com AV, identificando clientes, valores, origem,
+     destino e endereços de carteira envolvidos.
+II.  Prazo de retenção mínimo: 5 (cinco) anos contados do último uso, alteração ou
+     da data da operação, o que for maior.
+III. Comunicar operações que configurem indícios de crime previsto na Lei nº 9.613/1998,
+     observando requisitos e prazos da regulamentação do COAF.
+IV.  Triagem de endereços de carteira recebidos e enviados contra bases de risco
+     on-chain antes da confirmação de operações relevantes.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- VI_a: PLD/FTP → programa completo (direto).
+- VI_b: art. 48 → segurança dos sistemas que suportam PLD (monitoramento, logs).
+- XIII: práticas espúrias → sobreposição com identificação de manipulação de mercado.
+- VIII: monitoramento contínuo → inclui monitoramento de risco PLD.
+- par1_I: art. 67 → informações ao cliente sobre políticas e limitações da VASP.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Política de PLD/FTP aprovada (versão, data, responsável, próxima revisão).
+2. Matriz de avaliação de risco de clientes e produtos.
+3. Procedimento de KYC/KYA com etapas, fontes e responsáveis.
+4. Evidência de monitoramento transacional e blockchain (print/relatório de ferramenta, anonimizado).
+5. Registro de treinamento de colaboradores em PLD (últimos 12 meses).
+6. Relatório ou amostra de ROS submetido ao COAF (anonimizado — sem revelar o cliente).
+7. Relatório de revisão independente do programa de PLD (se existente).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base nos arts. 44–46 da Res. 520 e Lei nº 9.613/1998
+(com alterações) e Lei nº 14.478/2022. Verificar normas vigentes aplicáveis às PSVAVs:
+- Res. 520: https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+- Lei nº 9.613/1998: http://www.planalto.gov.br/ccivil_03/leis/l9613.htm
+================================================================================

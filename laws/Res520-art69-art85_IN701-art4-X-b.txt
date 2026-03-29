@@ -1,0 +1,110 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Arts. 69 (I–IX) e 85 (I–XX)
+Mapeado para: IN 701, Art. 4º, Inciso X (b) (ii)
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso X (b) (ii)
+Condições dos arts. 69 (incisos I a IX) e 85 (incisos I a XX), Res. 520.
+
+NOTA: Para X (a), ver ficheiro dedicado Res520-art69_IN701-art4-X-a.txt (art. 69 isolado).
+Este ficheiro cobre o conjunto completo de X (b) (ii): arts. 69 + 85.
+
+--------------------------------------------------------------------------------
+ART. 69 — CONFLITO DE INTERESSES (INCISOS I A IX)
+(ver também Res520-art69_IN701-art4-X-a.txt para mais detalhes)
+--------------------------------------------------------------------------------
+
+I.   Identificar e divulgar conflitos de interesse existentes entre a VASP,
+     seus administradores, colaboradores e o cliente.
+II.  Adotar políticas e procedimentos para prevenir que conflitos afetem negativamente
+     os interesses dos clientes; regras de segregação funcional.
+III. Estabelecer procedimentos contra uso de informações privilegiadas.
+IV.  Manter mecanismos de controle para execução equitativa de ordens.
+V.   Proibir ou mitigar atuação como contraparte direta de clientes sem divulgação.
+VI.  Designar responsável pela gestão de conflitos com autoridade e independência.
+VII. Registrar e monitorar situações de conflito efetivo ou potencial.
+VIII.Implementar barreiras de informação (chinese walls) entre áreas em conflito.
+IX.  Revisar periodicamente as políticas de conflito de interesse (mínimo anual).
+
+--------------------------------------------------------------------------------
+ART. 85 — CONDIÇÕES PARA CUMULAÇÃO DE INTERMEDIAÇÃO E CUSTÓDIA (INCISOS I A XX)
+(aplicável principalmente à trilha corretora — Res. 520, art. 10)
+--------------------------------------------------------------------------------
+
+Quando a PSVAV acumula as atividades de intermediação e custódia de ativos virtuais
+(modelo corretora — art. 10), deve adotar as seguintes medidas adicionais:
+
+I.    Segregar operacionalmente as unidades de intermediação/negociação (mesa, RFQ, OTC)
+      e de custódia/guarda de AV, com linhas de reporte distintas.
+II.   Manter monitoramento independente (2ª linha ou auditoria) sobre a conformidade
+      operacional entre as atividades acumuladas.
+III.  Adotar política de melhor execução: garantir que ordens de clientes sejam executadas
+      nas melhores condições disponíveis, sem preferência indevida.
+IV.   Proibir o uso de informações de custódia de clientes em benefício da mesa de
+      negociação ou de posições proprietárias da VASP.
+V.    Estabelecer limites internos para exposições proprietárias compatíveis com a
+      proteção dos ativos custodiados de clientes.
+VI.   Documentar e comunicar ao cliente os potenciais conflitos decorrentes da cumulação
+      antes da contratação.
+VII.  Implementar processo formal de gestão de ordens que impeça tratamento preferencial
+      entre clientes ou entre clientes e a própria instituição.
+VIII. Manter registro completo de operações próprias e de clientes com trilha de auditoria
+      que permita verificação independente.
+IX.   Realizar testes e avaliações periódicas dos controles de conflito de interesse
+      (pelo menos anualmente).
+X.    Submeter à revisão independente (auditoria interna ou externa qualificada) o
+      conjunto de controles de cumulação.
+XI.   Proibir ou controlar o uso de AV de clientes em operações proprietárias da VASP
+      (vedação do art. 31).
+XII.  Estabelecer política de precificação transparente que diferencie custos de
+      intermediação dos custos de custódia.
+XIII. Assegurar que a comunicação ao cliente sobre posições e movimentações seja
+      segregada por atividade (intermediação vs. custódia).
+XIV.  Adotar controles de risco de crédito e de contraparte distintos para as posições
+      de intermediação e as posições de custódia.
+XV.   Manter capital regulatório adequado para as atividades acumuladas conforme
+      regulamentação aplicável.
+XVI.  Reportar ao BCB em modelo padronizado as atividades de intermediação e custódia
+      quando exigido.
+XVII. Proibir acordos de exclusividade com prestadores de liquidez que possam prejudicar
+      a execução ao melhor preço para clientes.
+XVIII.Implementar política de prevenção de front-running e outras práticas espúrias que
+      possam decorrer do acesso simultâneo a informações de custódia e de negociação.
+XIX.  Manter canal exclusivo de reclamações para situações relacionadas à cumulação de
+      atividades, com prazo de resposta definido.
+XX.   Disponibilizar ao BCB, quando solicitado, relatório detalhado sobre a estrutura
+      de gestão de conflitos na cumulação de atividades.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- X_a: art. 69 → conflito de interesses (diretamente).
+- X_b_i: regulamentação de controles internos para IF/autorizadas (externo ao corpus Res. 520).
+- X_b_ii: arts. 69 (I–IX) + 85 (I–XX) → condições completas para controles internos.
+- XI: gestão de risco, compliance e auditoria interna → suporte às obrigações dos arts. 69/85.
+- XIII: práticas espúrias → arts. 85, XVIII e políticas de mercado.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Política de conflito de interesses aprovada cobrindo os incisos do art. 69.
+2. Política de gestão da cumulação de intermediação e custódia (art. 85) — para corretoras.
+3. Organograma com segregação de unidades e linhas de reporte independentes.
+4. Registros de conflitos identificados e tratados (últimos 12 meses, anonimizados).
+5. Relatório de revisão independente sobre gestão de conflitos (últimos 24 meses).
+6. Procedimento de melhor execução e evidência de monitoramento.
+7. Trilha de auditoria de operações próprias vs. de clientes (amostra anonimizada).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base nos arts. 69 e 85 da Res. 520.
+Art. 85, incisos I–XX: referência estruturada — verificar numeração e redação exata no
+texto oficial, pois a numeração pode divergir da versão de trabalho.
+Verificar:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

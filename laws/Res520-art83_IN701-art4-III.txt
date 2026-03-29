@@ -1,0 +1,85 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Art. 83
+Mapeado para: IN 701, Art. 4º, Inciso III
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso III
+Capacidade técnica, operacional e legal das empresas contratadas para serviços relevantes;
+prestador no exterior — art. 83 Res. 520.
+
+--------------------------------------------------------------------------------
+ART. 83 — PRESTADORES DE SERVIÇOS RELEVANTES NO EXTERIOR
+--------------------------------------------------------------------------------
+
+A PSVAV que contratar prestador de serviço relevante sediado no exterior ou sem
+autorização equivalente do BCB no País deve observar, cumulativamente:
+
+I.   Verificar que o prestador detém as autorizações regulatórias necessárias no país
+     de domicílio para a atividade contratada, ou demonstrar que opera em regime legal
+     equivalente ao exigido no Brasil.
+
+II.  Avaliar a capacidade técnica e operacional do prestador para executar o serviço
+     com nível de segurança e disponibilidade compatível com a regulamentação brasileira,
+     incluindo:
+     (a) Infraestrutura tecnológica e certificações de segurança (ISO 27001, SOC 2 ou equivalente);
+     (b) Histórico de incidentes e plano de resposta;
+     (c) Capacidade financeira e de continuidade de negócio.
+
+III. Garantir que o contrato preveja:
+     (a) Submissão à jurisdição brasileira ou cláusula de cooperação com o BCB para fins
+         de supervisão e auditoria;
+     (b) Acesso irrestrito do BCB a dados, sistemas e instalações do prestador relacionados
+         ao serviço contratado pela PSVAV;
+     (c) Obrigação de notificação imediata em caso de incidente, alteração societária
+         relevante ou mudança de domicílio que afete o serviço.
+
+IV.  Manter plano de contingência documentado para substituição do prestador ou
+     internalização do serviço, com prazo máximo de transição definido.
+
+V.   Revisar anualmente a adequação do prestador estrangeiro, incluindo reavaliação das
+     licenças e situação regulatória no país de domicílio.
+
+--------------------------------------------------------------------------------
+CONTEXTO ADICIONAL — CAPACIDADE LEGAL E OPERACIONAL (INCISOS II e III)
+--------------------------------------------------------------------------------
+
+O inciso III da IN 701 exige que a certificação aborde a capacidade das empresas
+contratadas para serviços relevantes. Além do art. 83 (exterior), aplicam-se:
+
+- Art. 32, III: avaliação prévia da capacidade do prestador (nacional ou estrangeiro).
+- Art. 32, IV, (a): cláusula de acesso para auditoria.
+- Regulamentação de controles internos para autorizadas BCB (quando aplicável ao prestador).
+
+Para prestadores nacionais sem autorização BCB equivalente, o mesmo nível de diligência
+se aplica, com avaliação de capacidade jurídica (contrato, responsabilidade) e operacional
+(infraestrutura, SLA, segurança).
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- II: arts. 32-33 → contratação e monitoramento contínuo do prestador.
+- III: art. 83 → especificidades do prestador no exterior.
+- IV: continuidade → plano de contingência por falha do prestador.
+- XI: estruturas de risco → due diligence como componente de gestão de risco operacional.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Dossiê de due diligence para cada prestador relevante no exterior (licenças, capacidade,
+   histórico de incidentes — versão redigida para auditoria).
+2. Contratos ou excertos com cláusula de jurisdição e acesso do BCB.
+3. Plano de contingência para substituição do prestador estrangeiro.
+4. Relatório ou declaração anual de reavaliação do prestador.
+5. Mapa de riscos associados a cada prestador estrangeiro com controles mitigantes.
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base no texto de referência da Res. 520, Art. 83.
+Verificar redação oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

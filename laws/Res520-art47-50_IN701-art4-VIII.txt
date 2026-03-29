@@ -1,0 +1,97 @@
+================================================================================
+CORPUS — Resolução BCB nº 520: Monitoramento Contínuo e Gestão de Riscos Operacionais
+Mapeado para: IN 701, Art. 4º, Inciso VIII
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso VIII
+Mecanismos de monitoramento contínuo de segurança institucional e avaliação de riscos
+(detectar, prevenir, responder).
+
+--------------------------------------------------------------------------------
+MONITORAMENTO CONTÍNUO — REQUISITOS (CORRELATO ART. 47–50 RES. 520)
+--------------------------------------------------------------------------------
+
+O inciso VIII da IN 701 exige que a PSVAV demonstre mecanismos de monitoramento
+contínuo que permitam detectar, prevenir e responder a riscos operacionais, de segurança
+e de integridade. Os requisitos cobrem:
+
+I.   MONITORAMENTO DE SEGURANÇA INSTITUCIONAL:
+     (a) SIEM (Security Information and Event Management) ou ferramenta equivalente
+         com coleta e correlação de logs de sistemas críticos (ledger, custódia, APIs,
+         acesso de usuários e de administradores);
+     (b) Alertas automáticos para eventos de segurança com criticidade definida
+         (tentativa de acesso não autorizado, anomalia de volume, acesso privilegiado
+         fora do horário padrão, etc.);
+     (c) SOC (Security Operations Center) interno ou terceirizado com cobertura
+         mínima 8x5 ou 24x7 conforme criticidade da operação;
+     (d) Revisão periódica de logs por equipe de segurança com trilha de auditoria.
+
+II.  AVALIAÇÃO CONTÍNUA DE RISCOS OPERACIONAIS:
+     (a) Processo formal de identificação, avaliação e priorização de riscos
+         operacionais (metodologia: matriz de risco, bow-tie, ou equivalente);
+     (b) Atualização do mapa de riscos ao menos trimestralmente ou quando da
+         ocorrência de evento relevante;
+     (c) Indicadores-chave de risco (KRIs) monitorados com limiares de alerta
+         e de ação definidos;
+     (d) Reporte à alta administração sobre o perfil de risco operacional com frequência
+         mínima trimestral.
+
+III. GESTÃO DE VULNERABILIDADES E AMEAÇAS:
+     (a) Processo de varredura periódica de vulnerabilidades em sistemas de produção
+         (frequência mínima mensal para sistemas críticos);
+     (b) Programa de pentest externo com perícia reconhecida, ao menos anualmente,
+         cobrindo as superfícies públicas (APIs, portal de cliente, administração);
+     (c) Rastreamento de CVEs (Common Vulnerabilities and Exposures) aplicáveis à
+         pilha tecnológica da VASP com patching dentro de prazos definidos por criticidade;
+     (d) Monitoramento de inteligência de ameaças (threat intel) relevante ao setor
+         de ativos virtuais.
+
+IV.  MONITORAMENTO DE BLOCKCHAIN (KYT/KYA):
+     (a) Triagem automática de endereços de carteira antes de confirmar depósitos e saques
+         contra bases de risco (endereços sancionados, darknet, ransomware, etc.);
+     (b) Monitoramento de transações on-chain suspeitas com alertas para revisão manual;
+     (c) Registros de todas as triagens realizadas, mantidos pelo prazo mínimo (art. 45, II).
+
+V.   DETECÇÃO E RESPOSTA A INCIDENTES:
+     (a) Processo de triagem e classificação de alertas com SLA de resposta por nível
+         de criticidade;
+     (b) Registro de todos os incidentes e alertas tratados com resolução documentada;
+     (c) Comunicação interna e ao BCB quando aplicável (ver XII da IN 701).
+
+VI.  REVISÃO PELA ALTA GESTÃO:
+     (a) Relatório de gestão de riscos operacionais apresentado à diretoria ou comitê
+         de risco com periodicidade mínima trimestral;
+     (b) Indicadores de desempenho de monitoramento (taxa de falsos positivos, tempo
+         de resposta, cobertura de monitoramento) revisados periodicamente.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- VIII: monitoramento contínuo (direto).
+- VI_b: art. 48, IV → detecção e monitoramento como parte de segurança computacional.
+- XII: política de cibersegurança → plano de resposta coordenado.
+- XIII: práticas espúrias → monitoramento de mercado (subconjunto do VIII).
+- XI: gestão de risco e auditoria interna → suporte institucional ao VIII.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Descrição técnica do SIEM/ferramenta de monitoramento em uso (escopo de cobertura).
+2. Amostra de dashboard ou relatório de monitoramento de segurança (período recente, anonimizado).
+3. Mapa de riscos operacionais atualizado (versão anonimizada, sem dados sensíveis).
+4. Relatório do último pentest externo (sumário executivo, achados e mitigações).
+5. KRIs monitorados com histórico de limiares e acionamentos (últimos 12 meses).
+6. Relatório de gestão de riscos apresentado à alta gestão (ata ou sumário).
+7. Registro de alertas e incidentes tratados nos últimos 6 meses (anonimizado).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada para o inciso VIII da IN 701. Os artigos específicos da Res. 520
+sobre monitoramento contínuo (estimados como arts. 47–50) devem ser verificados no texto oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

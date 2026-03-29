@@ -1,0 +1,80 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Art. 48 (Incisos I a VIII)
+Mapeado para: IN 701, Art. 4º, Inciso VI (b)
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso VI (b)
+Segurança, resiliência e funcionamento do ambiente computacional;
+mínimo art. 48, incisos I a VIII, Res. 520.
+
+--------------------------------------------------------------------------------
+ART. 48 — SEGURANÇA E RESILIÊNCIA DO AMBIENTE COMPUTACIONAL
+--------------------------------------------------------------------------------
+
+A PSVAV deve manter ambiente computacional seguro e resiliente, atendendo no mínimo:
+
+I.   Política de segurança da informação: documento formal aprovado pela alta administração,
+     com escopo, objetivos, responsabilidades, classificação de informações e revisão periódica.
+
+II.  Gestão de acessos: controles de autenticação forte (MFA obrigatório para acessos
+     privilegiados), princípio do menor privilégio, revisão periódica de acessos e
+     desativação imediata de credenciais de ex-colaboradores.
+
+III. Gestão de vulnerabilidades e patches: processo formal de identificação, classificação
+     de criticidade (CVSS ou equivalente) e aplicação de correções dentro de prazo definido
+     conforme criticidade (crítico ≤ 72h, alto ≤ 30 dias, médio ≤ 90 dias como referência).
+
+IV.  Monitoramento e detecção: ferramentas e processos para monitorar eventos de segurança
+     (SIEM ou equivalente), com alertas, correlação de logs e retenção de registros por
+     período mínimo compatível com a regulamentação (referência: 5 anos — art. 45, II).
+
+V.   Resposta a incidentes: plano formal de resposta a incidentes de segurança com:
+     (a) Classificação e priorização de incidentes;
+     (b) Equipe responsável e escalação (CSIRT interno ou contratado);
+     (c) Comunicação ao BCB e aos clientes afetados conforme obrigação regulatória;
+     (d) Análise pós-incidente e medidas corretivas documentadas.
+
+VI.  Segurança em nuvem e terceiros: extensão dos controles de segurança aos ambientes
+     de terceiros (nuvem, datacenter, subcustodiante), com requisitos contratuais de
+     segurança e direito de auditoria (art. 32, IV, a).
+
+VII. Proteção de dados pessoais: conformidade com a LGPD (Lei nº 13.709/2018) na coleta,
+     tratamento e armazenamento de dados de clientes, com mapeamento de dados, base legal
+     e mecanismos de resposta a solicitações de titulares.
+
+VIII.Continuidade de TI: planos de recuperação de desastre (DRP) para sistemas críticos
+     (ledger de saldos, motor de roteamento, base de clientes), com RTO e RPO definidos,
+     testados periodicamente e coordenados com o plano de continuidade de negócios (art. 43, IV).
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- VI_b: art. 48, I–VIII → segurança e resiliência computacional (direto).
+- V: art. 43, VI → política de TI e segurança como parte da governança.
+- VIII: monitoramento contínuo (IV do art. 48 + gestão de riscos operacionais).
+- XII: política de cibersegurança (regulamentação específica BCB sobre nuvem/ciber).
+- II: arts. 32-33 → requisitos de segurança em contratos com prestadores.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Política de segurança da informação aprovada (versão atual, data, responsável).
+2. Relatório de revisão periódica de acessos privilegiados (últimos 12 meses).
+3. Relatório ou dashboard de gestão de vulnerabilidades e patches aplicados.
+4. Evidência de monitoramento (ex.: SIEM ativo, alertas configurados, amostra de log review).
+5. Plano de resposta a incidentes e evidência de exercício ou incidente tratado.
+6. Certificação de segurança do ambiente de nuvem ou relatório SOC 2 do provedor.
+7. DRP com RTO/RPO definidos e resultado do último teste de recuperação.
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base no texto de referência da Res. 520, Art. 48, incisos I a VIII.
+VI (b) é inciso obrigatório fixo em todas as trilhas.
+Verificar redação oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

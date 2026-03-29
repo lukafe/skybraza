@@ -2,24 +2,63 @@
 Prontidão do corpus (laws/) no escopo ativo e pacote de exportação JSON (Fase D; integrado no roteiro E).
 
 Agrega status por inciso (completo / parcial / incompleto), referências STUB e índice simples
-para priorizar trabalho de evidências antes da auditoria.
-
-Limitações: o índice reflete apenas os campos ``corpus_status`` e ``ficheiros_corpus`` da matriz YAML,
-não valida conteúdo real dos ficheiros em ``laws/``. STUBs contam como evidência pendente.
+para priorizar trabalho de evidências antes da auditoria. Valida também a existência real dos
+ficheiros referenciados em ``laws/`` e devolve avisos quando há divergência entre o status YAML
+e a presença física do arquivo.
 """
 
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 from matrix_loader import (
     TRACK_DEFAULT,
+    PACKAGE_ROOT,
     build_incisos_matrix,
     get_coverage_meta,
     normalize_track,
     sort_scope_keys,
 )
+
+LAWS_DIR = PACKAGE_ROOT / "laws"
+
+
+def _check_corpus_files(ficheiros_str: str) -> tuple[list[str], list[str]]:
+    """
+    Dada a string de ficheiros do campo ``ficheiros_corpus``, devolve (existentes, ausentes).
+    Ficheiros separados por ``;``.
+    """
+    if not ficheiros_str or ficheiros_str == "—":
+        return [], []
+    names = [f.strip() for f in ficheiros_str.split(";") if f.strip()]
+    present = [n for n in names if (LAWS_DIR / n).is_file()]
+    missing = [n for n in names if not (LAWS_DIR / n).is_file()]
+    return present, missing
+
+
+def validate_corpus_files(track: str | None = None) -> list[dict[str, Any]]:
+    """
+    Verifica se os ficheiros referenciados na matriz (trilha dada ou intermediária por defeito)
+    existem em ``laws/``. Devolve lista de avisos para os que estão em falta.
+    """
+    t = normalize_track(track or TRACK_DEFAULT)
+    inc_matrix = build_incisos_matrix(t)
+    warnings: list[dict[str, Any]] = []
+    for key, meta in inc_matrix.items():
+        files_str = str(meta.get("ficheiros_corpus") or "")
+        _, missing = _check_corpus_files(files_str)
+        if missing:
+            warnings.append(
+                {
+                    "inciso_id": key,
+                    "item": meta.get("item", key),
+                    "corpus_status_yaml": meta.get("corpus_status", ""),
+                    "ficheiros_ausentes": missing,
+                }
+            )
+    return warnings
 
 EXPORT_SCHEMA_VERSION = "1"
 
@@ -34,12 +73,14 @@ def _norm_status(raw: str) -> str:
 def corpus_readiness_for_scope(active_keys: set[str], track: str | None = None) -> dict[str, Any]:
     """
     Resume cobertura do corpus na matriz para os incisos atualmente no escopo.
+    Inclui verificação de existência física dos ficheiros referenciados em ``laws/``.
     """
     t = normalize_track(track or TRACK_DEFAULT)
     inc_matrix = build_incisos_matrix(t)
     counts: dict[str, int] = {"completo": 0, "parcial": 0, "incompleto": 0, "outro": 0}
     items: list[dict[str, Any]] = []
     stub_refs: list[dict[str, Any]] = []
+    files_ausentes: list[dict[str, Any]] = []
 
     for k in sort_scope_keys(active_keys, t):
         m = inc_matrix[k]
@@ -47,16 +88,27 @@ def corpus_readiness_for_scope(active_keys: set[str], track: str | None = None) 
         st = _norm_status(str(m.get("corpus_status") or ""))
         counts[st] = counts.get(st, 0) + 1
         uses_stub = "STUB" in files.upper()
+        _, missing = _check_corpus_files(files)
         row = {
             "inciso_id": k,
             "item": m.get("item", k),
             "corpus_status": m.get("corpus_status", ""),
             "ficheiros_corpus": files,
             "uses_stub_reference": uses_stub,
+            "ficheiros_ausentes_em_disco": missing,
         }
         items.append(row)
         if uses_stub:
             stub_refs.append({"inciso_id": k, "item": row["item"], "ficheiros_corpus": files})
+        if missing:
+            files_ausentes.append(
+                {
+                    "inciso_id": k,
+                    "item": row["item"],
+                    "corpus_status_yaml": m.get("corpus_status", ""),
+                    "ficheiros_ausentes": missing,
+                }
+            )
 
     total = len(active_keys)
     if total:
@@ -75,6 +127,7 @@ def corpus_readiness_for_scope(active_keys: set[str], track: str | None = None) 
         "items": items,
         "stub_references": stub_refs,
         "gaps_priority": gaps_priority,
+        "ficheiros_ausentes_em_disco": files_ausentes,
     }
 
 
@@ -128,7 +181,9 @@ def build_export_package(
 
 __all__ = [
     "EXPORT_SCHEMA_VERSION",
+    "LAWS_DIR",
     "build_export_package",
     "corpus_readiness_for_scope",
     "json_safe_meta",
+    "validate_corpus_files",
 ]

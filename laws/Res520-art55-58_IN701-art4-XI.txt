@@ -1,0 +1,105 @@
+================================================================================
+CORPUS — Regulamentação BCB: Gestão de Risco, Capital, Compliance e Auditoria Interna
+Mapeado para: IN 701, Art. 4º, Inciso XI
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso XI
+Estruturas de gestão de risco e capital, compliance e auditoria interna
+na forma aplicável a IF/autorizadas BCB.
+
+--------------------------------------------------------------------------------
+REGULAMENTAÇÃO PRIMÁRIA
+--------------------------------------------------------------------------------
+
+O inciso XI da IN 701 remete à regulamentação aplicável a instituições financeiras (IF)
+e autorizadas pelo BCB para estruturas de gestão de risco, capital, compliance e
+auditoria interna. As normas de referência incluem:
+
+1. Resolução BCB nº 265/2022 (ou norma correspondente vigente):
+   - Estruturas de gerenciamento de riscos para IF e autorizadas.
+
+2. Circular BCB (aplicável a IF) sobre auditoria interna:
+   - Requisitos de independência, abrangência e reporte.
+
+3. Res. 520, Arts. 51–58 (estimativa — gestão de riscos e compliance para PSVAVs):
+   - Estrutura de gerenciamento de riscos;
+   - Função de compliance;
+   - Auditoria interna (ou equivalente).
+
+4. Requisitos de adequação de capital:
+   - Regulamentação prudencial aplicável às PSVAVs conforme porte e modelo de negócio.
+
+--------------------------------------------------------------------------------
+ESTRUTURA DE GESTÃO DE RISCOS (REFERÊNCIA ESTRUTURADA)
+--------------------------------------------------------------------------------
+
+I.   MODELO DE 3 LINHAS DE DEFESA (ou equivalente aprovado pela alta gestão):
+     (a) 1ª linha: áreas de negócio responsáveis pelos controles operacionais;
+     (b) 2ª linha: funções de risco e compliance com supervisão independente;
+     (c) 3ª linha: auditoria interna (ou auditor externo para PSVAVs menores).
+
+II.  GESTÃO DE RISCO OPERACIONAL:
+     (a) Identificação e classificação de riscos: catálogo de riscos atualizado;
+     (b) Avaliação qualitativa e quantitativa (probabilidade × impacto);
+     (c) Controles mitigantes e monitoramento via KRIs;
+     (d) Reporte ao comitê de risco ou à diretoria com periodicidade mínima trimestral.
+
+III. GESTÃO DE RISCO DE MERCADO E DE LIQUIDEZ (quando aplicável):
+     (a) Exposições a AV próprios da VASP marcadas a mercado;
+     (b) Risco de liquidez: disponibilidade de ativos líquidos para honrar saques
+         de clientes em cenários de stress;
+     (c) Testes de stress de liquidez com cenários adversos.
+
+IV.  ADEQUAÇÃO DE CAPITAL:
+     (a) Manutenção de capital mínimo compatível com as atividades exercidas (conforme
+         regulamentação BCB específica para PSVAVs autorizadas);
+     (b) Processo de ICAAP simplificado ou equivalente para PSVAVs de maior porte;
+     (c) Reporte ao BCB sobre indicadores de capital e solvência quando exigido.
+
+V.   FUNÇÃO DE COMPLIANCE:
+     (a) Responsável de compliance designado com autoridade e independência;
+     (b) Mapeamento e monitoramento das obrigações regulatórias aplicáveis;
+     (c) Programa de compliance com avaliações periódicas de aderência;
+     (d) Canal de reporte de descumprimentos (whistleblowing) com anonimato garantido.
+
+VI.  AUDITORIA INTERNA (ou equivalente):
+     (a) Função de auditoria interna independente ou contratação de auditor externo;
+     (b) Plano de auditoria baseado em riscos aprovado anualmente;
+     (c) Reporte funcional ao conselho ou comitê de auditoria;
+     (d) Abrangência mínima: PLD, custódia, segurança, controles internos;
+     (e) Seguimento de recomendações com prazo de remediação documentado.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- XI: estruturas de risco, capital, compliance e auditoria (direto).
+- V: art. 43 → governança geral que suporta o XI.
+- VIII: monitoramento contínuo → complemento operacional do XI.
+- X_a: art. 69 → conflito de interesses (dimensão específica de compliance).
+- X_b_i: regulamentação de controles internos para IF/autorizadas (específico).
+- XII: política de cibersegurança → risco cibernético como subcategoria do XI.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Organograma com as 3 linhas de defesa e linhas de reporte ao conselho/diretoria.
+2. Política de gestão de riscos aprovada (versão, data, responsável).
+3. Mapa de riscos atualizado (versão anonimizada sem dados sensíveis).
+4. Relatório de compliance com avaliação de aderência regulatória (últimos 12 meses).
+5. Plano de auditoria interna e relatório do último ciclo de auditoria (sumário executivo).
+6. Indicadores de capital e liquidez com histórico (se disponível publicamente ou para BCB).
+7. Evidência de seguimento de recomendações de auditoria (plano de ação com prazos).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada para o inciso XI. Os artigos específicos da Res. 520 sobre
+gerenciamento de riscos e compliance (estimados como arts. 51–58) e as normas BCB
+sobre estruturas de risco para IF devem ser verificados no texto oficial vigente.
+Verificar normas aplicáveis:
+https://www.bcb.gov.br/estabilidadefinanceira/buscanormas
+================================================================================

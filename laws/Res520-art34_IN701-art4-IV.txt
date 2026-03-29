@@ -1,0 +1,88 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Art. 34 (e correlatos — Continuidade)
+Mapeado para: IN 701, Art. 4º, Inciso IV
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso IV
+Planos de recuperação de posições e controlo de AV e recursos financeiros de clientes,
+e planos da própria prestadora, em incidentes envolvendo instituição ou contratada.
+
+--------------------------------------------------------------------------------
+ART. 34 — CONTINUIDADE DE NEGÓCIOS E RECUPERAÇÃO
+--------------------------------------------------------------------------------
+
+A PSVAV deve manter planos de continuidade de negócios e recuperação que abranjam:
+
+I.   Continuidade das atividades essenciais: garantir que as atividades críticas
+     (custódia, execução de ordens, atendimento ao cliente) possam ser mantidas
+     ou rapidamente retomadas após incidentes, incluindo:
+     (a) Identificação e classificação dos processos e sistemas críticos;
+     (b) RTOs (Recovery Time Objectives) e RPOs (Recovery Point Objectives) por sistema;
+     (c) Alternativas operacionais (fallback manual, site secundário, cloud burst).
+
+II.  Recuperação de posições de AV dos clientes: planos documentados para recuperar
+     posições e retomar movimentações de AV em caso de incidentes que afetem sistemas
+     de custódia, incluindo:
+     (a) Protocolo de congelamento preventivo de saques;
+     (b) Processo de restauração de registros internos a partir de backup;
+     (c) Reconciliação pós-incidente com posições on-chain;
+     (d) Comunicação ao cliente sobre o incidente e prazos de normalização.
+
+III. Recuperação de recursos financeiros fiduciários dos clientes: quando a PSVAV
+     mantém contas de pagamento ou saldos fiat em nome de clientes, manter planos de
+     acesso e recuperação coordenados com as instituições financeiras parceiras.
+
+IV.  Testes periódicos: executar e documentar exercícios de continuidade e recuperação
+     ao menos anualmente, cobrindo cenários de:
+     (a) Indisponibilidade de prestador de nuvem ou datacenter;
+     (b) Falha de sistema crítico (ledger, motor de roteamento, sistema de custódia);
+     (c) Indisponibilidade de parceiro de liquidez, custodiante ou subcustodiante;
+     (d) Incidente de segurança cibernética (ransomware, DDoS prolongado).
+
+V.   Planos de recuperação de contratadas: assegurar que os planos próprios incluam
+     cenários de falha dos prestadores de serviços relevantes (arts. 32–33), com
+     alternativas de substituição ou internalização do serviço.
+
+§ 1º Os planos devem ser aprovados pela alta administração e revisados após cada
+     exercício ou incidente real que demonstre necessidade de ajuste.
+
+§ 2º A documentação dos testes realizados deve ser mantida pelo prazo mínimo de 5 anos
+     (art. 45, II), disponível para supervisão do BCB.
+
+§ 3º A PSVAV deve designar responsável pela gestão de continuidade com autoridade
+     para acionar os planos sem necessidade de aprovação adicional em situação de crise.
+
+§ 4º Os planos de continuidade devem ser coordenados com a política de segurança
+     cibernética (art. 48, VIII e XII da IN 701) e com o plano de resposta a incidentes.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- IV: art. 34 → planos de recuperação (direto).
+- II: arts. 32-33 → planos de saída de prestadores (componente do IV).
+- III: art. 83 → contingência para prestadores no exterior.
+- VI_b: art. 48, VIII → DRP como componente de segurança computacional.
+- XII: política de cibersegurança → plano de resposta coordenado com IV.
+- XV: art. 76, VI → plano de resposta de custódia (subconjunto do IV).
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Política de continuidade de negócios aprovada (escopo, RTO/RPO, responsável).
+2. Planos de recuperação para sistemas críticos com dependências documentadas.
+3. Resultado do último exercício de continuidade (BCP/DR test) com achados e melhorias.
+4. Planos de contingência para falha de prestadores críticos (LP, nuvem, custodiante).
+5. Protocolo de comunicação ao cliente em incidente de continuidade.
+6. Registro histórico de testes (últimos 24 meses), com datas e cenários cobertos.
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base no art. 34 da Res. 520 e correlatos de continuidade.
+Verificar redação oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

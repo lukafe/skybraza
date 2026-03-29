@@ -106,6 +106,7 @@ CUST_QUESTION_BLURBS: dict[str, str] = {
     "cust_B_more_foreign": QUESTION_BLURBS["P6"],
     "cust_C_stable": QUESTION_BLURBS["P7"],
     "cust_C_staking": QUESTION_BLURBS["P8"],
+    "cust_C_if_api": QUESTION_BLURBS["P9"],
     "cust_C_catalog": QUESTION_BLURBS["P_list"],
 }
 

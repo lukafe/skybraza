@@ -1,0 +1,116 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Art. 76 (XII) e §s — Redundância e Recuperação
+Mapeado para: IN 701, Art. 4º, Incisos XVI e XVII
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso XVI
+Mecanismos de redundância para instrumentos de controle sobre os ativos virtuais.
+
+IN 701 — Art. 4º, Inciso XVII
+Procedimentos de recuperação do material sujeito à redundância (inciso XVI),
+para supervisão do Banco Central do Brasil.
+
+--------------------------------------------------------------------------------
+ART. 76, INCISO XII e §§ — REDUNDÂNCIA E RECUPERAÇÃO (REFERÊNCIA ESTRUTURADA)
+--------------------------------------------------------------------------------
+
+O art. 76, XII da Res. 520 (e seus parágrafos) fundamenta os incisos XVI e XVII da IN 701:
+
+ART. 76, XII — MECANISMOS DE REDUNDÂNCIA (→ INCISO XVI):
+
+A PSVAV custodiante deve manter mecanismos de redundância para os instrumentos de
+controle sobre os ativos virtuais dos clientes, incluindo:
+
+(a) REDUNDÂNCIA DE CHAVES PRIVADAS:
+    - Cópias de segurança (backup) criptografadas das chaves privadas ou materiais de
+      derivação (seeds, fragmentos MPC), armazenadas em localização física distinta
+      da chave primária;
+    - Mínimo de 2 (duas) localizações geograficamente separadas;
+    - Cópias offline (air-gapped) resistentes a incidentes de rede;
+    - Envelopes físicos lacrados e controlados com registro de acesso.
+
+(b) REDUNDÂNCIA DE SISTEMAS DE CUSTÓDIA:
+    - Sistema de custódia redundante (ativo-passivo ou ativo-ativo) com failover
+      documentado e testado;
+    - Banco de dados de posições dos clientes com replica em tempo real ou com
+      frequência máxima de 15 minutos (RPO referência);
+    - Backup completo periódico com teste de restauração ao menos mensalmente.
+
+(c) REDUNDÂNCIA DE HSMs:
+    - Módulos de segurança hardware em número suficiente para continuidade operacional
+      mesmo na falha de qualquer unidade individual;
+    - HSMs de reserva disponíveis para ativação em prazo máximo definido (ex.: 4 horas).
+
+(d) ACESSO MULTISIG / MPC RESILIENTE:
+    - Esquema de assinatura dimensionado para tolerar a indisponibilidade de qualquer
+      subconjunto de assinantes/participantes sem perda de capacidade operacional;
+    - Política de recuperação de quórum documentada.
+
+§ 1º Os mecanismos de redundância devem ser revisados e testados periodicamente,
+     com frequência mínima anual, e os resultados documentados.
+
+§ 2º O acesso às cópias de redundância deve ser controlado, registrado e sujeito
+     a autorização multi-pessoal (princípio dos 4 olhos mínimo).
+
+ART. 76, §§ — PROCEDIMENTOS DE RECUPERAÇÃO (→ INCISO XVII):
+
+Os procedimentos de recuperação do material sujeito à redundância devem ser:
+
+I.   DOCUMENTADOS: procedimento operacional padrão (POP) para cada cenário de
+     recuperação relevante:
+     (a) Perda total da chave primária (ativação de backup);
+     (b) Comprometimento de HSM (transferência para HSM reserva);
+     (c) Indisponibilidade de participante MPC (recuperação de quórum);
+     (d) Desastre físico da instalação primária (ativação de site secundário).
+
+II.  TESTADOS: exercício de recuperação real (drill) ao menos anualmente:
+     (a) Simulação de restauração de chaves a partir do backup;
+     (b) Verificação da integridade do material recuperado;
+     (c) Medição do tempo de recuperação vs. RTO definido;
+     (d) Participação da equipe relevante e registro de presença.
+
+III. PARA SUPERVISÃO DO BCB: os procedimentos e resultados dos testes devem ser:
+     (a) Disponibilizados ao BCB mediante solicitação;
+     (b) Mantidos em repositório acessível para inspeção regulatória;
+     (c) Incluídos nos relatórios anuais de prontidão operacional enviados ao BCB,
+         quando exigido.
+
+IV.  COMUNICAÇÃO: em caso de ativação dos procedimentos de recuperação por incidente real:
+     (a) Notificação imediata à diretoria da PSVAV;
+     (b) Notificação ao BCB no prazo regulatório aplicável ao tipo de incidente;
+     (c) Comunicação ao cliente afetado sobre o incidente e medidas tomadas;
+     (d) Relatório pós-incidente (RCA — Root Cause Analysis) com prazo de entrega
+         ao BCB definido (ex.: 15 dias úteis após resolução).
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- XVI: art. 76, XII e §s → redundância (direto).
+- XVII: art. 76, XII e §s → recuperação para supervisão BCB (direto).
+- VII: políticas de chaves → incluem design de redundância.
+- XV: art. 76 (I–XII completo) → deveres operacionais do custodiante.
+- IV: continuidade de negócios → complemento de XVI/XVII.
+- VI_b: art. 48, VIII → DRP de TI coordenado com XVI/XVII.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Arquitetura de redundância de chaves documentada (localização, tipo, frequência de teste).
+2. Procedimentos de recuperação escritos (POPs para cada cenário).
+3. Resultado do último drill de recuperação (data, cenário, participantes, tempo, resultado).
+4. Registros de acesso às cópias de redundância (log de ativação — últimos 12 meses).
+5. Política de backup e teste de restauração com histórico de execução.
+6. Relatório de prontidão de HSMs (quantidade, status, prazo de failover).
+7. Evidência de comunicação/preparação para supervisão do BCB (se aplicável).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Ficheiro unificado para XVI e XVII, que se ancoram nos mesmos dispositivos do art. 76, XII e §s.
+Verificar redação oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

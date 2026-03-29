@@ -1,0 +1,112 @@
+================================================================================
+CORPUS — Resolução BCB nº 520: Políticas de Chaves e Instrumentos de Controle
+Mapeado para: IN 701, Art. 4º, Inciso VII
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso VII
+Requisitos para políticas de guarda e proteção dos instrumentos de controle dos AV
+de clientes/usuários.
+
+--------------------------------------------------------------------------------
+INSTRUMENTOS DE CONTROLE — DEFINIÇÃO E ESCOPO
+--------------------------------------------------------------------------------
+
+Para fins da IN 701 e da Res. 520, os "instrumentos de controle" sobre AV incluem:
+
+- Chaves privadas criptográficas (chaves de assinatura de transações on-chain);
+- Fragmentos de chave em modelos MPC (multi-party computation);
+- Seeds (frases semente) de carteiras HD;
+- Credenciais de acesso a HSMs (Hardware Security Modules);
+- Mecanismos de multi-assinatura (multisig policies);
+- Tokens físicos e dispositivos de autenticação hardware para custódia.
+
+--------------------------------------------------------------------------------
+POLÍTICAS MÍNIMAS DE GUARDA E PROTEÇÃO (REFERÊNCIA ART. 76, V E CORRELATOS)
+--------------------------------------------------------------------------------
+
+I.   GERAÇÃO SEGURA DE CHAVES:
+     (a) Geração em ambiente isolado (air-gapped) ou em HSM certificado (FIPS 140-2
+         Nível 3 ou equivalente);
+     (b) Cerimônia de geração documentada com participantes, data, ambiente e
+         procedimento de verificação;
+     (c) Nenhuma chave ou seed deve existir em formato plaintext fora do HSM/envelope
+         após a geração.
+
+II.  ARMAZENAMENTO SEGREGADO:
+     (a) Separação obrigatória de chaves de clientes e chaves próprias da VASP;
+     (b) Arquitetura de cold/warm/hot wallet com limites de exposição por camada:
+         - Cold: ≥ 90% dos AV custodiados (como referência de mercado — verificar política);
+         - Warm: limites operacionais definidos;
+         - Hot: mínimo necessário para operação diária, com monitoramento automático.
+     (c) Backup criptografado de chaves/seeds armazenado em local físico diferente
+         (geolocalização redundante), com acesso restrito e registrado.
+
+III. ACESSO MULTI-ASSINATURA:
+     (a) Nenhuma chave pode ser usada por assinante único (princípio dos 4 olhos);
+     (b) Esquemas de assinatura: M de N (ex.: 2-de-3, 3-de-5) para operações críticas;
+     (c) Quórum mínimo definido por tipo de operação (saque ao cliente, rebalanceamento
+         interno, operação de emergência);
+     (d) Assinantes devem ser identificados e autenticados via MFA.
+
+IV.  ROTAÇÃO E CICLO DE VIDA DE CHAVES:
+     (a) Política de rotação periódica de chaves operacionais (frequência definida);
+     (b) Processo formal de revogação e destruição segura de chaves obsoletas
+         (certificado de destruição ou log de revogação em HSM);
+     (c) Plano de substituição de chaves em caso de comprometimento suspeito.
+
+V.   GESTÃO DE ACESSO E SEGREGAÇÃO DE FUNÇÕES:
+     (a) Separação de funções: geração, aprovação de operação, execução e auditoria
+         devem ser realizadas por pessoas ou sistemas distintos;
+     (b) Princípio do menor privilégio: acesso somente ao necessário para a função;
+     (c) Revisão trimestral (ou com menor periodicidade) dos detentores de acesso;
+     (d) Revogação imediata de acesso de colaboradores desligados.
+
+VI.  MONITORAMENTO E AUDITORIA:
+     (a) Log imutável de todas as operações envolvendo instrumentos de controle;
+     (b) Alertas automáticos para operações fora do padrão (valor, horário, frequência);
+     (c) Revisão periódica dos logs por equipe de risco ou auditoria interna.
+
+VII. MODELO MPC (quando aplicável):
+     (a) Protocolo MPC documentado (threshold, participantes, comunicação segura);
+     (b) Segregação dos fragmentos entre participantes independentes (VASP, cliente,
+         terceiro de custódia);
+     (c) Avaliação de risco de comprometimento de um ou mais participantes;
+     (d) Governança de adição e remoção de participantes do MPC.
+
+VIII.CUSTÓDIA POR TERCEIRO (quando aplicável):
+     (a) Contrato de subcustódia (art. 73, VIII) com cláusulas de segurança de chaves;
+     (b) Due diligence anual do subcustodiante (certificações, histórico de incidentes);
+     (c) Direito de auditoria da VASP sobre as práticas de custódia do terceiro.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- VII: políticas de guarda (direto).
+- XV: art. 76, V e XII → deveres operacionais de guarda de chaves.
+- XVI: redundância dos instrumentos de controle.
+- XVII: recuperação para supervisão BCB.
+- XIV: art. 73, VIII → subcustódia (extensão de VII para terceiros).
+- VI_b: art. 48, II → gestão de acessos em sentido amplo.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Política de gestão de chaves aprovada (arquitetura cold/warm/hot, MPC, multisig).
+2. Documentação da última cerimônia de geração de chaves (data, participantes, ambiente).
+3. Diagrama de arquitetura de custódia de chaves (com segregação de ambientes).
+4. Procedimento de rotação de chaves e evidência de última rotação.
+5. Relatório de auditoria ou revisão independente de custódia de chaves (últimos 24 meses).
+6. Log de acesso a sistemas de custódia (amostra anonimizada — período recente).
+7. Due diligence do subcustodiante (se aplicável) — últimos 12 meses.
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base nos arts. 76, V e 77–80 da Res. 520 (estimativa de localização
+dos dispositivos sobre chaves — verificar artigos exatos no texto oficial).
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

@@ -97,8 +97,8 @@ def test_mandatory_includes_x_b_i_not_x_b_ii() -> None:
 
 def test_rows_sorted_like_yaml_order() -> None:
     df, _ = compute_scope({})
-    # Primeiro item obrigatório na ordem do art. 4º é VI (a) (I e II não são obrigatórios fixos)
-    assert df.iloc[0]["Item IN 701"] == "VI (a)"
+    # Primeiro item obrigatório na ordem do art. 4º é IV (continuidade — elevado a obrigatório fixo)
+    assert df.iloc[0]["Item IN 701"] == "IV"
 
 
 def test_modelo_nao_custodial_remove_cluster_vii_xiv() -> None:

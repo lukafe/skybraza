@@ -1,0 +1,104 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Art. 76 (Incisos I a XII)
+Mapeado para: IN 701, Art. 4º, Inciso XV
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso XV
+Medidas e planos do custodiante conforme art. 76, incisos I a XII, Res. 520.
+
+--------------------------------------------------------------------------------
+ART. 76 — DEVERES OPERACIONAIS DO CUSTODIANTE DE ATIVOS VIRTUAIS
+--------------------------------------------------------------------------------
+
+O custodiante de ativos virtuais deve observar, no exercício de sua atividade:
+
+I.   Manter inventário atualizado de todos os ativos virtuais custodiados, com
+     identificação do cliente titular, endereço ou referência on-chain e valor de mercado
+     de referência (calculado conforme metodologia aprovada).
+
+II.  Realizar reconciliação diária (ou na frequência operacional mínima definida)
+     entre os registros internos de custódia e as posições on-chain efetivas,
+     com registro das divergências identificadas e das medidas corretivas.
+
+III. Emitir relatório de posição ao cliente com a frequência contratual mínima
+     (mensal como referência), contendo saldo de cada ativo, movimentações do período
+     e confirmação de custódia.
+
+IV.  Executar instruções do cliente (depósito, saque, transferência) no prazo contratual,
+     com registro da instrução, autorização e confirmação on-chain.
+
+V.   Adotar política de segurança de chaves privadas cobrindo: geração segura (HSM,
+     cerimônia de chaves documentada), armazenamento segregado (cold/warm/hot),
+     acesso multi-assinatura, rotação periódica e destruição segura de material obsoleto.
+
+VI.  Manter plano de resposta a incidentes específico para custódia, incluindo protocolo
+     de congelamento de saques, comunicação ao cliente e ao BCB, e acionamento de
+     mecanismos de recuperação.
+
+VII. Implementar controles de acesso físico e lógico aos sistemas de custódia, com
+     registro de acessos, revisão periódica de autorizações e uso de MFA para acessos
+     privilegiados.
+
+VIII.Contratar seguro, constituir garantia ou manter capital adicional para cobertura de
+     riscos operacionais de custódia (ex.: perda de chaves, roubo, falha técnica),
+     conforme regulamentação prudencial aplicável.
+
+IX.  Testar periodicamente os mecanismos de recuperação de ativos (drill de recuperação
+     de chaves, teste de saque em ambiente controlado), com frequência mínima anual
+     e documentação dos resultados.
+
+X.   Comunicar ao cliente qualquer evento que afete a segurança, disponibilidade ou
+     integridade dos ativos custodiados no prazo máximo definido em contrato
+     (referência: 24h para eventos críticos, 5 dias úteis para eventos relevantes).
+
+XI.  Disponibilizar ao BCB, quando solicitado, acesso a sistemas, registros e
+     instalações relacionados à atividade de custódia para fins de supervisão e
+     inspeção regulatória.
+
+XII. Manter mecanismos de redundância para os instrumentos de controle sobre os AV
+     (chaves, HSMs, sistemas de autorização), com cópias offline seguras e planos de
+     recuperação testados (ver incisos XVI e XVII da IN 701 para detalhes de redundância
+     e recuperação para supervisão do BCB).
+
+§ 1º Os planos e mecanismos referidos neste artigo devem ser:
+     (a) Documentados, aprovados e revisados periodicamente;
+     (b) Testados em exercícios regulares com registro de resultados;
+     (c) Disponibilizados ao BCB para fins de supervisão.
+
+§ 2º O custodiante deve manter registro histórico dos testes realizados pelo prazo
+     mínimo de 5 anos, conforme art. 45, II.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- XV: art. 76, I–XII → deveres operacionais do custodiante (direto).
+- XIV: arts. 73, 75 e 78 → contrato de custódia (base contratual dos deveres do XV).
+- XVI: art. 76, XII + §s → redundância (correlacionado).
+- XVII: art. 76, XII + §s → recuperação para supervisão BCB (correlacionado).
+- I_a: arts. 29–31 → segregação (I, II e III do art. 76).
+- I_b: prova de reservas → reconciliação (II do art. 76).
+- VII: políticas de chaves → V do art. 76.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Procedimento de reconciliação diária de custódia (com amostra de registro anonimizado).
+2. Política de segurança de chaves (geração, armazenamento, acesso, rotação, destruição).
+3. Plano de resposta a incidentes de custódia (protocolo VI do art. 76).
+4. Resultado do último teste de recuperação de ativos/chaves (IX do art. 76).
+5. Relatório de posição emitido ao cliente (modelo ou amostra anonimizada — III).
+6. Política de seguro ou garantia para riscos de custódia (VIII).
+7. Log de acessos privilegiados aos sistemas de custódia (período recente, anonimizado).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base no art. 76 da Res. 520, incisos I a XII.
+O art. 76, XII e seus §s correspondem diretamente aos incisos XVI e XVII da IN 701.
+Verificar redação oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

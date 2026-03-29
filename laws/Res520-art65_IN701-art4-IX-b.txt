@@ -1,0 +1,85 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Art. 65 (Incisos I a IX)
+Mapeado para: IN 701, Art. 4º, Inciso IX (b)
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso IX (b)
+Seleção de AV referenciados em moeda fiduciária — art. 65, incisos I a IX, Res. 520.
+
+--------------------------------------------------------------------------------
+ART. 65 — ATIVOS VIRTUAIS REFERENCIADOS EM MOEDA FIDUCIÁRIA (STABLECOINS E TOKENIZADOS)
+--------------------------------------------------------------------------------
+
+A PSVAV que oferte, negocie ou custodie ativos virtuais com paridade ou referência
+explícita a moedas fiduciárias (stablecoins, tokenizados lastreados, etc.) deve:
+
+I.   Identificar e documentar as características do ativo referenciado:
+     (a) Moeda de referência e mecanismo de paridade (colateral, algorítmico, híbrido);
+     (b) Emissor, jurisdição de registro e regulação aplicável ao emissor;
+     (c) Forma de resgate e conversibilidade em moeda fiduciária pelo titular.
+
+II.  Avaliar a qualidade e suficiência da reserva que lastreia o ativo:
+     (a) Composição da reserva (tipo de ativos — caixa, título público, etc.);
+     (b) Frequência e metodologia de attestation ou auditoria da reserva;
+     (c) Custódia das reservas e segregação dos ativos dos investidores.
+
+III. Divulgar ao cliente, de forma clara e prévia à contratação:
+     (a) Natureza do ativo referenciado e mecanismo de manutenção da paridade;
+     (b) Riscos específicos: risco de descasamento, risco de liquidez do emissor,
+         risco regulatório no país do emissor;
+     (c) Ausência de cobertura do FGC ou garantia soberana equivalente;
+     (d) Histórico de episódios de desvinculação (depeg) quando relevante.
+
+IV.  Adotar procedimentos de monitoramento contínuo da paridade, com alertas automáticos
+     para variações acima de limiar pré-definido e protocolo de comunicação ao cliente
+     em caso de evento de risco significativo.
+
+V.   Verificar que o ativo referenciado não configura ativo financeiro regulado pelo CMN/CVM
+     sujeito a regime normativo diferenciado (tokenização de valores mobiliários,
+     fundos de investimento tokenizados, etc.) antes de ofertar.
+
+VI.  Manter documentação técnica e jurídica sobre cada ativo referenciado ofertado,
+     incluindo smart contracts relevantes, white paper, termo de emissão e eventuais
+     auditorias de código.
+
+VII. Implementar critérios de suspensão de negociação ou custódia do ativo referenciado
+     diante de eventos que comprometam a segurança ou a paridade (ex.: falha do
+     mecanismo de colateral, intervenção regulatória no país do emissor).
+
+VIII.Reporte periódico ao BCB, quando exigido, sobre volume de ativos referenciados
+     negociados ou custodiados, conforme modelos de supervisão definidos.
+
+IX.  Manter política interna de seleção e deslistagem de ativos referenciados em moeda
+     fiduciária, com critérios objetivos de admissão (risk rating, auditoria, liquidez)
+     e procedimento formal de deslistagem com comunicação prévia ao cliente.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- IX_b: art. 65, I–IX → seleção e divulgação de AV referenciados (direto).
+- IX_a: art. 64 → políticas de listagem/suspensão/deslistagem (aplicável ao portfólio geral).
+- par1_I: art. 67, I–VIII → informações ao cliente sobre o ativo e a operação.
+- VII: guarda de instrumentos de controle → inclui smart contracts de stablecoins.
+- XIII: práticas espúrias → manipulação de preço de stablecoins.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Política de seleção de AV referenciados em moeda fiduciária com critérios documentados.
+2. Ficha técnica de cada stablecoin ou tokenizado ofertado (emissor, reserva, auditoria).
+3. Termos de uso ou contrato com divulgação de riscos ao cliente (exemplo anonimizado).
+4. Evidência de monitoramento de paridade (ex.: dashboard, alertas, log de eventos).
+5. Procedimento de suspensão/deslistagem de AV referenciado com histórico de aplicação.
+6. Relatório de attestation ou auditoria de reservas do emissor (quando disponível).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base no texto de referência da Res. 520, Art. 65, incisos I a IX.
+Verificar redação oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

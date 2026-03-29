@@ -1,0 +1,82 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Art. 69
+Mapeado para: IN 701, Art. 4º, Inciso X (a)
+Idioma: PT-BR (texto de referência estruturado — verificar redação oficial no site do BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso X (a)
+Controlo interno — segregação de funções da governança com conflito de interesses potencial
+ou efetivo.
+
+--------------------------------------------------------------------------------
+RESOLUÇÃO BCB Nº 520, ART. 69 — CONFLITO DE INTERESSES
+--------------------------------------------------------------------------------
+
+O art. 69 da Res. 520 disciplina as obrigações das PSVAV em matéria de prevenção e gestão
+de conflitos de interesses, estabelecendo deveres que se enquadram no inciso X (a) da IN 701.
+
+ESTRUTURA DO ARTIGO (incisos I a IX — referência estruturada):
+
+I.   Identificar e divulgar ao cliente os conflitos de interesse existentes entre a VASP,
+     seus administradores, colaboradores e o cliente, inclusive os decorrentes de participações
+     societárias e acordos comerciais.
+
+II.  Adotar políticas e procedimentos para prevenir que os conflitos de interesse afetem
+     negativamente os interesses dos clientes, incluindo regras de segregação funcional
+     e de uso de informações privilegiadas.
+
+III. Estabelecer procedimentos para que administradores e colaboradores não utilizem
+     informações privilegiadas obtidas no exercício de suas funções em benefício próprio
+     ou de terceiros.
+
+IV.  Manter mecanismos de controle interno que assegurem a execução de ordens de clientes
+     de forma equitativa, sem preferência indevida entre clientes ou entre cliente e
+     posições próprias da VASP.
+
+V.   Proibir, ou mitigar por controles adequados, a atuação como contraparte direta de
+     seus próprios clientes sem divulgação e consentimento, observadas as exceções regulatórias.
+
+VI.  Designar responsável pela gestão de conflitos de interesse com autoridade e independência
+     adequadas, reportando à diretoria ou ao comitê competente.
+
+VII. Registrar e monitorar situações de conflito efetivo ou potencial, com trilha de auditoria
+     para revisão pelo BCB.
+
+VIII.Implementar barreiras de informação (chinese walls) entre áreas sujeitas a conflito,
+     especialmente entre mesa de negociação, gestão de ativos próprios e custódia de clientes.
+
+IX.  Revisar periodicamente as políticas de conflito de interesse, pelo menos anualmente
+     ou quando da alteração material do modelo de negócio.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- Art. 4º, X (a): controlo interno com segregação de funções em governança com conflito
+  potencial/efetivo → ancoragem direta no art. 69 Res. 520.
+- Art. 4º, X (b) (ii): condições dos arts. 69 (I–IX) e 85 (I–XX) → X_b_ii aprofunda
+  o cumprimento integral do artigo.
+- Art. 4º, XI: estruturas de risco, compliance e auditoria interna → suporte institucional
+  ao cumprimento do art. 69.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Política de conflito de interesses aprovada (dono, data, versão, próxima revisão).
+2. Procedimento de identificação e divulgação de conflitos ao cliente.
+3. Mapa de segregação funcional (organograma + linhas de reporte).
+4. Registros de situações de conflito tratadas nos últimos 12 meses.
+5. Plano de treinamento de colaboradores sobre conflito de interesses.
+6. Atas de comitê ou decisões de governance sobre conflitos identificados.
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Este ficheiro contém uma referência estruturada com base no texto de referência da Res. 520.
+Para a certificação oficial, verificar a redação exata do art. 69 no site do BCB:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+
+Separado do ficheiro Res520-art69-art85_IN701-art4-X-b.txt (que cobre arts. 69+85 para X_b_ii).
+================================================================================

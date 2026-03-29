@@ -1,0 +1,122 @@
+================================================================================
+CORPUS — BCB: Política de Segurança Cibernética e Nuvem (Resolução BCB)
+Mapeado para: IN 701, Art. 4º, Inciso XII
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, Inciso XII
+Políticas de segurança cibernética e plano de ação e resposta a incidentes,
+na forma da regulamentação em vigor para instituições autorizadas pelo BCB.
+
+--------------------------------------------------------------------------------
+REGULAMENTAÇÃO DE REFERÊNCIA
+--------------------------------------------------------------------------------
+
+A regulamentação primária de cibersegurança e nuvem para instituições autorizadas
+pelo BCB inclui:
+
+1. Resolução BCB nº 85, de 8 de abril de 2021 (ou norma correspondente vigente):
+   - Política de segurança cibernética;
+   - Plano de ação e resposta a incidentes;
+   - Requisitos para contratação de serviços de nuvem.
+
+2. Resolução BCB nº 520, Art. 48 (incisos I a VIII):
+   - Segurança e resiliência do ambiente computacional das PSVAVs (ver VI_b).
+
+3. Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018):
+   - Proteção de dados pessoais de clientes.
+
+--------------------------------------------------------------------------------
+POLÍTICA DE SEGURANÇA CIBERNÉTICA — REQUISITOS MÍNIMOS
+--------------------------------------------------------------------------------
+
+A política de segurança cibernética deve:
+
+I.   Estabelecer objetivos e princípios de proteção de dados e sistemas.
+II.  Definir responsabilidades para gestão da segurança cibernética, incluindo
+     diretor ou executivo responsável.
+III. Contemplar procedimentos e controles para reduzir a vulnerabilidade da
+     instituição a incidentes cibernéticos, incluindo:
+     (a) Gestão de identidades e acessos (autenticação forte, menor privilégio);
+     (b) Proteção de perímetro (firewall, WAF, segmentação de rede);
+     (c) Gestão de patches e vulnerabilidades;
+     (d) Monitoramento e detecção (SIEM, SOC interno ou terceirizado);
+     (e) Proteção de endpoints e dispositivos móveis;
+     (f) Segurança em código (SSDLC, revisão de código, testes de segurança);
+     (g) Proteção de dados em trânsito e em repouso (criptografia).
+IV.  Contemplar cenários de incidentes relevantes (ransomware, vazamento de dados,
+     comprometimento de chaves, DDoS) e procedimentos de resposta.
+V.   Definir indicadores de desempenho de segurança revisados periodicamente.
+VI.  Ser aprovada pela alta administração e revisada ao menos anualmente.
+VII. Ser comunicada e treinada junto a todos os colaboradores.
+
+--------------------------------------------------------------------------------
+PLANO DE AÇÃO E RESPOSTA A INCIDENTES — REQUISITOS MÍNIMOS
+--------------------------------------------------------------------------------
+
+O plano de ação e resposta a incidentes cibernéticos deve contemplar:
+
+I.   Classificação de incidentes: critérios de severidade (crítico, alto, médio, baixo)
+     com base em impacto operacional, financeiro e reputacional.
+II.  Equipe de resposta: composição, papéis e responsabilidades, incluindo contatos
+     de plantão e escalação para a alta administração.
+III. Procedimentos por fase:
+     (a) DETECÇÃO: fontes de alerta, triagem e confirmação inicial;
+     (b) CONTENÇÃO: isolamento de sistemas, preservação de evidências;
+     (c) ERRADICAÇÃO: remoção da causa raiz e restauração segura;
+     (d) RECUPERAÇÃO: validação de integridade, retomada de operações;
+     (e) PÓS-INCIDENTE: análise de causa raiz, lições aprendidas, melhorias.
+IV.  Comunicação: fluxo de notificação interna, ao BCB (dentro dos prazos regulatórios),
+     a clientes afetados e, se necessário, a autoridades competentes (ANPD, polícia).
+V.   Preservação de evidências para fins regulatórios e investigação forense.
+VI.  Testes: exercícios periódicos (tabletop ou simulação técnica), ao menos anualmente,
+     com registro de resultados e plano de melhoria.
+
+--------------------------------------------------------------------------------
+REQUISITOS PARA CONTRATAÇÃO DE SERVIÇOS DE NUVEM
+--------------------------------------------------------------------------------
+
+A contratação de serviços de computação em nuvem deve observar:
+
+I.   Localização dos dados: preferência por armazenamento no Brasil; quando no exterior,
+     garantir acesso do BCB para supervisão.
+II.  Due diligence do provedor: certificações de segurança (ISO 27001, SOC 2 Tipo II ou
+     equivalente), histórico de incidentes e mecanismos de auditoria.
+III. Contratos: SLA com disponibilidade mínima definida, penalidades, plano de saída,
+     portabilidade de dados e direito de auditoria do BCB.
+IV.  Gestão de acessos: controles de acesso lógico ao ambiente de nuvem, MFA para
+     acessos privilegiados e revisão periódica de permissões.
+V.   Monitoramento: logs de acesso e de atividade no ambiente de nuvem disponíveis para
+     a instituição com retenção mínima de 5 anos (art. 45, II Res. 520).
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- XII: política de ciberseg. e plano de resposta (direto).
+- VI_b: art. 48, I–VIII → segurança operacional do ambiente computacional.
+- II: arts. 32-33 → contratos com prestadores de nuvem.
+- IV: continuidade → DRP coordenado com plano de cibersegurança.
+- VIII: monitoramento contínuo → SIEM e SOC.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Política de segurança cibernética aprovada (versão, data, responsável).
+2. Plano de ação e resposta a incidentes (versão atual).
+3. Resultado do último exercício/tabletop de resposta a incidentes.
+4. Relatório ou certificação de segurança do provedor de nuvem (SOC 2, ISO 27001).
+5. Contrato com provedor de nuvem com cláusulas de auditoria e SLA (excertos protegidos).
+6. Evidência de gestão de patches e vulnerabilidades (relatório, dashboard).
+7. Política de classificação de dados e exemplos de controles por nível de sensibilidade.
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada para o inciso XII da IN 701. A regulamentação específica de
+cibersegurança e nuvem do BCB para instituições autorizadas pode ser a Resolução BCB nº 85/2021
+ou norma equivalente atualizada. Verificar norma vigente no momento da certificação:
+https://www.bcb.gov.br/estabilidadefinanceira/buscanormas
+================================================================================

@@ -1,0 +1,88 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Art. 79 (Relatório de Posição)
+Mapeado para: IN 701, Art. 4º, § 1º, Inciso III
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, § 1º, Inciso III
+Relatório atualizado de posição em AV detida pelo cliente ou usuário.
+
+--------------------------------------------------------------------------------
+ART. 79 — RELATÓRIO DE POSIÇÃO DOS CLIENTES (REFERÊNCIA ESTRUTURADA)
+--------------------------------------------------------------------------------
+
+A PSVAV deve disponibilizar ao cliente, com periodicidade mínima mensal (ou
+conforme exigência regulatória específica), relatório de posição contendo:
+
+I.   IDENTIFICAÇÃO DO RELATÓRIO:
+     (a) Data de referência e período coberto;
+     (b) Identificação do cliente (nome/CNPJ + referência de conta);
+     (c) Identificação da PSVAV (razão social, CNPJ);
+     (d) Número de versão ou identificador do relatório (para rastreabilidade).
+
+II.  SALDOS POR ATIVO VIRTUAL:
+     (a) Quantidade de cada AV detido pelo cliente (unidades com precisão total);
+     (b) Valor de referência em BRL e/ou USD na data do relatório (metodologia de
+         precificação documentada);
+     (c) Distinção entre AV disponíveis (para saque/negociação) e AV bloqueados
+         (em staking, em ordem aberta, em processo de saque).
+
+III. MOVIMENTAÇÕES DO PERÍODO:
+     (a) Depósitos de AV recebidos: data, ativo, quantidade, endereço de origem (ou hash);
+     (b) Saques de AV realizados: data, ativo, quantidade, endereço de destino, hash on-chain;
+     (c) Negociações executadas: data, par, lado (compra/venda), quantidade, preço,
+         contraparte (ou "livro de ordens");
+     (d) Conversões: AV de origem, AV de destino, taxas aplicadas;
+     (e) Recompensas de staking recebidas (quando aplicável);
+     (f) Tarifas cobradas no período (por tipo de operação).
+
+IV.  CONFIRMAÇÃO DE CUSTÓDIA:
+     (a) Declaração de que os AV do cliente estão sob custódia segregada da PSVAV;
+     (b) Referência ao contrato de custódia vigente (número ou data);
+     (c) Identificação do custodiante ou subcustodiante (quando diferente da PSVAV).
+
+V.   FORMA DE ENTREGA:
+     (a) Disponível no portal/app do cliente (acesso a histórico com no mínimo 12 meses);
+     (b) Envio por e-mail sob solicitação ou conforme preferência configurada pelo cliente;
+     (c) Formato: PDF ou equivalente não editável para arquivo;
+     (d) Disponibilidade imediata: o cliente pode emitir relatório on-demand a qualquer tempo.
+
+§ 1º O relatório deve ser gerado de forma automatizada, com trilha de auditoria que
+     permita verificar sua integridade e a consistência com os registros internos.
+
+§ 2º Em caso de discrepância entre o relatório e os registros internos, a PSVAV deve
+     investigar imediatamente e comunicar o cliente e o BCB quando aplicável.
+
+§ 3º O histórico de relatórios emitidos deve ser mantido pelo prazo mínimo de 5 anos
+     (art. 45, II), acessível para supervisão do BCB.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- par1_III: art. 79 → relatório de posição (direto).
+- I_b: prova de reservas → reconciliação entre saldos do relatório e posições on-chain.
+- XV: art. 76, III → emissor periódico de relatório de posição (dever do custodiante).
+- XIV: art. 73 → contrato de custódia que ampara o relatório de posição.
+- par1_I: art. 67 → informações contratuais ao cliente (o relatório é parte do serviço).
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Modelo de relatório de posição (amostra anonimizada — cobrindo todos os campos do art. 79).
+2. Comprovante de disponibilidade no portal do cliente (captura de tela do menu de extrato).
+3. Procedimento de geração e trilha de auditoria do relatório.
+4. Política de retenção histórica (5 anos conforme art. 45, II).
+5. Evidência de envio periódico (log de e-mails ou push notifications — anonimizado).
+6. Procedimento de tratamento de discrepâncias (§ 2º do art. 79).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+par1_III é inciso obrigatório fixo em todas as trilhas.
+Referência ao art. 79 como localização estimada na Res. 520 — verificar número exato no
+texto oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

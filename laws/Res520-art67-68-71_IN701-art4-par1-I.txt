@@ -1,0 +1,125 @@
+================================================================================
+CORPUS — Resolução BCB nº 520, Arts. 67, 68 e 71 (Transparência ao Cliente)
+Mapeado para: IN 701, Art. 4º, § 1º, Inciso I (alíneas a a h) e Inciso par1_I_h (staking)
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, § 1º, Inciso I
+Informações claras e precisas ao cliente/usuário sobre a instituição, canais, contratadas,
+seguros (art. 68), contrato de custódia, staking (art. 71) — alíneas (a) a (h).
+
+--------------------------------------------------------------------------------
+ART. 67 — INFORMAÇÕES OBRIGATÓRIAS AO CLIENTE (INCISOS I A VIII)
+--------------------------------------------------------------------------------
+
+A PSVAV deve disponibilizar ao cliente, de forma clara, gratuita e em linguagem acessível,
+antes da contratação e sempre que houver alteração relevante:
+
+I.   IDENTIFICAÇÃO DA INSTITUIÇÃO:
+     (a) Razão social, CNPJ e endereço da sede;
+     (b) Número de autorização do BCB (quando aplicável);
+     (c) Modalidade de atividade autorizada (intermediação, custódia, emissão);
+     (d) Grupo econômico e controladores relevantes.
+
+II.  CANAIS DE ATENDIMENTO E RECLAMAÇÃO:
+     (a) Canais disponíveis para suporte ao cliente (horário, SLA de resposta);
+     (b) Procedimento de reclamação interno e prazo de resposta;
+     (c) Informação sobre o Procon e o BCB como instâncias regulatórias de reclamação;
+     (d) Link para o canal de reclamações do BCB (Fale Conosco).
+
+III. SERVIÇOS CONTRATADOS A TERCEIROS (RELEVANTES PARA O CLIENTE):
+     (a) Identificação dos prestadores de serviços que têm acesso a dados do cliente;
+     (b) Identificação do custodiante ou subcustodiante dos AV do cliente (quando aplicável);
+     (c) Identificação do parceiro de liquidez ou formador de mercado (quando relevante).
+
+IV.  SEGUROS E GARANTIAS (ART. 68):
+     (a) Existência ou ausência de seguro que cubra os AV do cliente;
+     (b) Valor coberto, franquia, coberturas e exclusões (se houver seguro);
+     (c) Declaração explícita da ausência de cobertura equivalente ao FGC/FGCoop
+         para AV em caso de insolvência da PSVAV;
+     (d) Existência de fundo de garantia próprio ou colateral constituído para proteção
+         dos clientes (se aplicável).
+
+V.   CONTRATO DE CUSTÓDIA (art. 73 correlato):
+     (a) Existência de contrato de custódia formalizado;
+     (b) Principais cláusulas: segregação patrimonial, condições de saque, subcustódia;
+     (c) Direitos do cliente em caso de encerramento da PSVAV (wind-down).
+
+VI.  TARIFAS E REMUNERAÇÃO:
+     (a) Tabela de tarifas vigente (custódia, negociação, saque, conversão);
+     (b) Spreads praticados e método de cálculo;
+     (c) Remuneração recebida de terceiros pela PSVAV relacionada ao cliente.
+
+VII. RISCOS RELEVANTES:
+     (a) Volatilidade de preços de AV;
+     (b) Riscos tecnológicos (falha de blockchain, smart contract, chaves);
+     (c) Risco de liquidez (impossibilidade temporária de saque ou negociação);
+     (d) Risco regulatório (mudanças legais que afetam a operação ou o ativo).
+
+VIII.STAKING (art. 71 — alínea h do § 1º, Inciso I da IN 701):
+     Ver detalhamento abaixo (art. 71).
+
+--------------------------------------------------------------------------------
+ART. 68 — DIVULGAÇÃO DE SEGUROS E GARANTIAS
+--------------------------------------------------------------------------------
+
+I.   A PSVAV deve divulgar claramente ao cliente a existência, características e limites
+     de eventuais coberturas de seguro para os AV custodiados.
+II.  Na ausência de seguro ou cobertura equivalente, a PSVAV deve declarar expressamente
+     que os AV do cliente não estão cobertos por FGC ou garantia soberana.
+III. O seguro (quando existente) deve ser contratado com seguradora regularmente autorizada
+     e a apólice deve estar disponível para verificação pelo BCB.
+
+--------------------------------------------------------------------------------
+ART. 71 — STAKING E INFORMAÇÕES AO CLIENTE (INCISO par1_I_h)
+--------------------------------------------------------------------------------
+
+Quando a PSVAV oferta operações de staking (bloqueio de AV para validação de rede
+com geração de recompensas), deve informar ao cliente:
+
+I.   Natureza do staking: mecanismo de consenso (PoS, delegated PoS), protocolo de rede,
+     e papel do cliente e da PSVAV na operação.
+II.  Remuneração: taxa de recompensa estimada (APY/APR histórico e projeção), metodologia
+     de cálculo e distribuição das recompensas ao cliente.
+III. Riscos específicos de staking:
+     (a) Slashing: risco de penalidade por comportamento indevido do validador;
+     (b) Lock-up: período de bloqueio e condições de unbonding (tempo, riscos de preço);
+     (c) Risco de protocolo: bugs ou ataques ao contrato de staking;
+     (d) Risco de concentração: impacto da participação da PSVAV como validador.
+IV.  Modelo operacional: a PSVAV opera como validador próprio, delega a terceiro ou usa
+     protocolo de liquid staking.
+V.   Condições de saída: prazo de unbonding, tratamento de recompensas pendentes,
+     eventuais custos de saída antecipada.
+VI.  Tratamento dos AV durante staking: se os AV ficam bloqueados on-chain ou se o
+     cliente recebe um token representativo (liquid staking token — LST).
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- par1_I: arts. 67, 68 → transparência e informações ao cliente (alíneas a–h).
+- par1_I_h: art. 71 → staking (detalhe da alínea h).
+- par1_II: boas práticas e riscos (complemento informacional).
+- par1_III: relatório de posição (informação periódica ao cliente).
+- XIV: art. 73 → contrato de custódia referenciado na alínea (e) do par1_I.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Contrato de adesão / termos de uso com as informações dos arts. 67 e 68 (versão atual).
+2. Apólice de seguro vigente (se existente) ou declaração formal de ausência de cobertura FGC.
+3. Tabela de tarifas publicada (link ou captura de tela com data).
+4. Termo específico de staking (art. 71) com divulgação de riscos (se oferta staking).
+5. Procedimento de atualização e comunicação ao cliente sobre mudanças nos termos.
+6. Evidência de canal de atendimento e SLA de resposta.
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+Referência estruturada com base nos arts. 67, 68 e 71 da Res. 520.
+par1_I e par1_I_h são incisos obrigatórios fixos em todas as trilhas.
+Verificar redação oficial:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

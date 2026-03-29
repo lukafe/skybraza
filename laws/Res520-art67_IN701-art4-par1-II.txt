@@ -1,0 +1,78 @@
+================================================================================
+CORPUS — Resolução BCB nº 520: Boas Práticas e Educação do Cliente (par1_II)
+Mapeado para: IN 701, Art. 4º, § 1º, Inciso II
+Idioma: PT-BR (referência estruturada — verificar texto oficial no site BCB)
+================================================================================
+
+IN 701 — Art. 4º, § 1º, Inciso II
+Conteúdos informativos sobre boas práticas e riscos nas operações no mercado de AV.
+
+--------------------------------------------------------------------------------
+CONTEÚDOS INFORMATIVOS — REQUISITOS (CORRELATO RES. 520)
+--------------------------------------------------------------------------------
+
+O inciso par1_II da IN 701 exige que a PSVAV disponibilize conteúdos informativos
+que auxiliem o cliente a compreender boas práticas e riscos no mercado de AV:
+
+I.   EDUCAÇÃO FINANCEIRA BÁSICA EM AV:
+     (a) Como funcionam os ativos virtuais (blockchain, carteiras, transações);
+     (b) Diferença entre AV de pagamento, stablecoin, token de utilidade e valores mobiliários;
+     (c) Como ler e interpretar extratos e relatórios de posição;
+     (d) Como verificar o status de uma transação on-chain.
+
+II.  BOAS PRÁTICAS DE SEGURANÇA:
+     (a) Cuidados com phishing, engenharia social e fraudes comuns no setor de AV;
+     (b) Importância de senhas fortes e autenticação de dois fatores (2FA/MFA);
+     (c) Riscos de compartilhamento de credenciais;
+     (d) Como identificar canais oficiais da PSVAV (prevenção de impostores);
+     (e) Não armazenar chaves privadas ou seeds em dispositivos conectados à internet.
+
+III. RISCOS DO MERCADO DE AV (em linguagem acessível):
+     (a) Volatilidade de preços: mercado sem mecanismos de circuit-breaker como em bolsas
+         tradicionais;
+     (b) Risco de liquidez: possibilidade de dificuldade de negociar o ativo a preço justo;
+     (c) Risco de custódia: riscos operacionais e de segurança da PSVAV;
+     (d) Ausência de FGC: perda de AV por insolvência da PSVAV não é coberta;
+     (e) Risco regulatório: mudanças legislativas podem afetar o valor ou uso de AV;
+     (f) Risco de smart contract: bugs em contratos inteligentes de DeFi;
+     (g) Irreversibilidade de transações on-chain confirmadas.
+
+IV.  BOAS PRÁTICAS OPERACIONAIS:
+     (a) Verificar o endereço de destino antes de confirmar transferências de AV;
+     (b) Realizar transações de teste para novos endereços ou valores elevados;
+     (c) Manter informações de contato atualizadas com a PSVAV;
+     (d) Comunicar imediatamente qualquer operação não reconhecida.
+
+V.   FORMATO E CANAIS:
+     (a) Conteúdo deve estar disponível no site/app da PSVAV em área acessível sem login;
+     (b) Linguagem simples, sem jargão técnico excessivo;
+     (c) Atualização sempre que houver mudança relevante nos produtos, riscos ou regulação.
+
+--------------------------------------------------------------------------------
+REFERÊNCIA CRUZADA — IN 701
+--------------------------------------------------------------------------------
+
+- par1_II: boas práticas e educação do cliente (direto).
+- par1_I: art. 67 → informações contratuais e legais ao cliente.
+- par1_III: relatório de posição → complementa a informação do cliente.
+- XIII: práticas espúrias → cliente informado pode reconhecer manipulação.
+- VI_a: PLD → cliente ciente de riscos de cumplicidade involuntária.
+
+--------------------------------------------------------------------------------
+EVIDÊNCIAS TÍPICAS PARA CERTIFICAÇÃO
+--------------------------------------------------------------------------------
+
+1. Página de educação financeira / centro de ajuda da PSVAV (URL, captura de tela, data).
+2. Material informativo sobre riscos de AV disponível ao cliente (antes do login se possível).
+3. Guia de boas práticas de segurança publicado (phishing, 2FA, senhas).
+4. Política de atualização de conteúdo informativo (responsável, frequência, gatilho).
+5. Evidência de comunicação proativa ao cliente sobre riscos emergentes (ex.: phishing campaign).
+
+--------------------------------------------------------------------------------
+NOTA SOBRE CORPUS
+--------------------------------------------------------------------------------
+
+par1_II é inciso obrigatório fixo em todas as trilhas.
+Verificar regulamentação de conduta ao cliente nas normas vigentes:
+https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=520
+================================================================================

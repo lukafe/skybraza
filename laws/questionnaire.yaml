@@ -135,7 +135,7 @@ questions:
         add_incisos: [VII, XIV, XVI, XVII, II]
       - id: full_third_custody
         label: "Custódia integral por terceiro contratado (a VASP não detém chaves, mas contrata o serviço)."
-        add_incisos: [VII, XIV, II, III]
+        add_incisos: [VII, XIV, XVI, XVII, II, III]
 
   # ---------- Bloco B ----------
   - id: P4
@@ -518,6 +518,51 @@ questions:
     justificativa: >
       Reforça IX (a) na prática documental; comitê e política §2º art. 64.
     tags: [listagem, art64, IX_a]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_viii_siem
+    block: E
+    order: 150
+    type: yes_no
+    text: >
+      A VASP utiliza ferramenta de correlação e monitoramento de eventos de segurança (SIEM, SOC ou equivalente)
+      cobrindo sistemas críticos (ledger, APIs, custódia, acesso de administradores)?
+    justificativa: >
+      Maturidade do inciso VIII (obrigatório) — monitoramento contínuo de segurança institucional;
+      IN 701 art. 4º VIII + Res. 520 art. 48 IV e art. 43 VI.
+    tags: [VIII, SIEM, seguranca, monitoramento]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_viii_pentest
+    block: E
+    order: 160
+    type: yes_no
+    text: >
+      Nos últimos 24 meses, a VASP realizou pentest externo (realizado por empresa independente) que cubra
+      as superfícies voltadas ao cliente e à operação (APIs, portal, painel de administração)?
+    justificativa: >
+      Maturidade do inciso VIII — avaliação de riscos e detecção de vulnerabilidades; complementa VI_b
+      (art. 48, III) e XII (política de cibersegurança). Evidência esperada na Jornada 2.
+    tags: [VIII, pentest, vulnerabilidades]
+    audit_only: true
+    when_true: []
+    when_false: []
+
+  - id: int_E_viii_kri_review
+    block: E
+    order: 170
+    type: yes_no
+    text: >
+      O perfil de riscos operacionais (mapa de riscos, KRIs ou indicadores equivalentes) é revisto e
+      reportado à alta gestão com periodicidade mínima trimestral?
+    justificativa: >
+      Maturidade do inciso VIII e inciso XI — gestão contínua de risco operacional; Res. 520 art. 43 II
+      e arts. 51–58. Documenta o ciclo de governança de risco para a certificação.
+    tags: [VIII, XI, risco, KRI, governanca]
     audit_only: true
     when_true: []
     when_false: []

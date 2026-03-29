@@ -83,9 +83,10 @@ incisos:
       e AV de clientes/usuários.
     refs_explicitas_na_in701:
       - "Res. 520 — segregação patrimonial / carteiras (Cap. IX, Seção II — confirmar arts. na versão oficial)"
-    law_files: []
-    stub_file: "STUB_IN701-art4-I-a-b_seg-regiao-reservas.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art29-31_IN701-art4-I-a-b.txt"
+    stub_file: null
+    status: parcial
 
   - id: I_b
     rotulo_in701: "I (b)"
@@ -94,9 +95,10 @@ incisos:
       Mecanismos destinados à asseguração da prova de reservas dos ativos virtuais.
     refs_explicitas_na_in701:
       - "Res. 520 — prova de reservas / comprovação de saldos (localizar capítulo pertinente na Res. 520)"
-    law_files: []
-    stub_file: "STUB_IN701-art4-I-a-b_seg-regiao-reservas.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art29-31_IN701-art4-I-a-b.txt"
+    stub_file: null
+    status: parcial
 
   - id: II
     rotulo_in701: "II"
@@ -110,7 +112,7 @@ incisos:
     law_files:
       - "Res520-art32-33_IN701-art4-II.txt"
     stub_file: null
-    status: completo
+    status: parcial
 
   - id: III
     rotulo_in701: "III"
@@ -123,7 +125,7 @@ incisos:
     law_files:
       - "Res520-art83_IN701-art4-III.txt"
     stub_file: null
-    status: completo
+    status: parcial
 
   - id: IV
     rotulo_in701: "IV"
@@ -133,9 +135,10 @@ incisos:
       e planos da própria prestadora, em incidentes envolvendo instituição ou contratada.
     refs_explicitas_na_in701:
       - "Res. 520 — continuidade de negócios / recuperação (localizar arts. correlatos ao tema)"
-    law_files: []
-    stub_file: "STUB_IN701-art4-IV_planos-recuperacao.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art34_IN701-art4-IV.txt"
+    stub_file: null
+    status: parcial
 
   - id: V
     rotulo_in701: "V"
@@ -147,7 +150,7 @@ incisos:
     law_files:
       - "Res520-art43_IN701-art4-V.txt"
     stub_file: null
-    status: completo
+    status: parcial
 
   - id: VI_a
     rotulo_in701: "VI (a)"
@@ -156,9 +159,10 @@ incisos:
       Processos voltados à legislação de PLD/FTP e combate à utilização criminosa do SFN.
     refs_explicitas_na_in701:
       - "Legislação PLD/FTP aplicável às PSVAV (citar na certificação conforme modelo da instituição)"
-    law_files: []
-    stub_file: "STUB_IN701-art4-VI-a_PLD-FTIP.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art60-63_IN701-art4-VI-a.txt"
+    stub_file: null
+    status: parcial
 
   - id: VI_b
     rotulo_in701: "VI (b)"
@@ -170,7 +174,7 @@ incisos:
     law_files:
       - "Res520-art48_IN701-art4-VI-b.txt"
     stub_file: null
-    status: completo
+    status: parcial
 
   - id: VII
     rotulo_in701: "VII"
@@ -179,9 +183,10 @@ incisos:
       Requisitos para políticas de guarda e proteção dos instrumentos de controle dos AV de clientes/usuários.
     refs_explicitas_na_in701:
       - "Res. 520 — políticas de chaves / instrumentos de controle (localizar capítulo e arts.)"
-    law_files: []
-    stub_file: "STUB_IN701-art4-VII_guarda-instrumentos-controle.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art77-80_IN701-art4-VII.txt"
+    stub_file: null
+    status: parcial
 
   - id: VIII
     rotulo_in701: "VIII"
@@ -191,9 +196,10 @@ incisos:
       (detetar, prevenir, responder).
     refs_explicitas_na_in701:
       - "Res. 520 — monitoramento e gestão de riscos operacionais (localizar arts.)"
-    law_files: []
-    stub_file: "STUB_IN701-art4-VIII_monitoramento-seguranca-institucional.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art47-50_IN701-art4-VIII.txt"
+    stub_file: null
+    status: parcial
 
   - id: IX_a
     rotulo_in701: "IX (a)"
@@ -202,9 +208,10 @@ incisos:
       Políticas de oferta, listagem, suspensão e deslistagem de ativos virtuais selecionados.
     refs_explicitas_na_in701:
       - "Res. 520 — listagem / oferta de AV (ex.: art. 64 e correlatos — confirmar na versão oficial)"
-    law_files: []
-    stub_file: "STUB_IN701-art4-IX-a_listagem-ativos.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art64_IN701-art4-IX-a.txt"
+    stub_file: null
+    status: parcial
 
   - id: IX_b
     rotulo_in701: "IX (b)"
@@ -216,8 +223,8 @@ incisos:
     law_files:
       - "Res520-art65_IN701-art4-IX-b.txt"
     stub_file: null
-    status: completo
-    notas: "Ficheiro contém duplicação do Art. 65 no final — limpar na Fase B."
+    status: parcial
+    notas: "Ficheiro contém duplicação do Art. 65 no final — pendente limpeza no corpus."
 
   - id: X_a
     rotulo_in701: "X (a)"
@@ -225,12 +232,12 @@ incisos:
     resumo_certificacao_pt: >
       Controlo interno — segregação de funções da governança com conflito de interesses potencial ou efetivo.
     refs_explicitas_na_in701:
-      - "Res. 520, art. 69 (contexto conflito de interesse)"
+      - "Res. 520, art. 69, incisos I a IX"
     law_files:
-      - "Res520-art69-art85_IN701-art4-X-b.txt"
+      - "Res520-art69_IN701-art4-X-a.txt"
     stub_file: null
     status: parcial
-    notas: "Texto do inciso X (a) está ligado ao art. 69; ficheiro atual agrupa 69+85 para X (b). Considerar ficheiro dedicado X (a) na Fase B."
+    notas: "Ficheiro dedicado criado com referência estruturada do art. 69 (incisos I–IX). Verificar redação oficial no site BCB e completar com texto integral."
 
   - id: X_b_i
     rotulo_in701: "X (b) (i)"
@@ -255,7 +262,7 @@ incisos:
       - "Res520-art69-art85_IN701-art4-X-b.txt"
     stub_file: null
     status: parcial
-    notas: "Art. 85 no ficheiro pode estar truncado em relação a I–XX completo — validar na Fase B."
+    notas: "Art. 85 no ficheiro pode estar truncado em relação a I–XX completo — validar corpus e completar se necessário."
 
   - id: XI
     rotulo_in701: "XI"
@@ -264,9 +271,10 @@ incisos:
       Estruturas de gestão de risco e capital, compliance e auditoria interna na forma aplicável a IF/autorizadas.
     refs_explicitas_na_in701:
       - "Regulamentação aplicável a IF e autorizadas BCB (corpus externo)"
-    law_files: []
-    stub_file: "STUB_IN701-art4-XI_risco-capital-compliance-auditoria.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art55-58_IN701-art4-XI.txt"
+    stub_file: null
+    status: parcial
 
   - id: XII
     rotulo_in701: "XII"
@@ -278,7 +286,7 @@ incisos:
     law_files:
       - "BCB-resolucao-ciberseguranca-nuvem_PT_IN701-art4-XII.txt"
     stub_file: null
-    status: completo
+    status: parcial
     notas: "Resolução BCB (PT) sobre política de segurança cibernética e nuvem — alinhada ao inciso XII."
 
   - id: XIII
@@ -288,9 +296,10 @@ incisos:
       Políticas e mecanismos para identificar, monitorar e evitar práticas espúrias no mercado de AV.
     refs_explicitas_na_in701:
       - "Res. 520 — conduta de mercado / práticas espúrias (localizar arts.)"
-    law_files: []
-    stub_file: "STUB_IN701-art4-XIII_praticas-espurias.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art67-70_IN701-art4-XIII.txt"
+    stub_file: null
+    status: parcial
 
   - id: XIV
     rotulo_in701: "XIV"
@@ -304,7 +313,7 @@ incisos:
       - "Res520-art73-75-78_IN701-art4-XIV.txt"
     stub_file: null
     status: parcial
-    notas: "Extrato atual começa no art. 73 inc. VIII — completar mínimos do contrato de custódia (art. 73 caput) na Fase B."
+    notas: "Extrato atual começa no art. 73 inc. VIII — completar mínimos do contrato de custódia (art. 73 caput) no corpus."
 
   - id: XV
     rotulo_in701: "XV"
@@ -316,7 +325,7 @@ incisos:
     law_files:
       - "Res520-art76_IN701-art4-XV.txt"
     stub_file: null
-    status: completo
+    status: parcial
 
   - id: XVI
     rotulo_in701: "XVI"
@@ -325,9 +334,10 @@ incisos:
       Mecanismos de redundância para instrumentos de controle sobre os ativos virtuais.
     refs_explicitas_na_in701:
       - "Res. 520 — redundância (ligado ao art. 76, XII e §s — cruzar com inciso XVII)"
-    law_files: []
-    stub_file: "STUB_IN701-art4-XVI_redundancia-instrumentos.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art76-XVI-XVII_IN701-art4-XVI-XVII.txt"
+    stub_file: null
+    status: parcial
 
   - id: XVII
     rotulo_in701: "XVII"
@@ -336,9 +346,10 @@ incisos:
       Procedimentos de recuperação do material sujeito à redundância (inciso XVI), para supervisão do BCB.
     refs_explicitas_na_in701:
       - "Res. 520 — recuperação para supervisão (cruzar com art. 76, XII e §s)"
-    law_files: []
-    stub_file: "STUB_IN701-art4-XVII_recuperacao-supervisao-BCB.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art76-XVI-XVII_IN701-art4-XVI-XVII.txt"
+    stub_file: null
+    status: parcial
 
   - id: par1_I
     rotulo_in701: "§ 1º (I)"
@@ -350,9 +361,10 @@ incisos:
       - "Res. 520, art. 68"
       - "Res. 520, art. 67, incisos I a VIII"
       - "Res. 520, art. 71"
-    law_files: []
-    stub_file: "STUB_IN701-art4-par1-I_transparencia-cliente-a-h.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art67-68-71_IN701-art4-par1-I.txt"
+    stub_file: null
+    status: parcial
 
   - id: par1_II
     rotulo_in701: "§ 1º (II)"
@@ -361,9 +373,10 @@ incisos:
       Conteúdos informativos sobre boas práticas e riscos nas operações no mercado de AV.
     refs_explicitas_na_in701:
       - "Res. 520 / IN 701 — divulgação ao cliente (localizar arts. de conduta e transparência)"
-    law_files: []
-    stub_file: "STUB_IN701-art4-par1-II_boas-praticas-riscos.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art67_IN701-art4-par1-II.txt"
+    stub_file: null
+    status: parcial
 
   - id: par1_III
     rotulo_in701: "§ 1º (III)"
@@ -372,9 +385,10 @@ incisos:
       Relatório atualizado de posição em AV detida pelo cliente ou usuário.
     refs_explicitas_na_in701:
       - "Res. 520 — informações de posição / extratos (localizar arts.)"
-    law_files: []
-    stub_file: "STUB_IN701-art4-par1-III_relatorio-posicao.txt"
-    status: incompleto
+    law_files:
+      - "Res520-art79_IN701-art4-par1-III.txt"
+    stub_file: null
+    status: parcial
 
   # Subitem do § 1º (I) acionado por gatilho (staking) — certificação específica alínea (h)
   - id: par1_I_h
@@ -384,10 +398,11 @@ incisos:
       Operações de staking de ativos virtuais — riscos e informações dispostos no art. 71, Res. 520.
     refs_explicitas_na_in701:
       - "Res. 520, art. 71"
-    law_files: []
-    stub_file: "STUB_IN701-art4-par1-I_transparencia-cliente-a-h.txt"
-    status: incompleto
-    notas: "Detalhe da alínea (h) dentro do bloco § 1º (I); gatilho P8 no escopo intermediário."
+    law_files:
+      - "Res520-art67-68-71_IN701-art4-par1-I.txt"
+    stub_file: null
+    status: parcial
+    notas: "Detalhe da alínea (h) dentro do bloco § 1º (I); gatilho cust_C_staking na trilha custodiante."
 
 resumo_contagem:
   total_itens_matriz: 26
