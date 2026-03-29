@@ -3,12 +3,15 @@
  * Dados: /static/data/decision_tree.json (gerado por scripts/export_decision_tree_data.py)
  */
 
-import { t } from "./i18n.js?v=2";
+import { t, getCurrentLang } from "./i18n.js?v=2";
 
 const DT_JSON_VER = "3";
+const QEN_VER = "1";
 
 /** @type {Record<string, unknown> | null} */
 let _dtCache = null;
+/** @type {Record<string, unknown> | null} */
+let _dtEnCache = null;
 
 function $(sel, root = document) {
   return root.querySelector(sel);
@@ -27,6 +30,57 @@ async function loadDecisionTreeData() {
   if (!res.ok) throw new Error(`Ficheiro decision_tree.json indisponível (${res.status}). Execute python scripts/export_decision_tree_data.py`);
   _dtCache = await res.json();
   return _dtCache;
+}
+
+async function loadDtEnData() {
+  if (_dtEnCache) return _dtEnCache;
+  try {
+    const res = await fetch(`/static/data/questions_en.json?v=${QEN_VER}`);
+    if (res.ok) _dtEnCache = await res.json();
+    else _dtEnCache = {};
+  } catch {
+    _dtEnCache = {};
+  }
+  return _dtEnCache;
+}
+
+/** Map intermediaria|custodiante|corretora → blocks_* key in questions_en.json */
+function _blocksEnKey(track) {
+  if (track === "custodiante") return "blocks_cust";
+  if (track === "corretora") return "blocks_corr";
+  return "blocks";
+}
+
+/** All tracks share the same "questions" key in questions_en.json (IDs are unique across tracks). */
+function _questionsEnKey(_track) {
+  return "questions";
+}
+
+/**
+ * Apply EN translations to the track data clone (blocks titles/leads + question text/justificativa).
+ */
+function applyDtEnOverlay(tdata, enData, track) {
+  if (!enData || !tdata) return tdata;
+  const blocksMap = enData[_blocksEnKey(track)] || {};
+  const qMap = enData[_questionsEnKey(track)] || {};
+
+  const blocks = (tdata.blocks || []).map((b) => {
+    const en = blocksMap[b.id];
+    if (!en) return b;
+    return { ...b, title: en.title_en || b.title, lead: en.lead_en || b.lead };
+  });
+
+  const questions = (tdata.questions || []).map((q) => {
+    const en = qMap[q.id];
+    if (!en) return q;
+    return {
+      ...q,
+      text: en.text_en || q.text,
+      justificativa: en.justificativa_en || q.justificativa,
+    };
+  });
+
+  return { ...tdata, blocks, questions };
 }
 
 const TRACK_ORDER = ["intermediaria", "custodiante", "corretora"];
@@ -56,6 +110,16 @@ export function wireDecisionTreeUI({ setView, getTrack }) {
 
   btnBack.addEventListener("click", () => {
     setView("intro");
+  });
+
+  // Re-render when language changes if decision tree view is currently visible
+  document.addEventListener("langchange", () => {
+    if (!root.classList.contains("hidden")) {
+      const activeTrack = pills?.querySelector(".dt-pill--active")?.getAttribute("data-dt-track") || getTrack();
+      // reset built flag so pills can be re-built with new lang if needed
+      if (pills) delete pills.dataset.built;
+      renderDecisionTree(activeTrack);
+    }
   });
 
   const pills = $("#dt-track-pills");
@@ -104,12 +168,19 @@ export function wireDecisionTreeUI({ setView, getTrack }) {
 export async function renderDecisionTree(track) {
   const data = await loadDecisionTreeData();
   const tracks = data.tracks || {};
-  const tdata = tracks[track];
+  let tdata = tracks[track];
   if (!tdata) return;
+
+  if (getCurrentLang() === "en") {
+    const enData = await loadDtEnData();
+    tdata = applyDtEnOverlay(tdata, enData, track);
+  }
 
   const noteSuppress = $("#dt-note-suppress");
   if (noteSuppress) {
-    const suppressText = data.notes?.suppress_custody_non_custodial;
+    const suppressTextPt = data.notes?.suppress_custody_non_custodial;
+    const suppressTextEn = t("dt_suppress_note_en");
+    const suppressText = (getCurrentLang() === "en" && suppressTextEn) ? suppressTextEn : suppressTextPt;
     const showSuppress = Boolean(suppressText);
     noteSuppress.classList.toggle("hidden", !showSuppress);
     if (showSuppress) {
@@ -120,10 +191,9 @@ export async function renderDecisionTree(track) {
   const pills = $("#dt-track-pills");
   if (pills && !pills.dataset.built) {
     pills.innerHTML = TRACK_ORDER.map((tr) => {
-      const td = tracks[tr];
-      const lab = td?.label || tr;
+      const lab = t(`track_pill_${tr}`) || (tracks[tr]?.label || tr).split("—")[0].trim();
       const active = tr === track;
-      return `<button type="button" role="tab" class="dt-pill ${active ? "dt-pill--active" : ""}" data-dt-track="${escapeHtml(tr)}" aria-selected="${active}">${escapeHtml(lab.split("—")[0].trim())}</button>`;
+      return `<button type="button" role="tab" class="dt-pill ${active ? "dt-pill--active" : ""}" data-dt-track="${escapeHtml(tr)}" aria-selected="${active}">${escapeHtml(lab)}</button>`;
     }).join("");
     pills.dataset.built = "1";
   } else if (pills) {

@@ -58,6 +58,45 @@ QUESTION_BLURBS: dict[str, str] = {
     ),
 }
 
+QUESTION_BLURBS_EN: dict[str, str] = {
+    "P1": (
+        "it was indicated that client-specific deposit addresses exist and that the VASP, MPC partner or other third party "
+        "holds or shares operational control over private keys capable of moving client funds"
+    ),
+    "P2": (
+        "it was indicated that, in buy/sell operations, assets pass through a transit or omnibus wallet "
+        "under the VASP's control (or a partner acting on its behalf)"
+    ),
+    "P3": (
+        "it was indicated that fiat currency balances are held in the client's name while awaiting orders on virtual assets"
+    ),
+    "P4": (
+        "an overseas or BCB-equivalent-unauthorised liquidity counterparty was indicated"
+    ),
+    "P5": (
+        "use of cloud or third-party data centre for critical systems (ledger, client database, routing) was indicated"
+    ),
+    "P6": (
+        "overseas or BCB-unauthorised partners in relevant roles beyond liquidity were indicated"
+    ),
+    "P7": (
+        "trading of assets with an explicit fiat currency reference (stablecoins, tokenised assets, etc.) was indicated"
+    ),
+    "P8": (
+        "an offering of staking, yield, lock-up or equivalent products to the client was indicated"
+    ),
+    "P9": (
+        "use of APIs/SDKs to interconnect with financial institutions or payment providers (on/off-ramp, Open Finance, etc.) was indicated"
+    ),
+    "P_list": (
+        "the way the VA universe offered to the client was described implies an expandable catalogue or listing policy "
+        "(not merely a closed set for execution)"
+    ),
+    "P_reserves": (
+        "a commitment or practice of reserve proof (proof of reserves or equivalent) under the platform's responsibility was indicated"
+    ),
+}
+
 P_ARCH_BLURBS: dict[str, str] = {
     "vasp_operates": (
         "foi escolhido o cenário em que a VASP ou operador designado movimenta ativos em nome do cliente "
@@ -74,6 +113,25 @@ P_ARCH_BLURBS: dict[str, str] = {
     "client_only": (
         "foi escolhido modelo em que apenas o cliente autoriza movimentações (interface não custodial); "
         "este texto não deve acionar custódia operacional da VASP"
+    ),
+}
+
+P_ARCH_BLURBS_EN: dict[str, str] = {
+    "vasp_operates": (
+        "the scenario was chosen in which the VASP or designated operator moves assets on behalf of the client "
+        "(hot wallet, omnibus, etc.), implying typical operational custody responsibilities"
+    ),
+    "mpc_mixed": (
+        "an MPC or multi-party signing model was chosen with the VASP and third parties holding control roles, "
+        "implying key governance and relevant outsourcing"
+    ),
+    "full_third_custody": (
+        "full custody by a contracted third party was chosen (the VASP contracts the service), maintaining obligations "
+        "to the client and the supervisor"
+    ),
+    "client_only": (
+        "a model was chosen in which only the client authorises movements (non-custodial interface); "
+        "this should not trigger operational custody for the VASP"
     ),
 }
 
@@ -94,6 +152,23 @@ CUST_ARCH_BLURBS: dict[str, str] = {
     ),
 }
 
+CUST_ARCH_BLURBS_EN: dict[str, str] = {
+    "client_only": (
+        "a model was indicated in which only the client authorises on-chain movements (non-custodial interface), "
+        "with no own omnibus transit or operational sub-custody declared in B_tp — consistent with suppression of "
+        "cluster VII/XIV/XVI/XVII and XV in the engine, subject to regulatory classification validation"
+    ),
+    "inst_operates": (
+        "it was indicated that the institution or designated operator moves custodied assets on behalf of the client"
+    ),
+    "mpc_mixed": (
+        "an MPC or multi-party model was indicated with the institution and third parties holding control roles over keys"
+    ),
+    "full_subcustody": (
+        "full sub-custody by a contracted third party was indicated, maintaining obligations to the client and the supervisor"
+    ),
+}
+
 CUST_QUESTION_BLURBS: dict[str, str] = {
     "cust_A_transit": (
         "foi indicado trânsito de ativos por omnibus ou carteiras de trânsito sob controlo da instituição ou subcustodiante"
@@ -110,16 +185,51 @@ CUST_QUESTION_BLURBS: dict[str, str] = {
     "cust_C_catalog": QUESTION_BLURBS["P_list"],
 }
 
+CUST_QUESTION_BLURBS_EN: dict[str, str] = {
+    "cust_A_transit": (
+        "asset transit through omnibus or transit wallets under the institution's or sub-custodian's control was indicated"
+    ),
+    "cust_A_fiat": QUESTION_BLURBS_EN["P3"],
+    "cust_B_exterior": (
+        "overseas providers or those without BCB-equivalent authorisation in custody-relevant roles were indicated"
+    ),
+    "cust_B_cloud": QUESTION_BLURBS_EN["P5"],
+    "cust_B_more_foreign": QUESTION_BLURBS_EN["P6"],
+    "cust_C_stable": QUESTION_BLURBS_EN["P7"],
+    "cust_C_staking": QUESTION_BLURBS_EN["P8"],
+    "cust_C_if_api": QUESTION_BLURBS_EN["P9"],
+    "cust_C_catalog": QUESTION_BLURBS_EN["P_list"],
+}
+
 CORR_QUESTION_BLURBS: dict[str, str] = {
     k.replace("cust_", "corr_", 1): v for k, v in CUST_QUESTION_BLURBS.items()
 }
 
+CORR_QUESTION_BLURBS_EN: dict[str, str] = {
+    k.replace("cust_", "corr_", 1): v for k, v in CUST_QUESTION_BLURBS_EN.items()
+}
 
-def _p_tp_explanation(norm: dict[str, Any]) -> str:
+
+def _p_tp_explanation(norm: dict[str, Any], lang: str = "pt") -> str:
     sel = norm.get("P_tp")
     if not isinstance(sel, list):
         sel = []
-    bits: list[str] = []
+    if lang == "en":
+        bits: list[str] = []
+        if "lp" in sel:
+            bits.append("liquidity provider / market maker")
+        if "custody_inst" in sel:
+            bits.append("institutional crypto-asset custody (cold/MPC/custodian)")
+        if "cloud_infra" in sel:
+            bits.append("cloud / hosting of critical systems")
+        if "fiat_bank" in sel:
+            bits.append("payment institution or bank for fiat")
+        if "kyc_vendor" in sel:
+            bits.append("external KYC/AML provider as a critical service")
+        if not bits:
+            return "third-party roles in the operation were indicated (insufficient detail for this sentence)"
+        return "the following materially relevant third-party roles were indicated in the third-party map: " + ", ".join(bits)
+    bits = []
     if "lp" in sel:
         bits.append("provedor de liquidez / market maker")
     if "custody_inst" in sel:
@@ -135,11 +245,24 @@ def _p_tp_explanation(norm: dict[str, Any]) -> str:
     return "no mapa de terceiros foram assinalados os seguintes papéis materialmente relevantes: " + ", ".join(bits)
 
 
-def _p_tp_explanation_cust(norm: dict[str, Any]) -> str:
+def _p_tp_explanation_cust(norm: dict[str, Any], lang: str = "pt") -> str:
     sel = norm.get("cust_B_tp")
     if not isinstance(sel, list):
         sel = []
-    bits: list[str] = []
+    if lang == "en":
+        bits: list[str] = []
+        if "subcustody" in sel:
+            bits.append("crypto-asset sub-custodian")
+        if "cloud_infra" in sel:
+            bits.append("cloud / critical custody systems")
+        if "fiat_bank" in sel:
+            bits.append("payment institution or bank for fiat")
+        if "kyc_vendor" in sel:
+            bits.append("external KYC/AML provider as a critical service")
+        if not bits:
+            return "third-party roles in the custody operation were indicated"
+        return "the following were indicated in the third-party map (custody): " + ", ".join(bits)
+    bits = []
     if "subcustody" in sel:
         bits.append("subcustodiante de criptoativos")
     if "cloud_infra" in sel:
@@ -153,11 +276,24 @@ def _p_tp_explanation_cust(norm: dict[str, Any]) -> str:
     return "no mapa de terceiros (custódia) foram assinalados: " + ", ".join(bits)
 
 
-def _p_tp_explanation_corr(norm: dict[str, Any]) -> str:
+def _p_tp_explanation_corr(norm: dict[str, Any], lang: str = "pt") -> str:
     sel = norm.get("corr_B_tp")
     if not isinstance(sel, list):
         sel = []
-    bits: list[str] = []
+    if lang == "en":
+        bits: list[str] = []
+        if "subcustody" in sel:
+            bits.append("crypto-asset sub-custodian")
+        if "cloud_infra" in sel:
+            bits.append("cloud / critical custody systems")
+        if "fiat_bank" in sel:
+            bits.append("payment institution or bank for fiat")
+        if "kyc_vendor" in sel:
+            bits.append("external KYC/AML provider as a critical service")
+        if not bits:
+            return "third-party roles in the broker/exchange operation were indicated"
+        return "the following were indicated in the third-party map (broker/exchange): " + ", ".join(bits)
+    bits = []
     if "subcustody" in sel:
         bits.append("subcustodiante de criptoativos")
     if "cloud_infra" in sel:
@@ -171,26 +307,37 @@ def _p_tp_explanation_corr(norm: dict[str, Any]) -> str:
     return "no mapa de terceiros (corretora) foram assinalados: " + ", ".join(bits)
 
 
-def _trigger_explanation_sentence(qid: str, norm: dict[str, Any]) -> str:
+def _trigger_explanation_sentence(qid: str, norm: dict[str, Any], lang: str = "pt") -> str:
+    en = lang == "en"
     if qid == "P_arch":
         key = str(norm.get("P_arch") or "")
-        return P_ARCH_BLURBS.get(key, QUESTION_BLURBS.get("P_arch", f"o modelo arquitetural (P_arch={key!r})"))
+        blurbs = P_ARCH_BLURBS_EN if en else P_ARCH_BLURBS
+        fallback = f"the architectural model (P_arch={key!r})" if en else f"o modelo arquitetural (P_arch={key!r})"
+        return blurbs.get(key, fallback)
     if qid == "cust_A_model":
         key = str(norm.get("cust_A_model") or "")
-        return CUST_ARCH_BLURBS.get(
-            key, f"o modelo de custódia declarado (cust_A_model={key!r})"
-        )
+        blurbs = CUST_ARCH_BLURBS_EN if en else CUST_ARCH_BLURBS
+        fallback = f"the declared custody model (cust_A_model={key!r})" if en else f"o modelo de custódia declarado (cust_A_model={key!r})"
+        return blurbs.get(key, fallback)
     if qid == "corr_A_model":
         key = str(norm.get("corr_A_model") or "")
-        return CUST_ARCH_BLURBS.get(
-            key, f"o modelo de custódia declarado (corr_A_model={key!r})"
-        )
+        blurbs = CUST_ARCH_BLURBS_EN if en else CUST_ARCH_BLURBS
+        fallback = f"the declared custody model (corr_A_model={key!r})" if en else f"o modelo de custódia declarado (corr_A_model={key!r})"
+        return blurbs.get(key, fallback)
     if qid == "P_tp":
-        return _p_tp_explanation(norm)
+        return _p_tp_explanation(norm, lang)
     if qid == "cust_B_tp":
-        return _p_tp_explanation_cust(norm)
+        return _p_tp_explanation_cust(norm, lang)
     if qid == "corr_B_tp":
-        return _p_tp_explanation_corr(norm)
+        return _p_tp_explanation_corr(norm, lang)
+    if en:
+        return CORR_QUESTION_BLURBS_EN.get(
+            qid,
+            CUST_QUESTION_BLURBS_EN.get(
+                qid,
+                QUESTION_BLURBS_EN.get(qid, f"the answer to question {qid} entered the scope logic for this clause"),
+            ),
+        )
     return CORR_QUESTION_BLURBS.get(
         qid,
         CUST_QUESTION_BLURBS.get(
@@ -265,7 +412,7 @@ def suppress_custody_cluster_if_non_custodial(
         triggered_by.pop(k, None)
 
 
-def _mandatory_why(inciso_id: str, inc_matrix: dict[str, dict[str, str]], track: str) -> str:
+def _mandatory_why(inciso_id: str, inc_matrix: dict[str, dict[str, str]], track: str, lang: str = "pt") -> str:
     m = inc_matrix[inciso_id]
     item = m["item"]
     art = m["artigo_in701"]
@@ -273,6 +420,26 @@ def _mandatory_why(inciso_id: str, inc_matrix: dict[str, dict[str, str]], track:
     if len(d) > 300:
         d = d[:297].rstrip() + "…"
     t = normalize_track(track)
+    if lang == "en":
+        if t == "custodiante":
+            ctx = (
+                "the mandatory core of the custodian track in this CertiK matrix (IN 701 and Res. No. 520). "
+                "The audit must demonstrate, through policies, processes and evidence, how the institution meets this requirement "
+                "in the context of the virtual-asset custody service"
+            )
+        elif t == "corretora":
+            ctx = (
+                "the mandatory core of the broker/exchange track in this CertiK matrix (IN 701; Res. 520 art. 10 modality — intermediation and custody). "
+                "The audit must demonstrate, through policies, processes and evidence, how the institution meets this requirement "
+                "in the context of virtual-asset intermediation and custody"
+            )
+        else:
+            ctx = (
+                "the mandatory package of the intermediary phase in this CertiK matrix (IN 701 and Res. No. 520). "
+                "The audit must demonstrate, through policies, processes and evidence, how the institution meets this requirement "
+                "in the context of intermediation"
+            )
+        return f"Clause «{item}» ({art}) is part of {ctx}. Regulatory scope summary: {d}"
     if t == "custodiante":
         ctx = (
             "o núcleo obrigatório da trilha custodiante nesta matriz CertiK (IN 701 e Res. nº 520). "
@@ -295,14 +462,21 @@ def _mandatory_why(inciso_id: str, inc_matrix: dict[str, dict[str, str]], track:
 
 
 def _conditional_why(
-    inciso_id: str, qids: list[str], norm: dict[str, Any], inc_matrix: dict[str, dict[str, str]]
+    inciso_id: str, qids: list[str], norm: dict[str, Any], inc_matrix: dict[str, dict[str, str]], lang: str = "pt"
 ) -> str:
     m = inc_matrix[inciso_id]
     item = m["item"]
     art = m["artigo_in701"]
     unique_q = sorted(set(qids))
-    sentences = [_trigger_explanation_sentence(q, norm) for q in unique_q]
+    sentences = [_trigger_explanation_sentence(q, norm, lang) for q in unique_q]
     core = "; ".join(s for s in sentences if s)
+    if lang == "en":
+        if not core:
+            core = "the questionnaire answers placed this topic in the conditional scope"
+        return (
+            f"Clause «{item}» ({art}) was included in this scope because {core}. "
+            f"The expected evidence must allow verification of compliance with IN 701 and the related Res. 520 excerpts."
+        )
     if not core:
         core = "as respostas ao questionário enquadraram este tema no escopo condicional"
     return (
@@ -318,6 +492,7 @@ def build_why_texts_for_scope(
     mandatory_keys: frozenset[str],
     inc_matrix: dict[str, dict[str, str]],
     track: str | None = None,
+    lang: str = "pt",
 ) -> dict[str, str]:
     t = normalize_track(track or TRACK_DEFAULT)
     out: dict[str, str] = {}
@@ -325,14 +500,15 @@ def build_why_texts_for_scope(
         is_m = key in mandatory_keys
         qids = triggered_by.get(key, [])
         if is_m:
-            out[key] = _mandatory_why(key, inc_matrix, t)
+            out[key] = _mandatory_why(key, inc_matrix, t, lang)
             if qids:
-                extra = "; ".join(_trigger_explanation_sentence(q, norm) for q in sorted(set(qids)))
-                out[key] = (
-                    f"{out[key]} Além disso, as respostas também reforçaram este tema: {extra}"
-                )
+                extra = "; ".join(_trigger_explanation_sentence(q, norm, lang) for q in sorted(set(qids)))
+                if lang == "en":
+                    out[key] = f"{out[key]} Additionally, the answers also reinforced this topic: {extra}"
+                else:
+                    out[key] = f"{out[key]} Além disso, as respostas também reforçaram este tema: {extra}"
         else:
-            out[key] = _conditional_why(key, qids, norm, inc_matrix)
+            out[key] = _conditional_why(key, qids, norm, inc_matrix, lang)
     return out
 
 

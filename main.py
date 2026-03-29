@@ -198,6 +198,7 @@ class ScopeRequest(BaseModel):
     institution: str = Field(default="", max_length=500)
     answers: dict[str, Any] = Field(default_factory=dict)
     track: str = Field(default="intermediaria", description="intermediaria | custodiante | corretora")
+    lang: str = Field(default="pt", description="pt | en — language for generated narratives")
 
 
 api_router = APIRouter(tags=["scope"])
@@ -268,8 +269,9 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
 
     _raise_if_track_disabled(t)
 
+    lang = body.lang if body.lang in ("pt", "en") else "pt"
     try:
-        _, meta = compute_scope(body.answers, track=t)
+        _, meta = compute_scope(body.answers, track=t, lang=lang)
     except Exception:
         logger.exception("compute_scope failed")
         raise HTTPException(

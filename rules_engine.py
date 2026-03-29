@@ -51,14 +51,42 @@ SCOPE_COLUMNS: tuple[str, ...] = (
 )
 
 
-def _why_out_of_scope(potential: list[str], *, mandatory_in_yaml: bool) -> str:
+def _why_out_of_scope(potential: list[str], *, mandatory_in_yaml: bool, lang: str = "pt") -> str:
     """Texto para incisos fora do ``active_keys`` (inclui supressão de ids ainda obrigatórios na YAML)."""
+    if lang == "en":
+        tail = ""
+        if potential:
+            t_str = "; ".join(potential[:8])
+            if len(potential) > 8:
+                t_str += "…"
+            tail = f" If the operation evolves, indicative conditions in the tool include: {t_str}"
+        if mandatory_in_yaml:
+            base = (
+                "Not present in the active scope calculated for this submission: the clause is a fixed mandatory item in the YAML "
+                "matrix for this track, but was excluded by a declarative rule (e.g. exclusively non-custodial model) or does not "
+                "remain in the scope given the answers provided."
+            )
+            if not potential:
+                return (
+                    base
+                    + " There are no conditional questions listing this id; the exclusion generally follows non-custodial suppression "
+                    "— validate the classification with compliance or legal counsel."
+                )
+            return base + tail
+        base = (
+            "Not part of the audit scope for this delimitation: it is not a fixed mandatory item in the matrix for this track "
+            "under the current model and no answer triggered this clause."
+        )
+        if potential:
+            return base + tail
+        return f"{base} There is no trigger mapped in the current questionnaire for this clause."
+
     tail = ""
     if potential:
-        t = "; ".join(potential[:8])
+        t_str = "; ".join(potential[:8])
         if len(potential) > 8:
-            t += "…"
-        tail = f" Se a operação evoluir, condições indicativas na ferramenta incluem: {t}"
+            t_str += "…"
+        tail = f" Se a operação evoluir, condições indicativas na ferramenta incluem: {t_str}"
 
     if mandatory_in_yaml:
         base = (
@@ -86,11 +114,13 @@ def _why_out_of_scope(potential: list[str], *, mandatory_in_yaml: bool) -> str:
 def compute_scope(
     answers: dict[str, Any],
     track: str | None = None,
+    lang: str = "pt",
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
     """
     Retorna (dataframe só com incisos sujeitos a auditoria, metadados).
 
     ``track``: ``intermediaria`` (default), ``custodiante`` ou ``corretora``.
+    ``lang``: ``pt`` (default) | ``en`` — idioma das narrativas geradas.
     """
     t = normalize_track(track or TRACK_DEFAULT)
     inc_matrix = build_incisos_matrix(t)
@@ -107,7 +137,7 @@ def compute_scope(
     # Ajuste declarativo: modelo exclusivamente não custodial (condições por trilha em scope_narrative).
     suppress_custody_cluster_if_non_custodial(active_keys, triggered_by, norm, t)
 
-    why_by_key = build_why_texts_for_scope(active_keys, triggered_by, norm, mandatory, inc_matrix, t)
+    why_by_key = build_why_texts_for_scope(active_keys, triggered_by, norm, mandatory, inc_matrix, t, lang)
     llm_whys = try_enrich_why_with_llm(why_by_key, norm, triggered_by, inc_matrix, t)
     why_by_key = merge_llm_whys(why_by_key, llm_whys)
 
@@ -121,8 +151,13 @@ def compute_scope(
         meta = inc_matrix[key]
         is_mandatory = key in mandatory
         qids = triggered_by.get(key, [])
-        origem = "Obrigatório (matriz)" if is_mandatory else "Acionado por respostas"
-        why = why_by_key.get(key) or "Escopo alinhado à matriz IN 701 e às respostas ao questionário."
+        if lang == "en":
+            origem = "Mandatory (matrix)" if is_mandatory else "Triggered by answers"
+            why_fallback = "Scope aligned with the IN 701 matrix and questionnaire answers."
+        else:
+            origem = "Obrigatório (matriz)" if is_mandatory else "Acionado por respostas"
+            why_fallback = "Escopo alinhado à matriz IN 701 e às respostas ao questionário."
+        why = why_by_key.get(key) or why_fallback
         hint = get_bcb_report_hint(key, track=t)
 
         row = {
@@ -164,7 +199,7 @@ def compute_scope(
                 "item": meta["item"],
                 "artigo_in701": meta["artigo_in701"],
                 "descricao": meta["descricao"],
-                "por_que_nao_neste_escopo": _why_out_of_scope(pot, mandatory_in_yaml=key in mandatory),
+                "por_que_nao_neste_escopo": _why_out_of_scope(pot, mandatory_in_yaml=key in mandatory, lang=lang),
             }
         )
 

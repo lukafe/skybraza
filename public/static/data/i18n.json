@@ -221,6 +221,7 @@
   "dt_micro_dot":            { "pt": "Cada coluna = uma <strong>condição</strong> possível", "en": "Each column = a possible <strong>condition</strong>" },
   "dt_micro_tri":            { "pt": "Triângulos = <strong>incisos</strong> acrescentados ao escopo", "en": "Triangles = <strong>clauses</strong> added to scope" },
   "dt_popover_close":        { "pt": "Fechar",                        "en": "Close" },
+  "dt_suppress_note_en":     { "pt": "", "en": "In any track, if the declared model is exclusively non-custodial — intermediary: P1 = No, P_arch = client_only, P_tp without custody_inst; custodian: cust_A_model = client_only, cust_A_transit = No, cust_B_tp without subcustody; broker/exchange: corr_A_model = client_only, corr_A_transit = No, corr_B_tp without subcustody — the engine removes VII, XIV, XVI and XVII from scope. For custodian and broker/exchange tracks it also removes XV. Rule: scope_narrative.suppress_custody_cluster_if_non_custodial. Contradictory answers (e.g. transit Yes with 'Client only') must be corrected by the user; there is no automatic conflict resolution." },
 
   "wizard_select_q":         { "pt": "Selecione uma opção em {qid} antes de continuar.", "en": "Select an option in {qid} before continuing." }
 }
