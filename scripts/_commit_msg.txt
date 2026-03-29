@@ -1,0 +1,19 @@
+feat(ui): 10 melhorias UI/UX -- Fases A, B e C
+
+FASE A (CSS + JS minor):
+- #1 Descricoes nos botoes de trilha: subtitulo e tooltip por tipo de VASP
+- #2 Seccao Fora do escopo fechada por defeito; toggle Ver N inciso(s)
+- #3 Navegacao sticky no wizard em mobile (<768px), glassmorphism backdrop
+- #4 Progress dots com nome do bloco corrente substituindo "Passo X de Y"
+- #5 Animacao slide entre blocos (slideInRight avanco, slideInLeft recuo)
+
+FASE B (interactividade JS):
+- #6 Estilo distinto perguntas audit-only: borda azul + tag Maturidade
+- #7 Badge "Pode activar incisos" em perguntas de escopo (when_true/options)
+- #8 Barra filtro arvore decisao sticky ao scroll com backdrop-filter
+
+FASE C (features completas):
+- #9 Persistencia respostas localStorage (48h); banner Retomar sessao
+- #10 Botao Exportar JSON no dashboard; download certik_vasp_scope_*.json
+
+Infra: cache bust v32; sync vercel_public; 78/78 testes OK

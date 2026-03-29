@@ -293,7 +293,38 @@ function renderTextShort(card, q) {
   card.appendChild(wrap);
 }
 
-function renderQuestions() {
+/** Renderiza os pontos de bloco (#4) */
+function renderBlockDots(direction) {
+  const dotsEl = $("#block-dots");
+  if (!dotsEl) return;
+  dotsEl.innerHTML = "";
+  state.blocks.forEach((b, i) => {
+    const dot = document.createElement("span");
+    dot.className = "block-dot";
+    if (i < state.step) dot.classList.add("block-dot--done");
+    else if (i === state.step) dot.classList.add("block-dot--active");
+    dot.title = b.title || `Bloco ${i + 1}`;
+    dotsEl.appendChild(dot);
+  });
+  // Label do bloco actual
+  const lbl = document.createElement("span");
+  lbl.className = "block-dot-label";
+  lbl.textContent = state.blocks[state.step]?.title || "";
+  dotsEl.appendChild(lbl);
+}
+
+/** Retorna true se a pergunta tem impacto no escopo (não audit_only e tem incisos em when_true/tags) */
+function hasScopeImpact(q) {
+  if (q.audit_only) return false;
+  if (Array.isArray(q.when_true) && q.when_true.length > 0) return true;
+  if (Array.isArray(q.tags) && q.tags.length > 0) return true;
+  if (Array.isArray(q.options)) {
+    return q.options.some((o) => Array.isArray(o.add_incisos) && o.add_incisos.length > 0);
+  }
+  return false;
+}
+
+function renderQuestions(direction = "forward") {
   const block = state.blocks[state.step];
   if (!block) return;
 
@@ -306,18 +337,45 @@ function renderQuestions() {
     $("#block-lead").classList.add("hidden");
   }
 
-  $("#step-label").textContent = `Passo ${state.step + 1} de ${state.blocks.length}`;
+  $("#step-label").textContent = `Bloco ${state.step + 1} de ${state.blocks.length}`;
 
   const pct = ((state.step + 1) / state.blocks.length) * 100;
   $("#progress-bar").style.width = `${pct}%`;
 
+  renderBlockDots(direction);
+
   const container = $("#questions-container");
   container.innerHTML = "";
 
+  // #5: slide animation
+  container.classList.remove("questions--slide-in", "questions--slide-back");
+  void container.offsetWidth; // force reflow
+  container.classList.add(direction === "back" ? "questions--slide-back" : "questions--slide-in");
+
   for (const q of block.questions) {
     const card = document.createElement("article");
-    card.className = "q-card";
+    const isAuditOnly = !!q.audit_only;
+    card.className = isAuditOnly ? "q-card q-card--audit-only" : "q-card";
     card.setAttribute("data-qid", q.id);
+
+    // #6: audit-only tag
+    if (isAuditOnly) {
+      const tag = document.createElement("div");
+      tag.className = "q-audit-tag";
+      tag.innerHTML = '<span aria-hidden="true">◉</span> Maturidade / relatório';
+      card.appendChild(tag);
+    } else {
+      // #7: impact badge for scope questions
+      const wt = q.when_true || [];
+      const optsIncisos = (q.options || []).flatMap((o) => o.add_incisos || []);
+      const allIncisos = [...new Set([...wt, ...optsIncisos])];
+      if (allIncisos.length > 0) {
+        const badge = document.createElement("div");
+        badge.className = "q-impact-badge";
+        badge.innerHTML = `<span class="q-impact-badge__dot" aria-hidden="true"></span>Pode activar incisos`;
+        card.appendChild(badge);
+      }
+    }
 
     const head = document.createElement("div");
     head.className = "q-id";
@@ -334,7 +392,7 @@ function renderQuestions() {
     pWhy.textContent = q.justificativa || "";
     card.appendChild(pWhy);
 
-    if (q.audit_only) {
+    if (isAuditOnly) {
       const note = document.createElement("p");
       note.className = "q-audit-note";
       note.textContent =
@@ -356,6 +414,9 @@ function renderQuestions() {
 
   const last = state.step === state.blocks.length - 1;
   $("#btn-next").textContent = last ? "Ver painel" : "Continuar";
+
+  // #9: save progress
+  saveProgressToStorage();
 }
 
 function escapeHtml(s) {
@@ -418,6 +479,58 @@ function renderComplianceDonut(mand, cond, nf) {
 }
 
 const J2_PEDIDO_STORAGE_KEY = "certik_vasp_j2_pedido_status";
+
+/* ---- #9: Persistência de respostas em localStorage ---- */
+const PROGRESS_STORAGE_KEY = "certik701_progress_v1";
+
+function saveProgressToStorage() {
+  try {
+    const snapshot = {
+      track: state.track,
+      step: state.step,
+      answers: state.answers,
+      institution: (document.getElementById("institution")?.value || "").trim(),
+      savedAt: Date.now(),
+    };
+    localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(snapshot));
+  } catch {
+    /* quota exceeded or private mode */
+  }
+}
+
+function loadProgressFromStorage() {
+  try {
+    const raw = localStorage.getItem(PROGRESS_STORAGE_KEY);
+    if (!raw) return null;
+    const p = JSON.parse(raw);
+    // expire after 48 h
+    if (!p || typeof p !== "object") return null;
+    if (Date.now() - (p.savedAt || 0) > 48 * 60 * 60 * 1000) {
+      localStorage.removeItem(PROGRESS_STORAGE_KEY);
+      return null;
+    }
+    return p;
+  } catch {
+    return null;
+  }
+}
+
+function clearProgressStorage() {
+  try { localStorage.removeItem(PROGRESS_STORAGE_KEY); } catch { /* ignore */ }
+}
+
+function showResumeBanner(saved) {
+  const banner = document.getElementById("resume-banner");
+  if (!banner || !saved) return;
+  const trackNames = { intermediaria: "Intermediário", custodiante: "Custodiante", corretora: "Corretora" };
+  const trk = trackNames[saved.track] || saved.track;
+  const inst = saved.institution ? ` · ${saved.institution}` : "";
+  const mins = Math.round((Date.now() - (saved.savedAt || 0)) / 60000);
+  const timeStr = mins < 60 ? `${mins} min atrás` : `${Math.round(mins / 60)} h atrás`;
+  banner.querySelector(".resume-banner__text").textContent =
+    `Sessão anterior: ${trk}${inst} (${timeStr}).`;
+  banner.classList.remove("hidden");
+}
 
 function loadJ2PedidoStatuses() {
   try {
@@ -837,11 +950,105 @@ async function submitScope() {
 
   listS.appendChild(renderDashSkipContainer(fora));
 
+  // #2: wrap skip cards in collapsible (closed by default)
+  wireSkipToggle(nf);
+
+  // store scope data for export (#10)
+  state._lastScopeData = data;
+  state._lastInstitution = ($("#institution").value || "").trim();
+
   setView("results");
+  clearProgressStorage();
   requestAnimationFrame(() => {
     const body = $("#results-body");
     if (body) body.scrollIntoView({ behavior: "smooth", block: "start" });
   });
+}
+
+/** #2: wrap skip list in a collapsible panel */
+function wireSkipToggle(nf) {
+  const skipSection = document.querySelector(".results-section--skip");
+  if (!skipSection) return;
+
+  // idempotent — remove previous wrapper if re-running
+  const existing = skipSection.querySelector(".skip-cards-wrap");
+  if (existing) {
+    const list = existing.querySelector(".inciso-card-list");
+    if (list) skipSection.appendChild(list);
+    existing.remove();
+  }
+  const oldToggle = skipSection.querySelector(".skip-section-toggle");
+  if (oldToggle) oldToggle.remove();
+
+  const cardList = skipSection.querySelector(".inciso-card-list");
+  if (!cardList) return;
+
+  // create wrapper
+  const wrap = document.createElement("div");
+  wrap.className = "skip-cards-wrap";
+  cardList.parentNode.insertBefore(wrap, cardList);
+  wrap.appendChild(cardList);
+
+  // create toggle button
+  const toggle = document.createElement("button");
+  toggle.type = "button";
+  toggle.className = "skip-section-toggle";
+  toggle.setAttribute("aria-expanded", "false");
+  toggle.innerHTML = `<span class="skip-section-toggle__chevron">▸</span> Ver ${nf} inciso(s) excluído(s)`;
+
+  const head = skipSection.querySelector(".results-section-head");
+  if (head) head.appendChild(toggle);
+
+  toggle.addEventListener("click", () => {
+    const open = wrap.classList.toggle("is-open");
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    toggle.innerHTML = open
+      ? `<span class="skip-section-toggle__chevron">▸</span> Ocultar incisos excluídos`
+      : `<span class="skip-section-toggle__chevron">▸</span> Ver ${nf} inciso(s) excluído(s)`;
+  });
+}
+
+/** #10: export JSON download */
+async function exportScopeJSON() {
+  const btn = $("#btn-export-json");
+  if (!btn) return;
+  const data = state._lastScopeData;
+  if (!data) {
+    showToast("Execute o questionário antes de exportar.");
+    return;
+  }
+  try {
+    btn.classList.add("btn-export-loading");
+    btn.textContent = "A exportar…";
+    const payload = {
+      institution: state._lastInstitution,
+      track: state.track,
+      answers: { ...state.answers },
+    };
+    let exportData;
+    try {
+      exportData = await fetchJSON("/scope/export", { method: "POST", body: JSON.stringify(payload) });
+    } catch {
+      // fallback: use the last scope response directly
+      exportData = data;
+    }
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    const inst = (state._lastInstitution || "vasp").replace(/[^a-z0-9]/gi, "_").toLowerCase();
+    a.download = `certik_vasp_scope_${inst}_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast("Exportação JSON concluída.");
+  } catch (e) {
+    showToast("Erro ao exportar: " + String(e.message || e));
+  } finally {
+    if (btn) {
+      btn.classList.remove("btn-export-loading");
+      btn.textContent = "Exportar JSON";
+    }
+  }
 }
 
 async function loadFeaturesFromHealth() {
@@ -930,7 +1137,7 @@ async function boot() {
   $("#btn-back").addEventListener("click", () => {
     if (state.step > 0) {
       state.step -= 1;
-      renderQuestions();
+      renderQuestions("back"); // #5: slide back
     }
   });
 
@@ -949,7 +1156,7 @@ async function boot() {
       return;
     }
     state.step += 1;
-    renderQuestions();
+    renderQuestions("forward"); // #5
   });
 
   $("#btn-restart").addEventListener("click", () => {
@@ -957,16 +1164,71 @@ async function boot() {
     state.blocks = [];
     state.step = 0;
     state.track = "intermediaria";
+    state._lastScopeData = null;
     try {
       sessionStorage.removeItem(TRACK_STORAGE_KEY);
     } catch {
       /* ignore */
     }
+    clearProgressStorage();
     syncTrackButtonsUI();
     initAnswersFromBlocks();
     $("#journey-2-panel")?.classList.add("hidden");
     sessionStorage.removeItem(J2_PEDIDO_STORAGE_KEY);
+    // check for saved session to show resume banner
+    const saved = loadProgressFromStorage();
+    if (saved && saved.answers && Object.keys(saved.answers).length > 0) showResumeBanner(saved);
     setView("intro");
+  });
+
+  // #10: export button
+  const exportBtn = $("#btn-export-json");
+  if (exportBtn) {
+    exportBtn.addEventListener("click", () => exportScopeJSON());
+  }
+
+  // #9: resume banner logic
+  const saved = loadProgressFromStorage();
+  if (saved && saved.answers && Object.keys(saved.answers).length > 0) {
+    showResumeBanner(saved);
+  }
+
+  document.getElementById("btn-resume")?.addEventListener("click", async () => {
+    const prog = loadProgressFromStorage();
+    if (!prog) return;
+    const instEl = $("#institution");
+    if (instEl && prog.institution) instEl.value = prog.institution;
+    if (prog.track) {
+      state.track = prog.track;
+      saveTrackToStorage();
+      syncTrackButtonsUI();
+    }
+    // fetch questions for track then restore answers
+    let data;
+    try {
+      data = await fetchJSON(`/questions?track=${encodeURIComponent(state.track)}`);
+    } catch (e) {
+      showToast("Não foi possível retomar: " + String(e.message || e));
+      return;
+    }
+    state.blocks = data.blocks || [];
+    if (!state.blocks.length) { showToast("Sem blocos para retomar."); return; }
+    initAnswersFromBlocks();
+    // restore saved answers
+    if (prog.answers) {
+      for (const [k, v] of Object.entries(prog.answers)) {
+        if (k in state.answers) state.answers[k] = v;
+      }
+    }
+    state.step = Math.min(prog.step || 0, state.blocks.length - 1);
+    document.getElementById("resume-banner")?.classList.add("hidden");
+    setView("wizard");
+    renderQuestions();
+  });
+
+  document.getElementById("btn-resume-dismiss")?.addEventListener("click", () => {
+    clearProgressStorage();
+    document.getElementById("resume-banner")?.classList.add("hidden");
   });
 }
 

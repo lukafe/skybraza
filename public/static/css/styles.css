@@ -2218,7 +2218,310 @@ body.app-view-intro .sk-main {
   }
 }
 
-/* Transições suaves em controlos interativos (paridade Skynet) */
+/* ============================================================
+   UI/UX IMPROVEMENTS — Fase A, B, C
+   ============================================================ */
+
+/* --- #1: Descrições nos botões de trilha --- */
+.intro-track__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.intro-track__btn-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.intro-track__btn-desc {
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: #6e6e78;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: color 0.15s ease;
+}
+
+.intro-track__btn--active .intro-track__btn-desc {
+  color: rgba(244, 244, 245, 0.65);
+}
+
+.intro-track__btn:hover .intro-track__btn-desc {
+  color: rgba(228, 228, 231, 0.65);
+}
+
+/* --- #2: "Fora do escopo" fechado por defeito --- */
+.skip-section-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  transition: color 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.skip-section-toggle:hover {
+  color: var(--text);
+  border-color: #4b5563;
+}
+
+.skip-section-toggle__chevron {
+  font-size: 0.65rem;
+  transition: transform 0.25s ease;
+}
+
+.skip-section-toggle[aria-expanded="true"] .skip-section-toggle__chevron {
+  transform: rotate(90deg);
+}
+
+.skip-cards-wrap {
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.3s ease;
+  max-height: 0;
+  opacity: 0;
+}
+
+.skip-cards-wrap.is-open {
+  max-height: 9999px;
+  opacity: 1;
+}
+
+/* --- #3: Navegação sticky no wizard (mobile) --- */
+@media (max-width: 767px) {
+  .wizard-nav {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    background: rgba(11, 14, 17, 0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 0.85rem 1rem;
+    margin-top: 1.25rem;
+  }
+}
+
+/* --- #4: Progress bar com nomes de bloco --- */
+.step-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.block-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.block-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.25s ease, transform 0.2s ease, width 0.25s ease;
+  border: 1px solid transparent;
+  cursor: default;
+  flex-shrink: 0;
+}
+
+.block-dot[title] {
+  cursor: help;
+}
+
+.block-dot--done {
+  background: rgba(255, 59, 71, 0.45);
+}
+
+.block-dot--active {
+  background: var(--accent);
+  transform: scale(1.3);
+  box-shadow: 0 0 8px rgba(255, 59, 71, 0.5);
+}
+
+.block-dot-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin-left: 0.2rem;
+  white-space: nowrap;
+}
+
+/* --- #5: Animação slide entre blocos --- */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(22px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-22px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.questions--slide-in {
+  animation: slideInRight 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.questions--slide-back {
+  animation: slideInLeft 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* --- #6: Estilo visual distinto para perguntas audit-only --- */
+.q-card--audit-only {
+  border-color: rgba(74, 144, 226, 0.22);
+  background: linear-gradient(180deg, rgba(15, 19, 30, 0.98) 0%, rgba(12, 16, 24, 0.95) 100%);
+}
+
+.q-card--audit-only:hover {
+  border-color: rgba(74, 144, 226, 0.38);
+}
+
+.q-card--audit-only .q-id {
+  color: #93c5fd;
+}
+
+.q-audit-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 0.18rem 0.45rem;
+  border-radius: 4px;
+  background: rgba(74, 144, 226, 0.1);
+  border: 1px solid rgba(74, 144, 226, 0.3);
+  color: #93c5fd;
+  margin-bottom: 0.45rem;
+}
+
+/* --- #7: Badge de impacto nas perguntas de escopo --- */
+.q-impact-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.18rem 0.45rem;
+  border-radius: 4px;
+  background: var(--accent-soft);
+  border: 1px solid rgba(255, 59, 71, 0.32);
+  color: var(--accent-bright);
+  margin-bottom: 0.45rem;
+}
+
+.q-impact-badge__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* --- #8: Filtro sticky na árvore de decisão --- */
+.dt-sticky-bar {
+  position: sticky;
+  top: 56px; /* altura do topbar */
+  z-index: 20;
+  background: rgba(11, 14, 17, 0.97);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 0;
+  margin-bottom: 1.25rem;
+}
+
+/* --- #9: Banner de retomar sessão --- */
+.resume-banner {
+  width: 100%;
+  max-width: 22rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  background: rgba(234, 179, 8, 0.07);
+  font-size: 0.82rem;
+  color: var(--text);
+  flex-wrap: wrap;
+}
+
+.resume-banner__icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.resume-banner__text {
+  flex: 1;
+  color: #e7d27a;
+  font-weight: 500;
+}
+
+.resume-banner__btn {
+  font-size: 0.75rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  background: rgba(234, 179, 8, 0.18);
+  border: 1px solid rgba(234, 179, 8, 0.45);
+  color: #fbbf24;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.resume-banner__btn:hover {
+  background: rgba(234, 179, 8, 0.28);
+  color: #fde68a;
+}
+
+.resume-banner__dismiss {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.1rem 0.2rem;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.resume-banner__dismiss:hover {
+  color: var(--text);
+}
+
+/* --- #10: Botão Exportar JSON --- */
+.btn-export-loading {
+  opacity: 0.7;
+  cursor: wait;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Transições suaves em controlos interativos (paridade Skynet) */
 :is(
     a,
     button,
