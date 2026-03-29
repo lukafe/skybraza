@@ -1,28 +1,45 @@
 /**
  * i18n — PT / EN switcher
- * Usage: import { t, getLangField, setLang, initI18n, getCurrentLang } from "./i18n.js"
+ * Usage: import { t, getLangField, setLang, initI18n, initLangSync, getCurrentLang } from "./i18n.js"
  */
 
 const STORAGE_KEY = "certik_lang";
 let _lang = "pt";
 const _strings = {};
+let _i18nLoaded = false;
 
 export function getCurrentLang() { return _lang; }
 
-/** Load the i18n.json bundle once */
-export async function initI18n() {
-  try {
-    const res = await fetch("/static/data/i18n.json?v=1");
-    const data = await res.json();
-    Object.assign(_strings, data);
-  } catch (e) {
-    console.warn("[i18n] Could not load i18n.json", e);
-  }
-  // Restore saved lang
+/**
+ * Synchronously restore the saved language from localStorage.
+ * Call this BEFORE any async work so buildLangToggle() uses the correct lang
+ * without waiting for the i18n.json fetch to complete.
+ */
+export function initLangSync() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved === "en" || saved === "pt") _lang = saved;
   } catch { /* ignore */ }
+  document.documentElement.lang = _lang === "en" ? "en" : "pt-BR";
+}
+
+/** Load the i18n.json bundle and apply to DOM. Safe to call multiple times. */
+export async function initI18n() {
+  if (!_i18nLoaded) {
+    try {
+      const res = await fetch("/static/data/i18n.json?v=2");
+      const data = await res.json();
+      Object.assign(_strings, data);
+      _i18nLoaded = true;
+    } catch (e) {
+      console.warn("[i18n] Could not load i18n.json", e);
+    }
+    // Restore saved lang (in case initLangSync was not called first)
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved === "en" || saved === "pt") _lang = saved;
+    } catch { /* ignore */ }
+  }
   _applyHTML();
 }
 

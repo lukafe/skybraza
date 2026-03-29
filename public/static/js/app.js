@@ -5,7 +5,7 @@
 
 import { wireDecisionTreeUI } from "./decision_tree.js?v=4";
 import { wireDocsGuideUI } from "./docs_guide.js?v=3";
-import { initI18n, t, getCurrentLang, buildLangToggle } from "./i18n.js?v=1";
+import { initI18n, initLangSync, t, getCurrentLang, buildLangToggle } from "./i18n.js?v=2";
 
 const $ = (sel, root = document) => root.querySelector(sel);
 
@@ -1156,14 +1156,17 @@ async function loadFeaturesFromHealth() {
 }
 
 async function boot() {
-  // Init i18n first (loads strings + restores saved language)
-  await initI18n();
+  // Read saved language from localStorage synchronously — no async wait needed.
+  // This lets buildLangToggle() show the correct active button immediately,
+  // while the JSON fetch and the health check run in parallel below.
+  initLangSync();
 
-  // Mount language toggle in header
+  // Mount language toggle immediately (uses the sync lang state)
   const langMount = document.getElementById("lang-toggle-mount");
   if (langMount) langMount.appendChild(buildLangToggle());
 
-  await loadFeaturesFromHealth();
+  // Load i18n strings and feature flags in parallel (was sequential → saves ~1 RTT)
+  await Promise.all([initI18n(), loadFeaturesFromHealth()]);
   state.track = loadTrackFromStorage();
   if (state.features.custodiante_track === false && state.track === "custodiante") {
     state.track = "intermediaria";

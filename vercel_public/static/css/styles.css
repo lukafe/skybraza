@@ -20,7 +20,7 @@
   --radius-sm: 8px;
   --radius-pill: 999px;
   --font: "Inter", system-ui, -apple-system, sans-serif;
-  --font-mono: "Roboto Mono", "IBM Plex Mono", ui-monospace, "Cascadia Code", monospace;
+  --font-mono: "Roboto Mono", ui-monospace, "Cascadia Code", monospace;
   --donut-mandatory: #22c55e;
   --donut-mandatory-dim: rgba(34, 197, 94, 0.14);
   --donut-triggered: #eab308;

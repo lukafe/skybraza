@@ -3,7 +3,7 @@
  * Consome /static/data/docs_guide.json + docs_guide_en.json para i18n
  */
 
-import { t, getCurrentLang } from "./i18n.js?v=1";
+import { t, getCurrentLang } from "./i18n.js?v=2";
 
 const CAT_ICONS = {
   politica:     "📋",

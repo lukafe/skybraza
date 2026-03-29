@@ -3,7 +3,7 @@
  * Dados: /static/data/decision_tree.json (gerado por scripts/export_decision_tree_data.py)
  */
 
-import { t } from "./i18n.js?v=1";
+import { t } from "./i18n.js?v=2";
 
 const DT_JSON_VER = "3";
 

@@ -33,6 +33,7 @@ if str(ROOT) not in sys.path:
 
 from fastapi import APIRouter, FastAPI, HTTPException, Query, Request, Response  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from fastapi.middleware.gzip import GZipMiddleware  # noqa: E402
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 from pydantic import BaseModel, Field  # noqa: E402
@@ -104,6 +105,9 @@ def _cors_allowed_origins() -> list[str]:
 
 app = FastAPI(title="CertiK VASP Scoping API", version="1.0.0")
 
+# GZip: compress responses ≥1 KB (CSS ~87KB→~20KB, JS ~48KB→~13KB, JSON data similarly).
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
 # CORS por último no add_middleware = camada mais externa (primeira a ver o pedido).
 app.add_middleware(
     CORSMiddleware,
@@ -112,6 +116,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def cache_headers_middleware(request: Request, call_next):
+    """
+    Aggressive caching for versioned static assets; no-cache for HTML and API.
+    Static files use ?v=N query params so max-age=1 year + immutable is safe.
+    """
+    response = await call_next(request)
+    path = request.url.path
+    if path.startswith("/static/"):
+        response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        response.headers["Vary"] = "Accept-Encoding"
+    elif path in ("/", "") or path.endswith(".html"):
+        response.headers["Cache-Control"] = "no-cache"
+    return response
 
 
 @app.middleware("http")
