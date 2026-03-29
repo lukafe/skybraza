@@ -3,7 +3,7 @@
  * Legado /api/* mantido no servidor para integrações antigas.
  */
 
-import { wireDecisionTreeUI } from "./decision_tree.js?v=7";
+import { wireDecisionTreeUI } from "./decision_tree.js?v=8";
 import { wireDocsGuideUI } from "./docs_guide.js?v=3";
 import { initI18n, initLangSync, t, getCurrentLang, buildLangToggle } from "./i18n.js?v=2";
 

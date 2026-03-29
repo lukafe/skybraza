@@ -3,9 +3,9 @@
  * Dados: /static/data/decision_tree.json (gerado por scripts/export_decision_tree_data.py)
  */
 
-import { t } from "./i18n.js?v=2";
+import { t, getCurrentLang } from "./i18n.js?v=2";
 
-const DT_JSON_VER = "3";
+const DT_JSON_VER = "4";
 
 /** @type {Record<string, unknown> | null} */
 let _dtCache = null;
@@ -19,6 +19,14 @@ function escapeHtml(s) {
   const d = document.createElement("div");
   d.textContent = String(s);
   return d.innerHTML;
+}
+
+/** Return EN field if lang=en and field exists, otherwise PT field. */
+function _en(obj, field) {
+  if (!obj) return "";
+  const en = getCurrentLang() === "en";
+  const enVal = obj[`${field}_en`];
+  return String((en && enVal) ? enVal : (obj[field] ?? ""));
 }
 
 async function loadDecisionTreeData() {
@@ -79,6 +87,16 @@ export function wireDecisionTreeUI({ setView, getTrack }) {
     filter.addEventListener("input", () => applyDtFilter(filter.value || ""));
   }
 
+  // Re-render when language switches while the tree is visible
+  document.addEventListener("langchange", () => {
+    if (!root.classList.contains("hidden")) {
+      const activeTrack = pills?.querySelector(".dt-pill--active")?.getAttribute("data-dt-track") || getTrack();
+      // Reset pill build flag so labels get rebuilt in the new language
+      if (pills) delete pills.dataset.built;
+      renderDecisionTree(activeTrack);
+    }
+  });
+
   const ex = $("#dt-expand-all");
   const col = $("#dt-collapse-all");
   const rootBlocks = $("#dt-blocks-root");
@@ -114,25 +132,24 @@ export async function renderDecisionTree(track) {
     const showSuppress = Boolean(suppressText);
     noteSuppress.classList.toggle("hidden", !showSuppress);
     if (showSuppress) {
-      noteSuppress.innerHTML = `<p class="dt-suppress-text"><strong>${t("dt_non_custodial_prefix")}</strong> ${escapeHtml(suppressText)}</p>`;
+      const suppressDisplay = getCurrentLang() === "en"
+        ? (t("dt_suppress_note_en") || suppressText)
+        : suppressText;
+      noteSuppress.innerHTML = `<p class="dt-suppress-text"><strong>${t("dt_non_custodial_prefix")}</strong> ${escapeHtml(suppressDisplay)}</p>`;
     }
   }
 
   const pills = $("#dt-track-pills");
-  if (pills && !pills.dataset.built) {
+  if (pills) {
+    // Always rebuild pills so labels reflect current lang
     pills.innerHTML = TRACK_ORDER.map((tr) => {
       const td = tracks[tr];
-      const lab = td?.label || tr;
+      const rawLabel = _en(td, "label") || tr;
+      const lab = rawLabel.split("—")[0].trim();
       const active = tr === track;
-      return `<button type="button" role="tab" class="dt-pill ${active ? "dt-pill--active" : ""}" data-dt-track="${escapeHtml(tr)}" aria-selected="${active}">${escapeHtml(lab.split("—")[0].trim())}</button>`;
+      return `<button type="button" role="tab" class="dt-pill ${active ? "dt-pill--active" : ""}" data-dt-track="${escapeHtml(tr)}" aria-selected="${active}">${escapeHtml(lab)}</button>`;
     }).join("");
     pills.dataset.built = "1";
-  } else if (pills) {
-    pills.querySelectorAll("[data-dt-track]").forEach((b) => {
-      const on = b.getAttribute("data-dt-track") === track;
-      b.classList.toggle("dt-pill--active", on);
-      b.setAttribute("aria-selected", on ? "true" : "false");
-    });
   }
 
   const cat = tdata.incisos_catalog || {};
@@ -180,9 +197,11 @@ export async function renderDecisionTree(track) {
     const qs = byBlock[bid];
     if (!qs?.length) continue;
     const bmeta = blockMap[bid] || { title: bid, lead: "" };
+    const blockTitle = _en(bmeta, "title") || bid;
+    const blockLead  = _en(bmeta, "lead");
     html.push(`<section class="dt-block" data-dt-block="${escapeHtml(bid)}">`);
-    html.push(`<h3 class="dt-block-title"><span class="dt-block-id">${escapeHtml(bid)}</span> ${escapeHtml(bmeta.title)}</h3>`);
-    if (bmeta.lead) html.push(`<p class="dt-block-lead">${escapeHtml(bmeta.lead)}</p>`);
+    html.push(`<h3 class="dt-block-title"><span class="dt-block-id">${escapeHtml(bid)}</span> ${escapeHtml(blockTitle)}</h3>`);
+    if (blockLead) html.push(`<p class="dt-block-lead">${escapeHtml(blockLead)}</p>`);
     html.push(`<div class="dt-questions">`);
     for (const q of qs) {
       html.push(renderQuestionCard(q, cat));
@@ -235,7 +254,7 @@ function wireFlowRailUX(host) {
  * @param {string} whyPlain
  */
 function edgeSubtitle(e, whyPlain) {
-  const n = String(e.note || "").trim();
+  const n = String(_en(e, "note") || "").trim();
   if (n) return n.length > 100 ? `${n.slice(0, 97)}…` : n;
   if (whyPlain) return whyPlain.length > 90 ? `${whyPlain.slice(0, 87)}…` : whyPlain;
   return t("dt_branch_default");
@@ -253,12 +272,13 @@ function renderFlowDiagramHTML(q, cat) {
 
   const rails = edges
     .map((e) => {
-      const cond = escapeHtml(String(e.condition || "—"));
-      const sub = escapeHtml(edgeSubtitle(e, whyPlain));
+      const cond = escapeHtml(String(_en(e, "condition") || "—"));
+      const sub  = escapeHtml(edgeSubtitle(e, whyPlain));
       const incs = Array.isArray(e.incisos) ? e.incisos : [];
+      const eNote = String(_en(e, "note") || "");
       const noteHtml =
-        incs.length > 0 && e.note
-          ? `<p class="dt-flow-rail-footnote">${escapeHtml(String(e.note))}</p>`
+        incs.length > 0 && eNote
+          ? `<p class="dt-flow-rail-footnote">${escapeHtml(eNote)}</p>`
           : "";
 
       let outcomesHtml;
@@ -276,8 +296,9 @@ function renderFlowDiagramHTML(q, cat) {
           })
           .join("");
       } else {
-        const emptyLabel = e.note
-          ? escapeHtml(String(e.note).slice(0, 120)) + (String(e.note).length > 120 ? "…" : "")
+        const rawEmptyNote = _en(e, "note");
+        const emptyLabel = rawEmptyNote
+          ? escapeHtml(String(rawEmptyNote).slice(0, 120)) + (String(rawEmptyNote).length > 120 ? "…" : "")
           : t("dt_no_clauses");
         outcomesHtml = `<div class="dt-flow-outcome dt-flow-outcome--empty">
             <span class="dt-flow-h-line" aria-hidden="true"></span>
@@ -327,15 +348,18 @@ function renderFlowDiagramHTML(q, cat) {
  * @param {Record<string, {item?: string, artigo?: string}>} cat
  */
 function renderQuestionCard(q, cat) {
-  const id = escapeHtml(q.id);
+  const id  = escapeHtml(q.id);
   const typ = escapeHtml(q.type || "");
-  const audit = q.audit_only ? `<span class="dt-badge dt-badge--audit">${t("dt_badge_audit")}</span>` : `<span class="dt-badge dt-badge--scope">${t("dt_badge_scope")}</span>`;
-  const text = escapeHtml(q.text || "");
-  const why = escapeHtml(q.justificativa || "");
+  const audit = q.audit_only
+    ? `<span class="dt-badge dt-badge--audit">${t("dt_badge_audit")}</span>`
+    : `<span class="dt-badge dt-badge--scope">${t("dt_badge_scope")}</span>`;
+  const text = escapeHtml(_en(q, "text") || q.text || "");
+  const why  = escapeHtml(_en(q, "justificativa") || q.justificativa || "");
 
   const flowHtml = renderFlowDiagramHTML(q, cat);
 
-  const searchPlain = `${q.id} ${String(q.text || "").replace(/\s+/g, " ")}`.trim().toLowerCase();
+  // Search index uses PT text so filter works regardless of active language
+  const searchPlain = `${q.id} ${String(q.text || "").replace(/\s+/g, " ")} ${String(q.text_en || "").replace(/\s+/g, " ")}`.trim().toLowerCase();
   return `
     <details class="dt-q" data-dt-qid="${id}" data-search-enc="${encodeURIComponent(searchPlain)}">
       <summary class="dt-q-summary">
