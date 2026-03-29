@@ -1,7 +1,9 @@
 /**
  * Guia de Documentos — IN 701 por inciso
- * Consome /static/data/docs_guide.json
+ * Consome /static/data/docs_guide.json + docs_guide_en.json para i18n
  */
+
+import { t, getCurrentLang } from "./i18n.js?v=1";
 
 const CAT_ICONS = {
   politica:     "📋",
@@ -14,12 +16,6 @@ const CAT_ICONS = {
   treinamento:  "🎓",
 };
 
-const PRIO_CONFIG = {
-  critica: { label: "Crítica",  cls: "dg-prio--critica" },
-  alta:    { label: "Alta",     cls: "dg-prio--alta"    },
-  media:   { label: "Média",    cls: "dg-prio--media"   },
-};
-
 function esc(s) {
   if (!s) return "";
   const d = document.createElement("div");
@@ -27,13 +23,97 @@ function esc(s) {
   return d.innerHTML;
 }
 
+/** Pick PT or EN field from an object (inline _en suffix or EN translations merged) */
+function pick(obj, field) {
+  if (!obj) return "";
+  const lang = getCurrentLang();
+  if (lang === "en") {
+    if (obj[`${field}_en`] !== undefined) return obj[`${field}_en`] ?? "";
+  }
+  return obj[field] ?? "";
+}
+
+/** Merge English translations (docs_guide_en.json) into the inciso data objects */
+function mergeEnTranslations(incisos, enData) {
+  if (!enData || !enData.incisos) return incisos;
+  return incisos.map((inc) => {
+    const enInc = enData.incisos[inc.id];
+    if (!enInc) return inc;
+    // build merged document list
+    const docsOut = (inc.documentos || []).map((doc) => {
+      const enDoc = enInc.documentos?.[doc.id];
+      if (!enDoc) return doc;
+      return {
+        ...doc,
+        titulo_en:            enDoc.titulo            ?? doc.titulo,
+        descricao_en:         enDoc.descricao         ?? doc.descricao,
+        justificativa_legal_en: enDoc.justificativa_legal ?? doc.justificativa_legal,
+        conteudo_minimo_en:   enDoc.conteudo_minimo   ?? doc.conteudo_minimo,
+        retencao_en:          enDoc.retencao          ?? doc.retencao,
+        certik_nota_en:       enDoc.certik_nota       ?? doc.certik_nota,
+      };
+    });
+    const roOut = inc.resposta_otima
+      ? {
+          ...inc.resposta_otima,
+          descricao_en:   enInc.resposta_otima?.descricao  ?? inc.resposta_otima?.descricao,
+          indicadores_en: enInc.resposta_otima?.indicadores ?? inc.resposta_otima?.indicadores,
+        }
+      : inc.resposta_otima;
+    return {
+      ...inc,
+      tema_en:    enInc.tema    ?? inc.tema,
+      resumo_en:  enInc.resumo  ?? inc.resumo,
+      gatilho_en: enInc.gatilho ?? inc.gatilho,
+      documentos: docsOut,
+      resposta_otima: roOut,
+    };
+  });
+}
+
+/** Merge English category/priority/certik_servicos from enData into meta */
+function mergeEnMeta(meta, enData) {
+  if (!enData || !meta) return meta;
+  const out = { ...meta };
+  // categorias labels
+  if (enData.categorias && meta.categorias) {
+    const cats = {};
+    for (const [k, v] of Object.entries(meta.categorias)) {
+      cats[k] = { ...v, label_en: enData.categorias[k]?.label ?? v.label };
+    }
+    out.categorias = cats;
+  }
+  // prioridades
+  if (enData.prioridades && meta.prioridades) {
+    const prios = {};
+    for (const [k, v] of Object.entries(meta.prioridades)) {
+      prios[k] = { ...v, descricao_en: enData.prioridades[k] ?? (typeof v === "string" ? v : v.descricao) };
+    }
+    out.prioridades = prios;
+  }
+  // certik_servicos
+  if (enData.certik_servicos && meta.certik_servicos) {
+    const svcs = {};
+    for (const [k, v] of Object.entries(meta.certik_servicos)) {
+      svcs[k] = {
+        ...v,
+        nome_en:     enData.certik_servicos[k]?.nome     ?? v.nome,
+        descricao_en: enData.certik_servicos[k]?.descricao ?? v.descricao,
+      };
+    }
+    out.certik_servicos = svcs;
+  }
+  return out;
+}
+
 /** Renderiza o badge CertiK para um documento */
 function renderCertikBadge(doc, certikServicos) {
   if (!doc.certik_servico) return "";
   const svc = certikServicos?.[doc.certik_servico] || {};
-  const nome = svc.nome || doc.certik_servico;
-  const url  = svc.url  || "https://www.certik.com";
-  const nota = doc.certik_nota ? `<p class="dg-certik-nota">${esc(doc.certik_nota)}</p>` : "";
+  const nome = getCurrentLang() === "en" ? (svc.nome_en || svc.nome || doc.certik_servico) : (svc.nome || doc.certik_servico);
+  const url  = svc.url || "https://www.certik.com";
+  const notaRaw = pick(doc, "certik_nota");
+  const nota = notaRaw ? `<p class="dg-certik-nota">${esc(notaRaw)}</p>` : "";
   return `
 <div class="dg-certik-block">
   <div class="dg-certik-badge">
@@ -43,7 +123,7 @@ function renderCertikBadge(doc, certikServicos) {
         <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </span>
-    <span class="dg-certik-label">Made by CertiK</span>
+    <span class="dg-certik-label">${t("dg_certik_label")}</span>
     <a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="dg-certik-service">${esc(nome)} ↗</a>
   </div>
   ${nota}
@@ -52,62 +132,81 @@ function renderCertikBadge(doc, certikServicos) {
 
 /** Renderiza um documento individual dentro do accordion do inciso */
 function renderDocCard(doc, meta) {
+  const lang = getCurrentLang();
   const catMeta = meta.categorias?.[doc.categoria] || {};
+  const catLabel = lang === "en" ? (catMeta.label_en || catMeta.label || doc.categoria) : (catMeta.label || doc.categoria);
   const icon = CAT_ICONS[doc.categoria] || "📁";
-  const prio = PRIO_CONFIG[doc.prioridade] || PRIO_CONFIG.media;
-  const conteudo = Array.isArray(doc.conteudo_minimo)
-    ? doc.conteudo_minimo.map((c) => `<li>${esc(c)}</li>`).join("")
+
+  const prioLabel = t(`prio_${doc.prioridade}`);
+  const prioCls = doc.prioridade === "critica" ? "dg-prio--critica" : doc.prioridade === "alta" ? "dg-prio--alta" : "dg-prio--media";
+
+  const prioTitle = (() => {
+    const v = meta.prioridades?.[doc.prioridade];
+    if (!v) return "";
+    if (lang === "en") return typeof v === "object" ? (v.descricao_en || v.descricao_en || "") : String(v);
+    return typeof v === "object" ? (v.descricao || "") : String(v);
+  })();
+
+  const conteudoItems = pick(doc, "conteudo_minimo");
+  const conteudo = Array.isArray(conteudoItems)
+    ? conteudoItems.map((c) => `<li>${esc(c)}</li>`).join("")
     : "";
   const hasCertik = !!doc.certik_servico;
+  const titulo   = pick(doc, "titulo");
+  const descricao = pick(doc, "descricao");
+  const justif   = pick(doc, "justificativa_legal");
+  const retencao = pick(doc, "retencao");
 
   return `
 <div class="dg-doc-card dg-doc-card--${esc(doc.prioridade)}${hasCertik ? " dg-doc-card--certik" : ""}">
   <div class="dg-doc-header">
     <span class="dg-doc-icon" aria-hidden="true">${icon}</span>
-    <span class="dg-doc-titulo">${esc(doc.titulo)}</span>
-    <span class="dg-prio-badge ${prio.cls}" title="${esc(prio.label)} — ${esc(meta.prioridades?.[doc.prioridade] || "")}">${esc(prio.label)}</span>
-    ${doc.categoria ? `<span class="dg-cat-badge" style="background: ${esc(catMeta.cor || "#555")}22; border-color: ${esc(catMeta.cor || "#555")}55; color: ${esc(catMeta.cor || "#999")}">${esc(catMeta.label || doc.categoria)}</span>` : ""}
+    <span class="dg-doc-titulo">${esc(titulo)}</span>
+    <span class="dg-prio-badge ${prioCls}" title="${esc(prioLabel)} — ${esc(prioTitle)}">${esc(prioLabel)}</span>
+    ${doc.categoria ? `<span class="dg-cat-badge" style="background: ${esc(catMeta.cor || "#555")}22; border-color: ${esc(catMeta.cor || "#555")}55; color: ${esc(catMeta.cor || "#999")}">${esc(catLabel)}</span>` : ""}
   </div>
   ${renderCertikBadge(doc, meta.certik_servicos)}
-  <p class="dg-doc-descricao">${esc(doc.descricao)}</p>
+  <p class="dg-doc-descricao">${esc(descricao)}</p>
   <details class="dg-doc-detail">
     <summary class="dg-doc-detail-summary">
-      <span class="dg-doc-detail-toggle">⚖️ Justificativa legal</span>
+      <span class="dg-doc-detail-toggle">${t("dg_justify_toggle")}</span>
     </summary>
-    <p class="dg-doc-justificativa">${esc(doc.justificativa_legal)}</p>
+    <p class="dg-doc-justificativa">${esc(justif)}</p>
   </details>
   ${conteudo ? `
   <details class="dg-doc-detail">
     <summary class="dg-doc-detail-summary">
-      <span class="dg-doc-detail-toggle">📋 Conteúdo mínimo exigido</span>
+      <span class="dg-doc-detail-toggle">${t("dg_content_toggle")}</span>
     </summary>
     <ul class="dg-conteudo-list">${conteudo}</ul>
   </details>` : ""}
-  ${doc.retencao ? `<p class="dg-retencao">⏱ Retenção: <strong>${esc(doc.retencao)}</strong></p>` : ""}
+  ${retencao ? `<p class="dg-retencao">${t("dg_retention")} <strong>${esc(retencao)}</strong></p>` : ""}
 </div>`;
 }
 
 /** Renderiza o bloco de resposta ótima */
 function renderRespostaOtima(ro) {
   if (!ro) return "";
-  const items = Array.isArray(ro.indicadores)
-    ? ro.indicadores.map((i) => `<li>${esc(i)}</li>`).join("")
+  const descricao = pick(ro, "descricao");
+  const indicadoresRaw = pick(ro, "indicadores");
+  const items = Array.isArray(indicadoresRaw)
+    ? indicadoresRaw.map((i) => `<li>${esc(i)}</li>`).join("")
     : "";
   return `
 <div class="dg-otima">
   <div class="dg-otima-header">
     <span class="dg-otima-icon" aria-hidden="true">⭐</span>
-    <span class="dg-otima-label">Resposta Ótima</span>
+    <span class="dg-otima-label">${t("dg_optimal_label")}</span>
   </div>
-  <p class="dg-otima-desc">${esc(ro.descricao)}</p>
+  <p class="dg-otima-desc">${esc(descricao)}</p>
   ${items ? `
-  <div class="dg-otima-indicadores-label">Indicadores de excelência:</div>
+  <div class="dg-otima-indicadores-label">${t("dg_optimal_indicators")}</div>
   <ul class="dg-otima-indicadores">${items}</ul>` : ""}
 </div>`;
 }
 
 /** Renderiza um card de inciso completo */
-function renderIncisoCard(inciso, meta, idx) {
+function renderIncisoCard(inciso, meta) {
   const docsHtml = (inciso.documentos || [])
     .map((d) => renderDocCard(d, meta))
     .join("");
@@ -115,30 +214,37 @@ function renderIncisoCard(inciso, meta, idx) {
     ? inciso.base_legal.map((b) => `<span class="dg-base-pill">${esc(b)}</span>`).join("")
     : "";
   const totalDocs = inciso.documentos?.length || 0;
-  const criticos = inciso.documentos?.filter((d) => d.prioridade === "critica").length || 0;
+  const criticos  = inciso.documentos?.filter((d) => d.prioridade === "critica").length || 0;
+
+  const docsLabel = totalDocs === 1 ? t("dg_docs_label", { n: totalDocs }) : t("dg_docs_label_plural", { n: totalDocs });
+  const critLabel = criticos === 1  ? t("dg_critico_label", { n: criticos }) : t("dg_critico_label_plural", { n: criticos });
+
+  const tema    = pick(inciso, "tema");
+  const resumo  = pick(inciso, "resumo");
+  const gatilho = pick(inciso, "gatilho");
 
   return `
 <details class="dg-inciso" id="dg-inc-${esc(inciso.id)}" data-inciso-id="${esc(inciso.id)}"
-  data-tema="${esc(inciso.tema)}" data-resumo="${esc(inciso.resumo)}" data-rotulo="${esc(inciso.rotulo)}">
+  data-tema="${esc(tema)}" data-resumo="${esc(resumo)}" data-rotulo="${esc(inciso.rotulo)}">
   <summary class="dg-inciso-summary">
     <span class="dg-inc-chevron" aria-hidden="true">▸</span>
     <span class="dg-inc-rotulo">${esc(inciso.rotulo)}</span>
     <div class="dg-inc-info">
-      <span class="dg-inc-tema">${esc(inciso.tema)}</span>
+      <span class="dg-inc-tema">${esc(tema)}</span>
       <span class="dg-inc-art">${esc(inciso.artigo_in701)}</span>
     </div>
     <div class="dg-inc-badges">
-      <span class="dg-inc-badge dg-inc-badge--docs" title="${totalDocs} documentos">${totalDocs} doc${totalDocs !== 1 ? "s" : ""}</span>
-      ${criticos > 0 ? `<span class="dg-inc-badge dg-inc-badge--critico" title="${criticos} crítico(s)">${criticos} crítico${criticos !== 1 ? "s" : ""}</span>` : ""}
+      <span class="dg-inc-badge dg-inc-badge--docs" title="${esc(docsLabel)}">${esc(docsLabel)}</span>
+      ${criticos > 0 ? `<span class="dg-inc-badge dg-inc-badge--critico" title="${esc(critLabel)}">${esc(critLabel)}</span>` : ""}
     </div>
   </summary>
   <div class="dg-inciso-body">
     <div class="dg-inciso-meta">
-      <p class="dg-resumo">${esc(inciso.resumo)}</p>
-      ${inciso.gatilho ? `<p class="dg-gatilho"><strong>Gatilho:</strong> ${esc(inciso.gatilho)}</p>` : ""}
+      <p class="dg-resumo">${esc(resumo)}</p>
+      ${gatilho ? `<p class="dg-gatilho"><strong>${t("dg_gatilho")}</strong> ${esc(gatilho)}</p>` : ""}
       <div class="dg-base-legal">${baseLegal}</div>
     </div>
-    <h4 class="dg-docs-section-title">Documentos necessários</h4>
+    <h4 class="dg-docs-section-title">${t("dg_docs_section_title")}</h4>
     <div class="dg-docs-list">${docsHtml}</div>
     ${renderRespostaOtima(inciso.resposta_otima)}
   </div>
@@ -149,8 +255,8 @@ function renderIncisoCard(inciso, meta, idx) {
 function applyGuideFilter(root, searchVal, prioVal, certikOnly) {
   const q = searchVal.trim().toLowerCase();
   root.querySelectorAll(".dg-inciso").forEach((el) => {
-    const id = el.dataset.incisoId || "";
-    const tema = el.dataset.tema || "";
+    const id     = el.dataset.incisoId || "";
+    const tema   = el.dataset.tema   || "";
     const resumo = el.dataset.resumo || "";
     const rotulo = el.dataset.rotulo || "";
     const matchSearch = !q ||
@@ -179,92 +285,116 @@ export function wireDocsGuideUI({ btnOpen, viewEl, btnBack, getTrack, setView })
   if (!btnOpen || !viewEl) return;
 
   let guideData = null;
+  let enData    = null;
+  let rendered  = false;
 
-  async function loadAndRender() {
+  async function loadData() {
     if (!guideData) {
+      const res = await fetch("/static/data/docs_guide.json?v=1");
+      guideData = await res.json();
+    }
+    if (!enData) {
       try {
-        const res = await fetch("/static/data/docs_guide.json?v=1");
-        guideData = await res.json();
-      } catch (e) {
-        viewEl.querySelector("#dg-body").innerHTML =
-          `<p class="dg-error">Erro ao carregar o guia: ${esc(String(e.message || e))}</p>`;
-        return;
-      }
+        const res = await fetch("/static/data/docs_guide_en.json?v=1");
+        enData = await res.json();
+      } catch { /* optional */ }
+    }
+  }
+
+  async function renderGuide() {
+    try {
+      await loadData();
+    } catch (e) {
+      const body = viewEl.querySelector("#dg-body");
+      if (body) body.innerHTML = `<p class="dg-error">${t("dg_error")} ${esc(String(e.message || e))}</p>`;
+      return;
     }
 
     const body = viewEl.querySelector("#dg-body");
     if (!body) return;
 
-    const meta = guideData.meta || {};
-    const incisos = guideData.incisos || [];
+    const meta   = mergeEnMeta(guideData.meta || {}, enData);
+    const incisos = mergeEnTranslations(guideData.incisos || [], enData);
 
-    // Render stats
-    const totalDocs = incisos.reduce((sum, i) => sum + (i.documentos?.length || 0), 0);
-    const totalCriticos = incisos.reduce(
-      (sum, i) => sum + (i.documentos?.filter((d) => d.prioridade === "critica").length || 0), 0
-    );
-    const totalCertik = incisos.reduce(
-      (sum, i) => sum + (i.documentos?.filter((d) => d.certik_servico).length || 0), 0
-    );
+    // Stats
+    const totalDocs     = incisos.reduce((s, i) => s + (i.documentos?.length || 0), 0);
+    const totalCriticos = incisos.reduce((s, i) => s + (i.documentos?.filter((d) => d.prioridade === "critica").length || 0), 0);
+    const totalCertik   = incisos.reduce((s, i) => s + (i.documentos?.filter((d) => d.certik_servico).length || 0), 0);
     const statsEl = viewEl.querySelector("#dg-stats");
     if (statsEl) {
       statsEl.innerHTML = `
-        <span class="dg-stat"><strong>${incisos.length}</strong> incisos</span>
+        <span class="dg-stat"><strong>${incisos.length}</strong> ${t("dg_stat_incisos", { n: "" }).replace(/^\d*\s*/, "")}</span>
         <span class="dg-stat-sep">·</span>
-        <span class="dg-stat"><strong>${totalDocs}</strong> documentos mapeados</span>
+        <span class="dg-stat"><strong>${totalDocs}</strong> ${t("dg_stat_docs", { n: "" }).replace(/^\d*\s*/, "")}</span>
         <span class="dg-stat-sep">·</span>
-        <span class="dg-stat dg-stat--crit"><strong>${totalCriticos}</strong> críticos</span>
+        <span class="dg-stat dg-stat--crit"><strong>${totalCriticos}</strong> ${t("dg_stat_criticos", { n: "" }).replace(/^\d*\s*/, "")}</span>
         <span class="dg-stat-sep">·</span>
-        <span class="dg-stat dg-stat--certik"><strong>${totalCertik}</strong> produzidos pela CertiK</span>`;
+        <span class="dg-stat dg-stat--certik"><strong>${totalCertik}</strong> ${t("dg_stat_certik", { n: "" }).replace(/^\d*\s*/, "")}</span>`;
     }
 
-    body.innerHTML = incisos
-      .map((inc, i) => renderIncisoCard(inc, meta, i))
-      .join("");
+    // Update select option texts (data-i18n inside select don't auto-apply on option tags in all browsers)
+    const prioEl = viewEl.querySelector("#dg-prio-filter");
+    if (prioEl) {
+      prioEl.querySelectorAll("option[data-i18n]").forEach((opt) => {
+        opt.textContent = t(opt.getAttribute("data-i18n"));
+      });
+    }
 
-    // Wire filter
+    body.innerHTML = incisos.map((inc) => renderIncisoCard(inc, meta)).join("");
+
+    // Wire filter (idempotent: remove old listeners by replacing element)
     const searchEl = viewEl.querySelector("#dg-search");
-    const prioEl   = viewEl.querySelector("#dg-prio-filter");
     const certikEl = viewEl.querySelector("#dg-certik-only");
 
     function doFilter() {
       const certikOnly = certikEl?.checked || false;
       applyGuideFilter(body, searchEl?.value || "", prioEl?.value || "all", certikOnly);
-      const visible = body.querySelectorAll(".dg-inciso:not(.dg-hidden)").length;
-      const countEl = viewEl.querySelector("#dg-filter-count");
-      if (countEl) countEl.textContent = `${visible} de ${incisos.length}`;
+      const visible  = body.querySelectorAll(".dg-inciso:not(.dg-hidden)").length;
+      const countEl  = viewEl.querySelector("#dg-filter-count");
+      if (countEl) countEl.textContent = `${visible} ${t("dg_of")} ${incisos.length}`;
     }
 
-    searchEl?.addEventListener("input", doFilter);
-    prioEl?.addEventListener("change", doFilter);
-    certikEl?.addEventListener("change", doFilter);
+    if (!rendered) {
+      searchEl?.addEventListener("input", doFilter);
+      prioEl?.addEventListener("change", doFilter);
+      certikEl?.addEventListener("change", doFilter);
 
-    // Expand all / Collapse all
-    viewEl.querySelector("#dg-expand-all")?.addEventListener("click", () => {
-      body.querySelectorAll(".dg-inciso:not(.dg-hidden)").forEach((el) => { el.open = true; });
-    });
-    viewEl.querySelector("#dg-collapse-all")?.addEventListener("click", () => {
-      body.querySelectorAll(".dg-inciso").forEach((el) => { el.open = false; });
-    });
-
-    // Export guide
-    viewEl.querySelector("#dg-export")?.addEventListener("click", () => {
-      const blob = new Blob([JSON.stringify(guideData, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `certik_vasp_docs_guide_${new Date().toISOString().slice(0, 10)}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    });
+      viewEl.querySelector("#dg-expand-all")?.addEventListener("click", () => {
+        body.querySelectorAll(".dg-inciso:not(.dg-hidden)").forEach((el) => { el.open = true; });
+      });
+      viewEl.querySelector("#dg-collapse-all")?.addEventListener("click", () => {
+        body.querySelectorAll(".dg-inciso").forEach((el) => { el.open = false; });
+      });
+      viewEl.querySelector("#dg-export")?.addEventListener("click", () => {
+        const blob = new Blob([JSON.stringify(guideData, null, 2)], { type: "application/json" });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement("a");
+        a.href = url;
+        a.download = `certik_vasp_docs_guide_${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+    rendered = true;
+    doFilter();
   }
 
   btnOpen.addEventListener("click", () => {
     setView("docsGuide");
-    loadAndRender();
+    renderGuide();
   });
 
   if (btnBack) {
     btnBack.addEventListener("click", () => setView("intro"));
   }
+
+  // Re-render on language change
+  document.addEventListener("langchange", () => {
+    if (!viewEl.classList.contains("hidden")) {
+      rendered = false;
+      renderGuide();
+    } else {
+      rendered = false; // will re-render next time opened
+    }
+  });
 }

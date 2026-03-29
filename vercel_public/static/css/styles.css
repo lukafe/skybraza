@@ -4240,3 +4240,56 @@ body.app-view-intro .sk-main {
     grid-column: 1 / -1;
   }
 }
+
+/* ===================================================================
+   LANGUAGE TOGGLE — PT / EN
+   =================================================================== */
+
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.lang-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1;
+  transition: color 0.15s, background 0.15s;
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+}
+
+.lang-toggle-btn:hover {
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.lang-toggle-btn--active {
+  color: #fff;
+  background: rgba(99, 209, 150, 0.18);
+}
+
+/* separator line between PT and EN */
+.lang-toggle-btn:first-child {
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 640px) {
+  .lang-toggle {
+    margin-left: auto;
+  }
+  .sk-topbar-mono-link {
+    display: none;
+  }
+}

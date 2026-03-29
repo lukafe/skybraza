@@ -12,7 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Roboto+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/css/styles.css?v=34" />
+    <link rel="stylesheet" href="/static/css/styles.css?v=35" />
   </head>
   <body class="sk-app app-view-intro">
     <noscript>
@@ -21,34 +21,26 @@
         deploy ou execute <code>python serve_web.py</code> / <code>npx vercel dev</code> em local.
       </div>
     </noscript>
-    <a class="skip-link" href="#main">Ir ao conteúdo</a>
+    <a class="skip-link" href="#main" data-i18n="skip_link">Ir ao conteúdo</a>
 
     <header class="site-header sk-topbar">
       <div class="wrap sk-topbar-row">
-        <a class="sk-brand-lockup" href="#main" aria-label="CertiK — início">
+        <a class="sk-brand-lockup" href="#main" data-i18n-aria="brand_label" aria-label="CertiK — início">
           <span class="sk-brand-mark">CertiK</span>
         </a>
         <nav class="sk-nav" aria-label="Links úteis">
-          <span class="sk-nav-pill sk-nav-pill--active" title="Este questionário">Questionário</span>
-          <a class="sk-nav-pill sk-nav-pill--link" href="https://skynet.certik.com" target="_blank" rel="noopener noreferrer"
-            >Skynet</a
-          >
-          <a class="sk-nav-pill sk-nav-pill--link" href="https://www.certik.com" target="_blank" rel="noopener noreferrer"
-            >certik.com</a
-          >
+          <span class="sk-nav-pill sk-nav-pill--active" data-i18n-title="nav_questionnaire_title" title="Este questionário" data-i18n="nav_questionnaire">Questionário</span>
+          <a class="sk-nav-pill sk-nav-pill--link" href="https://skynet.certik.com" target="_blank" rel="noopener noreferrer">Skynet</a>
+          <a class="sk-nav-pill sk-nav-pill--link" href="https://www.certik.com" target="_blank" rel="noopener noreferrer">certik.com</a>
         </nav>
-        <a
-          class="sk-topbar-mono-link"
-          href="https://www.certik.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          >certik.com</a
-        >
+        <!-- Language toggle injected by JS -->
+        <div id="lang-toggle-mount"></div>
+        <a class="sk-topbar-mono-link" href="https://www.certik.com" target="_blank" rel="noopener noreferrer">certik.com</a>
       </div>
       <div class="sk-subbar wrap">
         <p class="sk-subbar-line">
-          <span class="sk-subbar-badge">Ativos virtuais</span>
-          <span>Orientações alinhadas às exigências do Banco Central (IN 701 e normas correlatas).</span>
+          <span class="sk-subbar-badge" data-i18n="subbar_badge">Ativos virtuais</span>
+          <span data-i18n="subbar_text_pt">Orientações alinhadas às exigências do Banco Central (IN 701 e normas correlatas).</span>
         </p>
       </div>
     </header>
@@ -58,74 +50,78 @@
         <div class="intro-landing__float">
           <div class="intro-landing__inner">
             <p class="intro-landing__wordmark">CertiK</p>
-            <h1 id="intro-title" class="intro-landing__title">Prepare o escopo da sua operação</h1>
+            <h1 id="intro-title" class="intro-landing__title" data-i18n="intro_title">Prepare o escopo da sua operação</h1>
             <div class="intro-landing__desc">
               <p class="intro-landing__desc-line">
-                <strong>CertiK</strong> — escopo de conformidade com o Banco Central (IN 701).
+                <strong>CertiK</strong> — <span data-i18n="intro_desc_main">escopo de conformidade com o Banco Central (IN 701).</span>
               </p>
-              <p class="intro-landing__desc-line intro-landing__desc-line--muted">Orientação indicativa.</p>
+              <p class="intro-landing__desc-line intro-landing__desc-line--muted" data-i18n="intro_desc_hint">Orientação indicativa.</p>
             </div>
             <div class="intro-track" role="group" aria-labelledby="intro-track-label">
-              <p id="intro-track-label" class="intro-track__label">Tipo de operação (IN 701)</p>
+              <p id="intro-track-label" class="intro-track__label" data-i18n="track_label">Tipo de operação (IN 701)</p>
               <div class="intro-track__buttons">
                 <button
                   type="button"
                   class="intro-track__btn intro-track__btn--active"
                   id="track-intermediaria"
                   data-track="intermediaria"
+                  data-i18n-title="track_intermediaria_title"
                   title="VASP que intermedeia compra/venda de AV sem deter chaves privadas dos clientes"
                 >
-                  <span class="intro-track__btn-label">Intermediário</span>
-                  <span class="intro-track__btn-desc">Executa ordens, não custodia</span>
+                  <span class="intro-track__btn-label" data-i18n="track_intermediaria_label">Intermediário</span>
+                  <span class="intro-track__btn-desc" data-i18n="track_intermediaria_desc">Executa ordens, não custodia</span>
                 </button>
                 <button type="button" class="intro-track__btn" id="track-custodiante" data-track="custodiante"
+                  data-i18n-title="track_custodiante_title"
                   title="VASP que guarda chaves privadas e AV de clientes em seu nome">
-                  <span class="intro-track__btn-label">Custodiante</span>
-                  <span class="intro-track__btn-desc">Guarda chaves dos clientes</span>
+                  <span class="intro-track__btn-label" data-i18n="track_custodiante_label">Custodiante</span>
+                  <span class="intro-track__btn-desc" data-i18n="track_custodiante_desc">Guarda chaves dos clientes</span>
                 </button>
                 <button type="button" class="intro-track__btn" id="track-corretora" data-track="corretora"
+                  data-i18n-title="track_corretora_title"
                   title="VASP que acumula intermediação e custódia (art. 10, Res. 520)">
-                  <span class="intro-track__btn-label">Corretora</span>
-                  <span class="intro-track__btn-desc">Intermedia + custodia</span>
+                  <span class="intro-track__btn-label" data-i18n="track_corretora_label">Corretora</span>
+                  <span class="intro-track__btn-desc" data-i18n="track_corretora_desc">Intermedia + custodia</span>
                 </button>
               </div>
             </div>
             <div class="intro-landing__cta">
               <label class="field">
-                <span class="field-label intro-landing__field-label">Nome da sua empresa</span>
+                <span class="field-label intro-landing__field-label" data-i18n="institution_label">Nome da sua empresa</span>
                 <input
                   type="text"
                   id="institution"
                   name="institution"
                   class="intro-landing__input"
                   maxlength="500"
+                  data-i18n-ph="institution_ph"
                   placeholder="Ex.: nome da empresa ou do projeto"
                   autocomplete="organization"
                   aria-required="true"
                 />
               </label>
-              <button type="button" class="btn btn-primary btn-hero intro-landing__submit" id="btn-start">
+              <button type="button" class="btn btn-primary btn-hero intro-landing__submit" id="btn-start" data-i18n="btn_continue">
                 Continuar
               </button>
             </div>
             <div id="resume-banner" class="resume-banner hidden" role="alert">
               <span class="resume-banner__icon" aria-hidden="true">↩</span>
-              <span class="resume-banner__text">Sessão anterior guardada.</span>
-              <button type="button" class="btn resume-banner__btn" id="btn-resume">Retomar</button>
-              <button type="button" class="resume-banner__dismiss" id="btn-resume-dismiss" aria-label="Ignorar sessão anterior">✕</button>
+              <span class="resume-banner__text" data-i18n="resume_text">Sessão anterior guardada.</span>
+              <button type="button" class="btn resume-banner__btn" id="btn-resume" data-i18n="btn_resume">Retomar</button>
+              <button type="button" class="resume-banner__dismiss" id="btn-resume-dismiss" data-i18n-aria="resume_dismiss_label" aria-label="Ignorar sessão anterior">✕</button>
             </div>
 
             <div class="intro-landing__tree-wrap">
               <div class="intro-landing__aux-btns">
-                <button type="button" class="btn btn-secondary intro-landing__tree-btn" id="btn-open-decision-tree">
+                <button type="button" class="btn btn-secondary intro-landing__tree-btn" id="btn-open-decision-tree" data-i18n="btn_decision_tree">
                   Árvore de decisão dos incisos
                 </button>
-                <button type="button" class="btn btn-secondary intro-landing__tree-btn intro-landing__docs-btn" id="btn-open-docs-guide">
+                <button type="button" class="btn btn-secondary intro-landing__tree-btn intro-landing__docs-btn" id="btn-open-docs-guide" data-i18n="btn_docs_guide">
                   📋 Guia de documentos
                 </button>
               </div>
               <p class="intro-landing__tree-hint">
-                <strong>Árvore:</strong> mapa de perguntas × incisos por trilha. &nbsp;·&nbsp; <strong>Guia:</strong> documentos necessários e resposta ótima por inciso da IN 701.
+                <strong data-i18n="intro_tree_hint_tree">Árvore:</strong> <span data-i18n="intro_tree_hint_tree_body">mapa de perguntas × incisos por trilha.</span> &nbsp;·&nbsp; <strong data-i18n="intro_tree_hint_guide">Guia:</strong> <span data-i18n="intro_tree_hint_guide_body">documentos necessários e resposta ótima por inciso da IN 701.</span>
               </p>
             </div>
             <p class="intro-landing__certik-foot">
@@ -140,10 +136,10 @@
         <div class="wrap dg-wrap">
           <!-- Toolbar -->
           <div class="dg-toolbar">
-            <button type="button" class="btn btn-ghost dg-back" id="btn-dg-back">← Voltar ao início</button>
+            <button type="button" class="btn btn-ghost dg-back" id="btn-dg-back" data-i18n="dg_back">← Voltar ao início</button>
             <div class="dg-heading-block">
-              <h2 id="dg-main-title" class="dg-main-title">Guia de Documentos por Inciso — IN 701</h2>
-              <p class="dg-lead">
+              <h2 id="dg-main-title" class="dg-main-title" data-i18n="dg_title">Guia de Documentos por Inciso — IN 701</h2>
+              <p class="dg-lead" data-i18n="dg_lead">
                 Para cada inciso do art. 4º da IN 701: documentos necessários com justificativa legal, conteúdo mínimo e a resposta ótima que uma VASP bem preparada deve alcançar.
               </p>
             </div>
@@ -154,52 +150,52 @@
             <div class="dg-stats-row">
               <div id="dg-stats" class="dg-stats"></div>
               <div class="dg-controls">
-                <span class="dg-filter-count-wrap">Mostrando <span id="dg-filter-count">—</span></span>
-                <button type="button" class="btn btn-ghost dg-ctrl-btn" id="dg-expand-all">Expandir todos</button>
-                <button type="button" class="btn btn-ghost dg-ctrl-btn" id="dg-collapse-all">Fechar todos</button>
-                <button type="button" class="btn btn-ghost dg-ctrl-btn" id="dg-export" title="Exportar guia completo em JSON">⬇ JSON</button>
+                <span class="dg-filter-count-wrap"><span data-i18n="dg_showing">Mostrando</span> <span id="dg-filter-count">—</span></span>
+                <button type="button" class="btn btn-ghost dg-ctrl-btn" id="dg-expand-all" data-i18n="dg_expand_all">Expandir todos</button>
+                <button type="button" class="btn btn-ghost dg-ctrl-btn" id="dg-collapse-all" data-i18n="dg_collapse_all">Fechar todos</button>
+                <button type="button" class="btn btn-ghost dg-ctrl-btn" id="dg-export" data-i18n-title="dg_export_title" title="Exportar guia completo em JSON">⬇ JSON</button>
               </div>
             </div>
             <div class="dg-filter-row">
               <label class="dg-filter-label">
-                <span class="dg-filter-text">Pesquisar inciso</span>
-                <input type="search" id="dg-search" class="dg-filter-input" placeholder="Ex.: I (a), segregação, chaves…" autocomplete="off" />
+                <span class="dg-filter-text" data-i18n="dg_search_label">Pesquisar inciso</span>
+                <input type="search" id="dg-search" class="dg-filter-input" data-i18n-ph="dg_search_ph" placeholder="Ex.: I (a), segregação, chaves…" autocomplete="off" />
               </label>
               <label class="dg-filter-label">
-                <span class="dg-filter-text">Prioridade</span>
+                <span class="dg-filter-text" data-i18n="dg_prio_label">Prioridade</span>
                 <select id="dg-prio-filter" class="dg-prio-select">
-                  <option value="all">Todas</option>
-                  <option value="critica">Crítica</option>
-                  <option value="alta">Alta</option>
-                  <option value="media">Média</option>
+                  <option value="all" data-i18n="dg_prio_all">Todas</option>
+                  <option value="critica" data-i18n="dg_prio_critica">Crítica</option>
+                  <option value="alta" data-i18n="dg_prio_alta">Alta</option>
+                  <option value="media" data-i18n="dg_prio_media">Média</option>
                 </select>
               </label>
               <label class="dg-filter-label dg-certik-toggle-label">
                 <input type="checkbox" id="dg-certik-only" class="dg-certik-checkbox" />
                 <span class="dg-certik-toggle-btn">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="currentColor"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  Só CertiK
+                  <span data-i18n="dg_certik_only">Só CertiK</span>
                 </span>
               </label>
             </div>
           </div>
 
           <!-- Legenda visual -->
-          <div class="dg-legend" aria-label="Legenda de prioridade e CertiK">
+          <div class="dg-legend" data-i18n-aria="dg_legend_label" aria-label="Legenda de prioridade e CertiK">
             <div class="dg-legend-inner">
               <span class="dg-legend-item">
-                <span class="dg-prio-badge dg-prio--critica">Crítica</span>
-                <span class="dg-legend-text">Sem este documento a certificação é inviável</span>
+                <span class="dg-prio-badge dg-prio--critica" data-i18n="dg_legend_critica">Crítica</span>
+                <span class="dg-legend-text" data-i18n="dg_legend_critica_text">Sem este documento a certificação é inviável</span>
               </span>
               <span class="dg-legend-sep" aria-hidden="true">·</span>
               <span class="dg-legend-item">
-                <span class="dg-prio-badge dg-prio--alta">Alta</span>
-                <span class="dg-legend-text">Ausência gera gap material</span>
+                <span class="dg-prio-badge dg-prio--alta" data-i18n="dg_legend_alta">Alta</span>
+                <span class="dg-legend-text" data-i18n="dg_legend_alta_text">Ausência gera gap material</span>
               </span>
               <span class="dg-legend-sep" aria-hidden="true">·</span>
               <span class="dg-legend-item">
-                <span class="dg-prio-badge dg-prio--media">Média</span>
-                <span class="dg-legend-text">Indicador de maturidade</span>
+                <span class="dg-prio-badge dg-prio--media" data-i18n="dg_legend_media">Média</span>
+                <span class="dg-legend-text" data-i18n="dg_legend_media_text">Indicador de maturidade</span>
               </span>
               <span class="dg-legend-sep" aria-hidden="true">·</span>
               <span class="dg-legend-item dg-legend-item--certik">
@@ -207,14 +203,14 @@
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="currentColor"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   Made by CertiK
                 </span>
-                <span class="dg-legend-text">CertiK produz ou habilita este documento</span>
+                <span class="dg-legend-text" data-i18n="dg_legend_certik_text">CertiK produz ou habilita este documento</span>
               </span>
             </div>
           </div>
 
           <!-- Lista de incisos (gerada por JS) -->
           <div id="dg-body" class="dg-body">
-            <p class="dg-loading">A carregar guia…</p>
+            <p class="dg-loading" data-i18n="dg_loading">A carregar guia…</p>
           </div>
         </div>
       </section>
@@ -222,29 +218,30 @@
       <section id="decision-tree-view" class="decision-tree-view hidden" aria-labelledby="dt-main-title">
         <div class="wrap dt-wrap">
           <div class="dt-toolbar">
-            <button type="button" class="btn btn-ghost dt-back" id="btn-dt-back">← Voltar ao início</button>
+            <button type="button" class="btn btn-ghost dt-back" id="btn-dt-back" data-i18n="dt_back">← Voltar ao início</button>
             <div class="dt-heading-block">
-              <h2 id="dt-main-title" class="dt-main-title">Árvore de decisão — perguntas e incisos</h2>
-              <p class="dt-lead">
-                Trilha → filtro → expanda uma pergunta. Passe o rato sobre um <strong>ramo</strong> para o destacar; clique no ramo para
-                fixar o realce. Use <strong>Expandir todas</strong> para ver todos os fluxos de uma vez.
+              <h2 id="dt-main-title" class="dt-main-title" data-i18n="dt_title">Árvore de decisão — perguntas e incisos</h2>
+              <p class="dt-lead" data-i18n="dt_lead">
+                Trilha → filtro → expanda uma pergunta. Passe o rato sobre um ramo para o destacar; clique no ramo para
+                fixar o realce. Use Expandir todas para ver todos os fluxos de uma vez.
               </p>
             </div>
           </div>
 
           <div class="dt-sticky-bar">
             <div class="dt-track-bar">
-              <p class="dt-track-label" id="dt-track-label">Trilha</p>
+              <p class="dt-track-label" id="dt-track-label" data-i18n="dt_track_label">Trilha</p>
               <div class="dt-track-pills" id="dt-track-pills" role="tablist" aria-labelledby="dt-track-label"></div>
             </div>
 
             <div class="dt-search-row">
               <label class="dt-filter-label">
-                <span class="dt-filter-text">Filtrar perguntas</span>
+                <span class="dt-filter-text" data-i18n="dt_filter_label">Filtrar perguntas</span>
                 <input
                   type="search"
                   id="dt-filter"
                   class="dt-filter-input"
+                  data-i18n-ph="dt_filter_ph"
                   placeholder="Id (ex. P1) ou palavra no enunciado…"
                   autocomplete="off"
                 />
@@ -252,36 +249,36 @@
             </div>
           </div>
 
-          <div class="dt-visual-key" aria-label="Legenda do diagrama">
+          <div class="dt-visual-key" data-i18n-aria="dt_visual_key_label" aria-label="Legenda do diagrama">
             <div class="dt-visual-key-inner">
               <div class="dt-key-step">
                 <span class="dt-key-num">1</span>
                 <span class="dt-key-shape dt-key-shape--bar" aria-hidden="true"></span>
-                <span class="dt-key-txt"><strong>Pergunta</strong><small>Identificador no questionário</small></span>
+                <span class="dt-key-txt"><strong data-i18n="dt_key_question">Pergunta</strong><small data-i18n="dt_key_question_sub">Identificador no questionário</small></span>
               </div>
               <span class="dt-key-arrow" aria-hidden="true">→</span>
               <div class="dt-key-step">
                 <span class="dt-key-num">2</span>
                 <span class="dt-key-shape dt-key-shape--dot" aria-hidden="true"></span>
-                <span class="dt-key-txt"><strong>Condição</strong><small>Resposta ou opção escolhida</small></span>
+                <span class="dt-key-txt"><strong data-i18n="dt_key_condition">Condição</strong><small data-i18n="dt_key_condition_sub">Resposta ou opção escolhida</small></span>
               </div>
               <span class="dt-key-arrow" aria-hidden="true">→</span>
               <div class="dt-key-step">
                 <span class="dt-key-num">3</span>
                 <span class="dt-key-shape dt-key-shape--tri" aria-hidden="true"></span>
-                <span class="dt-key-txt"><strong>Inciso</strong><small>Art. 4º IN 701 (clique no código)</small></span>
+                <span class="dt-key-txt"><strong data-i18n="dt_key_clause">Inciso</strong><small data-i18n="dt_key_clause_sub">Art. 4º IN 701 (clique no código)</small></span>
               </div>
             </div>
           </div>
 
           <div class="dt-controls-row">
-            <button type="button" class="btn btn-ghost dt-ctrl-btn" id="dt-expand-all">Expandir todas</button>
-            <button type="button" class="btn btn-ghost dt-ctrl-btn" id="dt-collapse-all">Fechar todas</button>
+            <button type="button" class="btn btn-ghost dt-ctrl-btn" id="dt-expand-all" data-i18n="dt_expand_all">Expandir todas</button>
+            <button type="button" class="btn btn-ghost dt-ctrl-btn" id="dt-collapse-all" data-i18n="dt_collapse_all">Fechar todas</button>
           </div>
 
           <div class="dt-mandatory-card panel">
-            <h3 class="dt-mandatory-title">Incisos sempre no escopo nesta trilha</h3>
-            <p class="dt-mandatory-lead">
+            <h3 class="dt-mandatory-title" data-i18n="dt_mandatory_title">Incisos sempre no escopo nesta trilha</h3>
+            <p class="dt-mandatory-lead" data-i18n="dt_mandatory_lead">
               Obrigatórios fixos na matriz CertiK — <strong>não dependem</strong> das respostas ao questionário declarativo.
             </p>
             <div class="dt-inciso-chip-row" id="dt-mandatory-chips"></div>
@@ -309,8 +306,8 @@
         <div id="questions-container" class="questions"></div>
 
         <div class="wizard-nav">
-          <button type="button" class="btn btn-ghost" id="btn-back">Voltar</button>
-          <button type="button" class="btn btn-primary" id="btn-next">Continuar</button>
+          <button type="button" class="btn btn-ghost" id="btn-back" data-i18n="wizard_btn_back">Voltar</button>
+          <button type="button" class="btn btn-primary" id="btn-next" data-i18n="wizard_btn_next">Continuar</button>
         </div>
       </section>
 
@@ -318,49 +315,49 @@
         <div class="panel results-hero dashboard-hero">
           <div class="dashboard-hero-grid">
             <div class="dashboard-hero-kpi">
-              <span class="pill pill-ok">Dashboard</span>
-              <p class="dashboard-entity-label">Instituição</p>
+              <span class="pill pill-ok" data-i18n="results_dashboard">Dashboard</span>
+              <p class="dashboard-entity-label" data-i18n="results_institution">Instituição</p>
               <h2 id="results-entity-name" class="dashboard-entity-name">—</h2>
               <p id="results-track-badge" class="dashboard-track-pill" aria-live="polite"></p>
               <p id="results-summary" class="summary-line dashboard-summary-line"></p>
               <div class="metrics kpi-strip metrics-results" id="metrics"></div>
               <div class="results-actions">
-                <button type="button" class="btn btn-ghost" id="btn-restart">Novo questionário</button>
-                <button type="button" class="btn btn-secondary" id="btn-export-json" title="Descarregar pacote JSON com escopo, respostas e prontidão do corpus">Exportar JSON</button>
+                <button type="button" class="btn btn-ghost" id="btn-restart" data-i18n="btn_new_questionnaire">Novo questionário</button>
+                <button type="button" class="btn btn-secondary" id="btn-export-json" data-i18n-title="btn_export_title" title="Descarregar pacote JSON com escopo, respostas e prontidão do corpus" data-i18n="btn_export_json">Exportar JSON</button>
               </div>
             </div>
             <aside class="dashboard-chart-card" aria-labelledby="chart-title">
-              <h3 id="chart-title" class="dashboard-chart-title">Cobertura da matriz IN 701</h3>
-              <p class="dashboard-chart-sub">Distribuição por origem no universo de incisos da trilha</p>
+              <h3 id="chart-title" class="dashboard-chart-title" data-i18n="chart_title">Cobertura da matriz IN 701</h3>
+              <p class="dashboard-chart-sub" data-i18n="chart_sub">Distribuição por origem no universo de incisos da trilha</p>
               <div class="donut-block">
                 <div class="donut-ring-wrap">
                   <div id="compliance-donut" class="donut-ring" role="presentation"></div>
                   <div class="donut-hole">
                     <span id="donut-pct" class="donut-pct tabular-nums">0%</span>
-                    <span class="donut-hole-label">no escopo</span>
+                    <span class="donut-hole-label" data-i18n="donut_in_scope">no escopo</span>
                   </div>
                 </div>
                 <ul class="donut-legend">
                   <li>
                     <span class="donut-legend-swatch donut-legend-swatch--mandatory"></span>
-                    <span>Obrigatórios (matriz)</span>
+                    <span data-i18n="legend_mandatory">Obrigatórios (matriz)</span>
                     <strong id="leg-mand" class="donut-legend-val tabular-nums">0</strong>
                   </li>
                   <li>
                     <span class="donut-legend-swatch donut-legend-swatch--triggered"></span>
-                    <span>Acionados por respostas</span>
+                    <span data-i18n="legend_triggered">Acionados por respostas</span>
                     <strong id="leg-cond" class="donut-legend-val tabular-nums">0</strong>
                   </li>
                   <li>
                     <span class="donut-legend-swatch donut-legend-swatch--out"></span>
-                    <span>Fora deste escopo</span>
+                    <span data-i18n="legend_out">Fora deste escopo</span>
                     <strong id="leg-fora" class="donut-legend-val tabular-nums">0</strong>
                   </li>
                 </ul>
               </div>
             </aside>
           </div>
-          <h2 id="results-title" class="sr-only">Painel de escopo</h2>
+          <h2 id="results-title" class="sr-only" data-i18n="results_scope_panel">Painel de escopo</h2>
         </div>
 
         <div
@@ -369,7 +366,7 @@
           aria-labelledby="j2-title"
         >
           <div class="j2-activation-head">
-            <h3 id="j2-title" class="j2-heading">Ativação de serviços — Jornada 2</h3>
+            <h3 id="j2-title" class="j2-heading" data-i18n="j2_heading">Ativação de serviços — Jornada 2</h3>
             <p id="j2-lead" class="j2-lead"></p>
           </div>
           <div id="j2-streams" class="j2-product-grid"></div>
@@ -381,7 +378,7 @@
             <div class="results-section-head">
               <h3 class="results-section-title" id="sec-audit-title">
                 <span class="title-dot" aria-hidden="true"></span>
-                No escopo de auditoria
+                <span data-i18n="sec_audit_title">No escopo de auditoria</span>
               </h3>
               <span class="results-count" id="count-audit" aria-live="polite">0</span>
             </div>
@@ -392,7 +389,7 @@
             <div class="results-section-head">
               <h3 class="results-section-title results-section-title--muted" id="sec-skip-title">
                 <span class="title-dot title-dot--muted" aria-hidden="true"></span>
-                Fora deste escopo
+                <span data-i18n="sec_skip_title">Fora deste escopo</span>
               </h3>
               <span class="results-count results-count--muted" id="count-skip" aria-live="polite">0</span>
             </div>
@@ -401,7 +398,7 @@
           </section>
         </div>
 
-        <p class="fine-print results-disclaimer">
+        <p class="fine-print results-disclaimer" data-i18n="results_disclaimer">
           Resultado orientativo para alinhamento com a CertiK. A delimitação perante o Banco Central é validada em processo
           formal. Adapte relatórios ao modelo interno e à assessoria jurídica.
           <a href="https://www.certik.com" target="_blank" rel="noopener noreferrer">certik.com</a>
@@ -411,7 +408,7 @@
 
     <footer class="site-footer sk-footer">
       <div class="wrap footer-inner sk-footer-inner">
-        <span class="sk-footer-copy">© 2026 CertiK · uso institucional</span>
+        <span class="sk-footer-copy" data-i18n="footer_copy">© 2026 CertiK · uso institucional</span>
         <div class="sk-footer-links" aria-label="Ligações CertiK">
           <a href="https://skynet.certik.com" target="_blank" rel="noopener noreferrer">Skynet</a>
           <a href="https://www.certik.com" target="_blank" rel="noopener noreferrer">Site</a>
@@ -423,6 +420,6 @@
 
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-    <script src="/static/js/app.js?v=34" type="module"></script>
+    <script src="/static/js/app.js?v=35" type="module"></script>
   </body>
 </html>

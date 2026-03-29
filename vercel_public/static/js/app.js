@@ -4,7 +4,8 @@
  */
 
 import { wireDecisionTreeUI } from "./decision_tree.js?v=3";
-import { wireDocsGuideUI } from "./docs_guide.js?v=2";
+import { wireDocsGuideUI } from "./docs_guide.js?v=3";
+import { initI18n, t, buildLangToggle } from "./i18n.js?v=1";
 
 const $ = (sel, root = document) => root.querySelector(sel);
 
@@ -172,7 +173,7 @@ function renderYesNo(card, q) {
   const actions = document.createElement("div");
   actions.className = "q-actions";
   actions.setAttribute("role", "group");
-  actions.setAttribute("aria-label", `Resposta ${qid}`);
+  actions.setAttribute("aria-label", `${t("wizard_answer_group")} ${qid}`);
 
   const mkBtn = (label, v, pressed) => {
     const btn = document.createElement("button");
@@ -190,8 +191,8 @@ function renderYesNo(card, q) {
     return btn;
   };
 
-  actions.appendChild(mkBtn("Não", false, val === false));
-  actions.appendChild(mkBtn("Sim", true, val === true));
+  actions.appendChild(mkBtn(t("wizard_yn_no"), false, val === false));
+  actions.appendChild(mkBtn(t("wizard_yn_yes"), true, val === true));
   card.appendChild(actions);
 }
 
@@ -201,7 +202,7 @@ function renderSingleChoice(card, q) {
   /** Rádios em vez de &lt;select&gt;: listas nativas ignoram a largura do cartão com opções longas (ex.: P_list). */
   const wrap = document.createElement("fieldset");
   wrap.className = "q-multicheck q-radio-group";
-  wrap.setAttribute("aria-label", `Escolha única ${qid}`);
+  wrap.setAttribute("aria-label", `${t("wizard_single_label")} ${qid}`);
 
   const cur = state.answers[qid];
   const curId = cur && opts.some((o) => o.id === cur) ? cur : null;
@@ -229,7 +230,7 @@ function renderSingleChoice(card, q) {
   if (!curId) {
     const hint = document.createElement("p");
     hint.className = "q-radio-hint";
-    hint.textContent = "Selecione uma opção para continuar.";
+    hint.textContent = t("wizard_select_hint");
     wrap.appendChild(hint);
     wrap.addEventListener(
       "change",
@@ -248,7 +249,7 @@ function renderMultiChoice(card, q) {
   const opts = q.options || [];
   const wrap = document.createElement("fieldset");
   wrap.className = "q-multicheck";
-  wrap.setAttribute("aria-label", `Seleção múltipla ${qid}`);
+  wrap.setAttribute("aria-label", `${t("wizard_multi_label")} ${qid}`);
 
   let chosen = new Set(Array.isArray(state.answers[qid]) ? state.answers[qid] : []);
 
@@ -306,7 +307,7 @@ function renderBlockDots(direction) {
     dot.className = "block-dot";
     if (i < state.step) dot.classList.add("block-dot--done");
     else if (i === state.step) dot.classList.add("block-dot--active");
-    dot.title = b.title || `Bloco ${i + 1}`;
+    dot.title = b.title || t("wizard_block_of", { n: i + 1, total: state.blocks.length });
     dotsEl.appendChild(dot);
   });
   // Label do bloco actual
@@ -340,7 +341,7 @@ function renderQuestions(direction = "forward") {
     $("#block-lead").classList.add("hidden");
   }
 
-  $("#step-label").textContent = `Bloco ${state.step + 1} de ${state.blocks.length}`;
+  $("#step-label").textContent = t("wizard_block_of", { n: state.step + 1, total: state.blocks.length });
 
   const pct = ((state.step + 1) / state.blocks.length) * 100;
   $("#progress-bar").style.width = `${pct}%`;
@@ -365,7 +366,7 @@ function renderQuestions(direction = "forward") {
     if (isAuditOnly) {
       const tag = document.createElement("div");
       tag.className = "q-audit-tag";
-      tag.innerHTML = '<span aria-hidden="true">◉</span> Maturidade / relatório';
+      tag.innerHTML = `<span aria-hidden="true">◉</span> ${t("wizard_audit_tag")}`;
       card.appendChild(tag);
     } else {
       // #7: impact badge for scope questions
@@ -375,7 +376,7 @@ function renderQuestions(direction = "forward") {
       if (allIncisos.length > 0) {
         const badge = document.createElement("div");
         badge.className = "q-impact-badge";
-        badge.innerHTML = `<span class="q-impact-badge__dot" aria-hidden="true"></span>Pode activar incisos`;
+        badge.innerHTML = `<span class="q-impact-badge__dot" aria-hidden="true"></span>${t("wizard_impact_badge")}`;
         card.appendChild(badge);
       }
     }
@@ -399,7 +400,7 @@ function renderQuestions(direction = "forward") {
       const note = document.createElement("p");
       note.className = "q-audit-note";
       note.textContent =
-        "Só para relatório e maturidade — não altera o escopo de auditoria automaticamente.";
+        t("wizard_audit_note");
       card.appendChild(note);
     }
 
@@ -416,7 +417,7 @@ function renderQuestions(direction = "forward") {
   $("#btn-back").classList.toggle("hidden", state.step === 0);
 
   const last = state.step === state.blocks.length - 1;
-  $("#btn-next").textContent = last ? "Ver painel" : "Continuar";
+  $("#btn-next").textContent = last ? t("wizard_btn_finish") : t("wizard_btn_next");
 
   // #9: save progress
   saveProgressToStorage();
@@ -525,13 +526,17 @@ function clearProgressStorage() {
 function showResumeBanner(saved) {
   const banner = document.getElementById("resume-banner");
   if (!banner || !saved) return;
-  const trackNames = { intermediaria: "Intermediário", custodiante: "Custodiante", corretora: "Corretora" };
+  const trackNames = {
+    intermediaria: t("track_intermediaria_label"),
+    custodiante:   t("track_custodiante_label"),
+    corretora:     t("track_corretora_label"),
+  };
   const trk = trackNames[saved.track] || saved.track;
   const inst = saved.institution ? ` · ${saved.institution}` : "";
   const mins = Math.round((Date.now() - (saved.savedAt || 0)) / 60000);
-  const timeStr = mins < 60 ? `${mins} min atrás` : `${Math.round(mins / 60)} h atrás`;
+  const timeStr = mins < 60 ? `${mins} min` : `${Math.round(mins / 60)} h`;
   banner.querySelector(".resume-banner__text").textContent =
-    `Sessão anterior: ${trk}${inst} (${timeStr}).`;
+    `${t("resume_text")} ${trk}${inst} (${timeStr}).`;
   banner.classList.remove("hidden");
 }
 
@@ -1072,6 +1077,13 @@ async function loadFeaturesFromHealth() {
 }
 
 async function boot() {
+  // Init i18n first (loads strings + restores saved language)
+  await initI18n();
+
+  // Mount language toggle in header
+  const langMount = document.getElementById("lang-toggle-mount");
+  if (langMount) langMount.appendChild(buildLangToggle());
+
   await loadFeaturesFromHealth();
   state.track = loadTrackFromStorage();
   if (state.features.custodiante_track === false && state.track === "custodiante") {
@@ -1107,9 +1119,9 @@ async function boot() {
 
   document.querySelectorAll(".intro-track__btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const t = btn.getAttribute("data-track");
-      if (t !== "intermediaria" && t !== "custodiante" && t !== "corretora") return;
-      state.track = t;
+      const trk = btn.getAttribute("data-track");
+      if (trk !== "intermediaria" && trk !== "custodiante" && trk !== "corretora") return;
+      state.track = trk;
       saveTrackToStorage();
       syncTrackButtonsUI();
     });
