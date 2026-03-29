@@ -3,7 +3,7 @@
  * Legado /api/* mantido no servidor para integrações antigas.
  */
 
-import { wireDecisionTreeUI } from "./decision_tree.js?v=6";
+import { wireDecisionTreeUI } from "./decision_tree.js?v=7";
 import { wireDocsGuideUI } from "./docs_guide.js?v=3";
 import { initI18n, initLangSync, t, getCurrentLang, buildLangToggle } from "./i18n.js?v=2";
 
@@ -202,11 +202,11 @@ function initAnswersFromBlocks() {
   state.answers = {};
   for (const b of state.blocks) {
     for (const q of b.questions) {
-      const t = qType(q);
-      if (t === "yes_no") state.answers[q.id] = false;
-      else if (t === "single_choice") state.answers[q.id] = null;
-      else if (t === "multi_choice") state.answers[q.id] = [];
-      else if (t === "text_short") state.answers[q.id] = "";
+      const qkind = qType(q);
+      if (qkind === "yes_no") state.answers[q.id] = false;
+      else if (qkind === "single_choice") state.answers[q.id] = null;
+      else if (qkind === "multi_choice") state.answers[q.id] = [];
+      else if (qkind === "text_short") state.answers[q.id] = "";
       else state.answers[q.id] = false;
     }
   }
@@ -239,15 +239,15 @@ function setNavLoading(loading) {
 
 function normalizeBlockAnswers(block) {
   for (const q of block.questions) {
-    const t = qType(q);
+    const qkind = qType(q);
     const id = q.id;
-    if (t === "yes_no") {
+    if (qkind === "yes_no") {
       if (typeof state.answers[id] !== "boolean") state.answers[id] = false;
-    } else if (t === "single_choice") {
+    } else if (qkind === "single_choice") {
       if (state.answers[id] === undefined) state.answers[id] = null;
-    } else if (t === "multi_choice") {
+    } else if (qkind === "multi_choice") {
       if (!Array.isArray(state.answers[id])) state.answers[id] = [];
-    } else if (t === "text_short") {
+    } else if (qkind === "text_short") {
       if (typeof state.answers[id] !== "string") state.answers[id] = state.answers[id] == null ? "" : String(state.answers[id]);
     }
   }
@@ -491,11 +491,11 @@ function renderQuestions(direction = "forward") {
       card.appendChild(note);
     }
 
-    const t = qType(q);
-    if (t === "yes_no") renderYesNo(card, q);
-    else if (t === "single_choice") renderSingleChoice(card, q);
-    else if (t === "multi_choice") renderMultiChoice(card, q);
-    else if (t === "text_short") renderTextShort(card, q);
+    const qkind = qType(q);
+    if (qkind === "yes_no") renderYesNo(card, q);
+    else if (qkind === "single_choice") renderSingleChoice(card, q);
+    else if (qkind === "multi_choice") renderMultiChoice(card, q);
+    else if (qkind === "text_short") renderTextShort(card, q);
     else renderYesNo(card, q);
 
     container.appendChild(card);
@@ -936,6 +936,7 @@ async function submitScope() {
     institution,
     track: state.track,
     answers: { ...state.answers },
+    lang: getCurrentLang(),
   };
 
   let data;
@@ -1243,25 +1244,30 @@ async function boot() {
       inst.focus();
       return;
     }
-    let data;
+    const btnStart = $("#btn-start");
+    const origLabel = btnStart?.textContent;
     try {
-      data = await fetchQuestions(state.track);
-    } catch (e) {
-      showToast(
-        `${String(e.message || e)} — ${t("toast_api_hint")}`,
-      );
-      return;
+      if (btnStart) { btnStart.disabled = true; btnStart.textContent = t("loading_questions") || "…"; }
+      let data;
+      try {
+        data = await fetchQuestions(state.track);
+      } catch (e) {
+        showToast(`${String(e.message || e)} — ${t("toast_api_hint")}`);
+        return;
+      }
+      state.blocks = data.blocks || [];
+      if (!state.blocks.length) {
+        showToast(t("toast_no_blocks"));
+        return;
+      }
+      if (data.track && data.track !== state.track) state.track = data.track;
+      initAnswersFromBlocks();
+      state.step = 0;
+      setView("wizard");
+      renderQuestions();
+    } finally {
+      if (btnStart) { btnStart.disabled = false; btnStart.textContent = origLabel; }
     }
-    state.blocks = data.blocks || [];
-    if (!state.blocks.length) {
-      showToast(t("toast_no_blocks"));
-      return;
-    }
-    if (data.track && data.track !== state.track) state.track = data.track;
-    initAnswersFromBlocks();
-    state.step = 0;
-    setView("wizard");
-    renderQuestions();
   });
 
   $("#btn-back").addEventListener("click", () => {
@@ -1333,10 +1339,10 @@ async function boot() {
       saveTrackToStorage();
       syncTrackButtonsUI();
     }
-    // fetch questions for track then restore answers
+    // fetch questions for track then restore answers (uses EN overlay when lang=en)
     let data;
     try {
-      data = await fetchJSON(`/questions?track=${encodeURIComponent(state.track)}`);
+      data = await fetchQuestions(state.track);
     } catch (e) {
       showToast(`${t("toast_resume_fail")} ${String(e.message || e)}`);
       return;
@@ -1363,6 +1369,8 @@ async function boot() {
 }
 
 document.addEventListener("DOMContentLoaded", boot);
+
+document.addEventListener("app:toast", (e) => showToast(e.detail));
 
 document.addEventListener("langchange", async () => {
   // Re-apply question translations if the wizard is active and blocks are loaded

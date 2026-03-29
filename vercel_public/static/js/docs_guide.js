@@ -323,13 +323,13 @@ export function wireDocsGuideUI({ btnOpen, viewEl, btnBack, getTrack, setView })
     const statsEl = viewEl.querySelector("#dg-stats");
     if (statsEl) {
       statsEl.innerHTML = `
-        <span class="dg-stat"><strong>${incisos.length}</strong> ${t("dg_stat_incisos", { n: "" }).replace(/^\d*\s*/, "")}</span>
+        <span class="dg-stat"><strong>${incisos.length}</strong> ${t("dg_stat_incisos_label")}</span>
         <span class="dg-stat-sep">·</span>
-        <span class="dg-stat"><strong>${totalDocs}</strong> ${t("dg_stat_docs", { n: "" }).replace(/^\d*\s*/, "")}</span>
+        <span class="dg-stat"><strong>${totalDocs}</strong> ${t("dg_stat_docs_label")}</span>
         <span class="dg-stat-sep">·</span>
-        <span class="dg-stat dg-stat--crit"><strong>${totalCriticos}</strong> ${t("dg_stat_criticos", { n: "" }).replace(/^\d*\s*/, "")}</span>
+        <span class="dg-stat dg-stat--crit"><strong>${totalCriticos}</strong> ${t("dg_stat_criticos_label")}</span>
         <span class="dg-stat-sep">·</span>
-        <span class="dg-stat dg-stat--certik"><strong>${totalCertik}</strong> ${t("dg_stat_certik", { n: "" }).replace(/^\d*\s*/, "")}</span>`;
+        <span class="dg-stat dg-stat--certik"><strong>${totalCertik}</strong> ${t("dg_stat_certik_label")}</span>`;
     }
 
     // Update select option texts (data-i18n inside select don't auto-apply on option tags in all browsers)

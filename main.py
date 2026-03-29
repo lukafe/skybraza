@@ -272,7 +272,7 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
     lang = body.lang if body.lang in ("pt", "en") else "pt"
 
     try:
-        _, meta = compute_scope(body.answers, track=t, lang=lang)
+        _, meta = compute_scope(body.answers, track=t, lang=lang, build_df=False)
     except Exception:
         logger.exception("compute_scope failed")
         raise HTTPException(
@@ -321,7 +321,7 @@ def post_scope_export(body: ScopeRequest) -> StreamingResponse:
     lang = body.lang if body.lang in ("pt", "en") else "pt"
 
     try:
-        _, meta = compute_scope(body.answers, track=t, lang=lang)
+        _, meta = compute_scope(body.answers, track=t, lang=lang, build_df=False)
     except Exception:
         logger.exception("compute_scope failed (export)")
         raise HTTPException(

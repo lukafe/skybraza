@@ -50,7 +50,8 @@ export function wireDecisionTreeUI({ setView, getTrack }) {
       const tr = getTrack();
       renderDecisionTree(tr);
     } catch (e) {
-      alert(String(e?.message || e));
+      document.dispatchEvent(new CustomEvent("app:toast", { detail: String(e?.message || e) }));
+      btnOpen.focus();
     }
   });
 

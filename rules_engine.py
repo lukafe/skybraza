@@ -113,12 +113,15 @@ def compute_scope(
     answers: dict[str, Any],
     track: str | None = None,
     lang: str = "pt",
+    build_df: bool = True,
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
     """
     Retorna (dataframe só com incisos sujeitos a auditoria, metadados).
 
     ``track``: ``intermediaria`` (default), ``custodiante`` ou ``corretora``.
     ``lang``: ``pt`` (default) | ``en``
+    ``build_df``: se ``False``, devolve um DataFrame vazio (útil em endpoints onde só
+    os metadados são necessários, evitando a alocação desnecessária do pandas).
     """
     t = normalize_track(track or TRACK_DEFAULT)
     inc_matrix = build_incisos_matrix(t)
@@ -158,19 +161,19 @@ def compute_scope(
         why = why_by_key.get(key) or why_fallback
         hint = get_bcb_report_hint(key, track=t)
 
-        row = {
-            "Item IN 701": meta["item"],
-            "Artigo IN 701": meta["artigo_in701"],
-            "Descrição do Escopo": meta["descricao"],
-            "Ref. Resolução 520": meta["ref_resolucao"],
-            "Corpus (laws/)": meta["ficheiros_corpus"],
-            "Status corpus": meta["corpus_status"],
-            "Origem no escopo": origem,
-            "Por que será auditado": why,
-            "Orientação relatório ao BCB": hint,
-            "_key": key,
-        }
-        rows.append(row)
+        if build_df:
+            rows.append({
+                "Item IN 701": meta["item"],
+                "Artigo IN 701": meta["artigo_in701"],
+                "Descrição do Escopo": meta["descricao"],
+                "Ref. Resolução 520": meta["ref_resolucao"],
+                "Corpus (laws/)": meta["ficheiros_corpus"],
+                "Status corpus": meta["corpus_status"],
+                "Origem no escopo": origem,
+                "Por que será auditado": why,
+                "Orientação relatório ao BCB": hint,
+                "_key": key,
+            })
         incisos_auditar.append(
             {
                 "inciso_id": key,
@@ -201,9 +204,12 @@ def compute_scope(
             }
         )
 
-    df = pd.DataFrame(rows)
-    if not df.empty:
-        df = df.drop(columns=["_key"], errors="ignore")
+    if build_df:
+        df = pd.DataFrame(rows)
+        if not df.empty:
+            df = df.drop(columns=["_key"], errors="ignore")
+    else:
+        df = pd.DataFrame()
 
     mandatory_count = sum(1 for k in active_keys if k in mandatory)
     conditional_count = len(active_keys) - mandatory_count

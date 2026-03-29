@@ -4293,3 +4293,24 @@ body.app-view-intro .sk-main {
     display: none;
   }
 }
+
+/* ──────────────────────────────────────────────────────────
+   Accessibility: honour system "reduce motion" preference.
+   Disables non-essential animations for users with vestibular
+   or motion sensitivity conditions (WCAG 2.3 AAA / 2.1 AA).
+────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .questions--slide-in,
+  .questions--slide-back {
+    animation: none !important;
+  }
+}
