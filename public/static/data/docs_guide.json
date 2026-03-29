@@ -19,6 +19,44 @@
       "critica": "Sem este documento a certificação é inviável.",
       "alta":    "Ausência gera gap material — fortemente recomendado.",
       "media":   "Indicador de maturidade — ausência gera observação."
+    },
+    "certik_servicos": {
+      "proof_of_reserves_audit": {
+        "nome": "Proof of Reserves Audit",
+        "descricao": "Verificação independente de reservas com Merkle tree, comparação on-chain vs. liabilities, relatório de attestation e badge no Skynet. Modalidades: one-time ou Continuous Living PoR (dashboard em tempo real).",
+        "url": "https://www.certik.com/products/proof-of-reserves-audit",
+        "cor": "#f97316"
+      },
+      "pentest": {
+        "nome": "Penetration Testing",
+        "descricao": "Simulação avançada de ataques em componentes off-chain e aplicações Web3: APIs, portal de cliente, painéis de administração e infraestrutura. Cobertura de 500+ aplicações e 5.000+ APIs.",
+        "url": "https://certik.io/products/pentest",
+        "cor": "#a78bfa"
+      },
+      "smart_contract_audit": {
+        "nome": "Smart Contract Audit",
+        "descricao": "Avaliação de segurança de smart contracts e código blockchain, combinando revisão manual especializada, IA e verificação formal. Identifica vulnerabilidades e fornece relatório público com achados e remediações.",
+        "url": "https://www.certik.com/products/security-audit",
+        "cor": "#22c55e"
+      },
+      "skyinsights": {
+        "nome": "SkyInsights",
+        "descricao": "Plataforma de compliance, AML/CTF e gestão de risco: monitoramento de transações em tempo real, análise de endereços on-chain (300M+ labels), KYT (Know Your Transaction), alertas e relatórios de risco. Cobertura multi-chain.",
+        "url": "https://certik.io/products/skyinsights",
+        "cor": "#0ea5e9"
+      },
+      "dlt_security_solutions": {
+        "nome": "DLT Security Solutions",
+        "descricao": "Estratégia institucional, design de arquitetura e avaliação de segurança para DLT: sistemas on-chain, infraestrutura off-chain e prontidão regulatória. Para exchanges, custodiantes e bancos.",
+        "url": "https://certik.io/products/dlt-security-solutions",
+        "cor": "#6366f1"
+      },
+      "security_review": {
+        "nome": "Security Review / Independent Audit",
+        "descricao": "Revisão independente de programas de segurança, compliance ou vigilância de mercado por equipa de especialistas CertiK. Emite relatório formal com achados e recomendações.",
+        "url": "https://certik.io/products/smart-contract-audit",
+        "cor": "#2dd4bf"
+      }
     }
   },
   "incisos": [
@@ -82,6 +120,7 @@
           "titulo": "Relatório de Prova de Reservas",
           "categoria": "relatorio",
           "prioridade": "alta",
+          "certik_servico": "proof_of_reserves_audit",
           "justificativa_legal": "Inciso I(b) da IN 701 exige mecanismos de prova de reservas. A existência de relatório (interno ou externo) prova que o mecanismo opera em produção, não apenas existe na política.",
           "descricao": "Relatório periódico (interno ou com auditor externo) que comprova que a VASP detém on-chain os AV correspondentes às posições declaradas de clientes.",
           "conteudo_minimo": [
@@ -149,6 +188,7 @@
           "titulo": "Relatório de Attestation de Reservas",
           "categoria": "relatorio",
           "prioridade": "alta",
+          "certik_servico": "proof_of_reserves_audit",
           "justificativa_legal": "A prova de reservas deve ser verificável — um relatório periódico (idealmente com assinatura de auditor) é a evidência de que o mecanismo opera de fato.",
           "descricao": "Relatório mais recente de prova de reservas, interno ou produzido por auditor independente, demonstrando cobertura >= 100% das posições de clientes.",
           "conteudo_minimo": [
@@ -623,6 +663,7 @@
           "titulo": "Evidência de Ferramenta de Monitoramento Blockchain (KYT)",
           "categoria": "evidencia",
           "prioridade": "critica",
+          "certik_servico": "skyinsights",
           "justificativa_legal": "Art. 60, II da Res. 520 / inciso VIII da IN 701: o monitoramento de blockchain é parte do monitoramento contínuo exigido. Para VASP, o KYT é a principal fronteira de detecção de lavagem on-chain.",
           "descricao": "Descrição técnica da ferramenta KYT em uso (Chainalysis, Elliptic, TRM Labs ou equivalente), escopo de cobertura e evidência de alertas configurados.",
           "conteudo_minimo": [
@@ -870,6 +911,7 @@
           "titulo": "Relatório de Auditoria Independente de Custódia de Chaves",
           "categoria": "certificacao",
           "prioridade": "alta",
+          "certik_servico": "dlt_security_solutions",
           "justificativa_legal": "Art. 79 da Res. 520 e inciso VII da IN 701: a revisão independente dos controles de custódia é indicador de maturidade e prova de efetividade. Para uma VASP custodiante, é o documento de maior valor probatório.",
           "descricao": "Relatório de auditoria ou avaliação independente dos controles de custódia de chaves realizado nos últimos 24 meses por empresa especializada.",
           "conteudo_minimo": [
@@ -939,6 +981,7 @@
           "titulo": "Relatório do Último Pentest Externo",
           "categoria": "certificacao",
           "prioridade": "alta",
+          "certik_servico": "pentest",
           "justificativa_legal": "Inciso VIII: avaliação de riscos e detecção de vulnerabilidades. O pentest externo é a avaliação mais objetiva da resistência a ataques reais. Sem ele, o monitoramento é defensivo mas não proativo.",
           "descricao": "Sumário executivo do relatório do último pentest externo realizado por empresa independente, cobrindo superfícies públicas da VASP.",
           "conteudo_minimo": [
@@ -1026,6 +1069,8 @@
           "titulo": "Checklist de Avaliação de Novo Ativo (Due Diligence de Listagem)",
           "categoria": "evidencia",
           "prioridade": "alta",
+          "certik_servico": "smart_contract_audit",
+          "certik_nota": "A CertiK audita o smart contract do token candidato, fornecendo relatório que alimenta o checklist de listagem com evidência técnica objectiva.",
           "justificativa_legal": "Art. 64: a seleção deve seguir critérios estabelecidos na política. O checklist de avaliação é a evidência de que a política é aplicada sistematicamente, e não caso a caso de forma subjetiva.",
           "descricao": "Template e exemplos de checklist de avaliação usado na admissão de novo AV, cobrindo dimensões técnica, legal, de risco e de compliance.",
           "conteudo_minimo": [
@@ -1108,6 +1153,8 @@
           "titulo": "Ficha Técnica por Stablecoin Ofertada",
           "categoria": "evidencia",
           "prioridade": "alta",
+          "certik_servico": "smart_contract_audit",
+          "certik_nota": "A CertiK fornece auditoria do smart contract da stablecoin e perfil Skynet com análise de segurança, alimentando a ficha técnica com dados verificados de forma independente.",
           "justificativa_legal": "Art. 65, I: verificação de características do AV referenciado. A ficha técnica documenta a diligência realizada sobre cada stablecoin e serve de referência para monitoramento contínuo.",
           "descricao": "Documento por stablecoin ou AV referenciado em fiat listado, com características do emissor, estrutura de reservas, histórico de auditoria e riscos identificados.",
           "conteudo_minimo": [
@@ -1458,6 +1505,8 @@
           "titulo": "Descrição Técnica dos Mecanismos de Vigilância de Mercado",
           "categoria": "evidencia",
           "prioridade": "critica",
+          "certik_servico": "skyinsights",
+          "certik_nota": "SkyInsights inclui monitoramento de transações e detecção de padrões suspeitos on-chain (wash trading, endereços de risco, anomalias de volume). Cobre a camada blockchain da vigilância de mercado.",
           "justificativa_legal": "Inciso XIII exige 'mecanismos' — não apenas política. A descrição técnica prova que existem sistemas operacionais de detecção, não apenas declarações de intenção.",
           "descricao": "Documentação técnica da ferramenta ou sistema de vigilância de mercado: cobertura de pares, tipos de alertas configurados e processo de tratamento.",
           "conteudo_minimo": [
@@ -1488,6 +1537,7 @@
           "titulo": "Relatório de Revisão Independente Bienal do Programa de Vigilância",
           "categoria": "certificacao",
           "prioridade": "media",
+          "certik_servico": "security_review",
           "justificativa_legal": "Art. 70, IV da Res. 520: revisão independente bienal é requisito explícito. Sem este documento, a VASP incorre em infração literal ao art. 70, IV.",
           "descricao": "Relatório de revisão independente do programa de vigilância de práticas espúrias, realizado a cada 2 anos por empresa especializada.",
           "conteudo_minimo": [

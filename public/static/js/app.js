@@ -4,7 +4,7 @@
  */
 
 import { wireDecisionTreeUI } from "./decision_tree.js?v=3";
-import { wireDocsGuideUI } from "./docs_guide.js?v=1";
+import { wireDocsGuideUI } from "./docs_guide.js?v=2";
 
 const $ = (sel, root = document) => root.querySelector(sel);
 

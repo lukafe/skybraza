@@ -27,6 +27,29 @@ function esc(s) {
   return d.innerHTML;
 }
 
+/** Renderiza o badge CertiK para um documento */
+function renderCertikBadge(doc, certikServicos) {
+  if (!doc.certik_servico) return "";
+  const svc = certikServicos?.[doc.certik_servico] || {};
+  const nome = svc.nome || doc.certik_servico;
+  const url  = svc.url  || "https://www.certik.com";
+  const nota = doc.certik_nota ? `<p class="dg-certik-nota">${esc(doc.certik_nota)}</p>` : "";
+  return `
+<div class="dg-certik-block">
+  <div class="dg-certik-badge">
+    <span class="dg-certik-logo" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="currentColor" opacity="0.9"/>
+        <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span class="dg-certik-label">Made by CertiK</span>
+    <a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="dg-certik-service">${esc(nome)} ↗</a>
+  </div>
+  ${nota}
+</div>`;
+}
+
 /** Renderiza um documento individual dentro do accordion do inciso */
 function renderDocCard(doc, meta) {
   const catMeta = meta.categorias?.[doc.categoria] || {};
@@ -35,15 +58,17 @@ function renderDocCard(doc, meta) {
   const conteudo = Array.isArray(doc.conteudo_minimo)
     ? doc.conteudo_minimo.map((c) => `<li>${esc(c)}</li>`).join("")
     : "";
+  const hasCertik = !!doc.certik_servico;
 
   return `
-<div class="dg-doc-card dg-doc-card--${esc(doc.prioridade)}">
+<div class="dg-doc-card dg-doc-card--${esc(doc.prioridade)}${hasCertik ? " dg-doc-card--certik" : ""}">
   <div class="dg-doc-header">
     <span class="dg-doc-icon" aria-hidden="true">${icon}</span>
     <span class="dg-doc-titulo">${esc(doc.titulo)}</span>
     <span class="dg-prio-badge ${prio.cls}" title="${esc(prio.label)} — ${esc(meta.prioridades?.[doc.prioridade] || "")}">${esc(prio.label)}</span>
     ${doc.categoria ? `<span class="dg-cat-badge" style="background: ${esc(catMeta.cor || "#555")}22; border-color: ${esc(catMeta.cor || "#555")}55; color: ${esc(catMeta.cor || "#999")}">${esc(catMeta.label || doc.categoria)}</span>` : ""}
   </div>
+  ${renderCertikBadge(doc, meta.certik_servicos)}
   <p class="dg-doc-descricao">${esc(doc.descricao)}</p>
   <details class="dg-doc-detail">
     <summary class="dg-doc-detail-summary">
@@ -120,8 +145,8 @@ function renderIncisoCard(inciso, meta, idx) {
 </details>`;
 }
 
-/** Filtra os incisos visíveis com base no texto de pesquisa e categoria */
-function applyGuideFilter(root, searchVal, catVal) {
+/** Filtra os incisos visíveis com base no texto de pesquisa, prioridade e flag certik */
+function applyGuideFilter(root, searchVal, prioVal, certikOnly) {
   const q = searchVal.trim().toLowerCase();
   root.querySelectorAll(".dg-inciso").forEach((el) => {
     const id = el.dataset.incisoId || "";
@@ -134,16 +159,18 @@ function applyGuideFilter(root, searchVal, catVal) {
       resumo.toLowerCase().includes(q) ||
       rotulo.toLowerCase().includes(q);
 
-    let matchCat = true;
-    if (catVal && catVal !== "all") {
+    let matchPrio = true;
+    if (prioVal && prioVal !== "all") {
       const docs = el.querySelectorAll(".dg-doc-card");
-      matchCat = Array.from(docs).some((dc) =>
-        dc.classList.contains(`dg-doc-card--${catVal}`) ||
-        dc.querySelector(`.dg-cat-badge`)?.textContent?.toLowerCase().includes(catVal)
-      );
+      matchPrio = Array.from(docs).some((dc) => dc.classList.contains(`dg-doc-card--${prioVal}`));
     }
 
-    el.classList.toggle("dg-hidden", !(matchSearch && matchCat));
+    let matchCertik = true;
+    if (certikOnly) {
+      matchCertik = el.querySelector(".dg-doc-card--certik") !== null;
+    }
+
+    el.classList.toggle("dg-hidden", !(matchSearch && matchPrio && matchCertik));
   });
 }
 
@@ -176,6 +203,9 @@ export function wireDocsGuideUI({ btnOpen, viewEl, btnBack, getTrack, setView })
     const totalCriticos = incisos.reduce(
       (sum, i) => sum + (i.documentos?.filter((d) => d.prioridade === "critica").length || 0), 0
     );
+    const totalCertik = incisos.reduce(
+      (sum, i) => sum + (i.documentos?.filter((d) => d.certik_servico).length || 0), 0
+    );
     const statsEl = viewEl.querySelector("#dg-stats");
     if (statsEl) {
       statsEl.innerHTML = `
@@ -183,7 +213,9 @@ export function wireDocsGuideUI({ btnOpen, viewEl, btnBack, getTrack, setView })
         <span class="dg-stat-sep">·</span>
         <span class="dg-stat"><strong>${totalDocs}</strong> documentos mapeados</span>
         <span class="dg-stat-sep">·</span>
-        <span class="dg-stat dg-stat--crit"><strong>${totalCriticos}</strong> documentos críticos</span>`;
+        <span class="dg-stat dg-stat--crit"><strong>${totalCriticos}</strong> críticos</span>
+        <span class="dg-stat-sep">·</span>
+        <span class="dg-stat dg-stat--certik"><strong>${totalCertik}</strong> produzidos pela CertiK</span>`;
     }
 
     body.innerHTML = incisos
@@ -192,10 +224,12 @@ export function wireDocsGuideUI({ btnOpen, viewEl, btnBack, getTrack, setView })
 
     // Wire filter
     const searchEl = viewEl.querySelector("#dg-search");
-    const prioEl = viewEl.querySelector("#dg-prio-filter");
+    const prioEl   = viewEl.querySelector("#dg-prio-filter");
+    const certikEl = viewEl.querySelector("#dg-certik-only");
 
     function doFilter() {
-      applyGuideFilter(body, searchEl?.value || "", prioEl?.value || "all");
+      const certikOnly = certikEl?.checked || false;
+      applyGuideFilter(body, searchEl?.value || "", prioEl?.value || "all", certikOnly);
       const visible = body.querySelectorAll(".dg-inciso:not(.dg-hidden)").length;
       const countEl = viewEl.querySelector("#dg-filter-count");
       if (countEl) countEl.textContent = `${visible} de ${incisos.length}`;
@@ -203,6 +237,7 @@ export function wireDocsGuideUI({ btnOpen, viewEl, btnBack, getTrack, setView })
 
     searchEl?.addEventListener("input", doFilter);
     prioEl?.addEventListener("change", doFilter);
+    certikEl?.addEventListener("change", doFilter);
 
     // Expand all / Collapse all
     viewEl.querySelector("#dg-expand-all")?.addEventListener("click", () => {

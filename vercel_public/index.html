@@ -12,7 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Roboto+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/css/styles.css?v=33" />
+    <link rel="stylesheet" href="/static/css/styles.css?v=34" />
   </head>
   <body class="sk-app app-view-intro">
     <noscript>
@@ -174,11 +174,18 @@
                   <option value="media">Média</option>
                 </select>
               </label>
+              <label class="dg-filter-label dg-certik-toggle-label">
+                <input type="checkbox" id="dg-certik-only" class="dg-certik-checkbox" />
+                <span class="dg-certik-toggle-btn">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="currentColor"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Só CertiK
+                </span>
+              </label>
             </div>
           </div>
 
           <!-- Legenda visual -->
-          <div class="dg-legend" aria-label="Legenda de prioridade">
+          <div class="dg-legend" aria-label="Legenda de prioridade e CertiK">
             <div class="dg-legend-inner">
               <span class="dg-legend-item">
                 <span class="dg-prio-badge dg-prio--critica">Crítica</span>
@@ -193,6 +200,14 @@
               <span class="dg-legend-item">
                 <span class="dg-prio-badge dg-prio--media">Média</span>
                 <span class="dg-legend-text">Indicador de maturidade</span>
+              </span>
+              <span class="dg-legend-sep" aria-hidden="true">·</span>
+              <span class="dg-legend-item dg-legend-item--certik">
+                <span class="dg-certik-legend-badge">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="currentColor"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Made by CertiK
+                </span>
+                <span class="dg-legend-text">CertiK produz ou habilita este documento</span>
               </span>
             </div>
           </div>
@@ -408,6 +423,6 @@
 
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-    <script src="/static/js/app.js?v=33" type="module"></script>
+    <script src="/static/js/app.js?v=34" type="module"></script>
   </body>
 </html>
