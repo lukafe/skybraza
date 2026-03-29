@@ -454,6 +454,82 @@
       "text_en": "Are there documented processes to monitor spurious practices in the platform's trading environment (spoofing, wash trading, price manipulation)?",
       "justificativa_en": "XIII is already mandatory; operational maturity for Journey 2."
     },
+    "cust_E_external_custody_review": {
+      "text_en": "In the last two years, has there been an independent review or audit of the custody service (contract, custody policy, segregation or key controls), with a filed report?",
+      "justificativa_en": "Arts. 73 (X, §4–5), 75 and 82 — evidence of supervision and audit of custody."
+    },
+    "cust_E_instruction_event_logs": {
+      "text_en": "Do the systems preserve, in an auditable manner, client movement instructions and incident event logs for custodied VA (arts. 9, III–IV and 80), with a defined retention policy?",
+      "justificativa_en": "Custodian operational duties; supports XV and the contract type under art. 73."
+    },
+    "cust_E_por_client_facing": {
+      "text_en": "Does the institution disclose reserve demonstrations or attestations / balance reconciliations to clients or the public on a defined schedule?",
+      "justificativa_en": "I (b) is already mandatory; measures transparency maturity beyond internal controls."
+    },
+    "cust_E_position_report_contract": {
+      "text_en": "Does the custody contract regulate the frequency, channel and minimum content of the VA position report (statement), consistent with art. 79 of Res. 520?",
+      "justificativa_en": "§ 1 (III) IN 701; timely and accurate position reporting aligned with the internal register."
+    },
+    "cust_E_proprietary_use_monitor": {
+      "text_en": "Is there periodic monitoring (second line, risk or audit) to ensure client VA are not used in the institution's own operations, except under the cases expressly permitted by Res. 520?",
+      "justificativa_en": "Art. 31 caput and §1 — mitigation of improper use of client-owned VA."
+    },
+    "cust_E_seg_policy_patrimonial": {
+      "text_en": "Is there an approved policy describing segregation of client VA vs own VA, proof-of-reserves methods and treatment of the 5% limit (art. 30, §2–3), where applicable?",
+      "justificativa_en": "Arts. 29–30 Res. 520 — documentation expected by the supervisor and the certifier."
+    },
+    "cust_E_staking_bcb_notice": {
+      "text_en": "If staking is offered to clients (authorised scope art. 9, IV), was prior notification to the Central Bank completed with the legal advance notice (art. 82, §5 of Res. 520)?",
+      "justificativa_en": "Conditional on staking operations; complements cust_C_staking at the BCB supervision level."
+    },
+    "cust_E_stress_art82": {
+      "text_en": "Have stress tests been conducted in the last 12 months (art. 82), with documented and filed method and results available for supervision during the legal retention period?",
+      "justificativa_en": "Art. 82 caput and §1–2 — capacity of systems to protect custodied VA."
+    },
+    "cust_E_subcustody_art74": {
+      "text_en": "Does the institution maintain a documented sub-custodian oversight programme (due diligence, plans, continuous monitoring and reporting of non-compliance to the BCB), per art. 74 of Res. 520?",
+      "justificativa_en": "Replaces, in the custody modality, the broker/exchange focus on liquidity/market-maker contracts; core art. 74."
+    },
+    "corr_E_conflict_external_review": {
+      "text_en": "In the last two years, has there been a review or assessment by a qualified independent entity on conflict-of-interest structure and mitigation (intermediation + custody)?",
+      "justificativa_en": "Art. 85, IV — biennial verification by an independent entity (where applicable to the operation)."
+    },
+    "corr_E_conflict_monitor": {
+      "text_en": "Is there independent monitoring (second line, compliance or audit) of conflicts between the dealing/execution desk and custody, with findings recorded and a remediation plan?",
+      "justificativa_en": "Art. 85, II — independent monitoring of operational conformity regarding potential conflicts."
+    },
+    "corr_E_conflict_units": {
+      "text_en": "Are there distinct reporting lines or units between the intermediation/trading operation (desk, RFQ, OTC) and the VA custody/safekeeping operation, with written rules to reduce conflicts of interest (Res. 520 art. 85)?",
+      "justificativa_en": "Art. 85, I — explicit separation between intermediation and custody; reinforces X (a) and internal control clauses."
+    },
+    "corr_E_liquidity_provider_contract": {
+      "text_en": "Does the institution contract a liquidity provider for the trading environment (price formation, quotes), with a contract covering the business model, settlement and custody transfer per Res. 520?",
+      "justificativa_en": "Art. 38 Res. 520; documents the intermediation chain beyond custody."
+    },
+    "corr_E_margin_product": {
+      "text_en": "Does the institution offer or plan to offer financing for VA purchases (margin account / retail leverage), subject to the limits and eligibility requirements of Res. 520 (art. 72 and art. 12 restrictions)?",
+      "justificativa_en": "Art. 72 — only for eligible institutional profiles; document whether the product exists so the auditor can avoid non-compliance."
+    },
+    "corr_E_market_maker_contract": {
+      "text_en": "Does the institution contract a market maker for its book or trading environment, with minimum contractual operating parameters (frequency, spreads, fairness among participants)?",
+      "justificativa_en": "Art. 39 Res. 520; relevant for conflict and market conduct (XIII, 69, 70)."
+    },
+    "corr_E_por_client_facing": {
+      "text_en": "Does the institution disclose reserve demonstrations or attestations / balance reconciliations to clients or the public (website, app, report) on a defined schedule?",
+      "justificativa_en": "I (b) is already mandatory; documents transparency maturity beyond the internal minimum."
+    },
+    "corr_E_position_report_contract": {
+      "text_en": "Do the contract or terms regulate the frequency, channel and minimum content of the client's VA position report (statement), including after significant movements?",
+      "justificativa_en": "§ 1 (III) IN 701; Res. 520 art. 79 — timely and accurate reporting consistent with the internal position."
+    },
+    "corr_E_rfq_offering": {
+      "text_en": "Beyond a traditional order book or matching engine, does the institution offer quote-based trading (RFQ / request for quote) to clients, with disclosure of the conditions required by Res. 520 (art. 67, §6)?",
+      "justificativa_en": "Price and counterparty transparency in intermediation; linked to § 1 (I) and art. 67."
+    },
+    "corr_E_seg_policy_patrimonial": {
+      "text_en": "Is there a documented and approved policy describing the segregation of client VA from own VA (wallets, omnibus, proof of reserves, legal exceptions), aligned with Chapter IX of Res. 520?",
+      "justificativa_en": "Arts. 29–30 Res. 520; strengthens documentary evidence for I (a) and I (b)."
+    },
     "corr_E_treasury_split": {
       "text_en": "Are there documented controls separating own treasury movements from client asset operations (distinct ledgers, authorisation roles, audit trail)?",
       "justificativa_en": "Art. 29 and art. 69 Res. 520 — segregation between own and client assets."

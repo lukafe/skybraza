@@ -3,7 +3,7 @@
  * Legado /api/* mantido no servidor para integrações antigas.
  */
 
-import { wireDecisionTreeUI } from "./decision_tree.js?v=5";
+import { wireDecisionTreeUI } from "./decision_tree.js?v=6";
 import { wireDocsGuideUI } from "./docs_guide.js?v=3";
 import { initI18n, initLangSync, t, getCurrentLang, buildLangToggle } from "./i18n.js?v=2";
 
@@ -68,7 +68,7 @@ function apiBase() {
 }
 
 async function fetchJSON(path, options = {}) {
-  const diag = `Diagnóstico: GET ${apiBase()}/health`;
+  const diag = `GET ${apiBase()}/health`;
   let res;
   try {
     res = await fetch(`${apiBase()}${path}`, {
@@ -78,14 +78,14 @@ async function fetchJSON(path, options = {}) {
   } catch (e) {
     const base =
       e instanceof TypeError
-        ? "Não foi possível contactar a API (rede, CORS ou servidor parado)."
+        ? t("toast_api_error")
         : String(e?.message || e);
     throw new Error(`${base} ${diag}.`);
   }
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     const d = err.detail;
-    let msg = res.statusText || "Erro na requisição";
+    let msg = res.statusText || t("toast_req_error");
     if (typeof d === "string") msg = d;
     else if (d && typeof d === "object" && typeof d.message === "string") msg = d.message;
     throw new Error(`${msg} — ${diag}.`);
@@ -491,11 +491,11 @@ function renderQuestions(direction = "forward") {
       card.appendChild(note);
     }
 
-    const qtype = qType(q);
-    if (qtype === "yes_no") renderYesNo(card, q);
-    else if (qtype === "single_choice") renderSingleChoice(card, q);
-    else if (qtype === "multi_choice") renderMultiChoice(card, q);
-    else if (qtype === "text_short") renderTextShort(card, q);
+    const t = qType(q);
+    if (t === "yes_no") renderYesNo(card, q);
+    else if (t === "single_choice") renderSingleChoice(card, q);
+    else if (t === "multi_choice") renderMultiChoice(card, q);
+    else if (t === "text_short") renderTextShort(card, q);
     else renderYesNo(card, q);
 
     container.appendChild(card);
@@ -520,8 +520,8 @@ function escapeHtml(s) {
 /** Classe CSS do emblema de origem (matriz vs gatilhos). */
 function origemPillClass(origem) {
   const o = String(origem || "");
-  if (o.includes("Obrigatório") || o.includes("Mandatory")) return "dash-inciso-pill dash-inciso-pill--mandatory";
-  if (o.includes("Acionado") || o.includes("Triggered")) return "dash-inciso-pill dash-inciso-pill--triggered";
+  if (o.includes("Obrigatório")) return "dash-inciso-pill dash-inciso-pill--mandatory";
+  if (o.includes("Acionado")) return "dash-inciso-pill dash-inciso-pill--triggered";
   return "dash-inciso-pill dash-inciso-pill--neutral";
 }
 
@@ -771,7 +771,7 @@ function renderDashAuditInciso(row, checklistBloc, index, getNextPedidoIndex) {
   const sum = document.createElement("summary");
   sum.className = "dash-inciso-summary";
   const pillCls = origemPillClass(row.origem_escopo);
-  sum.innerHTML = `<span class="${pillCls}">${escapeHtml(row.origem_escopo || "")}</span><span class="dash-inciso-heading"><span class="dash-inciso-item">${escapeHtml(row.item || "")}</span><span class="dash-inciso-meta"><code>${escapeHtml(row.inciso_id || "")}</code> · ${escapeHtml(row.artigo_in701 || "")}</span></span><span class="dash-inciso-docs-n" aria-hidden="true">${nDocs} doc.</span>`;
+  sum.innerHTML = `<span class="${pillCls}">${escapeHtml(row.origem_escopo || "")}</span><span class="dash-inciso-heading"><span class="dash-inciso-item">${escapeHtml(row.item || "")}</span><span class="dash-inciso-meta"><code>${escapeHtml(row.inciso_id || "")}</code> · ${escapeHtml(row.artigo_in701 || "")}</span></span><span class="dash-inciso-docs-n" aria-hidden="true">${nDocs} ${t("dash_doc_abbr")}</span>`;
 
   const body = document.createElement("div");
   body.className = "dash-inciso-body";
@@ -936,7 +936,6 @@ async function submitScope() {
     institution,
     track: state.track,
     answers: { ...state.answers },
-    lang: getCurrentLang(),
   };
 
   let data;
@@ -1027,7 +1026,7 @@ async function submitScope() {
 
   if (!sujeitos.length) {
     listA.innerHTML =
-      '<p class="empty-col">Nenhum inciso no escopo. Se esperava linhas, confirme a versão da API (GET /api/v1/health).</p>';
+      `<p class="empty-col">${t("results_empty_scope")}</p>`;
   } else {
     sujeitos.forEach((row, i) => {
       if (!row || typeof row !== "object") return;
@@ -1096,46 +1095,66 @@ function wireSkipToggle(nf) {
   });
 }
 
-/** #10: export JSON download */
+/** Export scope as Excel (.xlsx) via POST /scope/export */
 async function exportScopeJSON() {
   const btn = $("#btn-export-json");
   if (!btn) return;
-  const data = state._lastScopeData;
-  if (!data) {
+  if (!state._lastScopeData && !Object.keys(state.answers || {}).length) {
     showToast(t("toast_run_first"));
     return;
   }
+  const origLabel = btn.textContent;
   try {
     btn.classList.add("btn-export-loading");
-    btn.textContent = "A exportar…";
+    btn.disabled = true;
+    btn.textContent = t("export_loading");
+
     const payload = {
-      institution: state._lastInstitution,
+      institution: state._lastInstitution || "",
       track: state.track,
       answers: { ...state.answers },
       lang: getCurrentLang(),
     };
-    let exportData;
-    try {
-      exportData = await fetchJSON("/scope/export", { method: "POST", body: JSON.stringify(payload) });
-    } catch {
-      // fallback: use the last scope response directly
-      exportData = data;
+
+    const resp = await fetch(`${apiBase()}/scope/export`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!resp.ok) {
+      let msg = `HTTP ${resp.status}`;
+      try {
+        const j = await resp.json();
+        msg = j?.detail?.message || j?.detail || msg;
+      } catch { /* ignore */ }
+      throw new Error(String(msg));
     }
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+
+    const arrayBuf = await resp.arrayBuffer();
+    const blob = new Blob([arrayBuf], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     const inst = (state._lastInstitution || "vasp").replace(/[^a-z0-9]/gi, "_").toLowerCase();
-    a.download = `certik_vasp_scope_${inst}_${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `certik_vasp_scope_${inst}_${new Date().toISOString().slice(0, 10)}.xlsx`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showToast("Exportação JSON concluída.");
+    showToast(t("export_done"));
   } catch (e) {
-    showToast("Erro ao exportar: " + String(e.message || e));
+    showToast(`${t("export_error")} ${String(e.message || e)}`);
   } finally {
     if (btn) {
       btn.classList.remove("btn-export-loading");
-      btn.textContent = "Exportar JSON";
+      btn.disabled = false;
+      btn.textContent = origLabel;
     }
   }
 }
@@ -1229,8 +1248,7 @@ async function boot() {
       data = await fetchQuestions(state.track);
     } catch (e) {
       showToast(
-        String(e.message || e) +
-          " — Confirme a API em /api/v1/questions?track=… (serve_web.py ou Vercel).",
+        `${String(e.message || e)} — ${t("toast_api_hint")}`,
       );
       return;
     }
@@ -1320,11 +1338,11 @@ async function boot() {
     try {
       data = await fetchJSON(`/questions?track=${encodeURIComponent(state.track)}`);
     } catch (e) {
-      showToast("Não foi possível retomar: " + String(e.message || e));
+      showToast(`${t("toast_resume_fail")} ${String(e.message || e)}`);
       return;
     }
     state.blocks = data.blocks || [];
-    if (!state.blocks.length) { showToast("Sem blocos para retomar."); return; }
+    if (!state.blocks.length) { showToast(t("toast_no_resume_blocks")); return; }
     initAnswersFromBlocks();
     // restore saved answers
     if (prog.answers) {
@@ -1359,12 +1377,48 @@ document.addEventListener("langchange", async () => {
       renderQuestions();
     }
   }
-  // Re-fetch and re-render results if visible — narratives come from the backend so we need a new API call
-  if (!$("#results").classList.contains("hidden") && state.answers && Object.keys(state.answers).length) {
-    try {
-      await submitScope();
-    } catch (_) {
-      // silent — user is already on the results page
+  // Re-render results if visible (re-submit is not needed; just re-render labels)
+  if (!$("#results").classList.contains("hidden") && state._lastScopeData) {
+    void getCurrentLang(); // strings are re-read via t() on re-render
+    // Re-run submitScope display portion with cached data
+    const data = state._lastScopeData;
+    const institution = state._lastInstitution || "";
+    const { sujeitos, fora } = normalizeScopePayload(data);
+    const resumo = data.resumo && typeof data.resumo === "object" ? data.resumo : {};
+    const na = Number(resumo.total_sujeitos_auditoria ?? sujeitos.length) || 0;
+    const nf = Number(resumo.total_fora_escopo_auditoria ?? fora.length) || 0;
+    const mand = Number(resumo.obrigatorios_matriz ?? 0) || 0;
+    const cond = Number(resumo.acionados_por_respostas ?? 0) || 0;
+
+    const trkMap2 = { custodiante: "custodiante", corretora: "corretora" };
+    const trkKey2 = trkMap2[data.track] ? data.track : "intermediaria";
+    const trkLabel2 = t(`track_pill_${trkKey2}`);
+    const elTrackPill = $("#results-track-badge");
+    if (elTrackPill) elTrackPill.textContent = `${trkLabel2} · IN 701`;
+
+    const trkSum2 = t(`track_summary_${trkKey2}`);
+    const nome2 = institution ? `<strong>${escapeHtml(institution)}</strong> — ` : "";
+    const summaryTpl2 = t("results_summary_html");
+    const elSummary = $("#results-summary");
+    if (elSummary) {
+      elSummary.innerHTML = summaryTpl2
+        .replace("{nome}", nome2)
+        .replace("{na}", String(na))
+        .replace("{nf}", String(nf))
+        .replace("{trk}", escapeHtml(trkSum2));
     }
+    const elMetrics = $("#metrics");
+    if (elMetrics) {
+      elMetrics.innerHTML = `
+        <div class="metric kpi-card"><div class="metric-value">${na}</div><div class="metric-label">${t("kpi_in_scope")}</div></div>
+        <div class="metric kpi-card"><div class="metric-value">${mand}</div><div class="metric-label">${t("kpi_mandatory")}</div></div>
+        <div class="metric kpi-card"><div class="metric-value">${cond}</div><div class="metric-label">${t("kpi_by_answers")}</div></div>
+        <div class="metric metric--muted kpi-card"><div class="metric-value">${nf}</div><div class="metric-label">${t("kpi_out_scope")}</div></div>
+      `;
+    }
+    const elLeadA = $("#col-audit-lead");
+    const elLeadS = $("#col-skip-lead");
+    if (elLeadA) elLeadA.textContent = t("dash_lead_audit");
+    if (elLeadS) elLeadS.textContent = t("dash_lead_skip");
   }
 });

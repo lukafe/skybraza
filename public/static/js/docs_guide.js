@@ -143,7 +143,7 @@ function renderDocCard(doc, meta) {
   const prioTitle = (() => {
     const v = meta.prioridades?.[doc.prioridade];
     if (!v) return "";
-    if (lang === "en") return typeof v === "object" ? (v.descricao_en || v.descricao_en || "") : String(v);
+    if (lang === "en") return typeof v === "object" ? (v.descricao_en || v.descricao || "") : String(v);
     return typeof v === "object" ? (v.descricao || "") : String(v);
   })();
 

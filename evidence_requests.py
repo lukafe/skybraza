@@ -21,84 +21,125 @@ EVIDENCE_PATH = PACKAGE_ROOT / "laws" / "AUDITOR_EVIDENCE_BY_INCISO.yaml"
 JOURNEY_2_SCHEMA_VERSION = "2"
 
 
-def _journey_2_corretora_e_notas(answers: dict[str, Any]) -> list[str]:
+def _journey_2_corretora_e_notas(answers: dict[str, Any], lang: str = "pt") -> list[str]:
     """Notas adicionais quando o questionário E (corretora) sinaliza intermediação ou produtos sensíveis."""
+    en = lang == "en"
     out: list[str] = []
     if answers.get("corr_E_margin_product"):
         out.append(
+            "Margin/leverage product indicated (corr_E_margin_product). Validate eligibility under Res. 520 art. 72 "
+            "and compatibility with art. 12 restrictions — cross-check with legal/compliance before BCB reporting."
+            if en else
             "Indicou produto de margem/alavancagem (corr_E_margin_product). Validar enquadramento na Res. 520 art. 72 "
             "(elegibilidade da instituição) e compatibilidade com vedações do art. 12 — cruzar com jurídico/compliance "
             "antes do relatório ao BCB."
         )
     if answers.get("corr_E_liquidity_provider_contract"):
         out.append(
+            "Liquidity provider contract in place (corr_E_liquidity_provider_contract). Gather the minimum clauses of "
+            "art. 38 Res. 520 (business model, settlement, safe custody transfer) for the evidence folder."
+            if en else
             "Contrato com provedor de liquidez (corr_E_liquidity_provider_contract). Reunir cláusulas mínimas do "
             "art. 38 Res. 520 (modelo de negócio, liquidação, transferência segura de custódia) para pasta de evidências."
         )
     if answers.get("corr_E_market_maker_contract"):
         out.append(
+            "Market maker contracted (corr_E_market_maker_contract). Document the contractual parameters of "
+            "art. 39 Res. 520 and fairness among participants."
+            if en else
             "Formador de mercado contratado (corr_E_market_maker_contract). Documentar parâmetros contratuais do "
             "art. 39 Res. 520 e equidade face a outros participantes."
         )
     if answers.get("corr_E_rfq_offering"):
         out.append(
+            "RFQ / request for quote active (corr_E_rfq_offering). Confirm client disclosure per Res. 520 "
+            "art. 67, §6 (quotes, deadlines, counterparty, risks)."
+            if en else
             "RFQ / request for quote ativo (corr_E_rfq_offering). Confirmar disclosure ao cliente conforme Res. 520 "
             "art. 67, §6º (cotações, prazos, contraparte, riscos)."
         )
     if answers.get("corr_E_conflict_units"):
         out.append(
+            "Desk vs. custody separation indicated (corr_E_conflict_units). Include organisational chart/policy "
+            "referencing Res. 520 art. 85 and clause X (a) IN 701 in the evidence folder."
+            if en else
             "Assinalou separação mesa vs custódia (corr_E_conflict_units). Incluir na evidência organograma/política "
             "referenciando Res. 520 art. 85 e inciso X (a) IN 701."
         )
     return out
 
 
-def _journey_2_custodiante_e_notas(answers: dict[str, Any]) -> list[str]:
+def _journey_2_custodiante_e_notas(answers: dict[str, Any], lang: str = "pt") -> list[str]:
     """Notas quando o questionário E (custodiante) sinaliza programas de custódia ou supervisão reforçada."""
+    en = lang == "en"
     out: list[str] = []
     if answers.get("cust_E_treasury_split"):
         out.append(
+            "Documented segregation of own VA vs client VA indicated (cust_E_treasury_split). Attach the policy "
+            "and org chart referencing Res. 520 arts. 29–31 and clauses I (a), XV IN 701."
+            if en else
             "Assinalou segregação documentada AV próprios vs clientes (cust_E_treasury_split). Juntar política "
             "e organograma referenciando Res. 520 arts. 29–31 e incisos I (a), XV IN 701."
         )
     if answers.get("cust_E_subcustody_art74"):
         out.append(
+            "Active sub-custody programme (cust_E_subcustody_art74). Ensure evidence of continuous monitoring "
+            "and timely reporting of non-compliance to the BCB (Res. 520 art. 74, VI)."
+            if en else
             "Programa de subcustódia ativo (cust_E_subcustody_art74). Garantir evidências de monitoramento "
             "contínuo e de comunicação tempestiva ao BCB em caso de descumprimento (Res. 520 art. 74, VI)."
         )
     if answers.get("cust_E_stress_art82"):
         out.append(
+            "Stress tests conducted (cust_E_stress_art82). File the method and results for the legal retention "
+            "period for supervision (Res. 520 art. 82, §2)."
+            if en else
             "Testes de stress realizados (cust_E_stress_art82). Arquivar método e resultados pelo prazo legal "
             "para supervisão (Res. 520 art. 82, §2º)."
         )
     if answers.get("cust_E_staking_bcb_notice"):
         out.append(
+            "Prior BCB notification for staking offering confirmed (cust_E_staking_bcb_notice). "
+            "Verify the date and protocol against art. 82, §5 of Res. 520."
+            if en else
             "Indicou cumprimento de comunicação prévia ao BCB sobre oferta de staking (cust_E_staking_bcb_notice). "
             "Confirmar data e protocolo face ao art. 82, §5º da Res. 520."
         )
     return out
 
 
-def _journey_2_intermediaria_e_notas(answers: dict[str, Any]) -> list[str]:
+def _journey_2_intermediaria_e_notas(answers: dict[str, Any], lang: str = "pt") -> list[str]:
     """Notas quando o bloco E (intermediária) sinaliza intermediação regulada ou produtos de mercado."""
+    en = lang == "en"
     out: list[str] = []
     if answers.get("int_E_art69_controls"):
         out.append(
+            "Art. 69 conflict-of-interest controls indicated (int_E_art69_controls). Attach the approved policy and "
+            "evidence of independent monitoring to the dossier — clause X (a) IN 701."
+            if en else
             "Assinalou controles de conflito art. 69 (int_E_art69_controls). Juntar política aprovada e evidências de "
             "monitoramento independente ao dossiê — inciso X (a) IN 701."
         )
     if answers.get("int_E_lp_art38"):
         out.append(
+            "Liquidity provider contract in place (int_E_lp_art38). Gather the minimum clauses of art. 38 Res. 520 "
+            "(business model, settlement, custody)."
+            if en else
             "Contrato com provedor de liquidez (int_E_lp_art38). Reunir cláusulas mínimas do art. 38 Res. 520 "
             "(modelo de negócio, liquidação, custódia)."
         )
     if answers.get("int_E_mm_art39"):
         out.append(
+            "Market maker contracted (int_E_mm_art39). Document the parameters of art. 39 Res. 520 and "
+            "fairness among participants."
+            if en else
             "Formador de mercado contratado (int_E_mm_art39). Documentar parâmetros do art. 39 Res. 520 e equidade "
             "entre participantes."
         )
     if answers.get("int_E_rfq_art67"):
         out.append(
+            "RFQ active (int_E_rfq_art67). Confirm client disclosure per Res. 520 art. 67, §6."
+            if en else
             "RFQ ativo (int_E_rfq_art67). Confirmar disclosure ao cliente conforme Res. 520 art. 67, §6º."
         )
     return out
@@ -196,11 +237,17 @@ def missing_evidence_yaml_incisos(track: str | None = None) -> list[str]:
     return sorted(missing)
 
 
-def build_journey_2_payload(answers: dict[str, Any], meta_scope: dict[str, Any]) -> dict[str, Any]:
+def build_journey_2_payload(
+    answers: dict[str, Any],
+    meta_scope: dict[str, Any],
+    lang: str = "pt",
+) -> dict[str, Any]:
     """
     ``answers`` deve estar normalizado (ex.: output de ``normalize_answers``).
     ``meta_scope`` deve conter pelo menos ``active_keys`` (set de ids de inciso).
+    ``lang``: ``pt`` (default) | ``en``
     """
+    en = lang == "en"
     data = _raw_evidence_config()
     meta_yaml = data.get("meta") if isinstance(data.get("meta"), dict) else {}
     gh_user = str(meta_yaml.get("smart_contract_github_user") or "Certik4audit").strip() or "Certik4audit"
@@ -227,38 +274,65 @@ def build_journey_2_payload(answers: dict[str, Any], meta_scope: dict[str, Any])
 
     notas: list[str] = []
     if p_staking and not p_sc:
-        notas.append(
-            f"A operação indica staking/rendimento ({q_staking}). Confirme se existem smart contracts próprios ou "
-            f"white-label on-chain não refletidos na pergunta correspondente ({q_sc})."
-        )
+        if en:
+            notas.append(
+                f"The operation indicates staking/yield ({q_staking}). Confirm whether own or white-label "
+                f"on-chain smart contracts exist that are not reflected in the corresponding question ({q_sc})."
+            )
+        else:
+            notas.append(
+                f"A operação indica staking/rendimento ({q_staking}). Confirme se existem smart contracts próprios ou "
+                f"white-label on-chain não refletidos na pergunta correspondente ({q_sc})."
+            )
 
     if track == "corretora":
-        notas.extend(_journey_2_corretora_e_notas(answers))
+        notas.extend(_journey_2_corretora_e_notas(answers, lang=lang))
     elif track == "custodiante":
-        notas.extend(_journey_2_custodiante_e_notas(answers))
+        notas.extend(_journey_2_custodiante_e_notas(answers, lang=lang))
     elif track == "intermediaria":
-        notas.extend(_journey_2_intermediaria_e_notas(answers))
+        notas.extend(_journey_2_intermediaria_e_notas(answers, lang=lang))
+
+    if en:
+        sc_acao = (
+            f"Share the Git repository URL (read access) for the smart contracts in scope **or** invite the GitHub user "
+            f"**{gh_user}** to the private repository with the appropriate permission for audit."
+        )
+    else:
+        sc_acao = (
+            f"Enviar o URL do repositório Git (leitura) dos smart contracts em scope **ou** convidar o utilizador "
+            f"GitHub **{gh_user}** ao repositório privado com permissão adequada para auditoria."
+        )
 
     sc_block: dict[str, Any] = {
         "aplicavel": p_sc,
         "github_username_convite": gh_user,
-        "acao_cliente": (
-            f"Enviar o URL do repositório Git (leitura) dos smart contracts em scope **ou** convidar o utilizador "
-            f"GitHub **{gh_user}** ao repositório privado com permissão adequada para auditoria."
-        ),
+        "acao_cliente": sc_acao,
     }
 
     if p_surf:
-        pentest_instr = (
-            f"Preencher o formulário de scoping de penetration test: {pentest_url}"
-            if pentest_url
-            else "Preencher o formulário de pentest que a equipa CertiK lhe enviar (URL não configurado no servidor — defina CERTIK_PENTEST_FORM_URL)."
-        )
+        if en:
+            pentest_instr = (
+                f"Fill in the penetration test scoping form: {pentest_url}"
+                if pentest_url
+                else "Fill in the pentest form that the CertiK team will send you (URL not configured on the server — set CERTIK_PENTEST_FORM_URL)."
+            )
+        else:
+            pentest_instr = (
+                f"Preencher o formulário de scoping de penetration test: {pentest_url}"
+                if pentest_url
+                else "Preencher o formulário de pentest que a equipa CertiK lhe enviar (URL não configurado no servidor — defina CERTIK_PENTEST_FORM_URL)."
+            )
     else:
-        pentest_instr = (
-            "Indicou que não opera superfícies expostas próprias (site/app/API/painel). "
-            "Confirme com o analista CertiK antes de excluir pentest do programa."
-        )
+        if en:
+            pentest_instr = (
+                "You indicated that the institution does not operate its own internet-facing surfaces (website/app/API/panel). "
+                "Confirm with the CertiK analyst before excluding pentest from the programme."
+            )
+        else:
+            pentest_instr = (
+                "Indicou que não opera superfícies expostas próprias (site/app/API/painel). "
+                "Confirme com o analista CertiK antes de excluir pentest do programa."
+            )
 
     pentest_block: dict[str, Any] = {
         "aplicavel": p_surf,
@@ -281,7 +355,7 @@ def build_journey_2_payload(answers: dict[str, Any], meta_scope: dict[str, Any])
         if isinstance(raw_items, list) and raw_items:
             items = _enrich_pedidos([dict(x) for x in raw_items if isinstance(x, dict)])
         else:
-            items = _enrich_pedidos(_fallback_pedidos_inciso(key, inc_matrix))
+            items = _enrich_pedidos(_fallback_pedidos_inciso(key, inc_matrix, lang=lang))
         checklist.append(
             {
                 "inciso_id": key,
@@ -291,9 +365,11 @@ def build_journey_2_payload(answers: dict[str, Any], meta_scope: dict[str, Any])
         )
         total_pedidos += len(items)
 
+    j2_label = "Journey 2 — evidence and technical services" if en else "Jornada 2 — evidências e serviços técnicos"
+
     return {
         "journey_2_schema_version": JOURNEY_2_SCHEMA_VERSION,
-        "label": str(meta_yaml.get("journey_label") or "Jornada 2 — evidências e serviços técnicos"),
+        "label": str(meta_yaml.get("journey_label") or j2_label),
         "smart_contract_audit": sc_block,
         "penetration_test": pentest_block,
         "notas_heuristica": notas,
@@ -302,8 +378,25 @@ def build_journey_2_payload(answers: dict[str, Any], meta_scope: dict[str, Any])
     }
 
 
-def _fallback_pedidos_inciso(inciso_id: str, inc_matrix: dict[str, dict[str, str]]) -> list[dict[str, Any]]:
+def _fallback_pedidos_inciso(
+    inciso_id: str, inc_matrix: dict[str, dict[str, str]], lang: str = "pt"
+) -> list[dict[str, Any]]:
     rot = inc_matrix.get(inciso_id, {}).get("item", inciso_id)
+    if lang == "en":
+        return [
+            {
+                "id": f"ev_fallback_{inciso_id}_pol",
+                "titulo": f"Applicable policies and procedures — {rot}",
+                "detalhe": "Approved version, effective date, control owner and recent execution evidence (redacted sample).",
+                "categoria": "politica",
+            },
+            {
+                "id": f"ev_fallback_{inciso_id}_ev",
+                "titulo": f"Supporting artefacts for clause — {rot}",
+                "detalhe": "Technical documentation or internal reports demonstrating implementation (without unnecessary sensitive data).",
+                "categoria": "evidencia",
+            },
+        ]
     return [
         {
             "id": f"ev_fallback_{inciso_id}_pol",

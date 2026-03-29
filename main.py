@@ -34,7 +34,7 @@ if str(ROOT) not in sys.path:
 from fastapi import APIRouter, FastAPI, HTTPException, Query, Request, Response  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from fastapi.middleware.gzip import GZipMiddleware  # noqa: E402
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse  # noqa: E402
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, StreamingResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 from pydantic import BaseModel, Field  # noqa: E402
 
@@ -270,6 +270,7 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
     _raise_if_track_disabled(t)
 
     lang = body.lang if body.lang in ("pt", "en") else "pt"
+
     try:
         _, meta = compute_scope(body.answers, track=t, lang=lang)
     except Exception:
@@ -278,7 +279,7 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
             status_code=400,
             detail={
                 "code": "SCOPE_COMPUTE_ERROR",
-                "message": "Não foi possível calcular o escopo com as respostas enviadas. Revise o questionário ou tente novamente.",
+                "message": "Could not compute scope with the answers provided. Review the questionnaire and try again.",
             },
         ) from None
 
@@ -298,6 +299,62 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
         "corpus_readiness": meta["corpus_readiness"],
         "journey_2": meta.get("journey_2") or {},
     }
+
+
+@api_router.post("/scope/export")
+def post_scope_export(body: ScopeRequest) -> StreamingResponse:
+    """
+    Gera e devolve ficheiro .xlsx com o escopo completo (4 folhas: Resumo, No Escopo,
+    Fora do Escopo, Prontidão Corpus). Aceita os mesmos campos que POST /scope.
+    """
+    from excel_export import build_scope_excel
+    from matrix_loader import MatrixLoadError, normalize_track
+    from rules_engine import compute_scope
+
+    try:
+        t = normalize_track(body.track)
+    except MatrixLoadError as e:
+        raise HTTPException(status_code=400, detail={"code": "INVALID_TRACK", "message": str(e)}) from e
+
+    _raise_if_track_disabled(t)
+
+    lang = body.lang if body.lang in ("pt", "en") else "pt"
+
+    try:
+        _, meta = compute_scope(body.answers, track=t, lang=lang)
+    except Exception:
+        logger.exception("compute_scope failed (export)")
+        raise HTTPException(
+            status_code=400,
+            detail={"code": "SCOPE_COMPUTE_ERROR", "message": "Could not compute scope."},
+        ) from None
+
+    inst = body.institution.strip()
+    scope_response = {
+        "institution": inst,
+        "track": t,
+        "incisos_sujeitos_auditoria": meta["incisos_sujeitos_auditoria"],
+        "incisos_fora_escopo_auditoria": meta["incisos_fora_escopo_auditoria"],
+        "resumo": {
+            "total_sujeitos_auditoria": meta["total_count"],
+            "obrigatorios_matriz": meta["mandatory_count"],
+            "acionados_por_respostas": meta["conditional_count"],
+            "total_fora_escopo_auditoria": meta["total_fora_escopo_auditoria"],
+        },
+        "corpus_readiness": meta["corpus_readiness"],
+    }
+
+    buf = build_scope_excel(scope_response, lang=lang)
+
+    from datetime import date
+    safe_inst = "".join(c if c.isalnum() or c in "-_" else "_" for c in inst)[:40] or "export"
+    filename = f"certik_vasp_scope_{safe_inst}_{date.today().isoformat()}.xlsx"
+
+    return StreamingResponse(
+        buf,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 
 app.include_router(api_router, prefix="/api")

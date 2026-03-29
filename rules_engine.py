@@ -53,62 +53,60 @@ SCOPE_COLUMNS: tuple[str, ...] = (
 
 def _why_out_of_scope(potential: list[str], *, mandatory_in_yaml: bool, lang: str = "pt") -> str:
     """Texto para incisos fora do ``active_keys`` (inclui supressão de ids ainda obrigatórios na YAML)."""
-    if lang == "en":
-        tail = ""
-        if potential:
-            t_str = "; ".join(potential[:8])
-            if len(potential) > 8:
-                t_str += "…"
-            tail = f" If the operation evolves, indicative conditions in the tool include: {t_str}"
-        if mandatory_in_yaml:
+    en = lang == "en"
+    tail = ""
+    if potential:
+        tr = "; ".join(potential[:8])
+        if len(potential) > 8:
+            tr += "…"
+        if en:
+            tail = f" If the operation evolves, indicative conditions in the tool include: {tr}"
+        else:
+            tail = f" Se a operação evoluir, condições indicativas na ferramenta incluem: {tr}"
+
+    if mandatory_in_yaml:
+        if en:
             base = (
-                "Not present in the active scope calculated for this submission: the clause is a fixed mandatory item in the YAML "
-                "matrix for this track, but was excluded by a declarative rule (e.g. exclusively non-custodial model) or does not "
-                "remain in the scope given the answers provided."
+                "Not in the active scope calculated for this submission: the clause is a fixed mandatory in the YAML "
+                "matrix for this track, but was excluded by a declarative rule (e.g. exclusively non-custodial model) "
+                "or does not apply given the answers."
             )
             if not potential:
                 return (
                     base
-                    + " There are no conditional questions listing this id; the exclusion generally follows non-custodial suppression "
-                    "— validate the classification with compliance or legal counsel."
+                    + " There are no conditional questions listing this id; the exclusion generally follows "
+                    "non-custodial suppression — verify with compliance or legal."
                 )
-            return base + tail
+        else:
+            base = (
+                "Não consta no escopo ativo calculado nesta submissão: o inciso é obrigatório fixo na matriz YAML desta "
+                "trilha, mas foi excluído por regra declarativa (por exemplo, modelo exclusivamente não custodial) ou não "
+                "se mantém na delimitação face às respostas."
+            )
+            if not potential:
+                return (
+                    base
+                    + " Não há perguntas condicionais que listem este id; em geral a exclusão segue a supressão não custodial "
+                    "— validar enquadramento com compliance ou jurídico."
+                )
+        return base + tail
+
+    if en:
         base = (
-            "Not part of the audit scope for this delimitation: it is not a fixed mandatory item in the matrix for this track "
-            "under the current model and no answer triggered this clause."
+            "Not part of the audit scope for this delimitation: it is not a fixed mandatory in this track's matrix "
+            "for the current model and no answer given triggered this clause."
         )
         if potential:
             return base + tail
         return f"{base} There is no trigger mapped in the current questionnaire for this clause."
-
-    tail = ""
-    if potential:
-        t_str = "; ".join(potential[:8])
-        if len(potential) > 8:
-            t_str += "…"
-        tail = f" Se a operação evoluir, condições indicativas na ferramenta incluem: {t_str}"
-
-    if mandatory_in_yaml:
+    else:
         base = (
-            "Não consta no escopo ativo calculado nesta submissão: o inciso é obrigatório fixo na matriz YAML desta "
-            "trilha, mas foi excluído por regra declarativa (por exemplo, modelo exclusivamente não custodial) ou não "
-            "se mantém na delimitação face às respostas."
+            "Não integra o escopo de auditoria desta delimitação: não é obrigatório fixo na matriz desta trilha "
+            "para o modelo atual e nenhuma resposta dada acionou este inciso."
         )
-        if not potential:
-            return (
-                base
-                + " Não há perguntas condicionais que listem este id; em geral a exclusão segue a supressão não custodial "
-                "— validar enquadramento com compliance ou jurídico."
-            )
-        return base + tail
-
-    base = (
-        "Não integra o escopo de auditoria desta delimitação: não é obrigatório fixo na matriz desta trilha "
-        "para o modelo atual e nenhuma resposta dada acionou este inciso."
-    )
-    if potential:
-        return base + tail
-    return f"{base} Não há gatilho mapeado no questionário atual para este inciso."
+        if potential:
+            return base + tail
+        return f"{base} Não há gatilho mapeado no questionário atual para este inciso."
 
 
 def compute_scope(
@@ -120,7 +118,7 @@ def compute_scope(
     Retorna (dataframe só com incisos sujeitos a auditoria, metadados).
 
     ``track``: ``intermediaria`` (default), ``custodiante`` ou ``corretora``.
-    ``lang``: ``pt`` (default) | ``en`` — idioma das narrativas geradas.
+    ``lang``: ``pt`` (default) | ``en``
     """
     t = normalize_track(track or TRACK_DEFAULT)
     inc_matrix = build_incisos_matrix(t)
@@ -137,7 +135,7 @@ def compute_scope(
     # Ajuste declarativo: modelo exclusivamente não custodial (condições por trilha em scope_narrative).
     suppress_custody_cluster_if_non_custodial(active_keys, triggered_by, norm, t)
 
-    why_by_key = build_why_texts_for_scope(active_keys, triggered_by, norm, mandatory, inc_matrix, t, lang)
+    why_by_key = build_why_texts_for_scope(active_keys, triggered_by, norm, mandatory, inc_matrix, t)
     llm_whys = try_enrich_why_with_llm(why_by_key, norm, triggered_by, inc_matrix, t)
     why_by_key = merge_llm_whys(why_by_key, llm_whys)
 
@@ -226,7 +224,7 @@ def compute_scope(
         "incisos_sujeitos_auditoria": incisos_auditar,
         "incisos_fora_escopo_auditoria": incisos_fora,
     }
-    meta_out["journey_2"] = build_journey_2_payload(norm, meta_out)
+    meta_out["journey_2"] = build_journey_2_payload(norm, meta_out, lang=lang)
     return df, meta_out
 
 

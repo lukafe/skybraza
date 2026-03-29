@@ -59,8 +59,8 @@
   "results_dashboard":      { "pt": "Dashboard",                        "en": "Dashboard" },
   "results_scope_panel":    { "pt": "Painel de escopo",                 "en": "Scope dashboard" },
   "btn_new_questionnaire":  { "pt": "Novo questionário",                "en": "New questionnaire" },
-  "btn_export_json":        { "pt": "Exportar JSON",                    "en": "Export JSON" },
-  "btn_export_title":       { "pt": "Descarregar pacote JSON com escopo, respostas e prontidão do corpus", "en": "Download JSON package with scope, answers and corpus readiness" },
+  "btn_export_json":        { "pt": "Exportar Excel",                   "en": "Export Excel" },
+  "btn_export_title":       { "pt": "Descarregar ficheiro Excel (.xlsx) com escopo, narrativas e prontidão do corpus", "en": "Download Excel file (.xlsx) with scope, narratives and corpus readiness" },
   "chart_title":            { "pt": "Cobertura da matriz IN 701",       "en": "IN 701 matrix coverage" },
   "chart_sub":              { "pt": "Distribuição por origem no universo de incisos da trilha", "en": "Distribution by origin across the track's clause universe" },
   "donut_in_scope":         { "pt": "no escopo",                        "en": "in scope" },
@@ -150,8 +150,8 @@
   "toast_api_error":        { "pt": "Não foi possível contactar a API (rede, CORS ou servidor parado).", "en": "Could not reach the API (network, CORS or server stopped)." },
   "toast_req_error":        { "pt": "Erro na requisição",              "en": "Request error" },
   "export_loading":         { "pt": "A exportar…",                    "en": "Exporting…" },
-  "export_error":           { "pt": "Falha ao exportar —",            "en": "Export failed —" },
-  "export_api_fallback":    { "pt": "API indisponível — exportando dados locais.", "en": "API unavailable — exporting local data." },
+  "export_error":           { "pt": "Erro ao exportar —",             "en": "Export failed —" },
+  "export_done":            { "pt": "Ficheiro Excel exportado.",      "en": "Excel file exported." },
 
   "toast_fill_name":        { "pt": "Indique o nome da sua empresa para continuar.", "en": "Enter your company name to continue." },
   "toast_no_blocks":        { "pt": "Nenhum bloco de perguntas retornado para esta trilha.", "en": "No question blocks returned for this track." },
@@ -221,7 +221,12 @@
   "dt_micro_dot":            { "pt": "Cada coluna = uma <strong>condição</strong> possível", "en": "Each column = a possible <strong>condition</strong>" },
   "dt_micro_tri":            { "pt": "Triângulos = <strong>incisos</strong> acrescentados ao escopo", "en": "Triangles = <strong>clauses</strong> added to scope" },
   "dt_popover_close":        { "pt": "Fechar",                        "en": "Close" },
-  "dt_suppress_note_en":     { "pt": "", "en": "In any track, if the declared model is exclusively non-custodial — intermediary: P1 = No, P_arch = client_only, P_tp without custody_inst; custodian: cust_A_model = client_only, cust_A_transit = No, cust_B_tp without subcustody; broker/exchange: corr_A_model = client_only, corr_A_transit = No, corr_B_tp without subcustody — the engine removes VII, XIV, XVI and XVII from scope. For custodian and broker/exchange tracks it also removes XV. Rule: scope_narrative.suppress_custody_cluster_if_non_custodial. Contradictory answers (e.g. transit Yes with 'Client only') must be corrected by the user; there is no automatic conflict resolution." },
+  "dt_load_error":           { "pt": "Dados da árvore indisponíveis. Execute python scripts/export_decision_tree_data.py", "en": "Decision tree data unavailable. Run python scripts/export_decision_tree_data.py" },
+  "dash_doc_abbr":           { "pt": "doc.",                         "en": "doc." },
+  "toast_api_hint":          { "pt": "Verifique /api/v1/questions?track=… (serve_web.py ou Vercel).", "en": "Check /api/v1/questions?track=… (serve_web.py or Vercel)." },
+  "toast_resume_fail":       { "pt": "Não foi possível retomar:",    "en": "Could not resume:" },
+  "toast_no_resume_blocks":  { "pt": "Sem blocos para retomar.",     "en": "No blocks to resume." },
+  "results_empty_scope":     { "pt": "Nenhum inciso no escopo. Se esperava linhas, confirme a versão da API (GET /api/v1/health).", "en": "No clauses in scope. If you expected results, check the API version (GET /api/v1/health)." },
 
   "wizard_select_q":         { "pt": "Selecione uma opção em {qid} antes de continuar.", "en": "Select an option in {qid} before continuing." }
 }
