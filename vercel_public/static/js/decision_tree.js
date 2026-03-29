@@ -3,6 +3,8 @@
  * Dados: /static/data/decision_tree.json (gerado por scripts/export_decision_tree_data.py)
  */
 
+import { t } from "./i18n.js?v=1";
+
 const DT_JSON_VER = "3";
 
 /** @type {Record<string, unknown> | null} */
@@ -111,7 +113,7 @@ export async function renderDecisionTree(track) {
     const showSuppress = Boolean(suppressText);
     noteSuppress.classList.toggle("hidden", !showSuppress);
     if (showSuppress) {
-      noteSuppress.innerHTML = `<p class="dt-suppress-text"><strong>Modelo não custodial (todas as trilhas):</strong> ${escapeHtml(suppressText)}</p>`;
+      noteSuppress.innerHTML = `<p class="dt-suppress-text"><strong>${t("dt_non_custodial_prefix")}</strong> ${escapeHtml(suppressText)}</p>`;
     }
   }
 
@@ -210,7 +212,7 @@ function wireFlowRailUX(host) {
   host.querySelectorAll(".dt-flow-rail").forEach((rail) => {
     rail.setAttribute("tabindex", "0");
     if (!rail.getAttribute("aria-label")) {
-      rail.setAttribute("aria-label", "Ramo de decisão — clique para destacar ou use Enter");
+      rail.setAttribute("aria-label", t("dt_branch_aria"));
     }
     rail.addEventListener("click", (ev) => {
       if (ev.target.closest("button")) return;
@@ -235,7 +237,7 @@ function edgeSubtitle(e, whyPlain) {
   const n = String(e.note || "").trim();
   if (n) return n.length > 100 ? `${n.slice(0, 97)}…` : n;
   if (whyPlain) return whyPlain.length > 90 ? `${whyPlain.slice(0, 87)}…` : whyPlain;
-  return "Ramificação declarada no questionário";
+  return t("dt_branch_default");
 }
 
 /**
@@ -275,7 +277,7 @@ function renderFlowDiagramHTML(q, cat) {
       } else {
         const emptyLabel = e.note
           ? escapeHtml(String(e.note).slice(0, 120)) + (String(e.note).length > 120 ? "…" : "")
-          : "Nenhum inciso por esta ramificação";
+          : t("dt_no_clauses");
         outcomesHtml = `<div class="dt-flow-outcome dt-flow-outcome--empty">
             <span class="dt-flow-h-line" aria-hidden="true"></span>
             <span class="dt-flow-triangle dt-flow-triangle--muted" aria-hidden="true"></span>
@@ -304,14 +306,14 @@ function renderFlowDiagramHTML(q, cat) {
     })
     .join("");
 
-  return `<div class="dt-flow-canvas" role="region" aria-label="Diagrama de decisão horizontal">
+  return `<div class="dt-flow-canvas" role="region" aria-label="${t("dt_diagram_aria")}">
     <ul class="dt-flow-micro-legend">
-      <li><span class="dt-micro-ico dt-micro-ico--bar" aria-hidden="true"></span> Esta barra = <strong>esta pergunta</strong></li>
-      <li><span class="dt-micro-ico dt-micro-ico--dot" aria-hidden="true"></span> Cada coluna = uma <strong>condição</strong> possível</li>
-      <li><span class="dt-micro-ico dt-micro-ico--tri" aria-hidden="true"></span> Triângulos = <strong>incisos</strong> acrescentados ao escopo</li>
+      <li><span class="dt-micro-ico dt-micro-ico--bar" aria-hidden="true"></span> ${t("dt_micro_bar")}</li>
+      <li><span class="dt-micro-ico dt-micro-ico--dot" aria-hidden="true"></span> ${t("dt_micro_dot")}</li>
+      <li><span class="dt-micro-ico dt-micro-ico--tri" aria-hidden="true"></span> ${t("dt_micro_tri")}</li>
     </ul>
     <div class="dt-flow-h-rail">
-      <div class="dt-flow-root" title="Pergunta">
+      <div class="dt-flow-root" title="${t("dt_decision_point")}">
         <span class="dt-flow-root-label">${id}</span>
       </div>
       <div class="dt-flow-rails">${rails}</div>
@@ -326,7 +328,7 @@ function renderFlowDiagramHTML(q, cat) {
 function renderQuestionCard(q, cat) {
   const id = escapeHtml(q.id);
   const typ = escapeHtml(q.type || "");
-  const audit = q.audit_only ? `<span class="dt-badge dt-badge--audit">Só relatório / J2</span>` : `<span class="dt-badge dt-badge--scope">Pode alterar escopo</span>`;
+  const audit = q.audit_only ? `<span class="dt-badge dt-badge--audit">${t("dt_badge_audit")}</span>` : `<span class="dt-badge dt-badge--scope">${t("dt_badge_scope")}</span>`;
   const text = escapeHtml(q.text || "");
   const why = escapeHtml(q.justificativa || "");
 
@@ -344,8 +346,8 @@ function renderQuestionCard(q, cat) {
       </summary>
       <div class="dt-q-body">
         <p class="dt-q-text">${text}</p>
-        <p class="dt-q-why"><strong>Objetivo / ligação ao escopo:</strong> ${why || "—"}</p>
-        <div class="dt-flow-wrap" role="group" aria-label="Mapa visual de gatilhos para incisos">
+        <p class="dt-q-why"><strong>${t("dt_scope_link")}</strong> ${why || "—"}</p>
+        <div class="dt-flow-wrap" role="group" aria-label="${t("dt_trigger_map_aria")}">
           ${flowHtml}
         </div>
       </div>
@@ -384,7 +386,7 @@ function showIncisoPopover(chip, cat) {
   pop.className = "dt-popover";
   pop.setAttribute("role", "tooltip");
   pop.innerHTML = `
-    <button type="button" class="dt-popover-close" aria-label="Fechar">×</button>
+    <button type="button" class="dt-popover-close" aria-label="${t("dt_popover_close")}">×</button>
     <p class="dt-popover-id">${escapeHtml(id)}</p>
     <p class="dt-popover-item">${escapeHtml(meta.item || "")}</p>
     <p class="dt-popover-art">${escapeHtml(meta.artigo || "")}</p>

@@ -1,0 +1,522 @@
+{
+  "_note": "English translations for questionnaire blocks and questions. Applied by the frontend when lang=en.",
+  "blocks": {
+    "diag": {
+      "title_en": "Diagnostics — CertiK Technical Services (Journey 2)",
+      "lead_en": "These questions do not change the IN 701 scope; they prepare the second part of the journey (smart contract audit, pentest and evidence checklist per clause)."
+    },
+    "A": {
+      "title_en": "Value Flow, Custody and Reserves",
+      "lead_en": "P1, P2, P3 and P_arch define custody and transit. With P_arch 'Client only', P1 'No' and no 'institutional custody' in P_tp, the engine removes VII, XIV, XVI and XVII from scope."
+    },
+    "B": {
+      "title_en": "Partners, Infrastructure and Third Parties",
+      "lead_en": "Liquidity, cloud, third-party custody and overseas counterparties."
+    },
+    "C": {
+      "title_en": "Product, Offering and Connectivity",
+      "lead_en": "Listing, stablecoins, staking and APIs with financial institutions."
+    },
+    "D": {
+      "title_en": "Governance, Market and Operational Detail",
+      "lead_en": "Third-party map, flow narrative and market practices."
+    },
+    "E": {
+      "title_en": "Intermediary — Governance, Intermediation and Regulatory Maturity",
+      "lead_en": "Intermediation modality (Res. 520 arts. 6–7). Maturity questions for report and Journey 2; they generally do not change clauses (parity with blocks E of the custodian and broker/exchange tracks)."
+    }
+  },
+  "blocks_cust": {
+    "diag": {
+      "title_en": "Diagnostics — CertiK Technical Services (Journey 2)",
+      "lead_en": "These questions do not change the IN 701 scope; they prepare Journey 2 (smart contract audit, pentest, evidence checklist). Also suitable for custodians with on-chain contracts or integrations."
+    },
+    "A": {
+      "title_en": "Custody, Segregation and Asset Transit",
+      "lead_en": "Key and transit model (cust_A_model, cust_A_transit). If 'Client only' is coherent with transit 'No' and no sub-custody in cust_B_tp, the engine removes cluster VII, XIV, XVI, XVII and XV from scope."
+    },
+    "B": {
+      "title_en": "Third Parties, Infrastructure and Sub-custody",
+      "lead_en": "Cloud, overseas providers, sub-custodians and critical services."
+    },
+    "C": {
+      "title_en": "Asset Universe, Products and Integrations",
+      "lead_en": "Client listing, stablecoins, staking and connections with financial institutions/payments."
+    },
+    "D": {
+      "title_en": "Narrative and Operational Transparency",
+      "lead_en": "End-to-end flow and public reserve commitments."
+    },
+    "E": {
+      "title_en": "Custodian — Governance, Continuity and Operational Evidence",
+      "lead_en": "Custody modality (Res. 520 arts. 8–9; Chapter X). Maturity questions for report; they generally do not change clauses (core already mandatory in the track). Flow parity with the broker/exchange track."
+    }
+  },
+  "blocks_corr": {
+    "diag": {
+      "title_en": "Diagnostics — CertiK Technical Services (Journey 2)",
+      "lead_en": "These questions do not change the IN 701 scope; they prepare Journey 2 (smart contract audit, pentest, evidence checklist). Also suitable for exchanges with on-chain contracts or integrations."
+    },
+    "A": {
+      "title_en": "Custody, Segregation and Asset Transit",
+      "lead_en": "Key and transit model (corr_A_model, corr_A_transit). If 'Client only' is coherent with transit 'No' and no sub-custody in corr_B_tp, the engine removes VII, XIV, XVI, XVII and XV from scope (parity with the custodian track)."
+    },
+    "B": {
+      "title_en": "Third Parties, Infrastructure and Sub-custody",
+      "lead_en": "Cloud, overseas providers, sub-custodians and critical services."
+    },
+    "C": {
+      "title_en": "Asset Universe, Products and Integrations",
+      "lead_en": "Client listing, stablecoins, staking and connections with financial institutions/payments."
+    },
+    "D": {
+      "title_en": "Narrative and Operational Transparency",
+      "lead_en": "End-to-end flow and public reserve commitments."
+    },
+    "E": {
+      "title_en": "Broker/Exchange — Governance, Continuity and Intermediation Layer",
+      "lead_en": "Res. 520 art. 10 (intermediation and custody) and art. 85 (conflict mitigation in cumulation). Maturity questions for report; most do not change clauses (already mandatory in the track)."
+    }
+  },
+  "questions": {
+    "P_diag_sc": {
+      "text_en": "Does the institution develop, deploy or commission the development of its own smart contracts in production (tokens, vaults, on-chain staking, bridges or protocol logic under its responsibility)?",
+      "justificativa_en": "Objective: determine whether a smart contract audit track will be needed (Git repository or Certik4audit user invitation). Does not change IN 701 clauses."
+    },
+    "P_diag_surface": {
+      "text_en": "Does the VASP operate its own internet-facing systems for clients or partners (website, mobile app, REST/GraphQL APIs, admin panel, webhooks)?",
+      "justificativa_en": "Objective: indicate whether a penetration test on its own attack surface typically applies. White-label-only operations without own infrastructure may be exceptions — confirm with CertiK."
+    },
+    "P1": {
+      "text_en": "Does the platform generate exclusive deposit addresses per client, and does the VASP, MPC partner or other third party hold or share operational control over the associated private keys (including co-signing or key shards that allow movement)?",
+      "justificativa_en": "Objective: identify operational key custody or equivalent (active depositary). If Yes, triggers cluster VII, XIV, XVI and XVII. If No and the model is client-signing only (P_arch client_only), the engine should not treat the VASP as holding custody of those cluster clauses — unless institutional custody is selected in P_tp."
+    },
+    "P2": {
+      "text_en": "During buy or sell orders, do assets pass through a transit or omnibus wallet under the VASP's control (or a partner acting on its behalf) before reaching the client's final destination?",
+      "justificativa_en": "Objective: capture asset transit under the intermediary's control (segregation in motion). Typical triggers: I (a), I (b) and XV."
+    },
+    "P3": {
+      "text_en": "Does the institution hold payment accounts or BRL (or other fiat) balances in the client's name awaiting orders to purchase virtual assets?",
+      "justificativa_en": "Objective: identify fiat funds held by the intermediary before conversion to VA. Typical trigger: X (b) (ii), aligned with art. 85 of Res. 520."
+    },
+    "P_arch": {
+      "text_en": "Which scenario best describes who can initiate or authorise on-chain movements of client funds in the predominant operational practice?",
+      "justificativa_en": "Qualifies the model. 'Client only' must be consistent with P1 = No (no VASP operational deposit/keys); if P2 = Yes (omnibus), do not use this option. Without 'institutional custody' in P_tp, the engine removes VII/XIV/XVI/XVII.",
+      "options_en": {
+        "client_only": "Client only (non-custodial interface or equivalent; the VASP does not move funds).",
+        "vasp_operates": "The VASP or designated operator moves funds on behalf of the client (hot wallet, omnibus, etc.).",
+        "mpc_mixed": "MPC or multi-party signing in which the VASP and third parties have control roles.",
+        "full_third_custody": "Full third-party custody (the VASP does not hold keys, but contracts the service)."
+      }
+    },
+    "P4": {
+      "text_en": "Do the order-executing partners (liquidity providers) include an entity headquartered outside Brazil or without direct authorisation from the Central Bank of Brazil for an equivalent activity in the country?",
+      "justificativa_en": "Objective: map counterparty and outsourcing with international or locally unregulated exposure. Typical triggers: II, III and IV."
+    },
+    "P5": {
+      "text_en": "Does the balance ledger, client database or order routing engine reside in the cloud or in a third-party data centre, with an access or audit contract aligned with BCB regulations?",
+      "justificativa_en": "Objective: identify relevant technology and continuity outsourcing. Typical triggers: II and IV (arts. 32 and 33 and continuity)."
+    },
+    "P6": {
+      "text_en": "Are there overseas or BCB-unauthorised partners in relevant roles beyond liquidity (e.g.: institutional custody, payments, KYC as a critical service)?",
+      "justificativa_en": "Objective: capture foreign provider risk and due diligence requirements (e.g.: art. 83 of Res. 520). Typical trigger: III."
+    },
+    "P_tp": {
+      "text_en": "Select all materially relevant third-party roles in the operation today:",
+      "justificativa_en": "Objective: deepen the third-party map (liquidity, institutional custody, cloud, fiat, KYC). The 'institutional custody' option triggers VII and XIV even if P1 is No — indicates use of a crypto-asset custodian.",
+      "options_en": {
+        "lp": "Liquidity provider / market maker",
+        "custody_inst": "Institutional crypto-asset custody (cold, MPC, regulated or unregulated custodian)",
+        "cloud_infra": "Cloud computing / hosting of critical systems",
+        "fiat_bank": "Payment institution / bank for fiat (accounts, Pix, TED)",
+        "kyc_vendor": "External KYC / AML provider as a critical service"
+      }
+    },
+    "P7": {
+      "text_en": "Does the platform allow trading of assets with an explicit parity or reference to fiat currencies (stablecoins, tokenised, USD, BRL)?",
+      "justificativa_en": "Objective: identify fiat-referenced assets and client disclosure. Typical trigger: IX (b) / art. 65 of Res. 520."
+    },
+    "P8": {
+      "text_en": "Does the VASP offer staking, yield, lock-up or equivalent products to the client (directly or white-label with a partner)?",
+      "justificativa_en": "Objective: capture yield products on VA and investor transparency. Typical trigger: § 1 (I) (h) / art. 71 of Res. 520."
+    },
+    "P9": {
+      "text_en": "Does the VASP provide or use APIs or SDKs to interconnect with other financial institutions or payment providers (on/off-ramp, Open Finance, etc.)?",
+      "justificativa_en": "Objective: map regulated interconnectivity (integration governance). Typical trigger: V / art. 43 of Res. 520."
+    },
+    "P_list": {
+      "text_en": "In practice, how does the intermediary expose the tradeable virtual asset universe to the client? (This is distinct from using an asset internally for routing, settlement or technical integration only, without the client choosing from a catalogue or expandable VA offering.)",
+      "justificativa_en": "Objective: align IX (a) to situations where there is an offering, catalogue or listing/suspension/delisting policy towards the client. Closed-set execution-only models (no expandable catalogue) do not trigger IX (a). IX (b) continues to depend primarily on fiat-referenced assets (stablecoin question).",
+      "options_en": {
+        "execution_only": "Closed set for execution: the client does not choose from an expandable VA catalogue; the operation is limited to one or a few fixed assets/pairs (e.g.: single product, contractual routing, settlement in a specific VA without its own policy or broad catalogue mirroring).",
+        "mirror_lp": "Broad mirrored catalogue: the client accesses multiple assets reproduced from the liquidity provider(s), even if the VASP has no own listing committee.",
+        "own_committee": "The VASP applies its own criteria (committee, written policy) to list, suspend or delist assets.",
+        "hybrid_list": "Hybrid: partner base plus an internal approval or risk layer over what is offered."
+      }
+    },
+    "P_narr": {
+      "text_en": "Describe in a few lines the end-to-end flow: deposit → trading → withdrawal (actors, systems and third parties involved). Optional, but recommended for the auditor.",
+      "justificativa_en": "Objective: qualitative context for the report; does not change automatic triggers.",
+      "placeholder_en": "E.g.: client deposits via PIX at FI X; internal balance; order routed to LP Y…"
+    },
+    "P_reserves": {
+      "text_en": "Does the institution publish, commit to auditing or demonstrate reserves of the crypto-assets under the platform's responsibility (proof of reserves, attestation or equivalent report)?",
+      "justificativa_en": "Objective: identify an explicit commitment to reserve proof beyond transit (P2). Typical trigger: I (b)."
+    },
+    "P_surveillance": {
+      "text_en": "Are there systems or documented processes to monitor spurious practices in the platform's environment (spoofing, wash trading, price manipulation)?",
+      "justificativa_en": "Objective: operational maturity of market surveillance; clause XIII is already mandatory in the intermediary matrix."
+    },
+    "int_E_art69_controls": {
+      "text_en": "Are there documented policies and controls to mitigate conflicts of interest in intermediation (function separation, best execution, treatment when the VASP or related parties are the counterparty), aligned with art. 69 of Res. 520?",
+      "justificativa_en": "Intermediation with multiple activities (art. 7); strengthens evidence for clause X (a) IN 701."
+    },
+    "int_E_operations_segregation": {
+      "text_en": "When the operation combines trading for clients and management of own assets (or treasury), are there written rules and controls that clearly separate own and client interests (including privileged information)?",
+      "justificativa_en": "Arts. 69 and 70 Res. 520; complements P1/P2/P_arch at the governance level."
+    },
+    "int_E_market_conduct_review": {
+      "text_en": "In the last two years, was there an independent assessment (audit, regulatory consulting or external review) on market practices, conflicts or surveillance aligned with arts. 69–70 of Res. 520?",
+      "justificativa_en": "Maturity for clause XIII and market conduct; does not replace the continuous monitoring obligation."
+    },
+    "int_E_bcp_tested": {
+      "text_en": "In the last 24 months, was a documented continuity test or exercise (BCP/DR) performed covering unavailability of liquidity partners, cloud, custodian or critical APIs?",
+      "justificativa_en": "IN 701 IV when triggered; Res. 520 art. 34, II and art. 43, IV — parity with other tracks."
+    },
+    "int_E_custody_model_documented": {
+      "text_en": "Does the institution maintain updated documentation explaining the custody/transit model to the client (who holds keys, omnibus, MPC, third parties), consistent with the operational answers to questions P1, P2 and P_arch?",
+      "justificativa_en": "Support for disclosure § 1 (I) and consistency with suppression or inclusion of cluster VII/XIV/XVI/XVII in the engine."
+    },
+    "int_E_por_disclosure": {
+      "text_en": "Does the VASP periodically disclose to clients or the public reserve demonstrations, reconciliation or attestation when it maintains or labels aggregated client balances?",
+      "justificativa_en": "Complements P_reserves and I (b); transparency beyond the minimum declaratory requirement."
+    },
+    "int_E_fgc_disclosure": {
+      "text_en": "When offering products, is the client explicitly informed about the absence of FGC/FGCoop coverage (and analogous funds, if applicable) for virtual assets?",
+      "justificativa_en": "Res. 520 art. 68; aligned with § 1 (I) IN 701."
+    },
+    "int_E_position_report_custodial": {
+      "text_en": "When there is custody or transit under the VASP's responsibility (P1 or P2), does the contract or terms regulate a VA position report with defined frequency and channel?",
+      "justificativa_en": "§ 1 (III) IN 701; art. 79 Res. 520 where a custody relationship with the client exists."
+    },
+    "int_E_sanctions_workflow": {
+      "text_en": "Does the operational flow include screening of addresses and parties against sanction/restricted lists, with exception records?",
+      "justificativa_en": "Art. 34, III and art. 43 §2 V Res. 520; consistent with AML/CFT (VI_a)."
+    },
+    "int_E_pld_retention": {
+      "text_en": "Are AML/CFT operation records and due diligence maintained for the applicable minimum legal period (reference: 5 years in art. 45, II of Res. 520, where applicable)?",
+      "justificativa_en": "VI (a) IN 701; traceability for supervision."
+    },
+    "int_E_lp_art38": {
+      "text_en": "Does the VASP contract liquidity provider(s) for the trading environment with a contract providing at minimum the business model, settlement and secure custody transfer (art. 38 Res. 520)?",
+      "justificativa_en": "Typical for an intermediary with an order book or routing; evidence folder for intermediation."
+    },
+    "int_E_mm_art39": {
+      "text_en": "Does the VASP contract market maker(s) with minimum contractual parameters (frequency, spreads, fairness among participants) per art. 39 Res. 520?",
+      "justificativa_en": "Art. 7 §1 III and art. 39; linked to conflict and market conduct."
+    },
+    "int_E_rfq_art67": {
+      "text_en": "Does the operation include request-for-quote (RFQ) trading with client disclosure of the art. 67, §6 of Res. 520 elements (quotes, deadlines, counterparty, risks)?",
+      "justificativa_en": "Price transparency in intermediation; art. 67 §6."
+    },
+    "int_E_listing_art64": {
+      "text_en": "When there is a catalogue or listing for clients (P_list other than execution_only), is there a documented policy or committee for offering, suspending and delisting VA with minimum criteria aligned with art. 64 Res. 520?",
+      "justificativa_en": "Reinforces IX (a) in practice; committee and policy §2 art. 64."
+    },
+    "int_E_viii_siem": {
+      "text_en": "Does the VASP use a security event correlation and monitoring tool (SIEM, SOC or equivalent) covering critical systems (ledger, APIs, custody, admin access)?",
+      "justificativa_en": "Maturity of clause VIII (mandatory) — continuous institutional security monitoring; IN 701 art. 4 VIII + Res. 520 art. 48 IV and art. 43 VI."
+    },
+    "int_E_viii_pentest": {
+      "text_en": "In the last 24 months, did the VASP conduct an external pentest (by an independent firm) covering client-facing and operational surfaces (APIs, portal, admin panel)?",
+      "justificativa_en": "Maturity of clause VIII — risk assessment and vulnerability detection; complements VI_b (art. 48, III) and XII (cybersecurity policy). Expected evidence in Journey 2."
+    },
+    "int_E_viii_kri_review": {
+      "text_en": "Is the operational risk profile (risk map, KRIs or equivalent indicators) reviewed and reported to senior management at least quarterly?",
+      "justificativa_en": "Maturity of clauses VIII and XI — continuous operational risk management; Res. 520 art. 43 II and arts. 51–58. Documents the risk governance cycle for certification."
+    },
+    "cust_diag_sc": {
+      "text_en": "Does the institution develop, deploy or commission its own smart contracts in production (on-chain custody vaults, permission logic, bridges or protocols under its responsibility)?",
+      "justificativa_en": "Journey 2 — possible smart contract audit track. Does not change clauses."
+    },
+    "cust_diag_surface": {
+      "text_en": "Does the institution operate its own internet-facing systems (client portal, custody API, admin panel, webhooks) for clients or partners?",
+      "justificativa_en": "Journey 2 — attack surface for pentest. Does not change clauses."
+    },
+    "cust_A_transit": {
+      "text_en": "In addition to static custody, do client assets pass through transit or omnibus wallets under the institution's control (or a sub-custodian acting on its behalf) before their final destination?",
+      "justificativa_en": "Reinforces segregation and proof of reserves in motion (I_a, I_b) and XV. If 'No' and cust_A_model is 'Client only' with no sub-custody in cust_B_tp, the operational custody cluster may leave scope (VII, XIV, XVI, XVII, XV)."
+    },
+    "cust_A_fiat": {
+      "text_en": "Does the institution hold payment accounts or fiat balances (e.g.: BRL) in the client's name linked to the virtual asset custody operation (pre-conversion, fiat withdrawal, or reserve account)?",
+      "justificativa_en": "Triggers conditions of arts. 69 and 85 of Res. 520 (clause X (b) (ii))."
+    },
+    "cust_A_model": {
+      "text_en": "Which model best describes who can initiate or authorise on-chain movements of custodied assets in the predominant practice?",
+      "justificativa_en": "'Client only' = non-custodial interface: the institution does not hold operational keys or own omnibus; must combine with cust_A_transit = No and no 'Sub-custodian' option in cust_B_tp.",
+      "options_en": {
+        "client_only": "Client only authorises on-chain; the institution does not hold operational keys or own omnibus transit (agency, documentary custody only or integration without client VA movement).",
+        "inst_operates": "The institution or designated operator moves on behalf of the client (hot, rotated cold, internal policies).",
+        "mpc_mixed": "MPC or multi-partition: the institution and third parties hold key shards or control roles.",
+        "full_subcustody": "Full sub-custody by a contracted third party (the institution does not hold keys alone, but is responsible to the client)."
+      }
+    },
+    "cust_B_exterior": {
+      "text_en": "Do relevant providers (sub-custody, cloud, payments, processing) include an entity headquartered outside Brazil or without direct BCB authorisation for an equivalent activity in the country?",
+      "justificativa_en": "Outsourcing with international exposure; arts. 32–33, 83 and continuity (II, III, IV)."
+    },
+    "cust_B_cloud": {
+      "text_en": "Does the balance ledger, key vault, HSM, or critical custody systems reside in the cloud or a third-party data centre, with a contract aligned with BCB requirements?",
+      "justificativa_en": "Technology and continuity outsourcing (II, IV)."
+    },
+    "cust_B_more_foreign": {
+      "text_en": "Are there other overseas or BCB-unauthorised partners in relevant roles not already covered (e.g.: KYC as a critical service, signature messaging)?",
+      "justificativa_en": "Reinforces due diligence on overseas providers (art. 83) — III."
+    },
+    "cust_B_tp": {
+      "text_en": "Select materially relevant third parties in the custody operation:",
+      "justificativa_en": "Outsourcing map. 'Crypto-asset sub-custodian' prevents suppression of the custody cluster if combined with cust_A_model = 'Client only' — review consistency (third party has operational control).",
+      "options_en": {
+        "subcustody": "Crypto-asset sub-custodian (cold, MPC, institutional)",
+        "cloud_infra": "Cloud / hosting of critical custody systems",
+        "fiat_bank": "Payment institution or bank for fiat (Pix, TED, accounts)",
+        "kyc_vendor": "External KYC / AML provider as a critical service"
+      }
+    },
+    "cust_C_stable": {
+      "text_en": "Does the custody include assets with an explicit parity or reference to fiat currency (stablecoins, backed tokenised assets, etc.) exposed to the client?",
+      "justificativa_en": "Selection and disclosure of referenced VA (IX (b), art. 65 Res. 520)."
+    },
+    "cust_C_staking": {
+      "text_en": "Does the institution offer staking, yield, lock-up or equivalent products on custodied assets (directly or with a partner)?",
+      "justificativa_en": "§ 1 (I) (h) and art. 71 Res. 520."
+    },
+    "cust_C_if_api": {
+      "text_en": "Does the institution integrate with financial institutions or payment providers via APIs/SDKs (on/off-ramp, Open Finance, settlement)?",
+      "justificativa_en": "V is already mandatory in the track; 'Yes' also marks the clause as triggered by this question (parity with P9 in the intermediary), useful for 'why' text and integration tracking in the report."
+    },
+    "cust_C_catalog": {
+      "text_en": "How does the client access the universe of virtual assets that can be custodied? (Distinct from using an asset internally for technical settlement only without a client catalogue.)",
+      "justificativa_en": "IX (a) when there is an offering/listing/suspension policy for the client; IX (b) coupled with stablecoins in cust_C_stable.",
+      "options_en": {
+        "closed_set": "Closed set: the client does not choose from an expandable catalogue; only contractually defined assets/pairs.",
+        "wide_mirror": "Broad mirrored catalogue from third parties (sub-custodian or partner), with no own listing committee.",
+        "own_policy": "The institution applies its own criteria to admit, suspend or remove custodied assets.",
+        "hybrid": "Hybrid: third-party base plus an internal risk approval layer."
+      }
+    },
+    "cust_D_narr": {
+      "text_en": "Describe the flow: onboarding → deposit/custody → authorisation for movement → withdrawal (actors, systems and third parties). Optional, recommended for the auditor.",
+      "justificativa_en": "Qualitative context; does not change triggers.",
+      "placeholder_en": "E.g.: KYC onboarding; deposit to a named address; internal approval policy; withdrawal to client wallet…"
+    },
+    "cust_D_attestation": {
+      "text_en": "Does the institution publish or commission a reserve audit/attestation (proof of reserves or equivalent) beyond the minimum internal controls?",
+      "justificativa_en": "I_b is already mandatory; 'Yes' strengthens the narrative of explicit proof to the market."
+    },
+    "cust_D_surveillance": {
+      "text_en": "Are there documented processes to monitor abuse in the scope of services offered to the client (e.g.: manipulation signals linked to APIs or assisted operations)?",
+      "justificativa_en": "XIII is already mandatory; operational maturity for Journey 2."
+    },
+    "cust_E_treasury_split": {
+      "text_en": "Are there documented controls separating own treasury movements from client custody operations (distinct ledgers, authorisation roles, audit trail)?",
+      "justificativa_en": "Art. 29 and art. 69 Res. 520 — segregation between own and client assets; directly relates to clause I (a) and X (a)."
+    },
+    "cust_E_key_rotation": {
+      "text_en": "Are there formal procedures for operational key rotation and critical key revocation, with documented cycle and responsible parties?",
+      "justificativa_en": "Arts. 77–80 Res. 520 — key lifecycle; reinforces clause VII evidence."
+    },
+    "cust_E_insurance": {
+      "text_en": "Does the institution have custody insurance or equivalent coverage (hot wallet insurance, crime insurance) to mitigate operational losses?",
+      "justificativa_en": "Art. 68 Res. 520 (client disclosure) and clause XIV evidence — demonstrates additional controls beyond regulatory minimum."
+    },
+    "cust_E_recovery_drill": {
+      "text_en": "In the last 24 months, was an end-to-end VA recovery drill or test conducted (key, wallet or ledger recovery)?",
+      "justificativa_en": "Art. 76, IX and clause XV — periodic recovery test is an explicit regulatory requirement."
+    },
+    "cust_E_bcp_tested": {
+      "text_en": "In the last 24 months, was a documented BCP/DR test conducted covering unavailability of cloud, sub-custodian or critical custody APIs?",
+      "justificativa_en": "IN 701 IV; Res. 520 art. 34, II and art. 43, IV."
+    },
+    "cust_E_client_report": {
+      "text_en": "Is there a documented process for issuing periodic VA position reports to clients, with defined frequency, format and channel?",
+      "justificativa_en": "§ 1 (III) IN 701; art. 79 Res. 520 — custody relationship with client implies a position report obligation."
+    },
+    "cust_E_conflict_controls": {
+      "text_en": "Are there documented policies and controls to mitigate conflicts of interest between custody and other VASP activities (e.g.: own treasury, intermediation, liquidity)?",
+      "justificativa_en": "Art. 69 Res. 520; parity with int_E_art69_controls in the intermediary track."
+    },
+    "cust_E_pld_retention": {
+      "text_en": "Are AML/CFT operation records and due diligence maintained for the minimum legal period (reference: 5 years, art. 45, II Res. 520)?",
+      "justificativa_en": "VI (a) IN 701; traceability for supervision."
+    },
+    "cust_E_fgc_disclosure": {
+      "text_en": "Is the client explicitly informed about the absence of FGC/FGCoop coverage for virtual assets?",
+      "justificativa_en": "Res. 520 art. 68; aligned with § 1 (I) IN 701."
+    },
+    "cust_E_sanctions_workflow": {
+      "text_en": "Does the operational flow include address and party screening against sanction/restricted lists, with exception records?",
+      "justificativa_en": "Art. 34, III and art. 43 §2 V Res. 520; consistent with AML/CFT (VI_a)."
+    },
+    "cust_E_viii_siem": {
+      "text_en": "Does the institution use a SIEM, SOC or equivalent security monitoring tool covering critical systems (ledger, APIs, custody, admin access)?",
+      "justificativa_en": "Maturity of clause VIII — continuous security monitoring; IN 701 art. 4 VIII + Res. 520 art. 48 IV."
+    },
+    "cust_E_viii_pentest": {
+      "text_en": "In the last 24 months, did the institution conduct an external pentest (by an independent firm) covering client-facing and operational surfaces?",
+      "justificativa_en": "Maturity of clause VIII — risk assessment and vulnerability detection; complements VI_b and XII."
+    },
+    "cust_E_viii_kri_review": {
+      "text_en": "Is the operational risk profile reviewed and reported to senior management at least quarterly?",
+      "justificativa_en": "Maturity of clauses VIII and XI — continuous operational risk management."
+    },
+    "corr_diag_sc": {
+      "text_en": "Does the institution develop, deploy or commission its own smart contracts in production (on-chain custody vaults, permission logic, bridges or protocols under its responsibility)?",
+      "justificativa_en": "Journey 2 — possible smart contract audit track. Does not change clauses."
+    },
+    "corr_diag_surface": {
+      "text_en": "Does the institution operate its own internet-facing systems (client portal, custody API, admin panel, webhooks) for clients or partners?",
+      "justificativa_en": "Journey 2 — attack surface for pentest. Does not change clauses."
+    },
+    "corr_A_transit": {
+      "text_en": "In addition to static custody, do client assets pass through transit or omnibus wallets under the institution's control (or a sub-custodian acting on its behalf) before their final destination?",
+      "justificativa_en": "Reinforces I_a, I_b and XV. With corr_A_model 'Client only', corr_A_transit 'No' and no sub-custody in corr_B_tp, the cluster VII/XIV/XVI/XVII and XV may leave scope."
+    },
+    "corr_A_fiat": {
+      "text_en": "Does the institution hold payment accounts or fiat balances in the client's name linked to the virtual asset custody operation?",
+      "justificativa_en": "Triggers conditions of arts. 69 and 85 of Res. 520 (clause X (b) (ii))."
+    },
+    "corr_A_model": {
+      "text_en": "Which model best describes who can initiate or authorise on-chain movements of client funds in the predominant practice?",
+      "justificativa_en": "'Client only' = non-custodial interface; must be consistent with corr_A_transit = No and no sub-custody in corr_B_tp.",
+      "options_en": {
+        "client_only": "Client only authorises on-chain; the institution does not hold operational keys or own omnibus transit.",
+        "inst_operates": "The institution or designated operator moves on behalf of the client (hot, rotated cold, internal policies).",
+        "mpc_mixed": "MPC or multi-partition: the institution and third parties hold key shards or control roles.",
+        "full_subcustody": "Full sub-custody by a contracted third party (the institution does not hold keys alone, but is responsible to the client)."
+      }
+    },
+    "corr_B_exterior": {
+      "text_en": "Do relevant providers (sub-custody, liquidity, cloud, payments) include an entity headquartered outside Brazil or without direct BCB authorisation?",
+      "justificativa_en": "Outsourcing with international exposure; arts. 32–33, 83 and continuity (II, III, IV)."
+    },
+    "corr_B_cloud": {
+      "text_en": "Does the balance ledger, key vault, HSM, order engine or critical systems reside in the cloud or a third-party data centre, with a contract aligned with BCB requirements?",
+      "justificativa_en": "Technology and continuity outsourcing (II, IV)."
+    },
+    "corr_B_more_foreign": {
+      "text_en": "Are there other overseas or BCB-unauthorised partners in relevant roles (e.g.: KYC as a critical service, signature messaging)?",
+      "justificativa_en": "Reinforces due diligence on overseas providers (art. 83) — III."
+    },
+    "corr_B_tp": {
+      "text_en": "Select materially relevant third parties in the broker/exchange operation:",
+      "justificativa_en": "Outsourcing map combining custodian and intermediary functions (art. 10 Res. 520).",
+      "options_en": {
+        "subcustody": "Crypto-asset sub-custodian (cold, MPC, institutional)",
+        "lp": "Liquidity provider / market maker",
+        "cloud_infra": "Cloud / hosting of critical systems",
+        "fiat_bank": "Payment institution or bank for fiat (Pix, TED, accounts)",
+        "kyc_vendor": "External KYC / AML provider as a critical service"
+      }
+    },
+    "corr_C_stable": {
+      "text_en": "Does the offering include assets with an explicit parity or reference to fiat currency (stablecoins, backed tokenised assets, etc.) exposed to the client?",
+      "justificativa_en": "Selection and disclosure of referenced VA (IX (b), art. 65 Res. 520)."
+    },
+    "corr_C_staking": {
+      "text_en": "Does the institution offer staking, yield, lock-up or equivalent products on virtual assets (directly or with a partner)?",
+      "justificativa_en": "§ 1 (I) (h) and art. 71 Res. 520."
+    },
+    "corr_C_if_api": {
+      "text_en": "Does the institution integrate with financial institutions or payment providers via APIs/SDKs (on/off-ramp, Open Finance, settlement)?",
+      "justificativa_en": "V is already mandatory; 'Yes' also marks it as triggered by this question."
+    },
+    "corr_C_catalog": {
+      "text_en": "How does the client access the tradeable virtual asset universe?",
+      "justificativa_en": "IX (a) when there is a listing/suspension/delisting policy for the client; IX (b) coupled with stablecoins.",
+      "options_en": {
+        "closed_set": "Closed set for execution: the client does not choose from an expandable VA catalogue.",
+        "wide_mirror": "Broad mirrored catalogue from liquidity providers, with no own listing committee.",
+        "own_committee": "The institution applies its own criteria (committee, written policy) to list, suspend or delist assets.",
+        "hybrid_list": "Hybrid: partner base plus an internal risk approval layer over what is offered."
+      }
+    },
+    "corr_D_narr": {
+      "text_en": "Describe the end-to-end flow: deposit → trading → withdrawal (actors, systems and third parties). Optional, recommended for the auditor.",
+      "justificativa_en": "Qualitative context; does not change triggers.",
+      "placeholder_en": "E.g.: client deposits via PIX; internal balance; order executed against LP or own book; withdrawal to external wallet…"
+    },
+    "corr_D_attestation": {
+      "text_en": "Does the institution publish or commission a reserve audit/attestation (proof of reserves or equivalent) beyond the minimum internal controls?",
+      "justificativa_en": "I_b is already mandatory; 'Yes' strengthens the narrative of explicit proof to the market."
+    },
+    "corr_D_surveillance": {
+      "text_en": "Are there documented processes to monitor spurious practices in the platform's trading environment (spoofing, wash trading, price manipulation)?",
+      "justificativa_en": "XIII is already mandatory; operational maturity for Journey 2."
+    },
+    "corr_E_treasury_split": {
+      "text_en": "Are there documented controls separating own treasury movements from client asset operations (distinct ledgers, authorisation roles, audit trail)?",
+      "justificativa_en": "Art. 29 and art. 69 Res. 520 — segregation between own and client assets."
+    },
+    "corr_E_conflict_controls": {
+      "text_en": "Are there documented policies and controls to mitigate conflicts of interest between the brokerage and custody activities (function separation, best execution, own book vs. client book)?",
+      "justificativa_en": "Art. 69 and art. 85 Res. 520; central in clause X (a) and the art. 10 context."
+    },
+    "corr_E_bcp_tested": {
+      "text_en": "In the last 24 months, was a documented BCP/DR test conducted covering unavailability of liquidity providers, cloud, sub-custodian or critical APIs?",
+      "justificativa_en": "IN 701 IV; Res. 520 art. 34, II and art. 43, IV."
+    },
+    "corr_E_client_report": {
+      "text_en": "Is there a documented process for issuing periodic VA position reports to clients, with defined frequency, format and channel?",
+      "justificativa_en": "§ 1 (III) IN 701; art. 79 Res. 520."
+    },
+    "corr_E_pld_retention": {
+      "text_en": "Are AML/CFT operation records maintained for the minimum legal period (5 years, art. 45, II Res. 520)?",
+      "justificativa_en": "VI (a) IN 701; traceability for supervision."
+    },
+    "corr_E_fgc_disclosure": {
+      "text_en": "Is the client explicitly informed about the absence of FGC/FGCoop coverage for virtual assets?",
+      "justificativa_en": "Res. 520 art. 68; aligned with § 1 (I) IN 701."
+    },
+    "corr_E_sanctions_workflow": {
+      "text_en": "Does the operational flow include address and party screening against sanction/restricted lists?",
+      "justificativa_en": "Art. 34, III and art. 43 §2 V Res. 520; consistent with AML/CFT (VI_a)."
+    },
+    "corr_E_insurance": {
+      "text_en": "Does the institution have custody insurance or equivalent coverage to mitigate operational losses?",
+      "justificativa_en": "Art. 68 Res. 520 (client disclosure); demonstrates additional controls."
+    },
+    "corr_E_recovery_drill": {
+      "text_en": "In the last 24 months, was an end-to-end VA recovery drill conducted (key, wallet or ledger recovery)?",
+      "justificativa_en": "Art. 76, IX and clause XV — periodic recovery test is an explicit regulatory requirement."
+    },
+    "corr_E_key_rotation": {
+      "text_en": "Are there formal procedures for operational key rotation and critical key revocation, with documented cycle?",
+      "justificativa_en": "Arts. 77–80 Res. 520 — key lifecycle; reinforces clause VII evidence."
+    },
+    "corr_E_viii_siem": {
+      "text_en": "Does the institution use a SIEM, SOC or equivalent security monitoring tool covering critical systems?",
+      "justificativa_en": "Maturity of clause VIII — continuous security monitoring."
+    },
+    "corr_E_viii_pentest": {
+      "text_en": "In the last 24 months, did the institution conduct an external pentest covering client-facing and operational surfaces?",
+      "justificativa_en": "Maturity of clause VIII — risk assessment and vulnerability detection."
+    },
+    "corr_E_viii_kri_review": {
+      "text_en": "Is the operational risk profile reviewed and reported to senior management at least quarterly?",
+      "justificativa_en": "Maturity of clauses VIII and XI — continuous operational risk management."
+    },
+    "corr_E_listing_art64": {
+      "text_en": "When there is a client catalogue (corr_C_catalog other than execution_only), is there a documented policy or committee for offering, suspending and delisting VA aligned with art. 64 Res. 520?",
+      "justificativa_en": "Reinforces IX (a); committee and policy §2 art. 64."
+    },
+    "corr_E_rfq_art67": {
+      "text_en": "Does the operation include RFQ trading with disclosure of art. 67, §6 of Res. 520 elements (quotes, deadlines, counterparty, risks)?",
+      "justificativa_en": "Price transparency in intermediation; art. 67 §6."
+    },
+    "corr_E_mm_art39": {
+      "text_en": "Does the institution contract market maker(s) with minimum contractual parameters per art. 39 Res. 520?",
+      "justificativa_en": "Art. 7 §1 III and art. 39; linked to conflict and market conduct."
+    }
+  }
+}

@@ -151,5 +151,76 @@
   "toast_req_error":        { "pt": "Erro na requisição",              "en": "Request error" },
   "export_loading":         { "pt": "A exportar…",                    "en": "Exporting…" },
   "export_error":           { "pt": "Falha ao exportar —",            "en": "Export failed —" },
-  "export_api_fallback":    { "pt": "API indisponível — exportando dados locais.", "en": "API unavailable — exporting local data." }
+  "export_api_fallback":    { "pt": "API indisponível — exportando dados locais.", "en": "API unavailable — exporting local data." },
+
+  "toast_fill_name":        { "pt": "Indique o nome da sua empresa para continuar.", "en": "Enter your company name to continue." },
+  "toast_no_blocks":        { "pt": "Nenhum bloco de perguntas retornado para esta trilha.", "en": "No question blocks returned for this track." },
+  "toast_run_first":        { "pt": "Execute o questionário antes de exportar.", "en": "Complete the questionnaire before exporting." },
+  "toast_page_error":       { "pt": "Erro: estrutura da página de resultados incompleta. Atualize com Ctrl+F5.", "en": "Error: results page structure is incomplete. Refresh with Ctrl+F5." },
+
+  "track_pill_intermediaria":  { "pt": "Fase intermediária",          "en": "Intermediary phase" },
+  "track_pill_custodiante":    { "pt": "Trilha custodiante",          "en": "Custodian track" },
+  "track_pill_corretora":      { "pt": "Trilha corretora",            "en": "Broker/Exchange track" },
+  "track_summary_intermediaria": { "pt": "fase intermediária",        "en": "intermediary phase" },
+  "track_summary_custodiante":   { "pt": "trilha custodiante",        "en": "custodian track" },
+  "track_summary_corretora":     { "pt": "trilha corretora (intermediação e custódia)", "en": "broker/exchange track (intermediation and custody)" },
+
+  "results_summary_html":   { "pt": "{nome}<strong>{na}</strong> inciso(s) no <strong>escopo de auditoria</strong> e <strong>{nf}</strong> <strong>fora deste escopo</strong> (matriz IN 701 · {trk}).", "en": "{nome}<strong>{na}</strong> clause(s) in the <strong>audit scope</strong> and <strong>{nf}</strong> <strong>outside this scope</strong> (IN 701 matrix · {trk})." },
+
+  "kpi_in_scope":           { "pt": "No escopo",                      "en": "In scope" },
+  "kpi_mandatory":          { "pt": "Obrigatórios",                   "en": "Mandatory" },
+  "kpi_by_answers":         { "pt": "Por respostas",                  "en": "By answers" },
+  "kpi_out_scope":          { "pt": "Fora do escopo",                 "en": "Out of scope" },
+
+  "dash_lead_audit":        { "pt": "Abra cada inciso: contexto, relatório BCB (indicativo) e checklist de evidências com perfil de entregável.", "en": "Open each clause: context, BCB report (indicative) and evidence checklist with exemplary deliverable profile." },
+  "dash_lead_skip":         { "pt": "Incisos excluídos nesta configuração — expanda para o motivo.", "en": "Clauses excluded in this configuration — expand to see the reason." },
+
+  "dash_ctx_label":         { "pt": "Contexto de escopo",             "en": "Scope context" },
+  "dash_why_label":         { "pt": "Por que entra no escopo",        "en": "Why it is in scope" },
+  "dash_bcb_label":         { "pt": "Relatório ao BCB (indicativo)",  "en": "BCB report (indicative)" },
+  "dash_trigger_label":     { "pt": "Gatilho no questionário:",       "en": "Questionnaire trigger:" },
+  "dash_checklist_title":   { "pt": "Checklist de evidências",        "en": "Evidence checklist" },
+  "dash_checklist_lead":    { "pt": "Apenas incisos no escopo atual. Abra cada linha para o pedido e o perfil de um entregável exemplar.", "en": "Only clauses in the current scope. Open each row for the request and the exemplary deliverable profile." },
+  "dash_no_docs":           { "pt": "Sem pedidos mapeados para este inciso.", "en": "No document requests mapped for this clause." },
+
+  "dash_doc_gather":        { "pt": "O que reunir",                   "en": "What to gather" },
+  "dash_doc_exemplar":      { "pt": "Entregável exemplar",            "en": "Exemplary deliverable" },
+  "dash_doc_actions_label": { "pt": "Estado do pedido de documentação", "en": "Document request status" },
+  "dash_doc_skip":          { "pt": "Pular por agora",                "en": "Skip for now" },
+  "dash_doc_elaborate":     { "pt": "Preciso elaborar este documento", "en": "I need to elaborate this document" },
+  "dash_doc_reset":         { "pt": "Repor",                          "en": "Reset" },
+  "dash_doc_skipped":       { "pt": "Adiado por agora",               "en": "Deferred for now" },
+  "dash_doc_elab":          { "pt": "Preciso elaborar este documento", "en": "I need to elaborate this document" },
+
+  "dash_skip_title":        { "pt": "Incisos fora deste escopo",      "en": "Clauses outside this scope" },
+  "dash_all_in_scope":      { "pt": "Todos os incisos da matriz entram no escopo nesta configuração.", "en": "All matrix clauses are in scope in this configuration." },
+  "dash_toggle_show":       { "pt": "Ver {n} inciso(s) excluído(s)",  "en": "Show {n} excluded clause(s)" },
+  "dash_toggle_hide":       { "pt": "Ocultar incisos excluídos",      "en": "Hide excluded clauses" },
+
+  "j2_lead_default":        { "pt": "Smart contract audit e pentest quando aplicáveis. A checklist por inciso está na secção «No escopo de auditoria» abaixo.", "en": "Smart contract audit and pentest when applicable. The per-clause checklist is in the 'In audit scope' section below." },
+  "j2_active":              { "pt": "Ativo",                          "en": "Active" },
+  "j2_inactive":            { "pt": "Inativo",                        "en": "Inactive" },
+  "j2_sc_applicable":       { "pt": "Aplicável nesta configuração",   "en": "Applicable in this configuration" },
+  "j2_sc_not_indicated":    { "pt": "Não indicado no diagnóstico",    "en": "Not indicated in the diagnostic" },
+  "j2_pt_applicable":       { "pt": "Superfície exposta indicada — confirmar âmbito com a CertiK", "en": "Exposed surface indicated — confirm scope with CertiK" },
+  "j2_pt_not_applicable":   { "pt": "Não aplicável por defeito — confirmar com a CertiK se tiver dúvida", "en": "Not applicable by default — confirm with CertiK if in doubt" },
+  "j2_pt_form":             { "pt": "Abrir formulário de pentest",    "en": "Open pentest form" },
+  "j2_pt_form_title":       { "pt": "CertiK Application Penetration Testing Questionnaire", "en": "CertiK Application Penetration Testing Questionnaire" },
+
+  "dt_non_custodial_prefix": { "pt": "Modelo não custodial (todas as trilhas):", "en": "Non-custodial model (all tracks):" },
+  "dt_branch_aria":          { "pt": "Ramo de decisão — clique para destacar ou use Enter", "en": "Decision branch — click to highlight or press Enter" },
+  "dt_branch_default":       { "pt": "Ramificação declarada no questionário", "en": "Branch declared in the questionnaire" },
+  "dt_no_clauses":           { "pt": "Nenhum inciso por esta ramificação", "en": "No clauses for this branch" },
+  "dt_decision_point":       { "pt": "Ponto de decisão",              "en": "Decision point" },
+  "dt_badge_audit":          { "pt": "Só relatório / J2",             "en": "Report only / J2" },
+  "dt_badge_scope":          { "pt": "Pode alterar escopo",           "en": "May change scope" },
+  "dt_scope_link":           { "pt": "Objetivo / ligação ao escopo:", "en": "Objective / scope link:" },
+  "dt_trigger_map_aria":     { "pt": "Mapa visual de gatilhos para incisos", "en": "Visual trigger map for clauses" },
+  "dt_diagram_aria":         { "pt": "Diagrama de decisão horizontal", "en": "Horizontal decision diagram" },
+  "dt_micro_bar":            { "pt": "Esta barra = <strong>esta pergunta</strong>", "en": "This bar = <strong>this question</strong>" },
+  "dt_micro_dot":            { "pt": "Cada coluna = uma <strong>condição</strong> possível", "en": "Each column = a possible <strong>condition</strong>" },
+  "dt_micro_tri":            { "pt": "Triângulos = <strong>incisos</strong> acrescentados ao escopo", "en": "Triangles = <strong>clauses</strong> added to scope" },
+  "dt_popover_close":        { "pt": "Fechar",                        "en": "Close" },
+
+  "wizard_select_q":         { "pt": "Selecione uma opção em {qid} antes de continuar.", "en": "Select an option in {qid} before continuing." }
 }

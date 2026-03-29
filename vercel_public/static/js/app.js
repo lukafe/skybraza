@@ -3,9 +3,9 @@
  * Legado /api/* mantido no servidor para integrações antigas.
  */
 
-import { wireDecisionTreeUI } from "./decision_tree.js?v=3";
+import { wireDecisionTreeUI } from "./decision_tree.js?v=4";
 import { wireDocsGuideUI } from "./docs_guide.js?v=3";
-import { initI18n, t, buildLangToggle } from "./i18n.js?v=1";
+import { initI18n, t, getCurrentLang, buildLangToggle } from "./i18n.js?v=1";
 
 const $ = (sel, root = document) => root.querySelector(sel);
 
@@ -20,6 +20,10 @@ const state = {
   features: { custodiante_track: true, corretora_track: true },
   /** @type {Record<string, unknown>} */
   answers: {},
+  /** Prefetch cache: track → blocks data from API */
+  _questionsCache: {},
+  /** English translations for questions, loaded once */
+  _questionsEnData: null,
 };
 
 function loadTrackFromStorage() {
@@ -89,6 +93,89 @@ async function fetchJSON(path, options = {}) {
   return res.json();
 }
 
+/** Load questions_en.json once and cache it. */
+async function loadQuestionsEnData() {
+  if (state._questionsEnData) return state._questionsEnData;
+  try {
+    const r = await fetch("/static/data/questions_en.json?v=1");
+    if (r.ok) state._questionsEnData = await r.json();
+  } catch {
+    /* non-fatal: site works in PT without it */
+  }
+  return state._questionsEnData;
+}
+
+/**
+ * Apply English translations to blocks/questions returned by the API.
+ * Mutates the data in-place (on a copy) so the original cache stays neutral.
+ */
+function applyQuestionsEnTranslations(data, enData) {
+  if (!enData) return data;
+  const trackId = data.track || "";
+  const blockKey = trackId === "custodiante" ? "blocks_cust"
+    : trackId === "corretora" ? "blocks_corr"
+    : "blocks";
+  const enBlocks = enData[blockKey] || enData.blocks || {};
+  const enQs = enData.questions || {};
+
+  const out = { ...data, blocks: data.blocks.map((b) => {
+    const eb = enBlocks[b.id] || {};
+    return {
+      ...b,
+      title: eb.title_en || b.title,
+      lead: eb.lead_en || b.lead,
+      questions: b.questions.map((q) => {
+        const eq = enQs[q.id] || {};
+        const base = {
+          ...q,
+          text: eq.text_en || q.text,
+          justificativa: eq.justificativa_en || q.justificativa,
+        };
+        if (eq.placeholder_en) base.placeholder = eq.placeholder_en;
+        if (eq.options_en && Array.isArray(q.options)) {
+          base.options = q.options.map((opt) => ({
+            ...opt,
+            label: eq.options_en[opt.id] || opt.label,
+          }));
+        }
+        return base;
+      }),
+    };
+  })};
+  return out;
+}
+
+/**
+ * Prefetch questions for a given track in background and cache the result.
+ * Silently discards errors — the question fetch on btn-start will retry.
+ */
+async function prefetchQuestions(track) {
+  if (state._questionsCache[track]) return;
+  try {
+    const raw = await fetchJSON(`/questions?track=${encodeURIComponent(track)}`);
+    state._questionsCache[track] = raw;
+  } catch {
+    /* non-fatal */
+  }
+}
+
+/**
+ * Fetch questions for a track, using cache if available.
+ * Applies EN translations when the active language is EN.
+ */
+async function fetchQuestions(track) {
+  let raw = state._questionsCache[track];
+  if (!raw) {
+    raw = await fetchJSON(`/questions?track=${encodeURIComponent(track)}`);
+    state._questionsCache[track] = raw;
+  }
+  if (getCurrentLang() === "en") {
+    const enData = await loadQuestionsEnData();
+    return applyQuestionsEnTranslations(raw, enData);
+  }
+  return raw;
+}
+
 function showToast(msg) {
   const el = $("#toast");
   el.textContent = msg;
@@ -132,7 +219,7 @@ function blockHasUnansweredSingleChoice(block) {
     if (qType(q) !== "single_choice") continue;
     const v = state.answers[q.id];
     if (v == null || v === "") {
-      showToast(`Selecione uma opção em ${q.id} antes de continuar.`);
+      showToast(t("wizard_select_q", { qid: q.id }));
       return true;
     }
   }
@@ -577,13 +664,13 @@ function applyJ2PedidoVisual(el, status) {
     el.classList.add("j2-pedido--skip");
     const b = document.createElement("span");
     b.className = "j2-pedido-badge j2-pedido-badge--skip";
-    b.textContent = "Adiado por agora";
+    b.textContent = t("dash_doc_skipped");
     el.insertBefore(b, el.firstChild);
   } else if (status === "elaborate") {
     el.classList.add("j2-pedido--elaborate");
     const b = document.createElement("span");
     b.className = "j2-pedido-badge j2-pedido-badge--elab";
-    b.textContent = "Preciso elaborar este documento";
+    b.textContent = t("dash_doc_elab");
     el.insertBefore(b, el.firstChild);
   }
 }
@@ -614,7 +701,7 @@ function createDashDocumentRow(p, iid, getNextPedidoIndex) {
 
   const lg = document.createElement("p");
   lg.className = "dash-doc-label";
-  lg.textContent = "O que reunir";
+  lg.textContent = t("dash_doc_gather");
 
   const detp = document.createElement("p");
   detp.className = "dash-doc-det";
@@ -622,7 +709,7 @@ function createDashDocumentRow(p, iid, getNextPedidoIndex) {
 
   const ot = document.createElement("aside");
   ot.className = "dash-doc-otimo";
-  ot.innerHTML = `<p class="dash-doc-otimo-label">Entregável exemplar</p><p class="dash-doc-otimo-text">${escapeHtml(String(p.documento_otimo || ""))}</p>`;
+  ot.innerHTML = `<p class="dash-doc-otimo-label">${t("dash_doc_exemplar")}</p><p class="dash-doc-otimo-text">${escapeHtml(String(p.documento_otimo || ""))}</p>`;
 
   const shell = document.createElement("div");
   shell.className = "dash-pedido-shell j2-pedido";
@@ -630,7 +717,7 @@ function createDashDocumentRow(p, iid, getNextPedidoIndex) {
   const actions = document.createElement("div");
   actions.className = "j2-pedido-actions";
   actions.setAttribute("role", "group");
-  actions.setAttribute("aria-label", "Estado do pedido de documentação");
+  actions.setAttribute("aria-label", t("dash_doc_actions_label"));
 
   const mkBtn = (cls, label, statusVal) => {
     const btn = document.createElement("button");
@@ -647,13 +734,13 @@ function createDashDocumentRow(p, iid, getNextPedidoIndex) {
     return btn;
   };
 
-  actions.appendChild(mkBtn("btn-j2-skip", "Pular por agora", "skip"));
-  actions.appendChild(mkBtn("btn-j2-elaborate", "Preciso elaborar este documento", "elaborate"));
+  actions.appendChild(mkBtn("btn-j2-skip", t("dash_doc_skip"), "skip"));
+  actions.appendChild(mkBtn("btn-j2-elaborate", t("dash_doc_elaborate"), "elaborate"));
 
   const btnReset = document.createElement("button");
   btnReset.type = "button";
   btnReset.className = "btn-j2 btn-j2-reset";
-  btnReset.textContent = "Repor";
+  btnReset.textContent = t("dash_doc_reset");
   btnReset.addEventListener("click", () => {
     setJ2PedidoStatus(pedidoKey, "");
     applyJ2PedidoVisual(shell, "");
@@ -693,14 +780,14 @@ function renderDashAuditInciso(row, checklistBloc, index, getNextPedidoIndex) {
   ctx.className = "dash-context";
   const ctxSum = document.createElement("summary");
   ctxSum.className = "dash-context-summary";
-  ctxSum.textContent = "Contexto de escopo";
+  ctxSum.textContent = t("dash_ctx_label");
   const ctxBody = document.createElement("div");
   ctxBody.className = "dash-context-body";
   const pq = Array.isArray(row.perguntas_gatilho) ? row.perguntas_gatilho : [];
   const gat = pq.length
-    ? `<p class="dash-gatilho"><strong>Gatilho no questionário:</strong> ${escapeHtml(pq.join(", "))}</p>`
+    ? `<p class="dash-gatilho"><strong>${t("dash_trigger_label")}</strong> ${escapeHtml(pq.join(", "))}</p>`
     : "";
-  ctxBody.innerHTML = `<p class="dash-label">Por que entra no escopo</p><p class="dash-text">${escapeHtml(row.por_que_sera_auditado || "")}</p><p class="dash-label dash-label--bcb">Relatório ao BCB (indicativo)</p><p class="dash-text dash-text--bcb">${escapeHtml(row.orientacao_relatorio_bcb || "")}</p>${gat}`;
+  ctxBody.innerHTML = `<p class="dash-label">${t("dash_why_label")}</p><p class="dash-text">${escapeHtml(row.por_que_sera_auditado || "")}</p><p class="dash-label dash-label--bcb">${t("dash_bcb_label")}</p><p class="dash-text dash-text--bcb">${escapeHtml(row.orientacao_relatorio_bcb || "")}</p>${gat}`;
   ctx.appendChild(ctxSum);
   ctx.appendChild(ctxBody);
 
@@ -708,11 +795,10 @@ function renderDashAuditInciso(row, checklistBloc, index, getNextPedidoIndex) {
   docsSection.className = "dash-docs-section";
   const docsTitle = document.createElement("h4");
   docsTitle.className = "dash-docs-title";
-  docsTitle.textContent = "Checklist de evidências";
+  docsTitle.textContent = t("dash_checklist_title");
   const docsLead = document.createElement("p");
   docsLead.className = "dash-docs-lead";
-  docsLead.textContent =
-    "Apenas incisos no escopo atual. Abra cada linha para o pedido e o perfil de um entregável exemplar.";
+  docsLead.textContent = t("dash_checklist_lead");
   docsSection.appendChild(docsTitle);
   docsSection.appendChild(docsLead);
 
@@ -726,7 +812,7 @@ function renderDashAuditInciso(row, checklistBloc, index, getNextPedidoIndex) {
   } else {
     const emp = document.createElement("p");
     emp.className = "dash-docs-empty";
-    emp.textContent = "Sem pedidos mapeados para este inciso.";
+    emp.textContent = t("dash_no_docs");
     docsSection.appendChild(emp);
   }
 
@@ -741,14 +827,14 @@ function renderDashSkipContainer(fora) {
   const host = document.createElement("div");
   host.className = "dash-skip-host";
   if (!fora.length) {
-    host.innerHTML = '<p class="empty-col">Todos os incisos da matriz entram no escopo nesta configuração.</p>';
+    host.innerHTML = `<p class="empty-col">${t("dash_all_in_scope")}</p>`;
     return host;
   }
   const outer = document.createElement("details");
   outer.className = "dash-skip-outer";
   const s = document.createElement("summary");
   s.className = "dash-skip-outer-summary";
-  s.innerHTML = `<span class="dash-skip-outer-title">Incisos fora deste escopo</span><span class="dash-skip-outer-count">${fora.length}</span>`;
+  s.innerHTML = `<span class="dash-skip-outer-title">${t("dash_skip_title")}</span><span class="dash-skip-outer-count">${fora.length}</span>`;
   outer.appendChild(s);
   const inner = document.createElement("div");
   inner.className = "dash-skip-outer-body";
@@ -791,7 +877,7 @@ function renderJourney2(j2) {
   lead.textContent =
     typeof j2.label === "string" && j2.label.trim()
       ? j2.label
-      : "Smart contract audit e pentest quando aplicáveis. A checklist por inciso está na secção «No escopo de auditoria» abaixo.";
+      : t("j2_lead_default");
 
   const sc = j2.smart_contract_audit && typeof j2.smart_contract_audit === "object" ? j2.smart_contract_audit : {};
   const pt = j2.penetration_test && typeof j2.penetration_test === "object" ? j2.penetration_test : {};
@@ -803,23 +889,21 @@ function renderJourney2(j2) {
     <article class="j2-product ${scOn ? "j2-product--active" : "j2-product--inactive"}">
       <div class="j2-product-head">
         <span class="j2-product-name">Smart contract audit</span>
-        <span class="j2-product-status">${scOn ? "Ativo" : "Inativo"}</span>
+        <span class="j2-product-status">${scOn ? t("j2_active") : t("j2_inactive")}</span>
       </div>
-      <p class="j2-product-tagline">${scOn ? "Aplicável nesta configuração" : "Não indicado no diagnóstico"}</p>
+      <p class="j2-product-tagline">${scOn ? t("j2_sc_applicable") : t("j2_sc_not_indicated")}</p>
       <p class="j2-product-body">${escapeHtml(sc.acao_cliente || "")}</p>
     </article>
     <article class="j2-product ${ptOn ? "j2-product--active" : "j2-product--inactive"}">
       <div class="j2-product-head">
         <span class="j2-product-name">Penetration test</span>
-        <span class="j2-product-status">${ptOn ? "Ativo" : "Inativo"}</span>
+        <span class="j2-product-status">${ptOn ? t("j2_active") : t("j2_inactive")}</span>
       </div>
-      <p class="j2-product-tagline">${
-        ptOn ? "Superfície exposta indicada — confirmar âmbito com a CertiK" : "Não aplicável por defeito — confirmar com a CertiK se tiver dúvida"
-      }</p>
+      <p class="j2-product-tagline">${ptOn ? t("j2_pt_applicable") : t("j2_pt_not_applicable")}</p>
       <p class="j2-product-body">${escapeHtml(pt.acao_cliente || "")}</p>
       ${
         ptOn && formUrl
-          ? `<p class="j2-product-form"><a href="${escapeHtml(formUrl)}" target="_blank" rel="noopener noreferrer" title="CertiK Application Penetration Testing Questionnaire">Abrir formulário de pentest</a></p>`
+          ? `<p class="j2-product-form"><a href="${escapeHtml(formUrl)}" target="_blank" rel="noopener noreferrer" title="${t("j2_pt_form_title")}">${t("j2_pt_form")}</a></p>`
           : ""
       }
     </article>
@@ -885,7 +969,7 @@ async function submitScope() {
   const listS = $("#cards-skip");
 
   if (!elSummary || !elMetrics || !listA || !listS || !elCountA || !elCountS || !elLeadA || !elLeadS) {
-    showToast("Erro: estrutura da página de resultados incompleta. Atualize com Ctrl+F5.");
+    showToast(t("toast_page_error"));
     return;
   }
 
@@ -894,30 +978,27 @@ async function submitScope() {
   if (elEntity) {
     elEntity.textContent = institution || "—";
   }
-  const trkLabel =
-    data.track === "custodiante"
-      ? "Trilha custodiante"
-      : data.track === "corretora"
-        ? "Trilha corretora"
-        : "Fase intermediária";
+  const trkMap = { custodiante: "custodiante", corretora: "corretora" };
+  const trkKey = trkMap[data.track] ? data.track : "intermediaria";
+  const trkLabel = t(`track_pill_${trkKey}`);
   if (elTrackPill) {
     elTrackPill.textContent = `${trkLabel} · IN 701`;
   }
 
+  const trkSum = t(`track_summary_${trkKey}`);
   const nome = institution ? `<strong>${escapeHtml(institution)}</strong> — ` : "";
-  const trk =
-    data.track === "custodiante"
-      ? "trilha custodiante"
-      : data.track === "corretora"
-        ? "trilha corretora (intermediação e custódia)"
-        : "fase intermediária";
-  elSummary.innerHTML = `${nome}<strong>${na}</strong> inciso(s) no <strong>escopo de auditoria</strong> e <strong>${nf}</strong> <strong>fora deste escopo</strong> (matriz IN 701 · ${trk}).`;
+  const summaryTpl = t("results_summary_html");
+  elSummary.innerHTML = summaryTpl
+    .replace("{nome}", nome)
+    .replace("{na}", String(na))
+    .replace("{nf}", String(nf))
+    .replace("{trk}", escapeHtml(trkSum));
 
   elMetrics.innerHTML = `
-    <div class="metric kpi-card"><div class="metric-value">${na}</div><div class="metric-label">No escopo</div></div>
-    <div class="metric kpi-card"><div class="metric-value">${mand}</div><div class="metric-label">Obrigatórios</div></div>
-    <div class="metric kpi-card"><div class="metric-value">${cond}</div><div class="metric-label">Por respostas</div></div>
-    <div class="metric metric--muted kpi-card"><div class="metric-value">${nf}</div><div class="metric-label">Fora do escopo</div></div>
+    <div class="metric kpi-card"><div class="metric-value">${na}</div><div class="metric-label">${t("kpi_in_scope")}</div></div>
+    <div class="metric kpi-card"><div class="metric-value">${mand}</div><div class="metric-label">${t("kpi_mandatory")}</div></div>
+    <div class="metric kpi-card"><div class="metric-value">${cond}</div><div class="metric-label">${t("kpi_by_answers")}</div></div>
+    <div class="metric metric--muted kpi-card"><div class="metric-value">${nf}</div><div class="metric-label">${t("kpi_out_scope")}</div></div>
   `;
 
   renderComplianceDonut(mand, cond, nf);
@@ -925,10 +1006,8 @@ async function submitScope() {
   elCountA.textContent = String(sujeitos.length);
   elCountS.textContent = String(fora.length);
 
-  elLeadA.textContent =
-    "Abra cada inciso: contexto, relatório BCB (indicativo) e checklist de evidências com perfil de entregável.";
-  elLeadS.textContent =
-    "Incisos excluídos nesta configuração — expanda para o motivo.";
+  elLeadA.textContent = t("dash_lead_audit");
+  elLeadS.textContent = t("dash_lead_skip");
 
   sessionStorage.removeItem(J2_PEDIDO_STORAGE_KEY);
   renderJourney2(data.journey_2);
@@ -1002,7 +1081,7 @@ function wireSkipToggle(nf) {
   toggle.type = "button";
   toggle.className = "skip-section-toggle";
   toggle.setAttribute("aria-expanded", "false");
-  toggle.innerHTML = `<span class="skip-section-toggle__chevron">▸</span> Ver ${nf} inciso(s) excluído(s)`;
+  toggle.innerHTML = `<span class="skip-section-toggle__chevron">▸</span> ${t("dash_toggle_show", { n: nf })}`;
 
   const head = skipSection.querySelector(".results-section-head");
   if (head) head.appendChild(toggle);
@@ -1011,8 +1090,8 @@ function wireSkipToggle(nf) {
     const open = wrap.classList.toggle("is-open");
     toggle.setAttribute("aria-expanded", open ? "true" : "false");
     toggle.innerHTML = open
-      ? `<span class="skip-section-toggle__chevron">▸</span> Ocultar incisos excluídos`
-      : `<span class="skip-section-toggle__chevron">▸</span> Ver ${nf} inciso(s) excluído(s)`;
+      ? `<span class="skip-section-toggle__chevron">▸</span> ${t("dash_toggle_hide")}`
+      : `<span class="skip-section-toggle__chevron">▸</span> ${t("dash_toggle_show", { n: nf })}`;
   });
 }
 
@@ -1022,7 +1101,7 @@ async function exportScopeJSON() {
   if (!btn) return;
   const data = state._lastScopeData;
   if (!data) {
-    showToast("Execute o questionário antes de exportar.");
+    showToast(t("toast_run_first"));
     return;
   }
   try {
@@ -1104,6 +1183,10 @@ async function boot() {
   }
   syncTrackButtonsUI();
 
+  // Prefetch questions in background so the first click is instant
+  prefetchQuestions(state.track);
+  loadQuestionsEnData();
+
   wireDecisionTreeUI({
     setView,
     getTrack: () => state.track,
@@ -1124,6 +1207,7 @@ async function boot() {
       state.track = trk;
       saveTrackToStorage();
       syncTrackButtonsUI();
+      prefetchQuestions(trk);
     });
   });
 
@@ -1131,13 +1215,13 @@ async function boot() {
     const inst = $("#institution");
     const name = (inst.value || "").trim();
     if (!name) {
-      showToast("Indique o nome da sua empresa para continuar.");
+      showToast(t("toast_fill_name"));
       inst.focus();
       return;
     }
     let data;
     try {
-      data = await fetchJSON(`/questions?track=${encodeURIComponent(state.track)}`);
+      data = await fetchQuestions(state.track);
     } catch (e) {
       showToast(
         String(e.message || e) +
@@ -1147,7 +1231,7 @@ async function boot() {
     }
     state.blocks = data.blocks || [];
     if (!state.blocks.length) {
-      showToast("Nenhum bloco de perguntas retornado para esta trilha.");
+      showToast(t("toast_no_blocks"));
       return;
     }
     if (data.track && data.track !== state.track) state.track = data.track;
@@ -1256,3 +1340,62 @@ async function boot() {
 }
 
 document.addEventListener("DOMContentLoaded", boot);
+
+document.addEventListener("langchange", async () => {
+  // Re-apply question translations if the wizard is active and blocks are loaded
+  if (state.blocks.length && !$("#wizard").classList.contains("hidden")) {
+    const enData = await loadQuestionsEnData();
+    const raw = state._questionsCache[state.track];
+    if (raw) {
+      const data = getCurrentLang() === "en"
+        ? applyQuestionsEnTranslations(raw, enData)
+        : raw;
+      state.blocks = data.blocks || state.blocks;
+      renderQuestions();
+    }
+  }
+  // Re-render results if visible (re-submit is not needed; just re-render labels)
+  if (!$("#results").classList.contains("hidden") && state._lastScopeData) {
+    void getCurrentLang(); // strings are re-read via t() on re-render
+    // Re-run submitScope display portion with cached data
+    const data = state._lastScopeData;
+    const institution = state._lastInstitution || "";
+    const { sujeitos, fora } = normalizeScopePayload(data);
+    const resumo = data.resumo && typeof data.resumo === "object" ? data.resumo : {};
+    const na = Number(resumo.total_sujeitos_auditoria ?? sujeitos.length) || 0;
+    const nf = Number(resumo.total_fora_escopo_auditoria ?? fora.length) || 0;
+    const mand = Number(resumo.obrigatorios_matriz ?? 0) || 0;
+    const cond = Number(resumo.acionados_por_respostas ?? 0) || 0;
+
+    const trkMap2 = { custodiante: "custodiante", corretora: "corretora" };
+    const trkKey2 = trkMap2[data.track] ? data.track : "intermediaria";
+    const trkLabel2 = t(`track_pill_${trkKey2}`);
+    const elTrackPill = $("#results-track-badge");
+    if (elTrackPill) elTrackPill.textContent = `${trkLabel2} · IN 701`;
+
+    const trkSum2 = t(`track_summary_${trkKey2}`);
+    const nome2 = institution ? `<strong>${escapeHtml(institution)}</strong> — ` : "";
+    const summaryTpl2 = t("results_summary_html");
+    const elSummary = $("#results-summary");
+    if (elSummary) {
+      elSummary.innerHTML = summaryTpl2
+        .replace("{nome}", nome2)
+        .replace("{na}", String(na))
+        .replace("{nf}", String(nf))
+        .replace("{trk}", escapeHtml(trkSum2));
+    }
+    const elMetrics = $("#metrics");
+    if (elMetrics) {
+      elMetrics.innerHTML = `
+        <div class="metric kpi-card"><div class="metric-value">${na}</div><div class="metric-label">${t("kpi_in_scope")}</div></div>
+        <div class="metric kpi-card"><div class="metric-value">${mand}</div><div class="metric-label">${t("kpi_mandatory")}</div></div>
+        <div class="metric kpi-card"><div class="metric-value">${cond}</div><div class="metric-label">${t("kpi_by_answers")}</div></div>
+        <div class="metric metric--muted kpi-card"><div class="metric-value">${nf}</div><div class="metric-label">${t("kpi_out_scope")}</div></div>
+      `;
+    }
+    const elLeadA = $("#col-audit-lead");
+    const elLeadS = $("#col-skip-lead");
+    if (elLeadA) elLeadA.textContent = t("dash_lead_audit");
+    if (elLeadS) elLeadS.textContent = t("dash_lead_skip");
+  }
+});
