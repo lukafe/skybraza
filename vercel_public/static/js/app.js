@@ -4,6 +4,7 @@
  */
 
 import { wireDecisionTreeUI } from "./decision_tree.js?v=3";
+import { wireDocsGuideUI } from "./docs_guide.js?v=1";
 
 const $ = (sel, root = document) => root.querySelector(sel);
 
@@ -96,11 +97,13 @@ function showToast(msg) {
 }
 
 function setView(view) {
-  document.body.classList.toggle("app-view-intro", view === "intro" || view === "decisionTree");
+  const isIntroLike = view === "intro" || view === "decisionTree" || view === "docsGuide";
+  document.body.classList.toggle("app-view-intro", isIntroLike);
   $("#intro").classList.toggle("hidden", view !== "intro");
   $("#wizard").classList.toggle("hidden", view !== "wizard");
   $("#results").classList.toggle("hidden", view !== "results");
   $("#decision-tree-view")?.classList.toggle("hidden", view !== "decisionTree");
+  $("#docs-guide-view")?.classList.toggle("hidden", view !== "docsGuide");
 }
 
 function qType(q) {
@@ -1092,6 +1095,14 @@ async function boot() {
   wireDecisionTreeUI({
     setView,
     getTrack: () => state.track,
+  });
+
+  wireDocsGuideUI({
+    btnOpen: $("#btn-open-docs-guide"),
+    viewEl:  $("#docs-guide-view"),
+    btnBack: $("#btn-dg-back"),
+    getTrack: () => state.track,
+    setView,
   });
 
   document.querySelectorAll(".intro-track__btn").forEach((btn) => {

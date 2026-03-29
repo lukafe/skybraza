@@ -2545,6 +2545,612 @@ body.app-view-intro .sk-main {
     filter 0.3s ease;
 }
 
+/* ============================================================
+   GUIA DE DOCUMENTOS — Secção similar à árvore de decisão
+   ============================================================ */
+
+.docs-guide-view {
+  padding: 1.75rem 0 3.5rem;
+  min-height: 60vh;
+}
+
+.dg-wrap {
+  max-width: 980px;
+}
+
+/* Toolbar */
+.dg-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.dg-back { flex-shrink: 0; }
+
+.dg-heading-block {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.dg-main-title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.2rem, 3vw, 1.45rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.dg-lead {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  max-width: 65ch;
+}
+
+/* Sticky bar (stats + filtros) */
+.dg-sticky-bar {
+  position: sticky;
+  top: 56px;
+  z-index: 20;
+  background: rgba(11, 14, 17, 0.97);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 0;
+  margin-bottom: 1.25rem;
+}
+
+.dg-stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.65rem;
+}
+
+.dg-stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.6rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.dg-stat strong { color: var(--text); font-weight: 700; }
+.dg-stat--crit strong { color: #f87171; }
+.dg-stat-sep { color: var(--border); }
+
+.dg-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.5rem;
+}
+
+.dg-filter-count-wrap {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.dg-ctrl-btn {
+  font-size: 0.75rem !important;
+  padding: 0.38rem 0.75rem !important;
+  border-radius: 7px !important;
+}
+
+.dg-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1.25rem;
+  align-items: flex-end;
+}
+
+.dg-filter-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dg-filter-text {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+}
+
+.dg-filter-input {
+  padding: 0.52rem 0.8rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: rgba(12, 14, 20, 0.85);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  min-width: 220px;
+  transition: border-color 0.2s ease;
+}
+
+.dg-filter-input:focus {
+  outline: none;
+  border-color: rgba(255, 59, 71, 0.45);
+  box-shadow: 0 0 0 3px rgba(255, 59, 71, 0.12);
+}
+
+.dg-prio-select {
+  padding: 0.52rem 0.8rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: rgba(12, 14, 20, 0.85);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+/* Legenda */
+.dg-legend {
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: linear-gradient(165deg, rgba(20, 24, 32, 0.95) 0%, rgba(15, 18, 24, 0.88) 100%);
+}
+
+.dg-legend-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.dg-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.dg-legend-sep { color: var(--border); font-size: 0.85rem; }
+
+/* Body */
+.dg-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.dg-loading, .dg-error {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.dg-hidden { display: none !important; }
+
+/* Accordion por inciso */
+.dg-inciso {
+  border: 1px solid rgba(45, 49, 57, 0.85);
+  border-radius: 14px;
+  background: linear-gradient(165deg, rgba(22, 26, 34, 0.98) 0%, rgba(15, 18, 24, 0.96) 100%);
+  overflow: hidden;
+  transition: border-color 0.25s ease;
+}
+
+.dg-inciso:hover { border-color: rgba(255, 59, 71, 0.22); }
+
+.dg-inciso[open] {
+  border-color: rgba(255, 59, 71, 0.35);
+  box-shadow: 0 0 0 1px rgba(255, 59, 71, 0.08);
+}
+
+.dg-inciso-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.85rem 1.05rem;
+  display: grid;
+  grid-template-columns: 1rem auto 1fr auto;
+  gap: 0.4rem 0.75rem;
+  align-items: center;
+}
+
+.dg-inciso-summary::-webkit-details-marker { display: none; }
+
+.dg-inciso-summary:focus-visible {
+  outline: 2px solid rgba(255, 59, 71, 0.65);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.dg-inc-chevron {
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  transition: transform 0.2s ease;
+}
+
+.dg-inciso[open] .dg-inc-chevron { transform: rotate(90deg); }
+
+.dg-inc-rotulo {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-bright);
+  padding: 0.18rem 0.42rem;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 59, 71, 0.3);
+  background: var(--accent-soft);
+  white-space: nowrap;
+}
+
+.dg-inc-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.dg-inc-tema {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.dg-inc-art {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.dg-inc-badges {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.dg-inc-badge {
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.18rem 0.42rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.dg-inc-badge--docs {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+.dg-inc-badge--critico {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.35);
+  color: #f87171;
+}
+
+/* Body do inciso */
+.dg-inciso-body {
+  padding: 1rem 1.15rem 1.25rem;
+  border-top: 1px solid rgba(45, 49, 57, 0.75);
+  background: rgba(0, 0, 0, 0.15);
+  animation: dtBodyReveal 0.3s ease;
+}
+
+.dg-inciso-meta {
+  margin-bottom: 1.1rem;
+}
+
+.dg-resumo {
+  margin: 0 0 0.45rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.dg-gatilho {
+  margin: 0 0 0.65rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.dg-gatilho strong { color: var(--text); }
+
+.dg-base-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.dg-base-pill {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.18rem 0.48rem;
+  border-radius: 4px;
+  border: 1px solid rgba(74, 144, 226, 0.35);
+  background: rgba(74, 144, 226, 0.1);
+  color: #93c5fd;
+  font-family: var(--font-mono);
+}
+
+.dg-docs-section-title {
+  margin: 0 0 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+}
+
+/* Cards de documento */
+.dg-docs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-bottom: 1.15rem;
+}
+
+.dg-doc-card {
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 0.9rem 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.dg-doc-card:hover { border-color: #3d4450; }
+
+.dg-doc-card--critica {
+  border-left: 3px solid #f87171;
+  background: linear-gradient(90deg, rgba(248, 113, 113, 0.05) 0%, var(--bg-card) 30%);
+}
+
+.dg-doc-card--alta {
+  border-left: 3px solid #fbbf24;
+  background: linear-gradient(90deg, rgba(251, 191, 36, 0.05) 0%, var(--bg-card) 30%);
+}
+
+.dg-doc-card--media {
+  border-left: 3px solid #94a3b8;
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.05) 0%, var(--bg-card) 30%);
+}
+
+.dg-doc-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  margin-bottom: 0.45rem;
+}
+
+.dg-doc-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.dg-doc-titulo {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+  min-width: 0;
+}
+
+.dg-prio-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.18rem 0.42rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  flex-shrink: 0;
+}
+
+.dg-prio--critica {
+  background: rgba(248, 113, 113, 0.14);
+  border-color: rgba(248, 113, 113, 0.4);
+  color: #f87171;
+}
+
+.dg-prio--alta {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: #fbbf24;
+}
+
+.dg-prio--media {
+  background: rgba(148, 163, 184, 0.1);
+  border-color: rgba(148, 163, 184, 0.3);
+  color: #94a3b8;
+}
+
+.dg-cat-badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.18rem 0.42rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  flex-shrink: 0;
+}
+
+.dg-doc-descricao {
+  margin: 0 0 0.5rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #c8c8d0;
+}
+
+/* Sub-detalhes (justificativa / conteúdo mínimo) */
+.dg-doc-detail {
+  margin-bottom: 0.35rem;
+}
+
+.dg-doc-detail-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.3rem 0.1rem;
+}
+
+.dg-doc-detail-summary::-webkit-details-marker { display: none; }
+
+.dg-doc-detail-toggle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
+.dg-doc-detail:hover .dg-doc-detail-toggle { color: var(--text); }
+
+.dg-doc-justificativa {
+  margin: 0.4rem 0 0 1.2rem;
+  font-size: 0.79rem;
+  line-height: 1.55;
+  color: #b8c0cc;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  background: rgba(74, 144, 226, 0.07);
+  border-left: 2px solid rgba(74, 144, 226, 0.35);
+}
+
+.dg-conteudo-list {
+  margin: 0.4rem 0 0 1.2rem;
+  padding: 0.5rem 0.75rem 0.5rem 1.5rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  list-style: disc;
+  font-size: 0.79rem;
+  line-height: 1.6;
+  color: #c0c8d4;
+}
+
+.dg-conteudo-list li { margin-bottom: 0.2rem; }
+
+.dg-retencao {
+  margin: 0.4rem 0 0;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.dg-retencao strong { color: var(--text); }
+
+/* Resposta ótima */
+.dg-otima {
+  margin-top: 1.15rem;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(20, 20, 14, 0.98) 0%, rgba(16, 18, 14, 0.95) 100%);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  box-shadow: 0 0 0 1px rgba(234, 179, 8, 0.08) inset;
+}
+
+.dg-otima-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.dg-otima-icon { font-size: 1rem; }
+
+.dg-otima-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fbbf24;
+}
+
+.dg-otima-desc {
+  margin: 0 0 0.75rem;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: #d8d0b8;
+}
+
+.dg-otima-indicadores-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.dg-otima-indicadores {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dg-otima-indicadores li {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: #c8c4a8;
+  padding-left: 1.1rem;
+  position: relative;
+}
+
+.dg-otima-indicadores li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #4ade80;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+/* Botão "Guia de documentos" na intro */
+.intro-landing__aux-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 22rem;
+  margin: 0 auto;
+}
+
+.intro-landing__docs-btn {
+  border-color: rgba(251, 191, 36, 0.35) !important;
+  color: #fde68a !important;
+  background: rgba(251, 191, 36, 0.06) !important;
+}
+
+.intro-landing__docs-btn:hover {
+  border-color: rgba(251, 191, 36, 0.55) !important;
+  background: rgba(251, 191, 36, 0.1) !important;
+  color: #fef3c7 !important;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .dg-inciso-summary {
+    grid-template-columns: 1rem 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.3rem;
+  }
+  .dg-inc-rotulo { grid-column: 2; }
+  .dg-inc-info { grid-column: 1 / -1; }
+  .dg-inc-badges { grid-column: 1 / -1; }
+  .dg-stats-row { flex-direction: column; align-items: flex-start; }
+}
+
 /* ---------- Árvore de decisão (mapa perguntas × incisos) ---------- */
 .intro-landing__tree-wrap {
   margin-top: 1.35rem;

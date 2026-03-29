@@ -1,0 +1,2118 @@
+{
+  "meta": {
+    "versao": "1.0",
+    "instrucao_normativa": "BCB IN 701 (art. 4º)",
+    "resolucao_principal": "Resolução BCB nº 520, de 10 de novembro de 2025",
+    "data_referencia": "2026-03-29",
+    "nota": "Guia indicativo de documentos necessários e resposta ótima por inciso da IN 701. Baseado nos arts. 29–85 da Res. 520 e na estrutura da IN 701. Não substitui assessoria jurídica nem o texto oficial do BCB.",
+    "categorias": {
+      "politica":    { "label": "Política",               "cor": "#6366f1" },
+      "procedimento":{ "label": "Procedimento",            "cor": "#0ea5e9" },
+      "relatorio":   { "label": "Relatório",               "cor": "#22c55e" },
+      "contrato":    { "label": "Contrato / Termo",        "cor": "#f59e0b" },
+      "diagrama":    { "label": "Diagrama / Arquitetura",  "cor": "#a78bfa" },
+      "evidencia":   { "label": "Evidência operacional",   "cor": "#94a3b8" },
+      "certificacao":{ "label": "Certificação externa",    "cor": "#f97316" },
+      "treinamento": { "label": "Treinamento / Ata",       "cor": "#2dd4bf" }
+    },
+    "prioridades": {
+      "critica": "Sem este documento a certificação é inviável.",
+      "alta":    "Ausência gera gap material — fortemente recomendado.",
+      "media":   "Indicador de maturidade — ausência gera observação."
+    }
+  },
+  "incisos": [
+    {
+      "id": "I_a",
+      "rotulo": "I (a)",
+      "artigo_in701": "4º, I, alínea a",
+      "tema": "Segregação Patrimonial de Ativos Virtuais",
+      "base_legal": ["Res. 520, art. 29", "Res. 520, art. 30", "Res. 520, art. 31"],
+      "resumo": "Demonstrar que os AV de clientes são rigorosamente separados dos AV próprios da VASP, identificados individualmente e protegidos de obrigações da própria prestadora.",
+      "gatilho": "Acionado por custódia própria ou terceirizada; obrigatório nas trilhas custodiante e corretora.",
+      "documentos": [
+        {
+          "id": "I_a_1",
+          "titulo": "Política de Segregação Patrimonial",
+          "categoria": "politica",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 29, III da Res. 520: a PSVAV deve manter registros que permitam identificar, a qualquer momento, quais AV pertencem a cada cliente. Sem política formal não há como demonstrar ao BCB que o processo é sistemático e supervisionável.",
+          "descricao": "Documento formal aprovado pela diretoria que define o modelo de segregação, limites de uso de AV de clientes e responsabilidades.",
+          "conteudo_minimo": [
+            "Modelo de identificação por cliente (omnibus, carteiras individuais ou misto)",
+            "Limite de 5% para uso de AV de clientes (art. 30, §2º) e controles associados",
+            "Vedações expressas dos arts. 29–31 (pignorar, misturar, utilizar sem consentimento)",
+            "Responsável pelo processo e frequência de revisão mínima anual",
+            "Aprovação da diretoria com data de vigência e controle de versão"
+          ],
+          "retencao": "5 anos (art. 45, II, Res. 520)"
+        },
+        {
+          "id": "I_a_2",
+          "titulo": "Diagrama de Fluxo de Fundos — Separação AV Próprios vs. Clientes",
+          "categoria": "diagrama",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 29, III: a estrutura de carteiras e registros deve ser identificável. Um diagrama demonstra ao auditor a arquitetura de separação de forma direta e verificável.",
+          "descricao": "Representação visual das carteiras on-chain (hot, warm, cold) e dos registros internos que vinculam cada carteira ou saldo ao cliente titular.",
+          "conteudo_minimo": [
+            "Carteiras de AV próprios identificadas e separadas das de clientes",
+            "Fluxo de depósito, custódia e saque com nós de reconciliação",
+            "Modelo omnibus: mapa de sub-ledger por cliente",
+            "Identificação do subcustodiante (se aplicável) e responsabilidades"
+          ],
+          "retencao": "Enquanto vigente; histórico 5 anos"
+        },
+        {
+          "id": "I_a_3",
+          "titulo": "Amostra de Reconciliação (Saldo Interno vs. On-chain)",
+          "categoria": "evidencia",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 29, III: identificar a qualquer momento quais AV pertencem a cada cliente. A reconciliação é o controle operacional que dá substância à política. Sem ela, a segregação é apenas declaratória.",
+          "descricao": "Relatório de conciliação entre o sub-ledger interno e as posições on-chain, com data recente, anonimizado para apresentação.",
+          "conteudo_minimo": [
+            "Total AV de clientes no sub-ledger vs. total on-chain (por moeda)",
+            "Diferença permitida (tolerância) e tratamento de discrepâncias",
+            "Frequência mínima: diária para sistemas críticos, semanal no mínimo",
+            "Responsável pela execução e aprovação do reconcile"
+          ],
+          "retencao": "5 anos (art. 45, II)"
+        },
+        {
+          "id": "I_a_4",
+          "titulo": "Relatório de Prova de Reservas",
+          "categoria": "relatorio",
+          "prioridade": "alta",
+          "justificativa_legal": "Inciso I(b) da IN 701 exige mecanismos de prova de reservas. A existência de relatório (interno ou externo) prova que o mecanismo opera em produção, não apenas existe na política.",
+          "descricao": "Relatório periódico (interno ou com auditor externo) que comprova que a VASP detém on-chain os AV correspondentes às posições declaradas de clientes.",
+          "conteudo_minimo": [
+            "Metodologia de cálculo das reservas elegíveis",
+            "Período de referência e data de emissão",
+            "Discrepâncias encontradas e tratamento",
+            "Auditor ou equipe responsável pela verificação"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "I_a_5",
+          "titulo": "Evidência de Controle do Limite de 5% (art. 30, §2º)",
+          "categoria": "evidencia",
+          "prioridade": "media",
+          "justificativa_legal": "Art. 30, §3º: a PSVAV deve manter documentação disponível para supervisão do BCB. Se a VASP usar AV de clientes dentro do limite legal, a ausência de controle documentado é infração por si.",
+          "descricao": "Dashboard ou relatório que evidencia o acompanhamento do percentual de AV de clientes eventualmente utilizados em operações autorizadas.",
+          "conteudo_minimo": [
+            "Total AV de clientes sob custódia (denominador)",
+            "Valor utilizado em operações autorizadas (numerador)",
+            "Percentual calculado e limite de 5%",
+            "Consentimento do cliente ou declaração de não utilização"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal opera com carteiras individuais nominativas por cliente (não omnibus), reconciliação automática diária entre sub-ledger e on-chain com alerta em tempo real para discrepâncias, e publica mensalmente uma prova de reservas verificada por auditor externo independente. O limite de 5% é monitorado por sistema automático com bloqueio automático ao atingir 4%. Todo o processo é aprovado pelo conselho e revisado semestralmente.",
+        "indicadores": [
+          "Reconciliação automática diária com zero discrepâncias não tratadas",
+          "Prova de reservas publicada mensalmente por auditor externo",
+          "Carteiras individuais por cliente (sem omnibus)",
+          "Alerta automático ao atingir 4% do limite do art. 30 §2º",
+          "Política revisada semestralmente pela diretoria"
+        ]
+      }
+    },
+    {
+      "id": "I_b",
+      "rotulo": "I (b)",
+      "artigo_in701": "4º, I, alínea b",
+      "tema": "Prova de Reservas",
+      "base_legal": ["Res. 520, art. 29", "Res. 520, art. 30"],
+      "resumo": "Manter mecanismos contínuos que demonstrem que os AV declarados aos clientes existem on-chain e estão sob controle da VASP ou do seu subcustodiante.",
+      "gatilho": "Obrigatório nas trilhas custodiante e corretora; acionado para intermediárias com custódia própria.",
+      "documentos": [
+        {
+          "id": "I_b_1",
+          "titulo": "Metodologia de Prova de Reservas",
+          "categoria": "procedimento",
+          "prioridade": "critica",
+          "justificativa_legal": "Sem metodologia documentada, a prova de reservas é apenas um número sem rastreabilidade. O BCB não pode validar o que não tem procedimento definido.",
+          "descricao": "Documento que define o método de cálculo — quais ativos on-chain são elegíveis como reserva, como as posições de clientes (liabilities) são calculadas e como a reconciliação é realizada.",
+          "conteudo_minimo": [
+            "Definição de ativos elegíveis como reserva (cold, warm, hot wallets)",
+            "Cálculo de liabilities (posições de clientes)",
+            "Frequência de cálculo e publicação",
+            "Tratamento de ativos bloqueados ou em staking",
+            "Responsável e aprovação"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "I_b_2",
+          "titulo": "Relatório de Attestation de Reservas",
+          "categoria": "relatorio",
+          "prioridade": "alta",
+          "justificativa_legal": "A prova de reservas deve ser verificável — um relatório periódico (idealmente com assinatura de auditor) é a evidência de que o mecanismo opera de fato.",
+          "descricao": "Relatório mais recente de prova de reservas, interno ou produzido por auditor independente, demonstrando cobertura >= 100% das posições de clientes.",
+          "conteudo_minimo": [
+            "Data de referência e AV cobertos",
+            "Método de verificação on-chain (endereços ou Merkle tree)",
+            "Cobertura total: posições de clientes vs. reservas",
+            "Achados e medidas corretivas se cobertura < 100%"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "I_b_3",
+          "titulo": "Política de Divulgação de Prova de Reservas ao Cliente",
+          "categoria": "politica",
+          "prioridade": "media",
+          "justificativa_legal": "A transparência ao cliente é elemento do par1_I e par1_II; divulgar a prova de reservas é boa prática regulatória que reforça a confiança e demonstra cumprimento proativo.",
+          "descricao": "Define como, quando e em que formato o resultado da prova de reservas é disponibilizado ao cliente e/ou ao público.",
+          "conteudo_minimo": [
+            "Canal de publicação (portal, e-mail, página pública)",
+            "Frequência mínima de divulgação",
+            "Nível de detalhe disponível ao cliente vs. ao público"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal publica provas de reservas mensalmente usando Merkle tree Proof-of-Reserves verificável on-chain, com attestation trimestral por auditor externo reconhecido (Big 4 ou especializado em cripto). Cada cliente pode verificar sua posição individualmente via hash do seu endereço. O resultado é publicado na página pública antes do login.",
+        "indicadores": [
+          "Merkle tree Proof-of-Reserves verificável on-chain por qualquer cliente",
+          "Attestation externa trimestral por auditor independente",
+          "Publicação pública mensal do resultado",
+          "Cobertura >= 102% (buffer de segurança acima de 100%)"
+        ]
+      }
+    },
+    {
+      "id": "II",
+      "rotulo": "II",
+      "artigo_in701": "4º, II",
+      "tema": "Gestão de Serviços Relevantes Contratados",
+      "base_legal": ["Res. 520, art. 32", "Res. 520, art. 33"],
+      "resumo": "Controlar e documentar todos os prestadores de serviços críticos contratados, especialmente processamento, armazenamento e nuvem, garantindo capacidade técnica, SLA, auditabilidade e plano de saída.",
+      "gatilho": "Acionado quando a VASP contrata processamento de dados críticos ou infraestrutura em nuvem com terceiros.",
+      "documentos": [
+        {
+          "id": "II_1",
+          "titulo": "Inventário de Prestadores de Serviços Relevantes",
+          "categoria": "evidencia",
+          "prioridade": "critica",
+          "justificativa_legal": "Arts. 32 e 33 da Res. 520 exigem controlo dos serviços relevantes. Sem inventário atualizado não é possível demonstrar que a VASP conhece e controla suas dependências críticas.",
+          "descricao": "Lista centralizada de todos os prestadores que processam, armazenam ou têm acesso a dados críticos ou AV da VASP ou de seus clientes.",
+          "conteudo_minimo": [
+            "Nome do prestador, função, criticidade e sede",
+            "Data de última avaliação / due diligence",
+            "Responsável interno pelo relacionamento",
+            "Status de conformidade e próxima revisão"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "II_2",
+          "titulo": "Contratos com Cláusulas Regulatórias (SLA, Auditoria, Saída)",
+          "categoria": "contrato",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 32: os contratos com prestadores relevantes devem assegurar continuidade, auditabilidade e saída ordenada. Sem cláusulas específicas, o BCB não tem garantia de supervisão.",
+          "descricao": "Excertos contratuais ou sumário das cláusulas de SLA, acesso para auditoria e procedimento de saída/transição para cada prestador relevante.",
+          "conteudo_minimo": [
+            "SLA de disponibilidade e tempo de resposta",
+            "Cláusula de auditoria ou direito de inspeção pelo BCB",
+            "Procedimento de encerramento e portabilidade de dados",
+            "Notificação de incidentes em prazo definido",
+            "Jurisdição e lei aplicável"
+          ],
+          "retencao": "5 anos após término do contrato"
+        },
+        {
+          "id": "II_3",
+          "titulo": "Política de Gestão de Fornecedores Críticos",
+          "categoria": "politica",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 43, VIII da Res. 520: as políticas de governança devem incluir regras para seleção, contratação e monitoramento de prestadores relevantes.",
+          "descricao": "Política formal que define critérios de seleção, due diligence, monitoramento contínuo e substituição de prestadores de serviços críticos.",
+          "conteudo_minimo": [
+            "Critérios de elegibilidade e due diligence pré-contratação",
+            "Processo de monitoramento contínuo (frequência, KPIs)",
+            "Critérios de desclassificação / substituição",
+            "Plano de saída para cada prestador crítico"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "II_4",
+          "titulo": "Relatório de Revisão Anual de Prestadores",
+          "categoria": "relatorio",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 33: a PSVAV deve monitorar continuamente a adequação dos prestadores. Revisão anual documentada é o mínimo esperado para demonstrar controlo efetivo.",
+          "descricao": "Relatório anual de avaliação de cada prestador relevante, incluindo desempenho de SLA, incidentes ocorridos e plano de melhoria.",
+          "conteudo_minimo": [
+            "Avaliação de SLA do período",
+            "Incidentes relevantes e resoluções",
+            "Resultado da due diligence periódica",
+            "Decisão: manter, exigir melhoria ou substituir"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "II_5",
+          "titulo": "Evidência de Due Diligence Pré-Contratação",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 32: a contratação deve ser precedida de avaliação técnica e operacional. Sem evidência de due diligence, o BCB não pode aferir que a escolha do prestador foi diligente.",
+          "descricao": "Checklist ou relatório de due diligence realizado antes da contratação de cada prestador relevante nos últimos 24 meses.",
+          "conteudo_minimo": [
+            "Capacidade técnica e operacional verificada",
+            "Situação regulatória e licenças",
+            "Histórico de incidentes declarados",
+            "Resultado e decisão de contratação"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal mantém um sistema de gestão de fornecedores (TPRM) automatizado com avaliação de risco contínua, SLA monitorados em tempo real, relatórios trimestrais por prestador e planos de saída testados anualmente. Todos os contratos incluem cláusula de auditabilidade pelo BCB e notificação de incidentes em até 2 horas.",
+        "indicadores": [
+          "100% dos prestadores críticos com contrato revisado anualmente",
+          "SLA monitorados em tempo real com alertas automatizados",
+          "Due diligence documentada antes de cada contratação",
+          "Plano de saída testado para os 3 prestadores mais críticos",
+          "Relatório trimestral de performance de fornecedores"
+        ]
+      }
+    },
+    {
+      "id": "III",
+      "rotulo": "III",
+      "artigo_in701": "4º, III",
+      "tema": "Prestadores no Exterior — Diligência e Controle",
+      "base_legal": ["Res. 520, art. 83"],
+      "resumo": "Assegurar que prestadores de serviços relevantes no exterior têm capacidade técnica, operacional e legal, e que o BCB mantém acesso para supervisão.",
+      "gatilho": "Acionado quando a VASP contrata prestador relevante sediado fora do Brasil.",
+      "documentos": [
+        {
+          "id": "III_1",
+          "titulo": "Dossiê de Due Diligence por Prestador Estrangeiro",
+          "categoria": "evidencia",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 83 da Res. 520 exige avaliação da capacidade técnica, operacional e legal do prestador estrangeiro. Sem dossiê individual, o controle é meramente declaratório.",
+          "descricao": "Conjunto de documentos por prestador estrangeiro: licenças locais, capacidade financeira, histórico de incidentes, estrutura de dados e acesso do BCB.",
+          "conteudo_minimo": [
+            "Licenças regulatórias na jurisdição de origem",
+            "Capacidade operacional verificada (infraestrutura, SLA, equipe)",
+            "Histórico de incidentes e sanções declaradas",
+            "Mecanismo de acesso do BCB a registros e dados"
+          ],
+          "retencao": "5 anos após término da relação"
+        },
+        {
+          "id": "III_2",
+          "titulo": "Cláusula de Acesso do BCB e Jurisdição nos Contratos",
+          "categoria": "contrato",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 83: os contratos com prestadores estrangeiros devem garantir o acesso do BCB para supervisão. Sem esta cláusula o contrato é irregular perante a Res. 520.",
+          "descricao": "Excerto do contrato com o prestador estrangeiro demonstrando as cláusulas de acesso do BCB, jurisdição brasileira para efeitos regulatórios e notificação de incidentes.",
+          "conteudo_minimo": [
+            "Cláusula de acesso do BCB a registros e instalações",
+            "Jurisdição aplicável para fins regulatórios",
+            "Prazo de notificação de incidentes ao contratante",
+            "Portabilidade de dados ao encerrar a relação"
+          ],
+          "retencao": "5 anos após término"
+        },
+        {
+          "id": "III_3",
+          "titulo": "Plano de Contingência para Substituição de Prestador Estrangeiro",
+          "categoria": "procedimento",
+          "prioridade": "alta",
+          "justificativa_legal": "Inciso IV da IN 701 (continuidade) conjugado com art. 83: a dependência de prestador estrangeiro é risco de continuidade. Plano de substituição é exigência implícita de resiliência.",
+          "descricao": "Plano de ação documentado para substituição do prestador estrangeiro em cenário de crise, incluindo alternativas identificadas e prazos de transição.",
+          "conteudo_minimo": [
+            "Alternativas de prestadores identificadas (mínimo 1)",
+            "Prazo estimado de transição (RTO da substituição)",
+            "Gatilhos de ativação do plano",
+            "Responsável e aprovação"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "III_4",
+          "titulo": "Relatório Anual de Reavaliação de Prestadores Estrangeiros",
+          "categoria": "relatorio",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 83 conjugado com art. 33: monitoramento contínuo. Uma reavaliação anual documentada demonstra que o controle é sistemático e não apenas na contratação inicial.",
+          "descricao": "Relatório anual de reavaliação de cada prestador estrangeiro, confirmando manutenção das capacidades e conformidade regulatória.",
+          "conteudo_minimo": [
+            "Situação regulatória atual na jurisdição de origem",
+            "Desempenho de SLA do período",
+            "Alterações materiais na estrutura ou capacidade do prestador",
+            "Decisão: manter ou acionar plano de substituição"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal limita a dependência de prestadores estrangeiros ao estritamente necessário, mantém dois prestadores alternativos qualificados para cada serviço crítico estrangeiro, realiza due diligence anual presencial ou remota com entrevista técnica, e possui cláusulas de acesso do BCB validadas pela equipe jurídica interna.",
+        "indicadores": [
+          "Zero prestadores estrangeiros sem cláusula de acesso do BCB no contrato",
+          "Due diligence presencial ou remota anual documentada",
+          "Alternativas de substituição testadas para prestadores de alta criticidade",
+          "Relatório anual de reavaliação por prestador"
+        ]
+      }
+    },
+    {
+      "id": "IV",
+      "rotulo": "IV",
+      "artigo_in701": "4º, IV",
+      "tema": "Continuidade de Negócios e Recuperação",
+      "base_legal": ["Res. 520, art. 34", "Res. 520, art. 43, IV"],
+      "resumo": "Planos documentados e testados para recuperação de posições e controle de AV de clientes em caso de incidente na própria VASP ou em prestadora contratada.",
+      "gatilho": "Obrigatório fixo nas trilhas intermediária, custodiante e corretora.",
+      "documentos": [
+        {
+          "id": "IV_1",
+          "titulo": "Política de Continuidade de Negócios (BCP)",
+          "categoria": "politica",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 34 e art. 43, IV da Res. 520: a PSVAV deve documentar planos de continuidade com RTO/RPO definidos. Sem política formal não existe base para os planos operacionais.",
+          "descricao": "Política de alto nível aprovada pela diretoria que define o programa de continuidade de negócios, os sistemas críticos, RTO/RPO e o ciclo de testes.",
+          "conteudo_minimo": [
+            "Definição de serviços e sistemas críticos",
+            "RTO (Recovery Time Objective) e RPO (Recovery Point Objective) por serviço",
+            "Ciclo de testes mínimo (anual) e cenários cobertos",
+            "Responsável pelo programa de continuidade",
+            "Aprovação da diretoria e data de vigência"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "IV_2",
+          "titulo": "Plano de Recuperação de Desastres (DRP) — Sistemas Críticos",
+          "categoria": "procedimento",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 34 exige planos para recuperação de posições de AV de clientes. O DRP é o instrumento operacional que viabiliza a recuperação técnica dentro do RTO/RPO definido.",
+          "descricao": "Plano de recuperação por sistema crítico (ledger, custódia, APIs de cliente, sistemas de pagamento) com passos detalhados de restauração.",
+          "conteudo_minimo": [
+            "Sistemas cobertos e prioridade de recuperação",
+            "Passos de recuperação com responsáveis",
+            "Fontes de backup e RTO/RPO por sistema",
+            "Comunicação interna e ao BCB durante incidente",
+            "Resultado do último teste documentado"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "IV_3",
+          "titulo": "Resultado do Último Exercício de Continuidade (BCP/DR Test)",
+          "categoria": "relatorio",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 43, §4º da Res. 520: planos de continuidade devem ser testados e documentados com periodicidade mínima anual. Sem evidência de teste, o plano é apenas teórico.",
+          "descricao": "Relatório do último exercício de continuidade realizado, com cenários testados, resultados, tempos de recuperação medidos e plano de melhoria.",
+          "conteudo_minimo": [
+            "Data e cenário do exercício",
+            "Sistemas e processos testados",
+            "RTO/RPO medido vs. objetivo definido",
+            "Achados, gaps identificados e plano de remediação",
+            "Aprovação do resultado pela diretoria ou comitê"
+          ],
+          "retencao": "5 anos (art. 45, II)"
+        },
+        {
+          "id": "IV_4",
+          "titulo": "Plano de Contingência para Falha de Prestadores Críticos",
+          "categoria": "procedimento",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 34: os planos cobrem incidentes na 'própria prestadora ou em contratada'. A falha de um prestador crítico é cenário explicitamente previsto na IN 701.",
+          "descricao": "Procedimento de contingência para indisponibilidade dos prestadores mais críticos (nuvem, custodiante, processador de pagamentos), com alternativas e prazos.",
+          "conteudo_minimo": [
+            "Prestadores cobertos pelo plano (mínimo top 3 críticos)",
+            "Alternativas de substituição ou operação degradada",
+            "SLA interno de ativação do plano",
+            "Responsável e comunicação ao cliente"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "IV_5",
+          "titulo": "Protocolo de Comunicação ao Cliente em Incidente de Continuidade",
+          "categoria": "procedimento",
+          "prioridade": "media",
+          "justificativa_legal": "Art. 43, VII: atendimento e comunicação ao cliente em incidentes. O inciso IV especifica recuperação de posições de AV de clientes — a comunicação proativa protege o cliente e demonstra boa fé regulatória.",
+          "descricao": "Procedimento definindo os gatilhos de comunicação ao cliente, canais, conteúdo mínimo e prazos em caso de incidente de continuidade.",
+          "conteudo_minimo": [
+            "Gatilhos de comunicação (tipo e severidade do incidente)",
+            "Prazo máximo para primeira comunicação ao cliente",
+            "Canal primário e canal de backup",
+            "Conteúdo mínimo da comunicação (o que ocorreu, impacto, prazo estimado)"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal realiza exercícios de recuperação completos (full failover) semestralmente com métricas de RTO menores que 4h para sistemas críticos de custódia. Mantém hot-standby em data center secundário geograficamente separado, com replicação síncrona de ledger. O plano de comunicação ao cliente é acionado em até 15 minutos após confirmação do incidente.",
+        "indicadores": [
+          "RTO < 4h para sistemas críticos de custódia",
+          "Exercício de failover completo realizado semestralmente",
+          "Data center secundário ativo com replicação síncrona",
+          "Comunicação ao cliente em até 15 min após confirmação de incidente",
+          "Histórico de testes dos últimos 5 anos documentado"
+        ]
+      }
+    },
+    {
+      "id": "V",
+      "rotulo": "V",
+      "artigo_in701": "4º, V",
+      "tema": "Políticas e Procedimentos de Governança Operacional",
+      "base_legal": ["Res. 520, art. 43"],
+      "resumo": "Conjunto completo de políticas de governança aprovadas e mantidas, cobrindo risco, compliance, TI, continuidade, terceirização e atendimento ao cliente.",
+      "gatilho": "Obrigatório fixo em todas as trilhas.",
+      "documentos": [
+        {
+          "id": "V_1",
+          "titulo": "Conjunto de Políticas Corporativas Aprovadas",
+          "categoria": "politica",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 43 caput e §1º: políticas devem ser elaboradas, aprovadas pela diretoria, revisadas periodicamente e comunicadas. O 'conjunto' é explícito — uma única política genérica não satisfaz.",
+          "descricao": "Portfólio de políticas formais cobrindo os temas do art. 43: governança, risco operacional, controles internos, continuidade, compliance, TI/cibersegurança, atendimento ao cliente e terceirização.",
+          "conteudo_minimo": [
+            "Política de governança corporativa (estrutura de administração, poderes, mandatos)",
+            "Política de gestão de riscos operacionais",
+            "Política de controles internos e segregação de funções",
+            "Política de continuidade de negócios",
+            "Política de compliance (PLD, proteção de dados)",
+            "Política de segurança da informação / cibersegurança",
+            "Política de atendimento ao cliente",
+            "Política de terceirização / fornecedores",
+            "Para cada política: data de aprovação, responsável, próxima revisão"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "V_2",
+          "titulo": "Organograma com Linhas de Reporte e Mandatos",
+          "categoria": "diagrama",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 43, I: estrutura de responsabilidades, poderes e mandatos deve ser documentada. O organograma é o instrumento básico para demonstrar governança e segregação de funções.",
+          "descricao": "Organograma atualizado mostrando a estrutura de administração, linhas de reporte, segregação entre operações, risco e compliance, e os responsáveis designados.",
+          "conteudo_minimo": [
+            "Conselho / diretoria e seus membros",
+            "Unidades de negócio e de controle (risco, compliance, auditoria interna)",
+            "Linhas de reporte: independência de funções de controle",
+            "Nomeação formal dos responsáveis por compliance e risco"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "V_3",
+          "titulo": "Programa de Treinamento e Atas de Disseminação de Políticas",
+          "categoria": "treinamento",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 43, §1º: políticas devem ser 'comunicadas e treinadas junto aos colaboradores responsáveis'. Sem evidência de treinamento, a política existe apenas no papel.",
+          "descricao": "Calendário e registros de treinamentos realizados sobre as políticas corporativas (presença, data, conteúdo), e atas de disseminação para novos colaboradores.",
+          "conteudo_minimo": [
+            "Programa anual de treinamentos com datas e conteúdos",
+            "Lista de presença por treinamento",
+            "Treinamento de onboarding para novos colaboradores",
+            "Avaliação de conhecimento ou teste de compreensão"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "V_4",
+          "titulo": "Calendário de Revisões de Políticas",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 43, §1º: revisadas 'pelo menos anualmente ou quando houver alteração material'. O calendário prova que a revisão é sistemática, não ad hoc.",
+          "descricao": "Registro das datas de revisão de cada política nos últimos 24 meses e das próximas revisões previstas, com responsável por cada uma.",
+          "conteudo_minimo": [
+            "Nome da política, data da última revisão, próxima revisão",
+            "Resultado da revisão: sem alteração, atualizada ou substituída",
+            "Aprovação das versões atualizadas pela diretoria",
+            "Histórico de versões"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "V_5",
+          "titulo": "Designação Formal do Responsável de Compliance",
+          "categoria": "evidencia",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 43, §2º: a PSVAV deve designar responsável pelo cumprimento das políticas com 'autoridade e independência adequadas'. Este requisito é literal e verificável.",
+          "descricao": "Documento formal (ata da diretoria ou resolução) que designa o responsável de compliance, define suas atribuições e garante sua independência.",
+          "conteudo_minimo": [
+            "Nome e cargo do responsável designado",
+            "Atribuições e poderes",
+            "Linha de reporte (preferencialmente ao conselho/CEO, não à área de negócios)",
+            "Data de designação e vigência"
+          ],
+          "retencao": "Permanente enquanto vigente; 5 anos após"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal tem um Chief Compliance Officer (CCO) com assento no comitê de risco e linha de reporte direta ao conselho, sem subordinação à área de negócios. As 8 políticas do art. 43 são revisadas semestralmente, treinamentos são obrigatórios trimestralmente e avaliados com teste de conhecimento. Todo colaborador assina termo de ciência das políticas no onboarding.",
+        "indicadores": [
+          "CCO com linha de reporte direta ao conselho",
+          "8 políticas do art. 43 revistas semestralmente",
+          "100% dos colaboradores treinados anualmente com teste",
+          "Repositório digital de políticas acessível 24/7 para supervisão do BCB",
+          "Calendário de revisões publicado internamente"
+        ]
+      }
+    },
+    {
+      "id": "VI_a",
+      "rotulo": "VI (a)",
+      "artigo_in701": "4º, VI, alínea a",
+      "tema": "PLD/FTP — Prevenção de Lavagem de Dinheiro e Financiamento do Terrorismo",
+      "base_legal": ["Res. 520, arts. 60–63", "Lei 9.613/1998", "Circular BCB 3.978/2020"],
+      "resumo": "Processos, políticas e controles para cumprimento da legislação de PLD/FTP, incluindo KYC, monitoramento de transações, KYT blockchain e comunicação ao COAF.",
+      "gatilho": "Obrigatório fixo em todas as trilhas.",
+      "documentos": [
+        {
+          "id": "VI_a_1",
+          "titulo": "Política de PLD/FTP",
+          "categoria": "politica",
+          "prioridade": "critica",
+          "justificativa_legal": "A legislação PLD/FTP (Lei 9.613 e Circular BCB 3.978) e art. 60 da Res. 520 exigem programa formal de PLD. Sem política aprovada não há programa — é infração autônoma.",
+          "descricao": "Política formal aprovada pela diretoria cobrindo todo o programa de PLD/FTP: KYC, monitoramento, comunicação ao COAF e governança.",
+          "conteudo_minimo": [
+            "Avaliação interna de risco (NRA — National Risk Assessment aplicado à VASP)",
+            "Processo de KYC/KYA (Know Your Customer / Know Your Asset)",
+            "Monitoramento transacional e blockchain (KYT)",
+            "Processo de comunicação ao COAF e SISCOAF",
+            "Retenção de registros (mínimo 5 anos — art. 45, II)",
+            "Responsável pelo programa e comitê de PLD"
+          ],
+          "retencao": "5 anos (art. 45, II)"
+        },
+        {
+          "id": "VI_a_2",
+          "titulo": "Matriz de Avaliação de Risco de Clientes e Produtos",
+          "categoria": "evidencia",
+          "prioridade": "critica",
+          "justificativa_legal": "Circular BCB 3.978 e art. 60 da Res. 520: a abordagem baseada em risco exige avaliação documentada de risco por cliente e produto. É o fundamento do programa PLD.",
+          "descricao": "Metodologia e resultado da avaliação de risco por perfil de cliente e por produto/serviço ofertado, com classificação (baixo, médio, alto) e controles associados.",
+          "conteudo_minimo": [
+            "Fatores de risco de cliente (volume, localização, PEP, origem de fundos)",
+            "Fatores de risco de produto (AV voláteis, staking, OTC, P2P)",
+            "Classificação de risco resultante por segmento",
+            "Controles mitigantes por nível de risco"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VI_a_3",
+          "titulo": "Procedimento de KYC/KYA com Fontes e Responsáveis",
+          "categoria": "procedimento",
+          "prioridade": "critica",
+          "justificativa_legal": "Circular BCB 3.978: a identificação e qualificação do cliente são obrigações fundamentais. Sem procedimento documentado, o KYC é arbitrário e não auditável.",
+          "descricao": "Processo passo-a-passo de onboarding de cliente: documentação exigida, fontes de verificação, decisão de aprovação, monitoramento contínuo e atualização cadastral.",
+          "conteudo_minimo": [
+            "Documentos exigidos por tipo de cliente (PF, PJ, internacional)",
+            "Fontes de verificação (bases públicas, bureaux de crédito, listas sancionadas)",
+            "Processo de Enhanced Due Diligence para alto risco",
+            "Frequência de atualização cadastral por perfil de risco",
+            "Critérios e responsável pela aprovação / recusa"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VI_a_4",
+          "titulo": "Evidência de Ferramenta de Monitoramento Blockchain (KYT)",
+          "categoria": "evidencia",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 60, II da Res. 520 / inciso VIII da IN 701: o monitoramento de blockchain é parte do monitoramento contínuo exigido. Para VASP, o KYT é a principal fronteira de detecção de lavagem on-chain.",
+          "descricao": "Descrição técnica da ferramenta KYT em uso (Chainalysis, Elliptic, TRM Labs ou equivalente), escopo de cobertura e evidência de alertas configurados.",
+          "conteudo_minimo": [
+            "Nome da ferramenta e cobertura de blockchains e tokens",
+            "Regras de alerta configuradas (endereços sancionados, darknet, ransomware)",
+            "Processo de tratamento de alertas (SLA, responsável, escalonamento)",
+            "Volume de transações monitoradas no período",
+            "Registro de alertas tratados (amostra anonimizada)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VI_a_5",
+          "titulo": "Registro de Treinamento de Colaboradores em PLD",
+          "categoria": "treinamento",
+          "prioridade": "alta",
+          "justificativa_legal": "Circular BCB 3.978: treinamento periódico é obrigatório no programa de PLD. Sem evidência, o BCB não pode confirmar que os colaboradores têm capacidade de operar os controles.",
+          "descricao": "Registros dos treinamentos de PLD realizados nos últimos 12 meses: data, conteúdo, participantes e avaliação.",
+          "conteudo_minimo": [
+            "Treinamento obrigatório anual para todos os colaboradores",
+            "Treinamento específico para analistas de KYC e compliance",
+            "Avaliação de aprendizagem (teste ou certificado)",
+            "Treinamento de atualização ao mudar legislação relevante"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VI_a_6",
+          "titulo": "Amostra de Relatório de Operação Suspeita (ROS) ao COAF",
+          "categoria": "relatorio",
+          "prioridade": "alta",
+          "justificativa_legal": "Lei 9.613 e Circular BCB 3.978: a comunicação de operações suspeitas ao COAF é obrigação legal. Uma amostra (anonimizada) prova que o processo existe em produção.",
+          "descricao": "Amostra de ROS anonimizado (sem identificação do cliente) demonstrando que o processo de comunicação ao COAF funciona. Pode ser substituído por declaração se nenhuma ROS foi necessária no período.",
+          "conteudo_minimo": [
+            "Data e motivo genérico da comunicação (sem dados pessoais)",
+            "Decisão de comunicar (quem, quando, base regulatória)",
+            "Ou: declaração formal de que não houve ROS no período com justificativa"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal opera com triagem de 100% das transações on-chain em tempo real via KYT de nível enterprise, possui analistas de compliance dedicados com fila de alertas gerenciada em SLA de 4h, realiza NRA anual e submeteu a última ROS ao COAF dentro de 24h do gatilho de decisão. Treinamentos são certificados e o programa é revisado por auditor externo independente anualmente.",
+        "indicadores": [
+          "100% das transações triadas em tempo real via KYT",
+          "SLA de tratamento de alertas: 4h para alto risco, 24h para médio",
+          "NRA documentada e atualizada anualmente",
+          "Programa revisado por auditor externo anualmente",
+          "Zero atraso em comunicação ao COAF (dentro do prazo legal)"
+        ]
+      }
+    },
+    {
+      "id": "VI_b",
+      "rotulo": "VI (b)",
+      "artigo_in701": "4º, VI, alínea b",
+      "tema": "Segurança do Ambiente Computacional",
+      "base_legal": ["Res. 520, art. 48, I a VIII"],
+      "resumo": "Demonstrar que o ambiente computacional (infraestrutura, sistemas, redes e nuvem) atende aos requisitos mínimos de segurança, resiliência e funcionamento do art. 48 da Res. 520.",
+      "gatilho": "Obrigatório fixo em todas as trilhas.",
+      "documentos": [
+        {
+          "id": "VI_b_1",
+          "titulo": "Política de Segurança da Informação",
+          "categoria": "politica",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 48, I a VIII da Res. 520 exige controles específicos de segurança computacional. A política é o instrumento que os organiza e legitima institucionalmente.",
+          "descricao": "Política formal de segurança da informação aprovada, cobrindo gestão de acessos, classificação de dados, criptografia, gestão de vulnerabilidades e resposta a incidentes.",
+          "conteudo_minimo": [
+            "Classificação de dados e sistemas (críticos, sensíveis, públicos)",
+            "Controle de acesso baseado em menor privilégio (art. 48, II)",
+            "Gestão de identidade e autenticação (MFA obrigatório)",
+            "Criptografia em trânsito e em repouso",
+            "Gestão de vulnerabilidades e patches",
+            "Monitoramento e registro de eventos (logs)",
+            "Resposta a incidentes (articulado com XII da IN 701)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VI_b_2",
+          "titulo": "Relatório de Revisão Periódica de Acessos Privilegiados",
+          "categoria": "relatorio",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 48, II da Res. 520: controle de acesso é requisito explícito. A revisão periódica documenta que o controle é operacionalizado e não apenas definido na política.",
+          "descricao": "Relatório de revisão de acessos privilegiados aos sistemas críticos (ledger, custódia, servidores de produção, consoles de nuvem), demonstrando que apenas pessoas autorizadas têm acesso.",
+          "conteudo_minimo": [
+            "Sistemas revisados e data da revisão",
+            "Número de contas privilegiadas antes e depois da revisão",
+            "Contas removidas ou desativadas e motivo",
+            "Responsável pela revisão e aprovação",
+            "Frequência: mínimo trimestral"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VI_b_3",
+          "titulo": "Relatório de Gestão de Vulnerabilidades e Patches",
+          "categoria": "relatorio",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 48, IV e V da Res. 520: detecção e correção de vulnerabilidades são componentes do ambiente seguro. Sem relatório, o controle é invisível para o auditor.",
+          "descricao": "Dashboard ou relatório de gestão de vulnerabilidades mostrando o processo de varredura, priorização e aplicação de patches por criticidade.",
+          "conteudo_minimo": [
+            "Ferramentas de varredura usadas e escopo de sistemas",
+            "Vulnerabilidades abertas por criticidade (CVSS)",
+            "SLA de patching por nível de criticidade",
+            "Vulnerabilidades críticas: prazo máximo de 72h",
+            "Histórico de compliance com SLA de patching"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VI_b_4",
+          "titulo": "Evidência de Monitoramento Ativo (SIEM / Logs)",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 48, IV: os sistemas críticos devem ser monitorados. Uma evidência do SIEM em operação (dashboard, configuração ou amostra de log review) prova que o monitoramento é real.",
+          "descricao": "Captura de tela ou relatório do SIEM/ferramenta de monitoramento demonstrando cobertura de sistemas críticos, alertas configurados e log de eventos recente.",
+          "conteudo_minimo": [
+            "Sistemas cobertos pelo monitoramento",
+            "Tipos de alertas configurados (autenticação, acesso privilegiado, anomalia)",
+            "Volume de eventos processados no período",
+            "Amostra de alerta tratado com resolução"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VI_b_5",
+          "titulo": "Plano de Resposta a Incidentes e Evidência de Exercício",
+          "categoria": "procedimento",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 48, VI da Res. 520 e Inciso XII da IN 701: plano de ação e resposta a incidentes é requisito explícito. Exercício documentado prova operacionalização.",
+          "descricao": "Plano de resposta a incidentes de segurança (IRP) com escalada, comunicação e papéis definidos, complementado por evidência de exercício tabletop ou simulação realizado.",
+          "conteudo_minimo": [
+            "Classificação de incidentes por severidade",
+            "Processo de triagem, contenção, erradicação e recuperação",
+            "Papéis e responsabilidades (RACI)",
+            "Comunicação ao BCB e ao cliente conforme inciso XII",
+            "Resultado do último exercício: cenário, participantes, tempo de resposta"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VI_b_6",
+          "titulo": "Relatório SOC 2 ou ISO 27001 do Provedor de Nuvem",
+          "categoria": "certificacao",
+          "prioridade": "media",
+          "justificativa_legal": "Art. 48 conjugado com art. 32 da Res. 520: a segurança do ambiente computacional inclui a infraestrutura de nuvem. O certificado do provedor é evidência de terceiro confiável.",
+          "descricao": "Relatório SOC 2 Tipo II ou certificado ISO 27001 do principal provedor de nuvem utilizado, demonstrando que a infraestrutura base atende a padrões reconhecidos.",
+          "conteudo_minimo": [
+            "Período coberto pelo relatório SOC 2 ou ISO 27001",
+            "Escopo da certificação (serviços/data centers relevantes para a VASP)",
+            "Achados relevantes e opiniões do auditor",
+            "Data de validade do certificado"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal opera em ambiente certificado ISO 27001, com SIEM de nível enterprise cobrindo 100% dos sistemas críticos, revisão semanal de acessos privilegiados automatizada, patching crítico em 24h e exercício de resposta a incidentes trimestral. O ambiente de nuvem tem relatório SOC 2 Tipo II atualizado e a VASP possui própria certificação ISO 27001.",
+        "indicadores": [
+          "ISO 27001 própria ou em andamento",
+          "SIEM cobrindo 100% dos sistemas críticos",
+          "Patching crítico (CVSS ≥ 9) em até 24h",
+          "Revisão de acessos privilegiados semanal automatizada",
+          "Exercício tabletop trimestral documentado"
+        ]
+      }
+    },
+    {
+      "id": "VII",
+      "rotulo": "VII",
+      "artigo_in701": "4º, VII",
+      "tema": "Políticas de Gestão de Chaves e Instrumentos de Controle de AV",
+      "base_legal": ["Res. 520, art. 76, V", "Res. 520, arts. 77–80"],
+      "resumo": "Demonstrar políticas robustas para geração, armazenamento, acesso, rotação e destruição das chaves privadas ou outros instrumentos de controle sobre AV de clientes.",
+      "gatilho": "Obrigatório quando a VASP custodia chaves privadas de clientes diretamente ou via subcustodiante.",
+      "documentos": [
+        {
+          "id": "VII_1",
+          "titulo": "Política de Gestão de Chaves Privadas",
+          "categoria": "politica",
+          "prioridade": "critica",
+          "justificativa_legal": "Arts. 77–80 da Res. 520 e inciso VII da IN 701: a VASP deve ter políticas formais para guarda e proteção dos instrumentos de controle. Sem política aprovada, qualquer prática de custódia é não-documentada e não-auditável.",
+          "descricao": "Política formal que define toda a gestão do ciclo de vida das chaves: arquitetura (cold/warm/hot/MPC), geração, armazenamento, acesso, rotação e destruição segura.",
+          "conteudo_minimo": [
+            "Arquitetura de custódia: cold, warm, hot wallet, MPC, multisig — com justificativa",
+            "Percentual máximo de AV em hot wallet",
+            "Processo de geração de chaves (cerimônia) com quórum mínimo",
+            "Controle de acesso às chaves: autenticação forte, princípio do menor privilégio",
+            "Processo de rotação e prazo máximo sem rotação",
+            "Processo de destruição segura de chaves antigas"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VII_2",
+          "titulo": "Documentação da Cerimônia de Geração de Chaves",
+          "categoria": "evidencia",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 77 da Res. 520: a geração de chaves deve seguir procedimentos seguros com rastreabilidade. A cerimônia documentada é a evidência de que o processo foi controlado desde a origem.",
+          "descricao": "Registro da última cerimônia de geração de chaves: data, local (ambiente air-gapped ou HSM), participantes (com papéis e testemunhas), procedimentos seguidos e resultado.",
+          "conteudo_minimo": [
+            "Data, local e ambiente de segurança (air-gap, HSM modelo)",
+            "Participantes com papéis definidos (quórum)",
+            "Procedimento passo-a-passo seguido",
+            "Verificação de integridade das chaves geradas",
+            "Assinaturas dos participantes"
+          ],
+          "retencao": "Permanente (histórico de chaves ativas)"
+        },
+        {
+          "id": "VII_3",
+          "titulo": "Diagrama de Arquitetura de Custódia de Chaves",
+          "categoria": "diagrama",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 76, V: a PSVAV custodiante deve manter estrutura de controle sobre os AV. O diagrama demonstra a arquitetura ao auditor de forma clara e verificável.",
+          "descricao": "Diagrama mostrando a arquitetura completa de custódia: ambientes de cold, warm e hot storage; HSMs utilizados; controles de acesso; segregação entre chaves de clientes e próprias.",
+          "conteudo_minimo": [
+            "Ambientes de cold, warm e hot storage identificados",
+            "HSMs (marca, modelo) e localização dos data centers",
+            "Controles de acesso por ambiente",
+            "Fluxo de movimentação de fundos entre ambientes (com quórum necessário)",
+            "Separação de chaves de clientes vs. operacionais"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VII_4",
+          "titulo": "Procedimento de Rotação de Chaves e Evidência da Última Rotação",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 78 da Res. 520: a PSVAV deve manter atualizada a proteção dos instrumentos de controle. Rotação periódica é controle fundamental de segurança de chaves.",
+          "descricao": "Procedimento documentado de rotação de chaves e registro da última rotação realizada, com data, escopo e resultado.",
+          "conteudo_minimo": [
+            "Frequência de rotação por tipo de chave (operacional, mestra, de backup)",
+            "Processo de rotação sem interrupção de serviço",
+            "Verificação pós-rotação",
+            "Log da última rotação com data e responsável"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VII_5",
+          "titulo": "Relatório de Auditoria Independente de Custódia de Chaves",
+          "categoria": "certificacao",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 79 da Res. 520 e inciso VII da IN 701: a revisão independente dos controles de custódia é indicador de maturidade e prova de efetividade. Para uma VASP custodiante, é o documento de maior valor probatório.",
+          "descricao": "Relatório de auditoria ou avaliação independente dos controles de custódia de chaves realizado nos últimos 24 meses por empresa especializada.",
+          "conteudo_minimo": [
+            "Escopo: sistemas, processos e controles avaliados",
+            "Metodologia de auditoria usada",
+            "Achados principais (classificados por severidade)",
+            "Plano de remediação e status de implementação"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal usa MPC (Multi-Party Computation) de nível enterprise com HSMs certificados FIPS 140-3 Level 3, máximo de 2% dos AV em hot wallet, cerimônia de geração com quórum de 5 pessoas em sala air-gapped, e revisão independente anual por empresa especializada em custódia de criptoativos. Rotação de chaves é automática a cada 90 dias.",
+        "indicadores": [
+          "MPC ou multisig com quórum mínimo de 3/5",
+          "HSMs certificados FIPS 140-3 Level 3",
+          "Máx. 2% de AV em hot wallet",
+          "Cerimônia de geração documentada em ambiente air-gapped",
+          "Auditoria independente de custódia anual",
+          "Rotação automática de chaves operacionais a cada 90 dias"
+        ]
+      }
+    },
+    {
+      "id": "VIII",
+      "rotulo": "VIII",
+      "artigo_in701": "4º, VIII",
+      "tema": "Monitoramento Contínuo de Segurança e Gestão de Riscos",
+      "base_legal": ["Res. 520, arts. 47–50"],
+      "resumo": "Mecanismos operacionais de monitoramento contínuo de segurança, avaliação de riscos operacionais, gestão de vulnerabilidades e detecção/resposta a incidentes.",
+      "gatilho": "Obrigatório fixo em todas as trilhas.",
+      "documentos": [
+        {
+          "id": "VIII_1",
+          "titulo": "Descrição Técnica do SIEM / Ferramenta de Monitoramento",
+          "categoria": "evidencia",
+          "prioridade": "critica",
+          "justificativa_legal": "Inciso VIII exige demonstrar mecanismos de monitoramento contínuo. A descrição técnica é a evidência primária de que a infraestrutura de monitoramento existe e opera.",
+          "descricao": "Documento técnico descrevendo a ferramenta de monitoramento (SIEM, SOC ou equivalente), o escopo de cobertura, os tipos de alertas configurados e a equipe responsável.",
+          "conteudo_minimo": [
+            "Nome da ferramenta e modelo de licenciamento",
+            "Sistemas críticos cobertos (ledger, APIs, custódia, administração)",
+            "Tipos de alertas configurados e limiares",
+            "Cobertura horária (8x5, 24x7)",
+            "Equipe responsável (interna ou SOC terceirizado)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VIII_2",
+          "titulo": "Mapa de Riscos Operacionais Atualizado",
+          "categoria": "relatorio",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 43, II da Res. 520: identificação, avaliação, monitoramento e mitigação de riscos. O mapa de riscos é o instrumento central que organiza todo o programa de gestão de riscos.",
+          "descricao": "Mapa de riscos operacionais atualizado (versão anonimizada para auditoria), com identificação, avaliação de probabilidade/impacto, controles mitigantes e planos de ação.",
+          "conteudo_minimo": [
+            "Riscos identificados por categoria (tecnológico, operacional, custódia, mercado)",
+            "Avaliação: probabilidade × impacto (antes e depois de controles)",
+            "Controles mitigantes por risco",
+            "Responsável pelo risco e prazo de remediação para riscos em aberto",
+            "Data de última atualização (mínimo trimestral)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VIII_3",
+          "titulo": "Relatório do Último Pentest Externo",
+          "categoria": "certificacao",
+          "prioridade": "alta",
+          "justificativa_legal": "Inciso VIII: avaliação de riscos e detecção de vulnerabilidades. O pentest externo é a avaliação mais objetiva da resistência a ataques reais. Sem ele, o monitoramento é defensivo mas não proativo.",
+          "descricao": "Sumário executivo do relatório do último pentest externo realizado por empresa independente, cobrindo superfícies públicas da VASP.",
+          "conteudo_minimo": [
+            "Empresa executora e metodologia (PTES, OWASP, TIBER-EU)",
+            "Escopo: APIs, portal de cliente, painel de administração",
+            "Classificação de achados por criticidade (Crítico/Alto/Médio/Baixo)",
+            "Plano de remediação com prazos e status de implementação",
+            "Data da última execução: máximo 12 meses de validade"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VIII_4",
+          "titulo": "KRIs — Indicadores-Chave de Risco com Histórico",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "Inciso VIII conjugado com inciso XI: gestão contínua exige indicadores mensuráveis. KRIs provam que a gestão de risco é quantitativa e não apenas qualitativa.",
+          "descricao": "Conjunto de KRIs (Key Risk Indicators) monitorados, com limiares de alerta e ação definidos, e histórico de evolução dos últimos 12 meses.",
+          "conteudo_minimo": [
+            "Lista de KRIs por categoria de risco",
+            "Limiar de alerta e limiar de ação para cada KRI",
+            "Histórico de leituras dos últimos 12 meses",
+            "Acionamentos (breaches) ocorridos e resposta adotada",
+            "Frequência de reporte à alta gestão"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "VIII_5",
+          "titulo": "Relatório de Gestão de Riscos para a Alta Gestão",
+          "categoria": "relatorio",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 43, I e II da Res. 520: a alta administração deve estar informada sobre o perfil de risco. Reporte trimestral documentado é a prova de que a governança de risco funciona de forma sistêmica.",
+          "descricao": "Relatório trimestral de gestão de riscos apresentado à diretoria ou ao comitê de risco, com sumário do mapa de riscos, KRIs e incidentes do período.",
+          "conteudo_minimo": [
+            "Sumário executivo do perfil de risco do período",
+            "KRIs com variação trimestral",
+            "Incidentes relevantes e status de remediação",
+            "Riscos emergentes identificados",
+            "Ata ou evidência de apresentação à alta gestão"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal tem SIEM de nível enterprise (Splunk, Microsoft Sentinel ou equivalente) com cobertura 24x7 por SOC dedicado, pentest externo semestral por empresa CREST-certificada, mapa de riscos atualizado automaticamente com dados dos sistemas de monitoramento, e relatório mensal de risco à diretoria. KRIs críticos disparam alerta automático ao CEO.",
+        "indicadores": [
+          "SIEM 24x7 com SOC dedicado ou gerenciado",
+          "Pentest externo semestral por empresa CREST-certificada",
+          "Mapa de riscos atualizado mensalmente",
+          "KRIs automáticos com alerta ao CEO para breaches críticos",
+          "Relatório mensal de risco à diretoria",
+          "MTTD (Mean Time to Detect) < 1h para incidentes críticos"
+        ]
+      }
+    },
+    {
+      "id": "IX_a",
+      "rotulo": "IX (a)",
+      "artigo_in701": "4º, IX, alínea a",
+      "tema": "Listagem, Suspensão e Deslistagem de Ativos Virtuais",
+      "base_legal": ["Res. 520, art. 64"],
+      "resumo": "Políticas formais que governam a decisão de oferecer, suspender ou retirar um ativo virtual da plataforma, com critérios objetivos e processo de comunicação ao cliente.",
+      "gatilho": "Acionado quando a VASP lista ou pretende listar AV para negociação ou custódia.",
+      "documentos": [
+        {
+          "id": "IX_a_1",
+          "titulo": "Política de Listagem e Deslistagem de Ativos Virtuais",
+          "categoria": "politica",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 64 da Res. 520 e inciso IX(a) da IN 701: exige políticas formais de oferta/listagem/suspensão/deslistagem. Sem política, a decisão é arbitrária e não auditável.",
+          "descricao": "Política formal definindo critérios de admissão de novo AV, monitoramento contínuo dos listados e processo de suspensão e deslistagem.",
+          "conteudo_minimo": [
+            "Critérios de admissão (técnico, legal, liquidez, risco de mercado, compliance)",
+            "Processo de aprovação (comitê, quórum, frequência)",
+            "Critérios de suspensão temporária e gatilhos de ativação",
+            "Critérios de deslistagem e prazo mínimo de aviso ao cliente",
+            "Revisão periódica dos AV listados (frequência mínima)",
+            "Disponibilização da política ao cliente (art. 64, §1º)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "IX_a_2",
+          "titulo": "Checklist de Avaliação de Novo Ativo (Due Diligence de Listagem)",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 64: a seleção deve seguir critérios estabelecidos na política. O checklist de avaliação é a evidência de que a política é aplicada sistematicamente, e não caso a caso de forma subjetiva.",
+          "descricao": "Template e exemplos de checklist de avaliação usado na admissão de novo AV, cobrindo dimensões técnica, legal, de risco e de compliance.",
+          "conteudo_minimo": [
+            "Análise técnica (protocolo, smart contract, descentralização)",
+            "Análise legal (classificação regulatória, restrições por jurisdição)",
+            "Análise de risco de mercado (liquidez, volatilidade, capitalização)",
+            "Análise de compliance (histórico PLD, uso em atividades ilícitas)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "IX_a_3",
+          "titulo": "Ata ou Registro de Comitê de Listagem",
+          "categoria": "relatorio",
+          "prioridade": "alta",
+          "justificativa_legal": "A decisão de listagem é formal e deve ser documentada. A ata do comitê prova que o processo de governança foi seguido e a decisão foi colegiada.",
+          "descricao": "Ata ou registro de decisão do comitê de listagem (anonimizado se necessário), demonstrando análise, debate e aprovação formal de listagens recentes.",
+          "conteudo_minimo": [
+            "Data da reunião e membros presentes",
+            "AV(s) avaliados e resultado da avaliação (aprovado/rejeitado)",
+            "Fundamentos da decisão",
+            "Assinaturas ou registro digital dos participantes"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "IX_a_4",
+          "titulo": "Exemplo de Comunicação ao Cliente sobre Suspensão ou Deslistagem",
+          "categoria": "evidencia",
+          "prioridade": "media",
+          "justificativa_legal": "Art. 64, §1º: a política deve ser disponível ao cliente. A comunicação de eventos de suspensão/deslistagem prova que o processo de transparência funciona em produção.",
+          "descricao": "Modelo ou exemplo anonimizado de comunicação ao cliente enviada em caso de suspensão ou deslistagem de um AV.",
+          "conteudo_minimo": [
+            "Prazo de aviso antes da efetivação (mínimo previsto na política)",
+            "Canal de comunicação utilizado",
+            "Conteúdo: motivo, impacto ao cliente, prazo e alternativas",
+            "Processo de retirada de AV deslistado pelo cliente"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal opera com comitê de listagem independente (sem participação da área comercial no voto), revisão trimestral de todos os AV listados com deslistagem automática se critérios não forem mantidos, e disponibiliza a política de listagem publicamente na página principal antes do login.",
+        "indicadores": [
+          "Comitê de listagem com membros independentes",
+          "Revisão trimestral de todos os AV listados",
+          "Política de listagem disponível publicamente antes do login",
+          "Due diligence documentada para cada AV listado",
+          "Aviso ao cliente com mínimo 30 dias para deslistagem"
+        ]
+      }
+    },
+    {
+      "id": "IX_b",
+      "rotulo": "IX (b)",
+      "artigo_in701": "4º, IX, alínea b",
+      "tema": "Seleção de AV Referenciados em Moeda Fiduciária (Stablecoins)",
+      "base_legal": ["Res. 520, art. 65, I a IX"],
+      "resumo": "Critérios específicos para seleção e monitoramento de AV referenciados em moeda fiduciária (stablecoins), incluindo verificação de emissores, reservas e paridade.",
+      "gatilho": "Acionado quando a VASP oferece ou pretende oferecer stablecoins ou AV referenciados em fiat.",
+      "documentos": [
+        {
+          "id": "IX_b_1",
+          "titulo": "Política de Seleção de AV Referenciados em Moeda Fiduciária",
+          "categoria": "politica",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 65 da Res. 520 lista 9 critérios específicos de seleção para AV referenciados em fiat. A política deve incorporar esses critérios de forma operacionalizável.",
+          "descricao": "Política específica para seleção de stablecoins e AV referenciados em fiat, cobrindo os critérios do art. 65, I a IX da Res. 520.",
+          "conteudo_minimo": [
+            "Critérios de seleção alinhados ao art. 65, I a IX",
+            "Verificação de reservas do emissor (tipo, cobertura, attestation)",
+            "Monitoramento de paridade (alertas e limites de desvio)",
+            "Divulgação de riscos específicos ao cliente (depeg, emissor centralizado)",
+            "Processo de suspensão em caso de eventos de desvio de paridade"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "IX_b_2",
+          "titulo": "Ficha Técnica por Stablecoin Ofertada",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 65, I: verificação de características do AV referenciado. A ficha técnica documenta a diligência realizada sobre cada stablecoin e serve de referência para monitoramento contínuo.",
+          "descricao": "Documento por stablecoin ou AV referenciado em fiat listado, com características do emissor, estrutura de reservas, histórico de auditoria e riscos identificados.",
+          "conteudo_minimo": [
+            "Emissor e jurisdição de registro",
+            "Estrutura de reservas (tipo de ativos, cobertura declarada)",
+            "Relatório de attestation de reservas mais recente (link ou cópia)",
+            "Histórico de eventos de desvio de paridade",
+            "Riscos identificados e controles mitigantes"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "IX_b_3",
+          "titulo": "Evidência de Monitoramento de Paridade em Tempo Real",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 65, V e IX: a VASP deve monitorar eventos relevantes que possam afetar o AV referenciado. O monitoramento de paridade é o controle operacional mais direto para stablecoins.",
+          "descricao": "Dashboard ou configuração de alertas que demonstra o monitoramento de paridade das stablecoins ofertadas, com limiares de alerta e histórico de eventos.",
+          "conteudo_minimo": [
+            "Stablecoins monitoradas e fonte de preço utilizada",
+            "Limiar de alerta (ex.: desvio > 0.5%) e limiar de ação (ex.: > 2%)",
+            "Histórico de alertas acionados no período",
+            "Processo de decisão ao acionar o alerta"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "IX_b_4",
+          "titulo": "Termos de Risco Específicos ao Cliente (Stablecoin)",
+          "categoria": "contrato",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 65, VIII da Res. 520 e par1_I: divulgação de riscos ao cliente. Para stablecoins, os riscos são específicos (depeg, falência do emissor, risco de reserva) e devem ser comunicados separadamente.",
+          "descricao": "Termo ou seção do contrato/termos de uso que divulga os riscos específicos de stablecoins ao cliente antes da primeira operação.",
+          "conteudo_minimo": [
+            "Risco de depeg (perda de paridade com o fiat de referência)",
+            "Risco de emissor (centralizado, sem cobertura FGC)",
+            "Risco de reserva (ativos de reserva podem perder valor)",
+            "Impacto em caso de insolvência do emissor"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal só oferece stablecoins reguladas (ou com attestation trimestral por Big 4), monitora paridade em tempo real com suspensão automática ao atingir 2% de desvio, e divulga a ficha de risco de cada stablecoin na página de produto antes da primeira operação do cliente.",
+        "indicadores": [
+          "Apenas stablecoins com attestation trimestral de reservas",
+          "Suspensão automática ao atingir 2% de desvio de paridade",
+          "Ficha de risco por stablecoin disponível publicamente",
+          "Revisão semestral de todos os AV referenciados listados"
+        ]
+      }
+    },
+    {
+      "id": "X_a",
+      "rotulo": "X (a)",
+      "artigo_in701": "4º, X, alínea a",
+      "tema": "Controlo Interno — Conflito de Interesses e Segregação de Funções",
+      "base_legal": ["Res. 520, art. 69, I a IX"],
+      "resumo": "Políticas e controles para identificar, divulgar e gerenciar conflitos de interesses entre a VASP, seus administradores e os clientes, com segregação efetiva de funções.",
+      "gatilho": "Obrigatório fixo na trilha intermediária; obrigatório em todas as trilhas.",
+      "documentos": [
+        {
+          "id": "X_a_1",
+          "titulo": "Política de Conflito de Interesses",
+          "categoria": "politica",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 69 da Res. 520 lista 9 situações de conflito que a VASP deve identificar, divulgar e gerenciar. Sem política formal, não é possível demonstrar que esses 9 requisitos são sistematicamente cobertos.",
+          "descricao": "Política formal cobrindo os 9 incisos do art. 69: identificação, divulgação, gestão e prevenção de conflitos de interesse entre a VASP, administradores e clientes.",
+          "conteudo_minimo": [
+            "Definição de conflito de interesse aplicada à VASP",
+            "Mapa dos 9 incisos do art. 69 e controles associados",
+            "Processo de identificação e divulgação de conflitos",
+            "Decisão de divulgar ao cliente vs. abster-se da operação",
+            "Responsável e comitê de conflitos",
+            "Revisão anual ou ao ocorrer evento material"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "X_a_2",
+          "titulo": "Mapa de Segregação Funcional (Organograma + Linhas de Reporte)",
+          "categoria": "diagrama",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 69 e art. 43, III da Res. 520: segregação de funções é controle fundamental. O mapa evidencia ao auditor que funções incompatíveis não são exercidas pela mesma pessoa ou unidade.",
+          "descricao": "Organograma detalhado mostrando a segregação entre funções incompatíveis (negociação própria vs. gestão de ordens de clientes, custódia vs. operações, compliance vs. comercial).",
+          "conteudo_minimo": [
+            "Funções incompatíveis identificadas (negociação própria vs. cliente)",
+            "Linhas de reporte independentes para risco e compliance",
+            "Controles compensatórios onde segregação total não é viável",
+            "Revisão da segregação ao ocorrer mudança organizacional"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "X_a_3",
+          "titulo": "Registros de Conflitos Identificados e Tratados",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 69: os conflitos devem ser identificados e tratados. Um registro demonstra que o processo é operacional e não apenas declaratório. Sem registros, não há prova de que a política é aplicada.",
+          "descricao": "Log ou registro dos conflitos de interesse identificados nos últimos 12 meses, com decisão tomada (divulgação, abstenção ou outro tratamento) e responsável.",
+          "conteudo_minimo": [
+            "Data e tipo de conflito identificado",
+            "Decisão: divulgar ao cliente, abster-se ou controle alternativo",
+            "Responsável pela decisão",
+            "Resultado e encerramento"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "X_a_4",
+          "titulo": "Procedimento de Divulgação de Conflitos ao Cliente",
+          "categoria": "procedimento",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 69, IV da Res. 520: a VASP deve divulgar ao cliente os conflitos que não consegue eliminar. O procedimento garante que essa divulgação é sistemática e documentada.",
+          "descricao": "Procedimento definindo quando e como os conflitos de interesse são divulgados ao cliente, incluindo o formato, o prazo e o canal de comunicação.",
+          "conteudo_minimo": [
+            "Gatilho de divulgação (antes da operação ou ao identificar o conflito)",
+            "Formato da divulgação (e-mail, termos de uso, popup no sistema)",
+            "Conteúdo mínimo da divulgação",
+            "Registro da divulgação e consentimento do cliente"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal tem barreira total entre mesa de negociação própria e gestão de ordens de clientes, com sistema de Chinese Wall automatizado, comitê de conflitos que se reúne mensalmente, e divulgação proativa de qualquer conflito ao cliente antes de executar a operação. Registros de conflitos tratados são auditados internamente semestralmente.",
+        "indicadores": [
+          "Chinese Wall implementado e auditado sistematicamente",
+          "Comitê de conflitos com reunião mensal documentada",
+          "Zero operações executadas com conflito não divulgado",
+          "Auditoria interna semestral dos registros de conflito",
+          "Treinamento obrigatório anual sobre conflito de interesses"
+        ]
+      }
+    },
+    {
+      "id": "XI",
+      "rotulo": "XI",
+      "artigo_in701": "4º, XI",
+      "tema": "Gestão de Risco, Capital, Compliance e Auditoria Interna",
+      "base_legal": ["Res. 520, arts. 55–58"],
+      "resumo": "Estruturas de gestão de risco e capital, função de compliance e auditoria interna operacionalizadas de acordo com a regulamentação de IF/autorizadas BCB.",
+      "gatilho": "Obrigatório fixo em todas as trilhas.",
+      "documentos": [
+        {
+          "id": "XI_1",
+          "titulo": "Organograma das 3 Linhas de Defesa",
+          "categoria": "diagrama",
+          "prioridade": "critica",
+          "justificativa_legal": "Arts. 55–58 da Res. 520 exigem estruturas de risco, compliance e auditoria alinhadas à regulamentação de IF. O modelo das 3 Linhas de Defesa é o padrão regulatório aceito pelo BCB.",
+          "descricao": "Organograma demonstrando as 3 linhas de defesa: 1ª (negócios/operação), 2ª (risco e compliance), 3ª (auditoria interna), com linhas de reporte independentes.",
+          "conteudo_minimo": [
+            "1ª linha: unidades de negócio e responsabilidades de controle próprias",
+            "2ª linha: gestão de risco e compliance com independência dos negócios",
+            "3ª linha: auditoria interna com reporte ao conselho/comitê de auditoria",
+            "Linhas de reporte para cada linha (sem reporte à área de negócios)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XI_2",
+          "titulo": "Política de Gestão de Riscos (incluindo Capital)",
+          "categoria": "politica",
+          "prioridade": "critica",
+          "justificativa_legal": "Arts. 55 e 56 da Res. 520: a VASP deve ter estrutura de gestão de risco formalizada. Sem política aprovada não há base para as atividades de identificação, avaliação e mitigação.",
+          "descricao": "Política de gestão de riscos cobrindo risco operacional, de mercado, de liquidez e de custódia, com metodologia de avaliação, limites de risco e estrutura de capital de suporte.",
+          "conteudo_minimo": [
+            "Categorias de risco cobertas e metodologia de avaliação",
+            "Apetite e limites de risco aprovados pela diretoria",
+            "Estrutura de capital mínimo para absorção de perdas operacionais",
+            "Escalada ao conselho ao atingir limites de risco",
+            "Ciclo de revisão (mínimo anual)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XI_3",
+          "titulo": "Relatório de Compliance — Avaliação de Aderência Regulatória",
+          "categoria": "relatorio",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 57 da Res. 520: a função de compliance deve reportar sistematicamente. O relatório é a evidência de que a 2ª linha está ativa e operando de forma independente.",
+          "descricao": "Relatório periódico (semestral ou anual) da função de compliance, avaliando a aderência da VASP às obrigações regulatórias, com status de cada obrigação e gaps identificados.",
+          "conteudo_minimo": [
+            "Mapeamento das obrigações regulatórias aplicáveis",
+            "Status de cumprimento por obrigação",
+            "Gaps identificados e planos de remediação com prazos",
+            "Riscos regulatórios emergentes identificados",
+            "Recomendações e acções em aberto"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XI_4",
+          "titulo": "Plano de Auditoria Interna e Relatório do Último Ciclo",
+          "categoria": "relatorio",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 58 da Res. 520: a auditoria interna deve avaliar a eficácia dos controles. O plano demonstra cobertura adequada; o relatório demonstra que a auditoria é realizada de fato.",
+          "descricao": "Plano anual de auditoria interna e sumário executivo do relatório do último ciclo de auditoria realizado, com achados principais e plano de ação.",
+          "conteudo_minimo": [
+            "Plano: áreas auditadas, cronograma e metodologia",
+            "Relatório: achados por severidade (críticos, altos, médios)",
+            "Plano de ação: responsável, prazo e status de implementação",
+            "Opinião do auditor interno sobre a eficácia dos controles",
+            "Evidência de apresentação ao conselho / comitê de auditoria"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XI_5",
+          "titulo": "Evidência de Acompanhamento de Recomendações de Auditoria",
+          "categoria": "evidencia",
+          "prioridade": "media",
+          "justificativa_legal": "A auditoria interna só gera valor se suas recomendações são implementadas. O acompanhamento documentado demonstra maturidade do ciclo de controle.",
+          "descricao": "Tracker ou relatório de acompanhamento das recomendações das últimas auditorias internas, com status atualizado de cada item.",
+          "conteudo_minimo": [
+            "Recomendação, área responsável e prazo acordado",
+            "Status: em aberto, em implementação, concluído",
+            "Evidência de closure para itens concluídos",
+            "Achados reabertos ou com prazo vencido — escalada"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal tem auditoria interna com equipe dedicada (ou função terceirizada a firma reconhecida), reportando ao comitê de auditoria do conselho, com plano de auditoria baseado em risco cobrindo 100% dos processos críticos em ciclos de 18 meses. O relatório de compliance é apresentado ao conselho mensalmente com status dos KPIs regulatórios.",
+        "indicadores": [
+          "Auditoria interna com reporte direto ao conselho",
+          "100% dos processos críticos auditados em ciclo de 18 meses",
+          "Relatório de compliance mensal ao conselho",
+          "Taxa de implementação de recomendações > 90% dentro do prazo",
+          "Comitê de auditoria com membro externo independente"
+        ]
+      }
+    },
+    {
+      "id": "XII",
+      "rotulo": "XII",
+      "artigo_in701": "4º, XII",
+      "tema": "Política de Segurança Cibernética e Plano de Resposta a Incidentes",
+      "base_legal": ["Res. BCB 85/2021 (cibersegurança e nuvem)", "Res. 520, art. 48"],
+      "resumo": "Política formal de segurança cibernética e plano de ação e resposta a incidentes na forma da regulamentação em vigor para instituições autorizadas pelo BCB.",
+      "gatilho": "Obrigatório fixo em todas as trilhas.",
+      "documentos": [
+        {
+          "id": "XII_1",
+          "titulo": "Política de Segurança Cibernética",
+          "categoria": "politica",
+          "prioridade": "critica",
+          "justificativa_legal": "Inciso XII da IN 701 exige política de segurança cibernética na forma da regulamentação em vigor (Res. BCB 85/2021). Sem este documento a VASP incorre em infração literal da IN.",
+          "descricao": "Política formal de segurança cibernética aprovada e publicada, cobrindo os objetivos, princípios, controles e ciclo de manutenção conforme a Res. BCB 85/2021.",
+          "conteudo_minimo": [
+            "Objetivos de segurança cibernética e âmbito de aplicação",
+            "Identificação dos ativos críticos e dados sensíveis",
+            "Controles de segurança por categoria (acesso, rede, endpoint, dados)",
+            "Gestão de incidentes cibernéticos",
+            "Formação e consciência de segurança",
+            "Aprovação da diretoria, data de vigência e próxima revisão"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XII_2",
+          "titulo": "Plano de Ação e Resposta a Incidentes Cibernéticos",
+          "categoria": "procedimento",
+          "prioridade": "critica",
+          "justificativa_legal": "Inciso XII e Res. BCB 85/2021: o plano de ação e resposta é literalmente exigido. É distinto da política — é o documento operacional que guia a resposta em tempo real.",
+          "descricao": "Plano detalhado de resposta a incidentes cibernéticos: classificação, papéis, processo de triagem, contenção, erradicação, recuperação e comunicação ao BCB.",
+          "conteudo_minimo": [
+            "Categorias de incidentes e critérios de classificação por severidade",
+            "RACI: papéis e responsabilidades na resposta",
+            "Passos de triagem, contenção, erradicação e recuperação",
+            "Processo e prazo de notificação ao BCB (incidentes relevantes)",
+            "Processo de comunicação ao cliente",
+            "Critérios de declaração e encerramento de incidente"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XII_3",
+          "titulo": "Resultado do Último Exercício de Resposta a Incidentes",
+          "categoria": "relatorio",
+          "prioridade": "alta",
+          "justificativa_legal": "Res. BCB 85/2021 e art. 43, §4º da Res. 520: planos devem ser testados. Sem exercício documentado, o plano é teórico e o BCB não pode confiar na capacidade de resposta.",
+          "descricao": "Relatório ou ata do último exercício de resposta a incidentes (tabletop ou simulação), com cenário testado, participantes e resultados.",
+          "conteudo_minimo": [
+            "Data e cenário do exercício (tipo de incidente simulado)",
+            "Participantes e papéis",
+            "Tempo de resposta medido vs. SLA definido",
+            "Gaps identificados e plano de melhoria",
+            "Próxima data de exercício prevista"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XII_4",
+          "titulo": "Política de Classificação de Dados e Controles por Sensibilidade",
+          "categoria": "politica",
+          "prioridade": "alta",
+          "justificativa_legal": "Res. BCB 85/2021 e LGPD: os dados devem ser classificados e protegidos de acordo com sua sensibilidade. Sem classificação, controles de segurança são iguais para tudo — o que é inadequado.",
+          "descricao": "Política de classificação de dados (público, interno, confidencial, crítico) e controles de segurança definidos por nível de classificação.",
+          "conteudo_minimo": [
+            "Categorias de classificação e critérios de enquadramento",
+            "Controles de segurança por categoria (acesso, criptografia, retenção)",
+            "Processo de classificação ao criar ou receber dados",
+            "Tratamento de dados de clientes (alinhado à LGPD)"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal tem política de cibersegurança certificada ISO 27001, plano de resposta a incidentes com SLA de contenção < 2h para incidentes críticos, exercício de tabletop trimestral, e notificação automática ao BCB configurada nos playbooks. Todos os dados de clientes são criptografados com chaves gerenciadas pelo cliente (BYOK) em ambiente de nuvem.",
+        "indicadores": [
+          "ISO 27001 própria ou certificação equivalente",
+          "SLA de contenção < 2h para incidentes críticos",
+          "Exercício tabletop trimestral com relatório",
+          "Notificação automática ao BCB em playbooks de incidente",
+          "BYOK (Bring Your Own Key) para dados de clientes"
+        ]
+      }
+    },
+    {
+      "id": "XIII",
+      "rotulo": "XIII",
+      "artigo_in701": "4º, XIII",
+      "tema": "Prevenção de Práticas Espúrias no Mercado de AV",
+      "base_legal": ["Res. 520, arts. 67–70"],
+      "resumo": "Políticas e mecanismos para identificar, monitorar e evitar wash trading, pump-and-dump, spoofing e outras práticas manipulativas no mercado de AV ofertado pela VASP.",
+      "gatilho": "Obrigatório fixo em todas as trilhas.",
+      "documentos": [
+        {
+          "id": "XIII_1",
+          "titulo": "Política de Conduta e Prevenção de Práticas Espúrias",
+          "categoria": "politica",
+          "prioridade": "critica",
+          "justificativa_legal": "Arts. 67–70 da Res. 520 e inciso XIII da IN 701: a VASP deve ter políticas e mecanismos formais. Sem política, os mecanismos técnicos não têm base institucional e não são auditáveis.",
+          "descricao": "Política formal de conduta de mercado definindo práticas proibidas, mecanismos de vigilância, processo de investigação e comunicação ao COAF quando aplicável.",
+          "conteudo_minimo": [
+            "Definição das práticas espúrias proibidas (wash trading, spoofing, pump-and-dump, front running)",
+            "Mecanismos de vigilância implementados (ferramenta, cobertura, alertas)",
+            "Processo de investigação de alertas (SLA, responsável, escalada)",
+            "Critérios e processo de comunicação ao COAF",
+            "Revisão bienal independente (art. 70, IV da Res. 520)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XIII_2",
+          "titulo": "Descrição Técnica dos Mecanismos de Vigilância de Mercado",
+          "categoria": "evidencia",
+          "prioridade": "critica",
+          "justificativa_legal": "Inciso XIII exige 'mecanismos' — não apenas política. A descrição técnica prova que existem sistemas operacionais de detecção, não apenas declarações de intenção.",
+          "descricao": "Documentação técnica da ferramenta ou sistema de vigilância de mercado: cobertura de pares, tipos de alertas configurados e processo de tratamento.",
+          "conteudo_minimo": [
+            "Ferramenta utilizada (interna ou terceirizada) e cobertura",
+            "Tipos de padrões detectados (wash trading, spoofing, etc.)",
+            "Limiares de alerta configurados por tipo de prática",
+            "Integração com o sistema de ordens da plataforma"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XIII_3",
+          "titulo": "Amostra de Alertas de Vigilância Tratados",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 70 da Res. 520: os mecanismos devem ser operacionais. Uma amostra de alertas tratados demonstra que o sistema funciona em produção e não é meramente configurado.",
+          "descricao": "Amostra anonimizada de alertas gerados pelo sistema de vigilância nos últimos 6 meses, com decisão tomada em cada caso (encerrado, investigado, comunicado ao COAF).",
+          "conteudo_minimo": [
+            "Tipo de alerta e data (sem identificação do cliente)",
+            "Resultado da investigação: falso positivo ou suspeita confirmada",
+            "Decisão e fundamento",
+            "Comunicação ao COAF (se aplicável)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XIII_4",
+          "titulo": "Relatório de Revisão Independente Bienal do Programa de Vigilância",
+          "categoria": "certificacao",
+          "prioridade": "media",
+          "justificativa_legal": "Art. 70, IV da Res. 520: revisão independente bienal é requisito explícito. Sem este documento, a VASP incorre em infração literal ao art. 70, IV.",
+          "descricao": "Relatório de revisão independente do programa de vigilância de práticas espúrias, realizado a cada 2 anos por empresa especializada.",
+          "conteudo_minimo": [
+            "Empresa revisora e escopo da revisão",
+            "Metodologia aplicada",
+            "Achados sobre eficácia dos mecanismos",
+            "Recomendações e plano de implementação"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal opera com sistema de vigilância de mercado de nível enterprise (NICE Actimize, Eventus Systems ou equivalente), cobrindo 100% das ordens e transações em tempo real, com revisão independente anual (mais frequente que o mínimo bienal exigido) e analistas dedicados com fila de alertas gerenciada em SLA de 2h.",
+        "indicadores": [
+          "100% das ordens e transações monitoradas em tempo real",
+          "SLA de tratamento de alertas < 2h para alta prioridade",
+          "Revisão independente anual (acima do mínimo bienal)",
+          "Zero wash trading detectado e não comunicado ao COAF"
+        ]
+      }
+    },
+    {
+      "id": "XIV",
+      "rotulo": "XIV",
+      "artigo_in701": "4º, XIV",
+      "tema": "Contrato de Custódia de Ativos Virtuais",
+      "base_legal": ["Res. 520, art. 73, VIII", "Res. 520, art. 75", "Res. 520, art. 78"],
+      "resumo": "Contrato formal de custódia de AV com clientes, contendo os elementos mínimos dos arts. 73, 75 e 78 da Res. 520, incluindo obrigações, direitos, plano de encerramento e notificação de incidentes.",
+      "gatilho": "Obrigatório quando a VASP realiza custódia de AV de clientes, diretamente ou via subcustodiante.",
+      "documentos": [
+        {
+          "id": "XIV_1",
+          "titulo": "Modelo de Contrato de Custódia de AV",
+          "categoria": "contrato",
+          "prioridade": "critica",
+          "justificativa_legal": "Inciso XIV da IN 701 e art. 73 da Res. 520: o contrato de custódia deve conter os elementos mínimos do art. 73, I a X. Sem contrato formal, a custódia não tem base jurídica adequada.",
+          "descricao": "Modelo de contrato de custódia de AV vigente, com os elementos mínimos dos arts. 73, 75 e 78, revisado juridicamente.",
+          "conteudo_minimo": [
+            "Identificação das partes e AV cobertos",
+            "Obrigações do custodiante (arts. 73 e 75)",
+            "Direitos e responsabilidades do cliente",
+            "Processo de encerramento e devolução de AV (art. 78, III)",
+            "Notificação de incidentes ao cliente (art. 73, IX)",
+            "Subcustódia: condições e responsabilidades (art. 73, VIII)",
+            "Divulgação de tarifas e taxas"
+          ],
+          "retencao": "5 anos após encerramento"
+        },
+        {
+          "id": "XIV_2",
+          "titulo": "Política ou Procedimento de Subcustódia",
+          "categoria": "politica",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 73, VIII da Res. 520: a subcustódia é regulada e requer consentimento e responsabilidade. Sem procedimento, a VASP não demonstra que controla o subcustodiante adequadamente.",
+          "descricao": "Política de subcustódia definindo critérios de seleção, responsabilidades, monitoramento e obrigações do subcustodiante em relação ao contrato com o cliente.",
+          "conteudo_minimo": [
+            "Critérios de seleção de subcustodiante",
+            "Responsabilidades da VASP perante o cliente mesmo usando subcustodiante",
+            "Cláusulas exigidas no contrato com o subcustodiante",
+            "Monitoramento contínuo do subcustodiante",
+            "Consentimento do cliente (quando exigido)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XIV_3",
+          "titulo": "Wind-down Plan — Plano de Encerramento Ordenado",
+          "categoria": "procedimento",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 78, III da Res. 520: a VASP deve ter plano de encerramento e devolução de AV ao cliente. Sem este plano, uma eventual insolvência ou encerramento voluntário seria desordenado e prejudicial ao cliente.",
+          "descricao": "Plano documentado de encerramento ordenado da VASP ou do serviço de custódia, detalhando o processo de devolução de AV a cada cliente.",
+          "conteudo_minimo": [
+            "Gatilhos de ativação do plano (insolvência, encerramento voluntário, revogação de autorização)",
+            "Processo de inventário final de AV por cliente",
+            "Processo de devolução (carteiras externas, prazos)",
+            "Comunicação ao cliente e ao BCB",
+            "Gestor responsável pelo wind-down"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XIV_4",
+          "titulo": "Exemplo de Notificação de Incidente ao Cliente",
+          "categoria": "evidencia",
+          "prioridade": "media",
+          "justificativa_legal": "Art. 73, IX da Res. 520: o contrato deve prever notificação de incidentes ao cliente. Uma evidência real prova que o processo funciona em produção.",
+          "descricao": "Modelo ou exemplo anonimizado de notificação de incidente de custódia enviada ao cliente (acesso não autorizado, perda, indisponibilidade).",
+          "conteudo_minimo": [
+            "Tipo de incidente (sem dados sensíveis)",
+            "Prazo de notificação após confirmação do incidente",
+            "Conteúdo mínimo: o que ocorreu, impacto ao cliente, medidas tomadas",
+            "Canal de comunicação utilizado"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal tem contrato de custódia revisado anualmente por advogados especializados em criptoativos e regulação BCB, wind-down plan testado em exercício anual, e notificação automática ao cliente em até 1h após confirmação de qualquer incidente de custódia. O contrato inclui SLA de disponibilidade do serviço de custódia.",
+        "indicadores": [
+          "Contrato revisado anualmente por advogados especializados",
+          "Wind-down plan testado em exercício anual",
+          "Notificação ao cliente em até 1h após incidente de custódia",
+          "SLA de disponibilidade do serviço de custódia no contrato",
+          "100% dos clientes com contrato assinado antes de primeira operação"
+        ]
+      }
+    },
+    {
+      "id": "XV",
+      "rotulo": "XV",
+      "artigo_in701": "4º, XV",
+      "tema": "Medidas e Planos do Custodiante (art. 76, I a XII)",
+      "base_legal": ["Res. 520, art. 76, I a XII"],
+      "resumo": "Conjunto de 12 medidas operacionais que o custodiante deve implementar: reconciliação, segurança de chaves, seguro, relatórios, recuperação e comunicação ao BCB.",
+      "gatilho": "Obrigatório para VASPs com custódia própria (custodiante e corretora).",
+      "documentos": [
+        {
+          "id": "XV_1",
+          "titulo": "Procedimento de Reconciliação Diária de Custódia",
+          "categoria": "procedimento",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 76, I da Res. 520: o custodiante deve manter inventário atualizado dos AV. A reconciliação diária é o controle operacional que garante que o inventário está correto a cada dia.",
+          "descricao": "Procedimento de reconciliação diária entre sub-ledger interno e posições on-chain, com registro e tratamento de discrepâncias.",
+          "conteudo_minimo": [
+            "Frequência: mínimo diária para sistemas críticos",
+            "Sistemas reconciliados e fontes de dados",
+            "Tratamento de discrepâncias (alerta, investigação, correção)",
+            "Responsável e aprovação do resultado",
+            "Amostra de reconciliação recente (anonimizada)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XV_2",
+          "titulo": "Política de Segurança e Ciclo de Vida das Chaves",
+          "categoria": "politica",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 76, II e V da Res. 520: geração, armazenamento e proteção de chaves são requisitos explícitos do custodiante. A política formaliza todo o ciclo de vida das chaves.",
+          "descricao": "Ver VII_1 — Política de Gestão de Chaves Privadas. Para o inciso XV, foco específico nos requisitos do art. 76, II e V.",
+          "conteudo_minimo": [
+            "Geração de chaves em ambiente seguro (art. 76, II)",
+            "Armazenamento em HSM ou equivalente certificado",
+            "Controle de acesso com autenticação forte e quórum",
+            "Rotação e revogação (art. 76, V)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XV_3",
+          "titulo": "Resultado do Último Teste de Recuperação de Ativos/Chaves",
+          "categoria": "relatorio",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 76, IX da Res. 520: o custodiante deve testar periodicamente a capacidade de recuperação dos AV. Sem resultado de teste, o plano de recuperação é apenas teórico.",
+          "descricao": "Relatório do último teste de recuperação de AV e/ou chaves, demonstrando que o processo funciona end-to-end em cenário de simulação.",
+          "conteudo_minimo": [
+            "Cenário testado (falha de HSM, perda de chave primária, etc.)",
+            "Resultado: recuperação bem-sucedida ou gaps",
+            "Tempo de recuperação medido vs. RTO definido",
+            "Plano de melhoria para gaps identificados"
+          ],
+          "retencao": "5 anos (art. 45, II)"
+        },
+        {
+          "id": "XV_4",
+          "titulo": "Modelo de Relatório de Posição para o Cliente",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 76, III da Res. 520 e par1_III da IN 701: o custodiante deve emitir relatório de posição ao cliente. O modelo demonstra que o processo existe e o conteúdo é adequado.",
+          "descricao": "Modelo ou amostra anonimizada do relatório de posição emitido ao cliente, cobrindo os campos exigidos pelo art. 76, III.",
+          "conteudo_minimo": [
+            "AV detidos por tipo e quantidade",
+            "Valor de referência (quando disponível)",
+            "Data e hora de referência",
+            "Movimentações do período (entradas e saídas)",
+            "Método de disponibilização (portal, e-mail, API)"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal realiza reconciliação automática em tempo real (não apenas diária), com alerta imediato para qualquer discrepância, e testa recuperação completa de AV trimestralmente. O relatório de posição é disponibilizado ao cliente em tempo real via portal e via API, com histórico completo de movimentações.",
+        "indicadores": [
+          "Reconciliação automática em tempo real com alerta imediato",
+          "Teste de recuperação de AV trimestral documentado",
+          "Relatório de posição em tempo real via portal e API",
+          "Zero discrepâncias não tratadas em > 24h"
+        ]
+      }
+    },
+    {
+      "id": "XVI",
+      "rotulo": "XVI",
+      "artigo_in701": "4º, XVI",
+      "tema": "Redundância dos Instrumentos de Controle de AV",
+      "base_legal": ["Res. 520, art. 76, XII"],
+      "resumo": "Mecanismos de redundância para as chaves privadas e instrumentos de controle sobre AV, garantindo que uma falha não resulte em perda irreversível.",
+      "gatilho": "Obrigatório para VASPs com custódia própria ou terceirizada quando se é responsável pela redundância.",
+      "documentos": [
+        {
+          "id": "XVI_1",
+          "titulo": "Arquitetura de Redundância de Chaves Documentada",
+          "categoria": "diagrama",
+          "prioridade": "critica",
+          "justificativa_legal": "Inciso XVI e art. 76, XII da Res. 520: a redundância é requisito explícito. Sem arquitetura documentada, não é possível demonstrar que a redundância existe e é adequada.",
+          "descricao": "Diagrama e documentação da arquitetura de redundância das chaves: localizações das cópias (geograficamente distribuídas), tipo de redundância e frequência de teste.",
+          "conteudo_minimo": [
+            "Número de cópias de redundância e localização (data centers diferentes)",
+            "Tipo de redundância: RAID, backup HSM, shares Shamir, etc.",
+            "Frequência de atualização das cópias de redundância",
+            "Controle de acesso às cópias de redundância",
+            "Tempo estimado de failover"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XVI_2",
+          "titulo": "Procedimentos de Recuperação Escritos (POPs por Cenário)",
+          "categoria": "procedimento",
+          "prioridade": "critica",
+          "justificativa_legal": "Inciso XVII (recuperação) é complementar ao XVI (redundância). Os POPs são o instrumento operacional que garante que a redundância pode ser acionada de forma controlada.",
+          "descricao": "Procedimentos Operacionais Padrão para acionamento de cada cenário de redundância: falha de HSM primário, destruição de site, corrupção de chaves.",
+          "conteudo_minimo": [
+            "Cenários cobertos (mínimo 3: falha HSM, destruição de site, corrupção)",
+            "Passos de ativação com responsáveis e quórum necessário",
+            "Verificação de integridade das cópias antes do uso",
+            "Tempo estimado de execução por cenário"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XVI_3",
+          "titulo": "Resultado do Último Drill de Recuperação de Redundância",
+          "categoria": "relatorio",
+          "prioridade": "alta",
+          "justificativa_legal": "Inciso XVII da IN 701 exige procedimentos de recuperação. O drill documenta que esses procedimentos funcionam em prática, não apenas no papel.",
+          "descricao": "Relatório do último exercício de recuperação usando o sistema de redundância, com cenário, participantes, tempo de recuperação e resultado.",
+          "conteudo_minimo": [
+            "Data e cenário do exercício",
+            "Participantes e papéis exercidos",
+            "Tempo de recuperação medido vs. objetivo",
+            "Integridade das chaves verificada após recuperação",
+            "Achados e melhorias"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "XVI_4",
+          "titulo": "Relatório de Status dos HSMs (Quantidade, Status, Failover)",
+          "categoria": "relatorio",
+          "prioridade": "media",
+          "justificativa_legal": "A redundância física depende do estado dos HSMs. Um relatório de status demonstra que a infraestrutura de redundância está operacional e não apenas configurada.",
+          "descricao": "Relatório periódico do estado dos HSMs utilizados: status de cada unidade, versão de firmware, último teste de failover e prazo de substituição.",
+          "conteudo_minimo": [
+            "Número de HSMs por localização e status",
+            "Versão de firmware e patches aplicados",
+            "Último teste de failover e resultado",
+            "Prazo de garantia e plano de substituição"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal usa Shamir Secret Sharing com shares distribuídas em 5 localizações geográficas em 3 países diferentes, com failover testado trimestralmente e tempo de recuperação de chaves < 4h. Nenhuma localização única tem chaves suficientes para comprometer o sistema.",
+        "indicadores": [
+          "Shares distribuídas em mínimo 5 localizações geográficas (3 países)",
+          "Failover testado trimestralmente",
+          "Tempo de recuperação < 4h documentado nos testes",
+          "Nenhuma localização única com quórum suficiente",
+          "HSMs com firmware atualizado e dentro da garantia"
+        ]
+      }
+    },
+    {
+      "id": "XVII",
+      "rotulo": "XVII",
+      "artigo_in701": "4º, XVII",
+      "tema": "Procedimentos de Recuperação para Supervisão do BCB",
+      "base_legal": ["Res. 520, art. 76, XII"],
+      "resumo": "Procedimentos documentados de recuperação dos materiais de redundância (inciso XVI), específicos para fins de supervisão do BCB em caso de intervenção ou liquidação.",
+      "gatilho": "Obrigatório junto com o inciso XVI para VASPs com custódia própria.",
+      "documentos": [
+        {
+          "id": "XVII_1",
+          "titulo": "Procedimento de Recuperação para Supervisão do BCB",
+          "categoria": "procedimento",
+          "prioridade": "critica",
+          "justificativa_legal": "Inciso XVII literalmente exige 'procedimentos de recuperação do material sujeito à redundância para fins de supervisão do BCB'. Este é o único inciso que menciona explicitamente o BCB como destinatário.",
+          "descricao": "Procedimento específico para transferência de controle das chaves ao BCB (ou a entidade por ele designada) em caso de intervenção, liquidação ou solicitação regulatória.",
+          "conteudo_minimo": [
+            "Gatilhos: intervenção do BCB, liquidação, solicitação de supervisão",
+            "Processo de ativação com quórum definido",
+            "Passos para entrega do material de redundância ao BCB ou seu representante",
+            "Verificação de integridade antes da entrega",
+            "Registro do processo de entrega"
+          ],
+          "retencao": "Permanente"
+        },
+        {
+          "id": "XVII_2",
+          "titulo": "Evidência de Comunicação/Preparação para Supervisão do BCB",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "O inciso XVII tem como destinatário explícito a supervisão do BCB. Evidência de que o BCB tem conhecimento do procedimento (ou que está previsto no plano de recuperação) reforça a conformidade.",
+          "descricao": "Documentação que demonstra que o procedimento de entrega ao BCB foi validado ou comunicado ao BCB (quando aplicável), ou que está integrado ao wind-down plan.",
+          "conteudo_minimo": [
+            "Referência ao procedimento de supervisão no wind-down plan",
+            "Ou: confirmação de validação com o BCB",
+            "Localização e acessibilidade do material de redundância"
+          ],
+          "retencao": "Permanente"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal tem o procedimento de entrega ao BCB formalmente validado com assessoria jurídica especializada, integrado ao wind-down plan, com exercício anual de simulação de entrega de material a terceiro autorizado. O BCB pode acessar o material em até 24h após solicitação formal.",
+        "indicadores": [
+          "Procedimento formalmente validado por assessoria jurídica",
+          "Integrado ao wind-down plan com simulação anual",
+          "BCB pode acessar material em até 24h",
+          "Material identificado em local seguro e acessível"
+        ]
+      }
+    },
+    {
+      "id": "par1_I",
+      "rotulo": "§ 1º (I)",
+      "artigo_in701": "4º, § 1º, I, alíneas a–h",
+      "tema": "Informações Claras e Precisas ao Cliente",
+      "base_legal": ["Res. 520, art. 67", "Res. 520, art. 68", "Res. 520, art. 71"],
+      "resumo": "Obrigação de prestar informações claras e precisas ao cliente sobre a instituição, canais, contratos, tarifas, seguros, direitos, AV e DLT, e operações de staking.",
+      "gatilho": "Obrigatório fixo em todas as trilhas.",
+      "documentos": [
+        {
+          "id": "par1_I_1",
+          "titulo": "Contrato de Adesão / Termos de Uso com Informações dos Arts. 67 e 68",
+          "categoria": "contrato",
+          "prioridade": "critica",
+          "justificativa_legal": "§1º, I da IN 701 exige informações sobre a instituição, canais, contratadas, seguros (art. 68), direitos, custódia, ativo e DLT (art. 67). O contrato/termos de uso é o instrumento primário de divulgação.",
+          "descricao": "Contrato de adesão ou termos de uso vigente, contendo todas as informações exigidas pelos arts. 67 e 68 da Res. 520 nas alíneas a–g do §1º, I da IN 701.",
+          "conteudo_minimo": [
+            "Identificação completa da VASP (razão social, CNPJ, endereço, autorização BCB)",
+            "Canais de atendimento e SLA de resposta",
+            "Contratadas relevantes e responsabilidades",
+            "Informação sobre seguro ou declaração de ausência (art. 68)",
+            "Direitos do cliente: saques, portabilidade, encerramento de conta",
+            "Características dos AV ofertados e riscos inerentes",
+            "Tecnologia de registro (DLT) e seus impactos",
+            "Tarifas e taxas vigentes (link para tabela atualizada)"
+          ],
+          "retencao": "5 anos após encerramento"
+        },
+        {
+          "id": "par1_I_2",
+          "titulo": "Apólice de Seguro Vigente ou Declaração Formal de Ausência",
+          "categoria": "evidencia",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 68 da Res. 520 e alínea (f) do §1º, I da IN 701: a existência ou ausência de seguro deve ser divulgada. A apólice (ou declaração formal) é a evidência de que a informação ao cliente é veraz.",
+          "descricao": "Apólice de seguro vigente cobrindo riscos de custódia/operação (se existente), ou declaração formal da VASP de que não existe cobertura de seguro e que os AV de clientes não são cobertos pelo FGC.",
+          "conteudo_minimo": [
+            "Se seguro: apólice com riscos cobertos, valor segurado e vigência",
+            "Se sem seguro: declaração formal com informação de ausência de FGC",
+            "Disponibilização da informação ao cliente (contrato, portal)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "par1_I_3",
+          "titulo": "Tabela de Tarifas Publicada",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 67, IV da Res. 520: divulgação de tarifas e taxas. A tabela publicada permite ao cliente comparar e tomar decisão informada — e demonstra transparência regulatória.",
+          "descricao": "Tabela de tarifas e taxas vigentes da VASP, publicada em lugar de fácil acesso (portal, app, termos de uso), com data de vigência.",
+          "conteudo_minimo": [
+            "Tarifas de transação (compra, venda, swap)",
+            "Taxas de custódia (se aplicável)",
+            "Taxas de saque e depósito (fiat e cripto)",
+            "Data de vigência e forma de comunicação de alterações"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "par1_I_4",
+          "titulo": "Termo Específico de Staking com Divulgação de Riscos (art. 71)",
+          "categoria": "contrato",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 71 da Res. 520 e alínea (h) do §1º, I da IN 701 (par1_I_h): operações de staking requerem divulgação específica de riscos. Sem termo separado, a divulgação pode ser insuficiente.",
+          "descricao": "Termo ou seção específica do contrato cobrindo staking, com divulgação dos riscos do art. 71: lock-up, slashing, volatilidade, riscos de protocolo.",
+          "conteudo_minimo": [
+            "Definição do serviço de staking ofertado",
+            "Período de lock-up e condições de unstaking",
+            "Risco de slashing e mecanismos de cobertura",
+            "Risco de liquidez durante o período de lock-up",
+            "Taxas do serviço de staking"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal disponibiliza todas as informações dos arts. 67 e 68 em portal bilíngue (PT e EN), antes mesmo do login, com hiperlinks para tabela de tarifas, termos de staking e política de seguros. As informações são atualizadas em tempo real e o cliente é notificado por e-mail e push quando há alteração material.",
+        "indicadores": [
+          "Informações disponíveis antes do login (sem necessidade de cadastro)",
+          "Notificação automática ao cliente em alterações materiais",
+          "Tabela de tarifas atualizada em tempo real via API",
+          "Termo de staking com toda divulgação do art. 71 aprovado por jurídico",
+          "Apólice de seguro ou declaração formal atualizada anualmente"
+        ]
+      }
+    },
+    {
+      "id": "par1_II",
+      "rotulo": "§ 1º (II)",
+      "artigo_in701": "4º, § 1º, II",
+      "tema": "Educação Financeira e Divulgação de Boas Práticas",
+      "base_legal": ["Res. 520, art. 67"],
+      "resumo": "Disponibilizar ao cliente conteúdos informativos sobre boas práticas e riscos nas operações no mercado de AV, de forma acessível e atualizada.",
+      "gatilho": "Obrigatório fixo em todas as trilhas.",
+      "documentos": [
+        {
+          "id": "par1_II_1",
+          "titulo": "Centro de Ajuda / Página de Educação Financeira",
+          "categoria": "evidencia",
+          "prioridade": "critica",
+          "justificativa_legal": "§1º, II da IN 701: divulgação de conteúdos informativos sobre boas práticas e riscos. A existência de um canal dedicado (URL, captura de tela) é a evidência básica de cumprimento.",
+          "descricao": "URL e captura de tela do centro de ajuda ou página de educação financeira da VASP, com conteúdos sobre riscos de AV e boas práticas de segurança.",
+          "conteudo_minimo": [
+            "Riscos dos AV: volatilidade, irreversibilidade, falta de FGC",
+            "Boas práticas de segurança: phishing, 2FA, senhas seguras",
+            "Riscos de custódia: responsabilidade por chaves privadas",
+            "Processo de reclamação e canais de atendimento",
+            "Atualização ao ocorrer riscos emergentes relevantes (ex.: novo golpe identificado)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "par1_II_2",
+          "titulo": "Material Informativo sobre Riscos de AV Disponível Antes do Login",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "O §1º, II deve ser acessível ao cliente — inclusive antes de se tornar cliente. Disponibilizar antes do login maximiza a divulgação e demonstra proatividade.",
+          "descricao": "Evidência (captura de tela com data) de que o material informativo sobre riscos de AV está acessível na página pública da VASP, antes do login.",
+          "conteudo_minimo": [
+            "URL pública acessível sem login",
+            "Conteúdo mínimo sobre riscos de AV",
+            "Data de captura e data de última atualização do conteúdo"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "par1_II_3",
+          "titulo": "Política de Atualização de Conteúdo Informativo",
+          "categoria": "politica",
+          "prioridade": "media",
+          "justificativa_legal": "O conteúdo de educação financeira deve ser atual e relevante. Uma política de atualização garante que a VASP mantém o conteúdo vivo e não apenas uma página estática desatualizada.",
+          "descricao": "Política ou procedimento interno que define a responsabilidade, a frequência mínima de revisão e os gatilhos de atualização do conteúdo de educação financeira.",
+          "conteudo_minimo": [
+            "Responsável pelo conteúdo de educação financeira",
+            "Frequência de revisão (mínimo anual)",
+            "Gatilhos de atualização urgente (novos golpes, mudanças regulatórias)",
+            "Processo de aprovação antes de publicação"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal tem uma academia de educação em AV com cursos gratuitos, artigos semanais sobre riscos e boas práticas, e sistema de comunicação proativa (e-mail/push) ao detectar novos golpes direcionados ao segmento. O conteúdo é produzido por equipe editorial dedicada e revisado por compliance antes de publicação.",
+        "indicadores": [
+          "Conteúdo disponível em página pública antes do login",
+          "Atualização mínima mensal do conteúdo de riscos",
+          "Comunicação proativa ao cliente sobre novos golpes/riscos",
+          "Responsável formal pelo conteúdo com processo de aprovação",
+          "Métricas de acesso ao conteúdo monitorizadas"
+        ]
+      }
+    },
+    {
+      "id": "par1_III",
+      "rotulo": "§ 1º (III)",
+      "artigo_in701": "4º, § 1º, III",
+      "tema": "Relatório de Posição em AV do Cliente",
+      "base_legal": ["Res. 520, art. 79"],
+      "resumo": "Disponibilizar ao cliente um relatório atualizado de sua posição em AV, com todos os campos exigidos pelo art. 79 da Res. 520, em formato acessível e com histórico.",
+      "gatilho": "Obrigatório fixo em todas as trilhas.",
+      "documentos": [
+        {
+          "id": "par1_III_1",
+          "titulo": "Modelo de Relatório de Posição (Amostra Anonimizada — art. 79)",
+          "categoria": "evidencia",
+          "prioridade": "critica",
+          "justificativa_legal": "§1º, III da IN 701 e art. 79 da Res. 520: o relatório de posição é obrigação explícita. Uma amostra do modelo prova que o relatório existe, está disponível e contém os campos exigidos.",
+          "descricao": "Modelo ou amostra anonimizada do relatório de posição emitido ao cliente, demonstrando que cobre todos os campos do art. 79.",
+          "conteudo_minimo": [
+            "Identificação do cliente (anonimizada na amostra)",
+            "AV detidos: tipo, quantidade e valor de referência",
+            "Movimentações do período (entradas, saídas, tarifas)",
+            "Data e hora de referência do relatório",
+            "Disponibilização: portal em tempo real e envio periódico"
+          ],
+          "retencao": "5 anos (art. 45, II; §3º do art. 79)"
+        },
+        {
+          "id": "par1_III_2",
+          "titulo": "Comprovante de Disponibilidade no Portal do Cliente",
+          "categoria": "evidencia",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 79 da Res. 520: o relatório deve estar disponível ao cliente. A captura de tela do portal prova que o cliente tem acesso direto e não depende de solicitação.",
+          "descricao": "Captura de tela (com data) do portal do cliente mostrando o menu de acesso ao extrato/relatório de posição, demonstrando facilidade de acesso.",
+          "conteudo_minimo": [
+            "Tela do portal com menu de extrato/posição visível",
+            "Data da captura",
+            "Demonstração de que não é necessária solicitação — acesso self-service"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "par1_III_3",
+          "titulo": "Procedimento de Tratamento de Discrepâncias no Relatório",
+          "categoria": "procedimento",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 79, §2º da Res. 520: discrepâncias entre posição declarada e real devem ter processo de tratamento. Sem procedimento, a VASP não demonstra que consegue resolver erros de forma organizada.",
+          "descricao": "Procedimento que define como o cliente pode contestar uma discrepância no relatório de posição e como a VASP investiga e resolve o problema.",
+          "conteudo_minimo": [
+            "Canal de contestação pelo cliente",
+            "Prazo de resposta da VASP (SLA)",
+            "Processo de investigação interno",
+            "Resolução e comunicação ao cliente"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "par1_III_4",
+          "titulo": "Política de Retenção Histórica do Relatório de Posição (5 anos)",
+          "categoria": "politica",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 45, II e art. 79, §3º da Res. 520: histórico de relatórios de posição deve ser retido por 5 anos. Sem política de retenção, o dado pode ser perdido e a VASP não consegue atender solicitações do BCB.",
+          "descricao": "Política de retenção que define como e por quanto tempo os relatórios de posição são armazenados, garantindo acesso pelo cliente e pelo BCB por 5 anos.",
+          "conteudo_minimo": [
+            "Prazo de retenção: 5 anos (art. 45, II)",
+            "Formato de armazenamento e integridade dos dados",
+            "Acesso do cliente ao histórico",
+            "Acesso do BCB aos registros históricos"
+          ],
+          "retencao": "Permanente (política); dados: 5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal disponibiliza o relatório de posição em tempo real via portal, API e e-mail programado, com histórico completo de 5 anos acessível em self-service. O cliente pode exportar seu extrato completo em CSV/PDF a qualquer momento. Discrepâncias são resolvidas em até 24h com comunicação proativa ao cliente.",
+        "indicadores": [
+          "Relatório em tempo real via portal, API e e-mail",
+          "Histórico de 5 anos acessível em self-service",
+          "Export CSV/PDF disponível ao cliente a qualquer momento",
+          "SLA de resolução de discrepâncias: 24h",
+          "Zero períodos sem relatório disponível ao cliente"
+        ]
+      }
+    },
+    {
+      "id": "par1_I_h",
+      "rotulo": "§ 1º (I) (h)",
+      "artigo_in701": "4º, § 1º, I, alínea h",
+      "tema": "Staking — Divulgação de Riscos Específicos",
+      "base_legal": ["Res. 520, art. 71"],
+      "resumo": "Divulgação específica ao cliente das condições e riscos das operações de staking de ativos virtuais, conforme art. 71 da Res. 520.",
+      "gatilho": "Acionado quando a VASP oferece serviço de staking a clientes.",
+      "documentos": [
+        {
+          "id": "par1_I_h_1",
+          "titulo": "Termo de Staking com Divulgação Completa do art. 71",
+          "categoria": "contrato",
+          "prioridade": "critica",
+          "justificativa_legal": "Art. 71 da Res. 520 e alínea (h) do §1º, I da IN 701: divulgação específica de riscos de staking é obrigação autônoma. Um termo separado garante clareza e evita que a divulgação se perca nos termos gerais.",
+          "descricao": "Termo específico de staking ou seção dedicada nos termos de uso, cobrindo todos os riscos e condições do art. 71.",
+          "conteudo_minimo": [
+            "Definição do serviço e protocolo(s) de staking envolvidos",
+            "Período de lock-up por protocolo e condições de unstaking antecipado",
+            "Risco de slashing: definição, probabilidade, consequências e cobertura da VASP",
+            "Risco de liquidez durante o período de lock-up",
+            "Taxas do serviço de staking (reward sharing, taxas fixas)",
+            "Tratamento de rewards: frequência de crédito, reinvestimento",
+            "Risco de protocolo: fork, atualização, descontinuação",
+            "Direito de opt-out e processo de saída"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "par1_I_h_2",
+          "titulo": "Procedimento de Gestão de Eventos de Slashing",
+          "categoria": "procedimento",
+          "prioridade": "alta",
+          "justificativa_legal": "Art. 71, III da Res. 520: a VASP deve divulgar o risco de slashing. Um procedimento de gestão prova que a VASP está preparada para o evento e que o cliente não será surpreendido sem processo de tratamento.",
+          "descricao": "Procedimento interno que define como a VASP detecta, responde e comunica ao cliente um evento de slashing nos validadores que operam para o serviço de staking.",
+          "conteudo_minimo": [
+            "Sistema de monitoramento de validadores (detecção de slashing)",
+            "Processo de quantificação da perda de slashing",
+            "Responsabilidade da VASP: absorção ou repasse ao cliente",
+            "Comunicação ao cliente em até X horas após o evento",
+            "Processo de compensação (se a VASP assume o risco de slashing)"
+          ],
+          "retencao": "5 anos"
+        },
+        {
+          "id": "par1_I_h_3",
+          "titulo": "Histórico de Rewards de Staking e Relatório por Protocolo",
+          "categoria": "relatorio",
+          "prioridade": "media",
+          "justificativa_legal": "Art. 79 da Res. 520 (relatório de posição) conjugado com o serviço de staking: o cliente deve ter acesso ao histórico de rewards. Um relatório demonstra que o processo é transparente.",
+          "descricao": "Relatório ou extrato periódico de rewards de staking por protocolo e por cliente, demonstrando consistência e rastreabilidade.",
+          "conteudo_minimo": [
+            "Protocolo de staking e período de referência",
+            "Quantidade de AV em staking",
+            "Rewards gerados e creditados",
+            "Taxa da VASP deduzida",
+            "Eventos relevantes no período (slashing, fork)"
+          ],
+          "retencao": "5 anos"
+        }
+      ],
+      "resposta_otima": {
+        "descricao": "A VASP ideal tem validadores operados por equipe técnica dedicada com uptime > 99.9%, seguro de slashing contratado para cobrir até 100% de qualquer evento, monitor de validadores 24x7 com alerta em tempo real, e relatório de rewards disponível ao cliente no portal com granularidade diária.",
+        "indicadores": [
+          "Validadores próprios com uptime > 99.9%",
+          "Seguro de slashing cobrindo 100% do evento",
+          "Monitoramento 24x7 com alerta de slashing em tempo real",
+          "Relatório de rewards com granularidade diária no portal",
+          "Comunicação ao cliente em até 1h de qualquer evento de slashing"
+        ]
+      }
+    }
+  ]
+}

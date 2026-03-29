@@ -12,7 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Roboto+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/css/styles.css?v=32" />
+    <link rel="stylesheet" href="/static/css/styles.css?v=33" />
   </head>
   <body class="sk-app app-view-intro">
     <noscript>
@@ -116,16 +116,90 @@
             </div>
 
             <div class="intro-landing__tree-wrap">
-              <button type="button" class="btn btn-secondary intro-landing__tree-btn" id="btn-open-decision-tree">
-                Árvore de decisão dos incisos
-              </button>
+              <div class="intro-landing__aux-btns">
+                <button type="button" class="btn btn-secondary intro-landing__tree-btn" id="btn-open-decision-tree">
+                  Árvore de decisão dos incisos
+                </button>
+                <button type="button" class="btn btn-secondary intro-landing__tree-btn intro-landing__docs-btn" id="btn-open-docs-guide">
+                  📋 Guia de documentos
+                </button>
+              </div>
               <p class="intro-landing__tree-hint">
-                Ver, por trilha, cada pergunta do questionário e que incisos da IN 701 pode ativar — mapa didático interativo.
+                <strong>Árvore:</strong> mapa de perguntas × incisos por trilha. &nbsp;·&nbsp; <strong>Guia:</strong> documentos necessários e resposta ótima por inciso da IN 701.
               </p>
             </div>
             <p class="intro-landing__certik-foot">
               <a href="https://www.certik.com" target="_blank" rel="noopener noreferrer">certik.com</a>
             </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== GUIA DE DOCUMENTOS ========== -->
+      <section id="docs-guide-view" class="docs-guide-view hidden" aria-labelledby="dg-main-title">
+        <div class="wrap dg-wrap">
+          <!-- Toolbar -->
+          <div class="dg-toolbar">
+            <button type="button" class="btn btn-ghost dg-back" id="btn-dg-back">← Voltar ao início</button>
+            <div class="dg-heading-block">
+              <h2 id="dg-main-title" class="dg-main-title">Guia de Documentos por Inciso — IN 701</h2>
+              <p class="dg-lead">
+                Para cada inciso do art. 4º da IN 701: documentos necessários com justificativa legal, conteúdo mínimo e a resposta ótima que uma VASP bem preparada deve alcançar.
+              </p>
+            </div>
+          </div>
+
+          <!-- Stats + controles -->
+          <div class="dg-sticky-bar">
+            <div class="dg-stats-row">
+              <div id="dg-stats" class="dg-stats"></div>
+              <div class="dg-controls">
+                <span class="dg-filter-count-wrap">Mostrando <span id="dg-filter-count">—</span></span>
+                <button type="button" class="btn btn-ghost dg-ctrl-btn" id="dg-expand-all">Expandir todos</button>
+                <button type="button" class="btn btn-ghost dg-ctrl-btn" id="dg-collapse-all">Fechar todos</button>
+                <button type="button" class="btn btn-ghost dg-ctrl-btn" id="dg-export" title="Exportar guia completo em JSON">⬇ JSON</button>
+              </div>
+            </div>
+            <div class="dg-filter-row">
+              <label class="dg-filter-label">
+                <span class="dg-filter-text">Pesquisar inciso</span>
+                <input type="search" id="dg-search" class="dg-filter-input" placeholder="Ex.: I (a), segregação, chaves…" autocomplete="off" />
+              </label>
+              <label class="dg-filter-label">
+                <span class="dg-filter-text">Prioridade</span>
+                <select id="dg-prio-filter" class="dg-prio-select">
+                  <option value="all">Todas</option>
+                  <option value="critica">Crítica</option>
+                  <option value="alta">Alta</option>
+                  <option value="media">Média</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <!-- Legenda visual -->
+          <div class="dg-legend" aria-label="Legenda de prioridade">
+            <div class="dg-legend-inner">
+              <span class="dg-legend-item">
+                <span class="dg-prio-badge dg-prio--critica">Crítica</span>
+                <span class="dg-legend-text">Sem este documento a certificação é inviável</span>
+              </span>
+              <span class="dg-legend-sep" aria-hidden="true">·</span>
+              <span class="dg-legend-item">
+                <span class="dg-prio-badge dg-prio--alta">Alta</span>
+                <span class="dg-legend-text">Ausência gera gap material</span>
+              </span>
+              <span class="dg-legend-sep" aria-hidden="true">·</span>
+              <span class="dg-legend-item">
+                <span class="dg-prio-badge dg-prio--media">Média</span>
+                <span class="dg-legend-text">Indicador de maturidade</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Lista de incisos (gerada por JS) -->
+          <div id="dg-body" class="dg-body">
+            <p class="dg-loading">A carregar guia…</p>
           </div>
         </div>
       </section>
@@ -334,6 +408,6 @@
 
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-    <script src="/static/js/app.js?v=32" type="module"></script>
+    <script src="/static/js/app.js?v=33" type="module"></script>
   </body>
 </html>
