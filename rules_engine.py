@@ -138,7 +138,7 @@ def compute_scope(
     # Ajuste declarativo: modelo exclusivamente não custodial (condições por trilha em scope_narrative).
     suppress_custody_cluster_if_non_custodial(active_keys, triggered_by, norm, t)
 
-    why_by_key = build_why_texts_for_scope(active_keys, triggered_by, norm, mandatory, inc_matrix, t)
+    why_by_key = build_why_texts_for_scope(active_keys, triggered_by, norm, mandatory, inc_matrix, t, lang=lang)
     llm_whys = try_enrich_why_with_llm(why_by_key, norm, triggered_by, inc_matrix, t)
     why_by_key = merge_llm_whys(why_by_key, llm_whys)
 
@@ -159,7 +159,7 @@ def compute_scope(
             origem = "Obrigatório (matriz)" if is_mandatory else "Acionado por respostas"
             why_fallback = "Escopo alinhado à matriz IN 701 e às respostas ao questionário."
         why = why_by_key.get(key) or why_fallback
-        hint = get_bcb_report_hint(key, track=t)
+        hint = get_bcb_report_hint(key, track=t, lang=lang)
 
         if build_df:
             rows.append({

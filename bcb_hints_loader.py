@@ -63,7 +63,7 @@ def missing_explicit_bcb_hints(track: str | None = None) -> list[str]:
     return sorted(k for k in matrix_keys if k not in have)
 
 
-def get_bcb_report_hint(inciso_id: str, track: str | None = None) -> str:
+def get_bcb_report_hint(inciso_id: str, track: str | None = None, lang: str = "pt") -> str:
     t = normalize_track(track)
     tovr = _track_hint_overrides(t).get(inciso_id)
     if isinstance(tovr, str) and tovr.strip():
@@ -74,6 +74,18 @@ def get_bcb_report_hint(inciso_id: str, track: str | None = None) -> str:
     inc_matrix = build_incisos_matrix(t)
     meta = inc_matrix.get(inciso_id, {})
     desc = (meta.get("descricao") or "").strip()
+    if lang == "en":
+        if desc:
+            return (
+                "The report must demonstrate, through verifiable policies, procedures and evidence, compliance "
+                "with this requirement, explicitly linked to the wording of IN 701 and the applicable Res. 520 extracts. "
+                f"Focus: {desc[:500]}"
+                + ("…" if len(desc) > 500 else "")
+            )
+        return (
+            "Describe in a structured manner how the institution implements this requirement, with technical "
+            "artefacts and relevant Res. 520 regulatory references."
+        )
     if desc:
         return (
             "O relatório deve demonstrar, com políticas, procedimentos e evidências verificáveis, o atendimento "

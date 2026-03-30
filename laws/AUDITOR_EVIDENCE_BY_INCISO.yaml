@@ -14,295 +14,417 @@ incisos:
   I_a:
     - id: ev_ia_pol_seg
       titulo: Política de segregação patrimonial AV (cliente vs instituição)
+      titulo_en: Asset Segregation Policy — Virtual Assets (client vs. institution)
       detalhe: Versão aprovada, vigência, responsável e revisão periódica; referência explícita a carteiras e fluxos de fundos.
+      detalhe_en: Approved version, effective dates, owner and periodic review schedule; explicit reference to wallet types and fund flows.
       categoria: politica
     - id: ev_ia_diag_fluxo
       titulo: Diagramas e descrição técnica do fluxo de fundos
+      titulo_en: Fund Flow Diagrams and Technical Description
       detalhe: Diagramas (alto nível e operacional), lista de tipos de carteira (hot/cold/omnibus/MPC) e reconciliações periódicas (amostra recente anonimizada).
+      detalhe_en: Diagrams (high-level and operational), list of wallet types (hot/cold/omnibus/MPC), and periodic reconciliations (recent anonymised sample).
       categoria: diagrama
     - id: ev_ia_evid_reconc
       titulo: Evidências de reconciliação e controles
+      titulo_en: Reconciliation Evidence and Controls
       detalhe: Procedimento de reconciliação, logs ou relatórios internos que demonstrem execução (trechos redigidos).
+      detalhe_en: Reconciliation procedure, internal logs or reports demonstrating execution (redacted excerpts).
       categoria: evidencia
 
   I_b:
     - id: ev_ib_pol_por
       titulo: Política e metodologia de prova de reservas / comprovação de saldos
+      titulo_en: Proof-of-Reserves / Balance Attestation Policy and Methodology
       detalhe: Metodologia (self-attestation, auditoria externa, relatório interno), frequência e responsáveis.
+      detalhe_en: Methodology (self-attestation, external audit, internal report), frequency and responsible parties.
       categoria: politica
     - id: ev_ib_docs_por
       titulo: Artefactos recentes de PoR ou equivalente
+      titulo_en: Recent PoR Artefacts or Equivalent
       detalhe: Último relatório público ou interno, hashes ou referências de snapshot, limitações declaradas.
+      detalhe_en: Last public or internal report, snapshot hashes or references, declared limitations.
       categoria: evidencia
     - id: ev_ib_proc_por
       titulo: Procedimento operacional ligado à comprovação de reservas
+      titulo_en: Operational Procedure for Reserve Attestation
       detalhe: Passos desde extração de saldos até publicação/comunicação ao cliente.
+      detalhe_en: Steps from balance extraction to publication / client communication.
       categoria: procedimento
 
   II:
     - id: ev_ii_map_terc
       titulo: Mapa de prestadores relevantes (outsourcing)
+      titulo_en: Map of Relevant Service Providers (Outsourcing)
       detalhe: Lista de terceiros críticos, função, criticidade, país de sede, substituição de contingência.
+      detalhe_en: List of critical third parties, function, criticality, jurisdiction, and contingency replacement plan.
       categoria: organizacional
     - id: ev_ii_contr_aud
       titulo: Contratos ou excertos com cláusulas de acesso, auditoria e SLA
+      titulo_en: Contracts or Excerpts with Access, Audit, and SLA Clauses
       detalhe: Cláusulas que permitam due diligence e supervisão (arts. 32–33 Res. 520 na ótica aplicável).
+      detalhe_en: Clauses enabling due diligence and oversight (arts. 32–33 Res. 520 as applicable).
       categoria: contrato
     - id: ev_ii_gov_mud
       titulo: Governança de mudanças em terceiros críticos
+      titulo_en: Change Governance for Critical Third Parties
       detalhe: Processo de onboarding/offboarding, revisão de segurança e aprovações internas.
+      detalhe_en: Onboarding/offboarding process, security review, and internal approvals.
       categoria: procedimento
 
   III:
     - id: ev_iii_dd_exterior
       titulo: Dossiê de diligência para parceiros no exterior / não autorizados no País
+      titulo_en: Due Diligence Dossier for Foreign / Unauthorised Partners
       detalhe: Checklist legal e operacional, licenças equivalentes quando existirem, plano de mitigação.
+      detalhe_en: Legal and operational checklist, equivalent licences where available, mitigation plan.
       categoria: evidencia
     - id: ev_iii_plan_cont
       titulo: Plano de contingência para falha de prestador estrangeiro
+      titulo_en: Contingency Plan for Foreign Provider Failure
       detalhe: Cenários, RTO/RPO onde aplicável, contactos de escalação.
+      detalhe_en: Scenarios, RTO/RPO where applicable, escalation contacts.
       categoria: procedimento
     - id: ev_iii_ref_art83
       titulo: Mapeamento ao art. 83 Res. 520 (quando aplicável)
+      titulo_en: Mapping to Art. 83 Res. 520 (where applicable)
       detalhe: Narrativa de como a operação atende exigências para serviços no exterior (rascunho para parecer jurídico).
+      detalhe_en: Narrative of how the operation meets requirements for offshore services (draft for legal review).
       categoria: evidencia
 
   IV:
     - id: ev_iv_bcp_dr
       titulo: Planos de continuidade e recuperação (BCP/DR) relevantes
+      titulo_en: Business Continuity and Disaster Recovery Plans (BCP/DR)
       detalhe: Âmbito institucional + terceiros críticos; dependências e priorização de sistemas.
+      detalhe_en: Institutional and critical-third-party scope; system dependencies and prioritisation.
       categoria: politica
     - id: ev_iv_testes
       titulo: Registos de testes / simulados
+      titulo_en: Test / Drill Records
       detalhe: Atas, datas, achados e planos de remediação (anonimizados).
+      detalhe_en: Minutes, dates, findings and remediation plans (anonymised).
       categoria: evidencia
     - id: ev_iv_enc_incidentes
       titulo: Encadeamento com gestão de incidentes
+      titulo_en: Integration with Incident Management
       detalhe: Como BCP aciona playbooks de incidente e comunicação interna/externa.
+      detalhe_en: How BCP activates incident playbooks and internal / external communications.
       categoria: procedimento
 
   V:
     - id: ev_v_pol_intercon
       titulo: Política de interconectividade (APIs, parceiros, Open Finance)
+      titulo_en: Interconnectivity Policy (APIs, Partners, Open Finance)
       detalhe: Aprovação de integrações, gestão de chaves API, limites e monitorização.
+      detalhe_en: Integration approvals, API key management, rate limits and monitoring.
       categoria: politica
     - id: ev_v_inv_integr
       titulo: Inventário de integrações expostas
+      titulo_en: Inventory of Exposed Integrations
       detalhe: Endpoints, ambientes, autenticação, dados trocados (classificação), dono técnico.
+      detalhe_en: Endpoints, environments, authentication, data exchanged (classification), technical owner.
       categoria: diagrama
     - id: ev_v_mud_seg
       titulo: Controlo de mudanças em integrações críticas
+      titulo_en: Change Control for Critical Integrations
       detalhe: Fluxo de deploy, revisão de segurança, rollback e registos (amostra).
+      detalhe_en: Deploy workflow, security review, rollback procedure and change records (sample).
       categoria: procedimento
 
   VI_a:
     - id: ev_via_pld
       titulo: Programa de PLD/FTP alinhado a PSVAV
+      titulo_en: AML/CFT Programme Aligned with PSVAV
       detalhe: Política, rastreabilidade de operações, reportes a órgãos competentes (sem dados sensíveis desnecessários).
+      detalhe_en: Policy, transaction traceability, reports to competent authorities (without unnecessary sensitive data).
       categoria: politica
     - id: ev_via_rel_pld
       titulo: Relatórios ou métricas internas de PLD (amostra)
+      titulo_en: Internal AML/CFT Reports or Metrics (sample)
       detalhe: KPIs, alertas tratados, revisões periódicas (redigidos).
+      detalhe_en: KPIs, treated alerts, periodic reviews (redacted).
       categoria: evidencia
 
   VI_b:
     - id: ev_vib_pol_ciber
       titulo: Política de segurança cibernética e hardening
+      titulo_en: Cybersecurity and Hardening Policy
       detalhe: Referência a padrões internos, gestão de patches, acessos privilegiados, segmentação.
+      detalhe_en: Reference to internal standards, patch management, privileged access controls, network segmentation.
       categoria: politica
     - id: ev_vib_priv_access
       titulo: Modelo de acessos privilegiados (PAM) e revisões
+      titulo_en: Privileged Access Model (PAM) and Reviews
       detalhe: Quem tem acesso a produção, MFA, revisão trimestral ou equivalente (evidência amostral).
+      detalhe_en: Who has production access, MFA enforcement, quarterly review or equivalent (sample evidence).
       categoria: evidencia
     - id: ev_vib_patch
       titulo: Procedimento de gestão de vulnerabilidades e patches
+      titulo_en: Vulnerability and Patch Management Procedure
       detalhe: SLAs internos, exceções aprovadas e registo de CVE críticos tratados.
+      detalhe_en: Internal SLAs, approved exceptions and record of treated critical CVEs.
       categoria: procedimento
 
   VII:
     - id: ev_vii_pol_chaves
       titulo: Política de guarda de chaves e instrumentos de controle
+      titulo_en: Key Custody and Control Instrument Policy
       detalhe: MPC/HSM/custodiante, segregação de funções no fluxo de assinatura, backup e recuperação de chaves.
+      detalhe_en: MPC/HSM/custodian, segregation of duties in the signing flow, key backup and recovery.
       categoria: politica
     - id: ev_vii_proc_mov
       titulo: Procedimento de movimentação on-chain (autorização de 4 olhos, limites)
+      titulo_en: On-Chain Movement Procedure (four-eyes authorisation, limits)
       detalhe: Fluxo desde pedido até broadcast, logs internos (amostra anonimizada).
+      detalhe_en: Workflow from request to broadcast, internal logs (anonymised sample).
       categoria: procedimento
     - id: ev_vii_map_comp
       titulo: Diagrama de componentes de custódia
+      titulo_en: Custody Component Diagram
       detalhe: Atores (VASP, cliente, MPC, cold), redes e papéis de assinatura.
+      detalhe_en: Actors (VASP, client, MPC, cold), networks and signing roles.
       categoria: diagrama
 
   VIII:
     - id: ev_viii_prog_monitor
       titulo: Programa de monitorização contínua de segurança
+      titulo_en: Continuous Security Monitoring Programme
       detalhe: SIEM/EDR, revisões de risco, indicadores e periodicidade de relatório à gestão.
+      detalhe_en: SIEM/EDR, risk reviews, indicators and management reporting frequency.
       categoria: politica
     - id: ev_viii_evid_rev
       titulo: Evidências de revisões e melhorias
+      titulo_en: Evidence of Reviews and Improvements
       detalhe: Atas de comité de risco ou segurança, planos de ação (trechos).
+      detalhe_en: Risk or security committee minutes, action plans (excerpts).
       categoria: evidencia
 
   IX_a:
     - id: ev_ixa_pol_list
       titulo: Política de listagem, suspensão e deslistagem
+      titulo_en: Listing, Suspension and Delisting Policy
       detalhe: Critérios de risco, comité, registo de decisões e comunicação ao cliente quando aplicável.
+      detalhe_en: Risk criteria, committee, decision records and client notification where applicable.
       categoria: politica
     - id: ev_ixa_atas
       titulo: Amostra de atas ou tickets de decisões de listagem
+      titulo_en: Sample Minutes or Tickets for Listing Decisions
       detalhe: Casos representativos anonimizados (entrada, suspensão, saída).
+      detalhe_en: Representative anonymised cases (listing, suspension, delisting).
       categoria: evidencia
 
   IX_b:
     - id: ev_ixb_div_risco
       titulo: Divulgação de riscos para ativos referenciados em moeda fiduciária
+      titulo_en: Risk Disclosure for Fiat-Referenced Assets
       detalhe: Materiais ao cliente (app/site/termos) e coerência com art. 65 Res. 520 (rascunho para jurídico).
+      detalhe_en: Client materials (app/site/terms) and alignment with art. 65 Res. 520 (draft for legal review).
       categoria: evidencia
     - id: ev_ixb_proc_aval
       titulo: Procedimento de avaliação e aprovação de stablecoins/tokenizados
+      titulo_en: Stablecoin / Tokenised Asset Evaluation and Approval Procedure
       detalhe: Quem aprova, dados de emissor, reservas e cenários de stress quando aplicável.
+      detalhe_en: Who approves, issuer data, reserves and stress scenarios where applicable.
       categoria: procedimento
 
   X_a:
     - id: ev_xa_pol_conflito
       titulo: Política de conflitos de interesse e segregação de funções na governança
+      titulo_en: Conflict-of-Interest Policy and Governance Segregation of Duties
       detalhe: Situações cobertas, declarações de interesse, controle interno.
+      detalhe_en: Covered situations, interest declarations, internal control.
       categoria: politica
     - id: ev_xa_evid_controles
       titulo: Exemplos de mitigação aplicada (anonimizados)
+      titulo_en: Examples of Applied Mitigation (anonymised)
       detalhe: Casos ou fluxos onde conflito foi tratado.
+      detalhe_en: Cases or flows where conflicts were identified and managed.
       categoria: evidencia
 
   X_b_i:
     - id: ev_xbi_map_controles
       titulo: Mapa de controles internos vs normas IF/autorização BCB aplicável
+      titulo_en: Internal Controls Map vs. Applicable IF / BCB Authorisation Standards
       detalhe: Matriz controle → dono → frequência → evidência esperada.
+      detalhe_en: Matrix — control → owner → frequency → expected evidence.
       categoria: organizacional
     - id: ev_xbi_docs_inst
       titulo: Documentação de órgãos de controle interno e auditoria interna
+      titulo_en: Internal Audit and Control Bodies Documentation
       detalhe: Regimento, planos anuais, amostra de relatório ao conselho (índice ou sumário).
+      detalhe_en: Charter, annual plans, board report sample (index or summary).
       categoria: evidencia
 
   X_b_ii:
     - id: ev_xbii_pol_fiat
       titulo: Política para recursos em moeda fiduciária em nome do cliente
+      titulo_en: Policy for Client Fiat Currency Balances
       detalhe: Concordância com limites e informações ao cliente (art. 85) — alinhamento com jurídico.
+      detalhe_en: Alignment with limits and client disclosures (art. 85) — legal alignment required.
       categoria: politica
     - id: ev_xbii_proc_saldos
       titulo: Procedimentos de reconciliação de saldos fiat e correção de erros
+      titulo_en: Fiat Balance Reconciliation and Error Correction Procedures
       detalhe: Fluxo operacional e comunicação ao cliente.
+      detalhe_en: Operational workflow and client communication.
       categoria: procedimento
     - id: ev_xbii_evid_limites
       titulo: Evidências de cumprimento de limites e salvaguardas
+      titulo_en: Evidence of Limit and Safeguard Compliance
       detalhe: Relatórios internos ou extracts redigidos.
+      detalhe_en: Internal reports or redacted extracts.
       categoria: evidencia
 
   XI:
     - id: ev_xi_org_risco
       titulo: Organograma de risco, compliance, capital e auditoria interna
+      titulo_en: Risk, Compliance, Capital and Internal Audit Organisational Chart
       detalhe: Mandatos, reporte ao conselho, independência.
+      detalhe_en: Mandates, board reporting lines, independence.
       categoria: organizacional
     - id: ev_xi_relatorios
       titulo: Calendário e amostra de relatórios ao conselho (índices)
+      titulo_en: Schedule and Sample of Board Reports (indices)
       detalhe: Temas cobertos nos últimos 12 meses (sem dados sensíveis).
+      detalhe_en: Topics covered in the last 12 months (without sensitive data).
       categoria: evidencia
 
   XII:
     - id: ev_xii_plano_inc
       titulo: Plano de resposta a incidentes de cibersegurança
+      titulo_en: Cybersecurity Incident Response Plan
       detalhe: Tempos de deteção/resposta, comunicação ao BCB/clientes conforme modelo interno.
+      detalhe_en: Detection/response times, notification to BCB/clients per internal model.
       categoria: politica
     - id: ev_xii_playbooks
       titulo: Playbooks ou runbooks (amostra)
+      titulo_en: Playbooks or Runbooks (sample)
       detalhe: Cenários cobertos (ransomware, vazamento de chaves, indisponibilidade crítica).
+      detalhe_en: Covered scenarios (ransomware, key leak, critical unavailability).
       categoria: procedimento
 
   XIII:
     - id: ev_xiii_pol_mercado
       titulo: Política de vigilância de mercado (spoofing, wash trading, manipulação)
+      titulo_en: Market Surveillance Policy (spoofing, wash trading, manipulation)
       detalhe: Regras de deteção, fontes de dados, escalação.
+      detalhe_en: Detection rules, data sources, escalation paths.
       categoria: politica
     - id: ev_xiii_evid_alertas
       titulo: Estatísticas ou exemplos de alertas tratados (anonimizados)
+      titulo_en: Statistics or Examples of Treated Alerts (anonymised)
       detalhe: Volume, falsos positivos, ações corretivas.
+      detalhe_en: Volume, false positives, corrective actions taken.
       categoria: evidencia
 
   XIV:
     - id: ev_xiv_modelo_contr
       titulo: Modelo de contrato de custódia (arts. 73, 75, 78)
+      titulo_en: Custody Contract Template (arts. 73, 75, 78)
       detalhe: Versão vigente, gestão de alterações contratuais e aceite do cliente.
+      detalhe_en: Current version, contract change management and client acceptance.
       categoria: contrato
     - id: ev_xiv_papeis
       titulo: Descrição dos papéis instituição vs cliente na custódia
+      titulo_en: Description of Institution vs. Client Roles in Custody
       detalhe: Responsabilidades, limites e comunicação de incidentes.
+      detalhe_en: Responsibilities, limits and incident communication.
       categoria: procedimento
 
   XV:
     - id: ev_xv_medidas_76
       titulo: Inventário de medidas do custodiante (art. 76 I–XII)
+      titulo_en: Custodian Measures Inventory (art. 76 I–XII)
       detalhe: Mapeamento medida → responsável → evidência operacional.
+      detalhe_en: Mapping — measure → owner → operational evidence.
       categoria: organizacional
     - id: ev_xv_revisoes
       titulo: Registos de revisões periódicas das medidas
+      titulo_en: Periodic Review Records for Custodian Measures
       detalhe: Atas ou relatórios internos (trechos).
+      detalhe_en: Internal minutes or reports (excerpts).
       categoria: evidencia
 
   XVI:
     - id: ev_xvi_redund
       titulo: Descrição da redundância de instrumentos de controle sobre AV
+      titulo_en: Description of Virtual Asset Control Instrument Redundancy
       detalhe: Mecanismos alternativos, testes de falha, dependências críticas.
+      detalhe_en: Alternative mechanisms, failure tests, critical dependencies.
       categoria: diagrama
     - id: ev_xvi_continuidade
       titulo: Evidências de continuidade operacional em cenário de falha
+      titulo_en: Evidence of Operational Continuity in Failure Scenarios
       detalhe: Relatórios de teste ou simulado (anonimizados).
+      detalhe_en: Test or drill reports (anonymised).
       categoria: evidencia
 
   XVII:
     - id: ev_xvii_proc_recup
       titulo: Procedimentos de recuperação de material redundante para supervisão do BCB
+      titulo_en: Recovery Procedures for Redundant Material for BCB Supervision
       detalhe: Acesso a logs, chaves de leitura, prazos e responsáveis.
+      detalhe_en: Access to logs, read keys, timeframes and responsible parties.
       categoria: procedimento
     - id: ev_xvii_logs
       titulo: Amostra de logs ou relatórios de recuperação (redigidos)
+      titulo_en: Sample Logs or Recovery Reports (redacted)
       detalhe: Demonstração de rastreabilidade sem expor segredos operacionais.
+      detalhe_en: Traceability demonstration without exposing operational secrets.
       categoria: evidencia
 
   par1_I:
     - id: ev_p1_canais
       titulo: Canais de transparência ao cliente (instituição, contratadas, seguros, DLT art. 67)
+      titulo_en: Client Transparency Channels (institution, contractors, insurance, DLT art. 67)
       detalhe: Lista de canais, exemplos de comunicações e referências contratuais.
+      detalhe_en: List of channels, sample communications and contractual references.
       categoria: evidencia
     - id: ev_p1_pol_trans
       titulo: Política de transparência e linguagem clara ao investidor
+      titulo_en: Transparency Policy and Plain Language for Investors
       detalhe: Revisão jurídica/compliance e critérios de aprovação de conteúdo.
+      detalhe_en: Legal/compliance review and content approval criteria.
       categoria: politica
 
   par1_II:
     - id: ev_p2_edu
       titulo: Materiais educativos sobre riscos de AV
+      titulo_en: Educational Materials on Virtual Asset Risks
       detalhe: Links ou PDFs públicos, datas de atualização, público-alvo.
+      detalhe_en: Public links or PDFs, update dates, target audience.
       categoria: evidencia
     - id: ev_p2_proc_pub
       titulo: Procedimento de publicação e revisão de conteúdo educativo
+      titulo_en: Publication and Review Procedure for Educational Content
       detalhe: Workflow de aprovação (compliance/marketing).
+      detalhe_en: Approval workflow (compliance/marketing).
       categoria: procedimento
 
   par1_III:
     - id: ev_p3_rel_pos
       titulo: Modelo de relatório de posição em AV do cliente
+      titulo_en: Client Virtual Asset Position Report Template
       detalhe: Frequência, formato, reconciliação com movimentações e tratamento de erros.
+      detalhe_en: Frequency, format, reconciliation with movements and error handling.
       categoria: procedimento
     - id: ev_p3_amostra
       titulo: Amostra anonimizada de relatório de posição
+      titulo_en: Anonymised Sample of Position Report
       detalhe: Exemplo redigido ou template preenchido fictício.
+      detalhe_en: Redacted example or filled fictional template.
       categoria: evidencia
 
   par1_I_h:
     - id: ev_ph_pol_staking
       titulo: Divulgação de riscos para staking / rendimento / produtos equivalentes
+      titulo_en: Risk Disclosure for Staking / Yield / Equivalent Products
       detalhe: Contraparte, smart contracts relevantes, riscos de protocolo (alinhamento art. 71 — jurídico).
+      detalhe_en: Counterparty, relevant smart contracts, protocol risks (art. 71 alignment — legal review).
       categoria: politica
     - id: ev_ph_contr_ref
       titulo: Referência a contratos ou interfaces utilizados no produto
+      titulo_en: Reference to Contracts or Interfaces Used in the Product
       detalhe: Endereços ou repos em scope para eventual smart contract audit; termos ao cliente.
+      detalhe_en: Addresses or repos in scope for potential smart contract audit; client-facing terms.
       categoria: evidencia

@@ -520,8 +520,10 @@ function escapeHtml(s) {
 /** Classe CSS do emblema de origem (matriz vs gatilhos). */
 function origemPillClass(origem) {
   const o = String(origem || "");
-  if (o.includes("Obrigatório")) return "dash-inciso-pill dash-inciso-pill--mandatory";
-  if (o.includes("Acionado")) return "dash-inciso-pill dash-inciso-pill--triggered";
+  // matches PT ("Obrigatório") and EN ("Mandatory")
+  if (o.includes("Obrigatório") || o.includes("Mandatory")) return "dash-inciso-pill dash-inciso-pill--mandatory";
+  // matches PT ("Acionado") and EN ("Triggered")
+  if (o.includes("Acionado") || o.includes("Triggered")) return "dash-inciso-pill dash-inciso-pill--triggered";
   return "dash-inciso-pill dash-inciso-pill--neutral";
 }
 
@@ -1385,48 +1387,8 @@ document.addEventListener("langchange", async () => {
       renderQuestions();
     }
   }
-  // Re-render results if visible (re-submit is not needed; just re-render labels)
-  if (!$("#results").classList.contains("hidden") && state._lastScopeData) {
-    void getCurrentLang(); // strings are re-read via t() on re-render
-    // Re-run submitScope display portion with cached data
-    const data = state._lastScopeData;
-    const institution = state._lastInstitution || "";
-    const { sujeitos, fora } = normalizeScopePayload(data);
-    const resumo = data.resumo && typeof data.resumo === "object" ? data.resumo : {};
-    const na = Number(resumo.total_sujeitos_auditoria ?? sujeitos.length) || 0;
-    const nf = Number(resumo.total_fora_escopo_auditoria ?? fora.length) || 0;
-    const mand = Number(resumo.obrigatorios_matriz ?? 0) || 0;
-    const cond = Number(resumo.acionados_por_respostas ?? 0) || 0;
-
-    const trkMap2 = { custodiante: "custodiante", corretora: "corretora" };
-    const trkKey2 = trkMap2[data.track] ? data.track : "intermediaria";
-    const trkLabel2 = t(`track_pill_${trkKey2}`);
-    const elTrackPill = $("#results-track-badge");
-    if (elTrackPill) elTrackPill.textContent = `${trkLabel2} · IN 701`;
-
-    const trkSum2 = t(`track_summary_${trkKey2}`);
-    const nome2 = institution ? `<strong>${escapeHtml(institution)}</strong> — ` : "";
-    const summaryTpl2 = t("results_summary_html");
-    const elSummary = $("#results-summary");
-    if (elSummary) {
-      elSummary.innerHTML = summaryTpl2
-        .replace("{nome}", nome2)
-        .replace("{na}", String(na))
-        .replace("{nf}", String(nf))
-        .replace("{trk}", escapeHtml(trkSum2));
-    }
-    const elMetrics = $("#metrics");
-    if (elMetrics) {
-      elMetrics.innerHTML = `
-        <div class="metric kpi-card"><div class="metric-value">${na}</div><div class="metric-label">${t("kpi_in_scope")}</div></div>
-        <div class="metric kpi-card"><div class="metric-value">${mand}</div><div class="metric-label">${t("kpi_mandatory")}</div></div>
-        <div class="metric kpi-card"><div class="metric-value">${cond}</div><div class="metric-label">${t("kpi_by_answers")}</div></div>
-        <div class="metric metric--muted kpi-card"><div class="metric-value">${nf}</div><div class="metric-label">${t("kpi_out_scope")}</div></div>
-      `;
-    }
-    const elLeadA = $("#col-audit-lead");
-    const elLeadS = $("#col-skip-lead");
-    if (elLeadA) elLeadA.textContent = t("dash_lead_audit");
-    if (elLeadS) elLeadS.textContent = t("dash_lead_skip");
+  // Re-submit scope with the new language so all server-generated narratives are translated
+  if (!$("#results").classList.contains("hidden") && state.track && Object.keys(state.answers).length) {
+    await submitScope();
   }
 });

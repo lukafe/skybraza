@@ -178,12 +178,50 @@ CRITERIOS_DOCUMENTO_OTIMO: dict[str, str] = {
     ),
 }
 
+CRITERIOS_DOCUMENTO_OTIMO_EN: dict[str, str] = {
+    "politica": (
+        "explicit approver and effective date; control owner and review frequency; "
+        "measurable objectives and controls; clear link to operations and applicable BCB / Res. 520 requirements; "
+        "version history or reference to the last formal approval."
+    ),
+    "procedimento": (
+        "ordered steps with responsible parties (RACI or equivalent); mandatory SLAs and records (ticket templates, "
+        "reports or checklists); exception handling and escalation paths; evidence of recent execution (redacted sample)."
+    ),
+    "evidencia": (
+        "artefacts dated and traceable to a recent period; approved version or internal reference; "
+        "sensitive data minimised or anonymised; where possible, linked to a ticket or internal audit reference."
+    ),
+    "contrato": (
+        "relevant clauses identified (access, audit, SLA, confidentiality, subcontracting, termination); "
+        "signed or current version; annexe and amendment map; parties and dates clearly stated."
+    ),
+    "diagrama": (
+        "legend and actors; data and trust flows; environments (production, staging); "
+        "consistency with policies and the operational narrative presented to the auditor; date of last update."
+    ),
+    "organizacional": (
+        "up-to-date organisational chart or mandate map; reporting lines to the board or equivalent; "
+        "information frequency and key named responsible parties."
+    ),
+    "_default": (
+        "dated document with identified owner, defined periodic review and a sample or reference demonstrating "
+        "recent implementation aligned with the request."
+    ),
+}
 
-def _documento_otimo_text(pedido: dict[str, Any]) -> str:
+
+def _documento_otimo_text(pedido: dict[str, Any], lang: str = "pt") -> str:
     custom = str(pedido.get("documento_otimo") or "").strip()
     if custom:
         return " ".join(custom.split())
     cat = str(pedido.get("categoria") or "").strip().lower() or "_default"
+    if lang == "en":
+        base = CRITERIOS_DOCUMENTO_OTIMO_EN.get(cat) or CRITERIOS_DOCUMENTO_OTIMO_EN["_default"]
+        tit = str(pedido.get("titulo_en") or pedido.get("titulo") or "").strip()
+        if tit:
+            return f'For «{tit}», an exemplary document typically includes: {base}'
+        return f"An exemplary document typically includes: {base}"
     base = CRITERIOS_DOCUMENTO_OTIMO.get(cat) or CRITERIOS_DOCUMENTO_OTIMO["_default"]
     tit = str(pedido.get("titulo") or "").strip()
     if tit:
@@ -191,11 +229,15 @@ def _documento_otimo_text(pedido: dict[str, Any]) -> str:
     return f"Um documento exemplar costuma incluir: {base}"
 
 
-def _enrich_pedidos(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _enrich_pedidos(items: list[dict[str, Any]], lang: str = "pt") -> list[dict[str, Any]]:
+    en = lang == "en"
     out: list[dict[str, Any]] = []
     for raw in items:
         p = dict(raw)
-        p["documento_otimo"] = _documento_otimo_text(p)
+        if en:
+            p["titulo"] = str(p.get("titulo_en") or p.get("titulo") or "").strip()
+            p["detalhe"] = str(p.get("detalhe_en") or p.get("detalhe") or "").strip()
+        p["documento_otimo"] = _documento_otimo_text(p, lang)
         out.append(p)
     return out
 
@@ -353,9 +395,9 @@ def build_journey_2_payload(
         raw_items = incisos_data.get(key)
         items: list[dict[str, Any]]
         if isinstance(raw_items, list) and raw_items:
-            items = _enrich_pedidos([dict(x) for x in raw_items if isinstance(x, dict)])
+            items = _enrich_pedidos([dict(x) for x in raw_items if isinstance(x, dict)], lang=lang)
         else:
-            items = _enrich_pedidos(_fallback_pedidos_inciso(key, inc_matrix, lang=lang))
+            items = _enrich_pedidos(_fallback_pedidos_inciso(key, inc_matrix, lang=lang), lang=lang)
         checklist.append(
             {
                 "inciso_id": key,
