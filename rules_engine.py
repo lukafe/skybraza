@@ -136,7 +136,7 @@ def compute_scope(
         active_keys.add(inc)
 
     # Ajuste declarativo: modelo exclusivamente não custodial (condições por trilha em scope_narrative).
-    suppress_custody_cluster_if_non_custodial(active_keys, triggered_by, norm, t)
+    suppressions = suppress_custody_cluster_if_non_custodial(active_keys, triggered_by, norm, t)
 
     why_by_key = build_why_texts_for_scope(active_keys, triggered_by, norm, mandatory, inc_matrix, t, lang=lang)
     llm_whys = try_enrich_why_with_llm(why_by_key, norm, triggered_by, inc_matrix, t)
@@ -227,6 +227,7 @@ def compute_scope(
         "total_count": len(active_keys),
         "total_fora_escopo_auditoria": len(incisos_fora),
         "corpus_readiness": corpus_readiness,
+        "suppressed_incisos": suppressions,
         "incisos_sujeitos_auditoria": incisos_auditar,
         "incisos_fora_escopo_auditoria": incisos_fora,
     }

@@ -14,6 +14,7 @@ Uso:
 from __future__ import annotations
 
 import io
+import unicodedata
 from datetime import datetime, timezone
 from typing import Any
 
@@ -58,9 +59,22 @@ _CENTER = Alignment(horizontal="center", vertical="center")
 _TOP_LEFT = Alignment(horizontal="left", vertical="top")
 
 
+def _sanitize_cell_value(value: Any) -> Any:
+    """Remove caracteres de controle e garante que strings são UTF-8 válido."""
+    if value is None:
+        return ""
+    if isinstance(value, str):
+        return "".join(
+            c for c in value if unicodedata.category(c)[0] != "C"
+        )
+    if isinstance(value, (int, float, bool)):
+        return value
+    return str(value)
+
+
 def _cell(ws, row: int, col: int, value: Any, *, font=None, fill=None,
           align=None, border=None, number_format: str | None = None):
-    c = ws.cell(row=row, column=col, value=value)
+    c = ws.cell(row=row, column=col, value=_sanitize_cell_value(value))
     if font:    c.font   = font
     if fill:    c.fill   = fill
     if align:   c.alignment = align

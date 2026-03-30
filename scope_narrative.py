@@ -396,21 +396,27 @@ def suppress_custody_cluster_if_non_custodial(
     triggered_by: dict[str, list[str]],
     norm: dict[str, Any],
     track: str | None = None,
-) -> None:
+) -> dict[str, str]:
     """
     Remove do escopo o cluster de custódia operacional (VII, XIV, XVI, XVII) quando o modelo declarado é
     exclusivamente não custodial. Nas trilhas custodiante e corretora remove também XV (trânsito/guarda ativa),
     coerente com «sem omnibus» e sem subcustódia em B_tp.
+
+    Retorna dict {inciso_id: motivo} com os incisos suprimidos (vazio se nenhum).
     """
     t = normalize_track(track or TRACK_DEFAULT)
     if not declares_exclusive_non_custodial_model(norm, t):
-        return
+        return {}
     remove = set(CUSTODY_CLUSTER)
     if t in ("custodiante", "corretora"):
         remove |= set(NON_CUSTODIAL_EXTRA_BY_TRACK)
+    suppressions: dict[str, str] = {}
     for k in remove:
+        if k in active_keys or k in triggered_by:
+            suppressions[k] = "non_custodial_model"
         active_keys.discard(k)
         triggered_by.pop(k, None)
+    return suppressions
 
 
 def _mandatory_why(inciso_id: str, inc_matrix: dict[str, dict[str, str]], track: str, lang: str = "pt") -> str:
