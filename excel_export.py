@@ -139,7 +139,14 @@ _STRINGS: dict[str, dict[str, str]] = {
     "col_files":        {"pt": "Ficheiros",            "en": "Files"},
     "col_stub":         {"pt": "Usa STUB?",            "en": "Uses STUB?"},
     "col_missing":      {"pt": "Ficheiros ausentes",   "en": "Missing files"},
-    "readiness_idx":    {"pt": "Índice prontidão",     "en": "Readiness index"},
+    "readiness_idx":    {"pt": "Índice prontidão (0–100)", "en": "Readiness index (0–100)"},
+    "corp_banner":      {"pt": "Resumo — prontidão do corpus", "en": "Summary — corpus readiness"},
+    "corp_in_scope_n":  {"pt": "Incisos avaliados (no escopo)", "en": "Clauses evaluated (in scope)"},
+    "corp_counts_row":  {"pt": "Contagens por estado", "en": "Counts by status"},
+    "cnt_completo":     {"pt": "completo",             "en": "complete"},
+    "cnt_parcial":      {"pt": "parcial",              "en": "partial"},
+    "cnt_incompleto":   {"pt": "incompleto",           "en": "incomplete"},
+    "cnt_outro":        {"pt": "outro",                "en": "other"},
     "yes":              {"pt": "Sim",                  "en": "Yes"},
     "no":               {"pt": "Não",                  "en": "No"},
     "track_intermediaria": {"pt": "Fase intermediária",   "en": "Intermediary phase"},
@@ -168,7 +175,12 @@ def _build_summary_sheet(ws, data: dict[str, Any], lang: str):
     nf     = resumo.get("total_fora_escopo_auditoria", 0)
     gen    = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     cr     = data.get("corpus_readiness") or {}
-    ri     = cr.get("readiness_index_0_100", "—")
+    ri     = cr.get("readiness_index_0_100")
+    ri_disp: str | float
+    if isinstance(ri, (int, float)) and not isinstance(ri, bool):
+        ri_disp = round(float(ri), 1)
+    else:
+        ri_disp = "—"
 
     track_label = _s(f"track_{track}", lang)
 
@@ -187,7 +199,10 @@ def _build_summary_sheet(ws, data: dict[str, Any], lang: str):
         (_s("mandatory_n", lang),     mand),
         (_s("triggered_n", lang),     cond),
         (_s("out_scope_n", lang),     nf),
-        (_s("readiness_idx", lang),   f"{ri}%" if isinstance(ri, (int, float)) else ri),
+        (
+            _s("readiness_idx", lang),
+            f"{ri_disp}%" if isinstance(ri_disp, (int, float)) and not isinstance(ri_disp, bool) else str(ri_disp),
+        ),
     ]
     for i, (k, v) in enumerate(rows, start=2):
         if k is None:
@@ -215,6 +230,8 @@ def _build_in_scope_sheet(ws, incisos: list[dict[str, Any]], lang: str):
         _s("col_inciso_id", lang),
         _s("col_item", lang),
         _s("col_article", lang),
+        _s("col_corpus_status", lang),
+        _s("col_files", lang),
         _s("col_origin", lang),
         _s("col_why", lang),
         _s("col_bcb", lang),
@@ -224,7 +241,7 @@ def _build_in_scope_sheet(ws, incisos: list[dict[str, Any]], lang: str):
     ws.row_dimensions[1].height = 20
 
     # Column widths
-    widths = [12, 12, 18, 18, 60, 50, 20]
+    widths = [12, 12, 18, 16, 36, 18, 50, 42, 20]
     for ci, w in enumerate(widths, start=1):
         ws.column_dimensions[get_column_letter(ci)].width = w
 
@@ -238,6 +255,8 @@ def _build_in_scope_sheet(ws, incisos: list[dict[str, Any]], lang: str):
             row.get("inciso_id") or "",
             row.get("item") or "",
             row.get("artigo_in701") or "",
+            row.get("corpus_status") or "",
+            row.get("ficheiros_corpus") or "",
             origem,
             row.get("por_que_sera_auditado") or "",
             row.get("orientacao_relatorio_bcb") or "",
@@ -293,6 +312,63 @@ def _build_out_scope_sheet(ws, incisos: list[dict[str, Any]], lang: str):
 def _build_corpus_sheet(ws, corpus_readiness: dict[str, Any], lang: str):
     ws.title = _s("sheet_corpus", lang)
 
+    ncols = 6
+    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=ncols)
+    _cell(
+        ws,
+        1,
+        1,
+        _s("corp_banner", lang),
+        font=_SUBHEADER_FONT,
+        fill=_HEADER_FILL,
+        align=_CENTER,
+        border=_THIN_BORDER,
+    )
+    ws.row_dimensions[1].height = 22
+
+    ri_idx = corpus_readiness.get("readiness_index_0_100")
+    if isinstance(ri_idx, (int, float)) and not isinstance(ri_idx, bool):
+        _cell(ws, 2, 1, _s("readiness_idx", lang), font=_BOLD_FONT, fill=_ALT_FILL, align=_TOP_LEFT, border=_THIN_BORDER)
+        _cell(
+            ws,
+            2,
+            2,
+            round(float(ri_idx), 1),
+            font=_BODY_FONT,
+            fill=_ALT_FILL,
+            align=_TOP_LEFT,
+            border=_THIN_BORDER,
+            number_format="0.0",
+        )
+    else:
+        _cell(ws, 2, 1, _s("readiness_idx", lang), font=_BOLD_FONT, fill=_ALT_FILL, align=_TOP_LEFT, border=_THIN_BORDER)
+        _cell(ws, 2, 2, "—", font=_BODY_FONT, fill=_ALT_FILL, align=_TOP_LEFT, border=_THIN_BORDER)
+
+    total_ev = corpus_readiness.get("total_in_scope", "")
+    _cell(ws, 3, 1, _s("corp_in_scope_n", lang), font=_BOLD_FONT, fill=PatternFill("solid", fgColor=_WHITE), align=_TOP_LEFT, border=_THIN_BORDER)
+    _cell(ws, 3, 2, total_ev, font=_BODY_FONT, fill=PatternFill("solid", fgColor=_WHITE), align=_TOP_LEFT, border=_THIN_BORDER)
+
+    counts = corpus_readiness.get("counts") or {}
+    cnt_line = (
+        f"{_s('cnt_completo', lang)}={counts.get('completo', 0)}, "
+        f"{_s('cnt_parcial', lang)}={counts.get('parcial', 0)}, "
+        f"{_s('cnt_incompleto', lang)}={counts.get('incompleto', 0)}, "
+        f"{_s('cnt_outro', lang)}={counts.get('outro', 0)}"
+    )
+    ws.merge_cells(start_row=4, start_column=1, end_row=4, end_column=ncols)
+    _cell(
+        ws,
+        4,
+        1,
+        f"{_s('corp_counts_row', lang)}: {cnt_line}",
+        font=_BODY_FONT,
+        fill=_BLUE_LIGHT,
+        align=_WRAP,
+        border=_THIN_BORDER,
+    )
+    ws.row_dimensions[4].height = 28
+
+    header_row = 6
     headers = [
         _s("col_inciso_id", lang),
         _s("col_item", lang),
@@ -301,8 +377,8 @@ def _build_corpus_sheet(ws, corpus_readiness: dict[str, Any], lang: str):
         _s("col_files", lang),
         _s("col_missing", lang),
     ]
-    _write_header_row(ws, 1, headers, fill=PatternFill("solid", fgColor="117A65"))
-    ws.row_dimensions[1].height = 20
+    _write_header_row(ws, header_row, headers, fill=PatternFill("solid", fgColor="117A65"))
+    ws.row_dimensions[header_row].height = 20
 
     widths = [12, 12, 16, 12, 55, 40]
     for ci, w in enumerate(widths, start=1):
@@ -312,7 +388,7 @@ def _build_corpus_sheet(ws, corpus_readiness: dict[str, Any], lang: str):
     yes_s = _s("yes", lang)
     no_s  = _s("no", lang)
 
-    for ri, row in enumerate(items, start=2):
+    for ri, row in enumerate(items, start=header_row + 1):
         alt = ri % 2 == 0
         stub = row.get("uses_stub_reference", False)
         missing = row.get("ficheiros_ausentes_em_disco") or []
@@ -332,9 +408,11 @@ def _build_corpus_sheet(ws, corpus_readiness: dict[str, Any], lang: str):
             aln = _CENTER if ci in (1, 3, 4) else _WRAP
             _cell(ws, ri, ci, val, font=fnt, fill=use_fill, align=aln, border=_THIN_BORDER)
 
-    ws.freeze_panes = "A2"
+    freeze_row = header_row + 1
+    ws.freeze_panes = f"A{freeze_row}"
     if items:
-        ws.auto_filter.ref = f"A1:F{len(items) + 1}"
+        last_r = header_row + len(items)
+        ws.auto_filter.ref = f"A{header_row}:F{last_r}"
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────
