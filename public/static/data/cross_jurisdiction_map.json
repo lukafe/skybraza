@@ -1,0 +1,664 @@
+{
+  "version": 1,
+  "domains": {
+    "custody":       { "pt": "Custódia e Segregação Patrimonial", "en": "Custody and Asset Segregation" },
+    "cybersecurity": { "pt": "Segurança Cibernética",             "en": "Cybersecurity" },
+    "third_party":   { "pt": "Risco de Terceiros e Nuvem",        "en": "Third-Party and Cloud Risk" },
+    "grc":           { "pt": "Governança, Risco e Compliance",    "en": "Governance, Risk and Compliance" },
+    "aml":           { "pt": "PLD / CFT",                         "en": "AML / CFT" },
+    "market":        { "pt": "Mercado e Ativos Virtuais",         "en": "Market and Virtual Assets" },
+    "transparency":  { "pt": "Transparência e Conduta",           "en": "Transparency and Conduct" }
+  },
+  "mappings": [
+    {
+      "inciso_id": "I_a",
+      "domain": "custody",
+      "bcb_ref": "Art. 4º, I(a) — Res. 520 Cap. IX, Seção II",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 70 — Safeguarding of client crypto-assets",
+          "overlap": "high",
+          "binance_artefact": "MiCA safeguarding policy (Binance France SAS / PSAN)",
+          "delta_notes": { "pt": "Necessário parecer jurídico local sobre blindagem falimentar brasileira.", "en": "Local legal opinion needed on Brazilian insolvency ring-fencing." }
+        },
+        "vara_dubai": {
+          "ref": "Company Rulebook — Client Money Ring-Fencing",
+          "overlap": "high",
+          "binance_artefact": "VARA client money policy + daily reconciliation reports",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "Nest Clearing and Custody Ltd — RCH/CSD structure",
+          "overlap": "high",
+          "binance_artefact": "ADGM corporate structure diagrams + inter-company custody agreements",
+          "delta_notes": { "pt": "Organograma da entidade brasileira (SPSAV) deve ser inserido.", "en": "Brazilian entity (SPSAV) org chart must be inserted." }
+        }
+      }
+    },
+    {
+      "inciso_id": "I_b",
+      "domain": "custody",
+      "bcb_ref": "Art. 4º, I(b) — Prova de reservas",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 36 — Audit of reserve assets (ARTs/EMTs, semiannual)",
+          "overlap": "high",
+          "binance_artefact": "Binance PoR system (Merkle tree + zk-SNARKs) + external attestation reports",
+          "delta_notes": { "pt": "Pode reutilizar integralmente; excede requisitos do BCB.", "en": "Fully reusable; exceeds BCB requirements." }
+        },
+        "vara_dubai": {
+          "ref": "Compliance Rulebook — Daily reconciliation of individual asset balances",
+          "overlap": "high",
+          "binance_artefact": "VARA daily balance reconciliation + fiat custodian bank statements",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA Prudential rules — Client asset reconciliation",
+          "overlap": "high",
+          "binance_artefact": "ADGM periodic reserve verification reports",
+          "delta_notes": { "pt": "Atestado deve incluir saldos específicos de residentes BR vs passivo total.", "en": "Attestation must include BR-resident balances vs total liabilities." }
+        }
+      }
+    },
+    {
+      "inciso_id": "II",
+      "domain": "third_party",
+      "bcb_ref": "Art. 4º, II — Serviços relevantes contratados (arts. 32–33 Res. 520)",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "DORA Art. 28–30 — ICT third-party risk management",
+          "overlap": "high",
+          "binance_artefact": "DORA ICT outsourcing register + vendor risk assessments (AWS/GCP)",
+          "delta_notes": { "pt": "Avaliações DORA de fornecedores mapeiam diretamente as expectativas do BCB.", "en": "DORA vendor assessments map directly to BCB expectations." }
+        },
+        "vara_dubai": {
+          "ref": "Tech & Info Rulebook I.H — Third-party and outsourcing controls",
+          "overlap": "high",
+          "binance_artefact": "VARA outsourcing policy + BCDR covering third-party failure",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA Outsourcing Framework — Material outsourcing notifications",
+          "overlap": "medium",
+          "binance_artefact": "ADGM material outsourcing register",
+          "delta_notes": { "pt": "Adaptar o contrato tipo para cláusulas de auditoria e SLA locais.", "en": "Adapt template contract for local audit and SLA clauses." }
+        }
+      }
+    },
+    {
+      "inciso_id": "III",
+      "domain": "third_party",
+      "bcb_ref": "Art. 4º, III — Capacidade técnica de empresas contratadas no exterior",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "DORA Art. 28 — Due diligence on ICT third-party providers",
+          "overlap": "high",
+          "binance_artefact": "DORA third-party due diligence reports + contractual assessments",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "vara_dubai": {
+          "ref": "Tech & Info Rulebook I.H — BCDR for third-party failure mitigation",
+          "overlap": "high",
+          "binance_artefact": "VARA BCDR plans + contingency for provider failure",
+          "delta_notes": { "pt": "Adicionar mapeamento ao art. 83 Res. 520 para serviços no exterior.", "en": "Add mapping to art. 83 Res. 520 for offshore services." }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA — Approved foreign provider regime",
+          "overlap": "medium",
+          "binance_artefact": "ADGM approved foreign provider list + due diligence files",
+          "delta_notes": { "pt": "Necessário dossiê com checklist legal/operacional para cada parceiro estrangeiro.", "en": "Need dossier with legal/operational checklist per foreign partner." }
+        }
+      }
+    },
+    {
+      "inciso_id": "IV",
+      "domain": "cybersecurity",
+      "bcb_ref": "Art. 4º, IV — Planos de recuperação e continuidade (BCP/DR)",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "DORA Art. 11–12 — ICT business continuity and disaster recovery",
+          "overlap": "high",
+          "binance_artefact": "DORA BCP/DR framework + annual resilience testing reports",
+          "delta_notes": { "pt": "Planos globais já padronizados; baixa adaptação local.", "en": "Global plans already standardised; low local adaptation." }
+        },
+        "vara_dubai": {
+          "ref": "Tech & Info Rulebook I.F — Business Continuity and Disaster Recovery",
+          "overlap": "high",
+          "binance_artefact": "VARA BCDR policy + drill records + RTO/RPO documentation",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA Business Continuity Requirements",
+          "overlap": "high",
+          "binance_artefact": "ADGM BCP documents for Nest Exchange / Nest Clearing",
+          "delta_notes": { "pt": "", "en": "" }
+        }
+      }
+    },
+    {
+      "inciso_id": "V",
+      "domain": "cybersecurity",
+      "bcb_ref": "Art. 4º, V — Políticas de interconectividade (art. 43 Res. 520)",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "DORA Art. 9 — ICT systems, protocols and tools; network security",
+          "overlap": "high",
+          "binance_artefact": "DORA ICT asset inventory + network architecture documentation",
+          "delta_notes": { "pt": "Adicionar inventário de integrações exclusivas BR (Pix, Open Finance).", "en": "Add inventory of BR-exclusive integrations (Pix, Open Finance)." }
+        },
+        "vara_dubai": {
+          "ref": "Tech & Info Rulebook I.C — Network and API security controls",
+          "overlap": "high",
+          "binance_artefact": "VARA API security policy + integration approval process",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA Technology Governance — System interconnectivity",
+          "overlap": "medium",
+          "binance_artefact": "ADGM technology governance documentation",
+          "delta_notes": { "pt": "Necessário adendo com fluxo de deploy e controlo de mudanças para integrações locais.", "en": "Need addendum with deploy flow and change control for local integrations." }
+        }
+      }
+    },
+    {
+      "inciso_id": "VI_a",
+      "domain": "aml",
+      "bcb_ref": "Art. 4º, VI(a) — PLD/FTP e legislação aplicável (PSVAV)",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "TFR (Transfer of Funds Regulation) — Zero-threshold travel rule + AML/CFT",
+          "overlap": "high",
+          "binance_artefact": "AMF-registered AML/CFT policies (Binance France) + Travel Rule implementation",
+          "delta_notes": { "pt": "Adaptar manuais para reporte de suspeitas ao COAF; listas de sanções brasileiras.", "en": "Adapt manuals for suspicious activity reporting to COAF; Brazilian sanctions lists." }
+        },
+        "vara_dubai": {
+          "ref": "Compliance Rulebook — Client screening + transaction monitoring",
+          "overlap": "high",
+          "binance_artefact": "VARA AML/CFT compliance manual + on-chain intelligence integration",
+          "delta_notes": { "pt": "Ajustar fluxos de KYC para CPF e documentação brasileira.", "en": "Adjust KYC flows for CPF and Brazilian documentation." }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA AML/CFT Rules — Transaction monitoring and reporting",
+          "overlap": "high",
+          "binance_artefact": "ADGM AML framework + Chainalysis / SkyInsights integration",
+          "delta_notes": { "pt": "Tecnologia global reaproveitável; reporte local ao COAF é o delta principal.", "en": "Global technology reusable; local COAF reporting is the main delta." }
+        }
+      }
+    },
+    {
+      "inciso_id": "VI_b",
+      "domain": "cybersecurity",
+      "bcb_ref": "Art. 4º, VI(b) — Segurança do ambiente computacional (art. 48 Res. 520)",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "DORA Art. 5–9 — ICT risk management framework + security policies",
+          "overlap": "high",
+          "binance_artefact": "ISO 27001 cert + SOC 2 Type II report + DORA ICT risk framework",
+          "delta_notes": { "pt": "Relatórios globais cobrem infraestrutura core; testar apenas integrações locais.", "en": "Global reports cover core infrastructure; test only local integrations." }
+        },
+        "vara_dubai": {
+          "ref": "Tech & Info Rulebook I.E — Independent penetration testing (TLPT)",
+          "overlap": "high",
+          "binance_artefact": "VARA TLPT reports + vulnerability assessment history",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA Technology Risk — Cybersecurity governance and controls",
+          "overlap": "high",
+          "binance_artefact": "ADGM cybersecurity governance documents for Nest entities",
+          "delta_notes": { "pt": "Apenas PenTest de integrações exclusivas locais (ex: Pix) é necessário.", "en": "Only PenTest of local-exclusive integrations (e.g. Pix) is needed." }
+        }
+      }
+    },
+    {
+      "inciso_id": "VII",
+      "domain": "custody",
+      "bcb_ref": "Art. 4º, VII — Guarda e proteção de instrumentos de controle de AV",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 75 — Custody policies, key management, segregation of duties",
+          "overlap": "high",
+          "binance_artefact": "MiCA custody & key management policy (MPC/HSM architecture)",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "vara_dubai": {
+          "ref": "Tech & Info Rulebook I.D — Cryptographic key management and custody controls",
+          "overlap": "high",
+          "binance_artefact": "VARA key management policy + wallet architecture diagrams",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "Nest Clearing and Custody — CSD key generation and storage procedures",
+          "overlap": "high",
+          "binance_artefact": "ADGM Nest C&C key custody and signing flow documentation",
+          "delta_notes": { "pt": "Tecnologia agnóstica em relação ao país; reaproveitamento integral.", "en": "Country-agnostic technology; full reuse." }
+        }
+      }
+    },
+    {
+      "inciso_id": "VIII",
+      "domain": "cybersecurity",
+      "bcb_ref": "Art. 4º, VIII — Monitoramento contínuo de segurança e avaliação de riscos",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "DORA Art. 8 — Identification, detection and response functions",
+          "overlap": "high",
+          "binance_artefact": "DORA detection & response framework + SIEM/EDR architecture",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "vara_dubai": {
+          "ref": "Tech & Info Rulebook I.G — Continuous security monitoring and risk reviews",
+          "overlap": "high",
+          "binance_artefact": "VARA security monitoring program + risk committee reports",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA — Ongoing technology risk assessment",
+          "overlap": "medium",
+          "binance_artefact": "ADGM technology risk assessment reports",
+          "delta_notes": { "pt": "Incluir periodicidade de relatórios ao conselho local.", "en": "Include local board reporting frequency." }
+        }
+      }
+    },
+    {
+      "inciso_id": "IX_a",
+      "domain": "market",
+      "bcb_ref": "Art. 4º, IX(a) — Políticas de listagem, suspensão e deslistagem de AV",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 68 — Assessment of crypto-assets for admission to trading",
+          "overlap": "high",
+          "binance_artefact": "MiCA asset listing/delisting policy + Whitepaper review process",
+          "delta_notes": { "pt": "Padrões MiCA para listagem excedem expectativas do BCB; baixa adaptação.", "en": "MiCA listing standards exceed BCB expectations; low adaptation." }
+        },
+        "vara_dubai": {
+          "ref": "Market Conduct Rulebook — VA admission, suspension and withdrawal",
+          "overlap": "high",
+          "binance_artefact": "VARA listing committee procedures + project evaluation framework",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSMR — Accepted Virtual Assets requirements for MTF/RIE",
+          "overlap": "medium",
+          "binance_artefact": "ADGM Nest Exchange accepted assets list + review criteria",
+          "delta_notes": { "pt": "Adaptar critérios à taxonomia de AV do BCB.", "en": "Adapt criteria to BCB's VA taxonomy." }
+        }
+      }
+    },
+    {
+      "inciso_id": "IX_b",
+      "domain": "market",
+      "bcb_ref": "Art. 4º, IX(b) — Stablecoins / AV referenciados em moeda fiduciária (art. 65 Res. 520)",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Title III–IV — ARTs and EMTs: reserve, prudential and disclosure requirements",
+          "overlap": "high",
+          "binance_artefact": "MiCA stablecoin compliance framework (ARTs/EMTs) + reserve audits",
+          "delta_notes": { "pt": "Regime MiCA para stablecoins é o mais rigoroso globalmente; excede BCB.", "en": "MiCA stablecoin regime is the most rigorous globally; exceeds BCB." }
+        },
+        "vara_dubai": {
+          "ref": "Company Rulebook — Fiat-referenced token controls and reserves",
+          "overlap": "medium",
+          "binance_artefact": "VARA stablecoin reserve documentation",
+          "delta_notes": { "pt": "Necessário alinhamento com art. 65 Res. 520 para riscos ao investidor BR.", "en": "Need alignment with art. 65 Res. 520 for BR investor risk disclosure." }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA — Accepted Virtual Assets (fiat-referenced)",
+          "overlap": "medium",
+          "binance_artefact": "ADGM fiat-referenced token assessment reports",
+          "delta_notes": { "pt": "Documentar lastro e cenários de stress conforme Res. 520.", "en": "Document backing and stress scenarios per Res. 520." }
+        }
+      }
+    },
+    {
+      "inciso_id": "X_a",
+      "domain": "grc",
+      "bcb_ref": "Art. 4º, X(a) — Controlo interno e conflitos de interesse na governança",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 68 — Conflict of interest policy + organizational structure",
+          "overlap": "medium",
+          "binance_artefact": "MiCA conflict-of-interest policy + organizational governance",
+          "delta_notes": { "pt": "Existem organogramas globais mas governança local BR exige adaptação (diretores estatutários).", "en": "Global org charts exist but local BR governance requires adaptation (statutory directors)." }
+        },
+        "vara_dubai": {
+          "ref": "Company Rulebook — Board governance + fit-and-proper + conflicts",
+          "overlap": "medium",
+          "binance_artefact": "VARA governance framework + conflict-of-interest declarations",
+          "delta_notes": { "pt": "Adaptar à estrutura executiva brasileira.", "en": "Adapt to Brazilian executive structure." }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA — Governance, senior management and conduct rules",
+          "overlap": "medium",
+          "binance_artefact": "ADGM governance documents for Nest entities + board mandates",
+          "delta_notes": { "pt": "Políticas gerais de risco recicladas; estrutura executiva localizada.", "en": "General risk policies recycled; executive structure localised." }
+        }
+      }
+    },
+    {
+      "inciso_id": "X_b_i",
+      "domain": "grc",
+      "bcb_ref": "Art. 4º, X(b)(i) — Controles internos para IF autorizadas pelo BCB",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 68(4)–(9) — Internal control mechanisms for CASPs",
+          "overlap": "medium",
+          "binance_artefact": "MiCA internal control framework documentation",
+          "delta_notes": { "pt": "Matriz controle → dono → frequência precisa de adaptação à regulação BR de IF.", "en": "Control → owner → frequency matrix needs adaptation to BR FI regulation." }
+        },
+        "vara_dubai": {
+          "ref": "Company Rulebook — Internal audit function + compliance officer",
+          "overlap": "medium",
+          "binance_artefact": "VARA internal audit charter + annual plans",
+          "delta_notes": { "pt": "Exige documentação de órgãos de controle interno alinhada ao modelo bancário BR.", "en": "Requires internal control body documentation aligned with BR banking model." }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA — Internal controls and compliance monitoring",
+          "overlap": "medium",
+          "binance_artefact": "ADGM compliance monitoring framework",
+          "delta_notes": { "pt": "Necessário regimento e planos anuais adaptados.", "en": "Need adapted charter and annual plans." }
+        }
+      }
+    },
+    {
+      "inciso_id": "X_b_ii",
+      "domain": "transparency",
+      "bcb_ref": "Art. 4º, X(b)(ii) — Condições dos arts. 69 e 85, Res. 520 (fiat em nome do cliente)",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 70(3)–(5) — Fiat funds safeguarding and non-commingling",
+          "overlap": "medium",
+          "binance_artefact": "MiCA fiat safeguarding policy",
+          "delta_notes": { "pt": "Alinhar com limites do art. 85 Res. 520 e comunicação ao cliente.", "en": "Align with art. 85 Res. 520 limits and client communication." }
+        },
+        "vara_dubai": {
+          "ref": "Company Rulebook — Fiat balances held in client name",
+          "overlap": "medium",
+          "binance_artefact": "VARA client fiat balance reconciliation procedures",
+          "delta_notes": { "pt": "Documentação de reconciliação e correção de erros locais.", "en": "Local reconciliation and error correction documentation." }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA — Client money and asset protection rules",
+          "overlap": "medium",
+          "binance_artefact": "ADGM client money rules compliance docs",
+          "delta_notes": { "pt": "Necessário parecer jurídico sobre concordância com CDC brasileiro.", "en": "Legal opinion needed on alignment with Brazilian Consumer Code." }
+        }
+      }
+    },
+    {
+      "inciso_id": "XI",
+      "domain": "grc",
+      "bcb_ref": "Art. 4º, XI — Estrutura de gestão de risco, capital, compliance e auditoria interna",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 68 — Organizational requirements: risk, compliance, audit",
+          "overlap": "medium",
+          "binance_artefact": "MiCA organizational structure + risk management framework",
+          "delta_notes": { "pt": "Localizar organograma com mandatos, reporte ao conselho e independência funcional.", "en": "Localise org chart with mandates, board reporting and functional independence." }
+        },
+        "vara_dubai": {
+          "ref": "Company Rulebook — CISO, DPO, compliance officer appointment",
+          "overlap": "medium",
+          "binance_artefact": "VARA key personnel register + mandate documentation",
+          "delta_notes": { "pt": "Inserir calendário de relatórios ao conselho adaptado ao modelo BR.", "en": "Insert board reporting calendar adapted to BR model." }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA — Governance, risk and compliance structure for licensed entities",
+          "overlap": "medium",
+          "binance_artefact": "ADGM Nest entities' GRC organizational docs",
+          "delta_notes": { "pt": "Exige documentação adaptada à governança local.", "en": "Requires documentation adapted to local governance." }
+        }
+      }
+    },
+    {
+      "inciso_id": "XII",
+      "domain": "cybersecurity",
+      "bcb_ref": "Art. 4º, XII — Política de segurança cibernética e plano de resposta a incidentes",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "DORA Art. 17 — ICT-related incident management and reporting",
+          "overlap": "high",
+          "binance_artefact": "DORA incident response framework + notification templates",
+          "delta_notes": { "pt": "Adaptar tempos de notificação ao modelo interno do BCB.", "en": "Adapt notification timeframes to BCB internal model." }
+        },
+        "vara_dubai": {
+          "ref": "Tech & Info Rulebook I.E — Incident response and reporting",
+          "overlap": "high",
+          "binance_artefact": "VARA incident response playbooks + runbooks",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA — Cyber incident notification and response requirements",
+          "overlap": "high",
+          "binance_artefact": "ADGM incident management procedures",
+          "delta_notes": { "pt": "", "en": "" }
+        }
+      }
+    },
+    {
+      "inciso_id": "XIII",
+      "domain": "market",
+      "bcb_ref": "Art. 4º, XIII — Vigilância de mercado (spoofing, wash trading, manipulação)",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 92 — Market abuse prevention (MAR-like obligations)",
+          "overlap": "high",
+          "binance_artefact": "MiCA market surveillance framework + detection rules",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "vara_dubai": {
+          "ref": "Market Conduct Rulebook — Market integrity and surveillance",
+          "overlap": "high",
+          "binance_artefact": "VARA market surveillance program + alert handling statistics",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSMR — Market abuse and manipulation detection (Nest Exchange)",
+          "overlap": "high",
+          "binance_artefact": "ADGM Nest Exchange market surveillance engine + reports",
+          "delta_notes": { "pt": "", "en": "" }
+        }
+      }
+    },
+    {
+      "inciso_id": "XIV",
+      "domain": "custody",
+      "bcb_ref": "Art. 4º, XIV — Contrato de custódia de AV (arts. 73, 75, 78 Res. 520)",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 75 — Custody agreement and client rights",
+          "overlap": "high",
+          "binance_artefact": "MiCA custody agreement template + contractual framework",
+          "delta_notes": { "pt": "Adaptar modelo contratual ao direito brasileiro (CDC e Código Civil).", "en": "Adapt contract template to Brazilian law (Consumer Code and Civil Code)." }
+        },
+        "vara_dubai": {
+          "ref": "Company Rulebook — Custody terms and client disclosures",
+          "overlap": "medium",
+          "binance_artefact": "VARA custody contract model + role descriptions",
+          "delta_notes": { "pt": "Necessária tradução e localização jurídica integral.", "en": "Full legal translation and localisation needed." }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "Nest Clearing and Custody — Custody service agreement",
+          "overlap": "high",
+          "binance_artefact": "ADGM Nest C&C custody agreement + responsibilities matrix",
+          "delta_notes": { "pt": "", "en": "" }
+        }
+      }
+    },
+    {
+      "inciso_id": "XV",
+      "domain": "custody",
+      "bcb_ref": "Art. 4º, XV — Medidas do custodiante (art. 76, I–XII Res. 520)",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 75 — Custodian obligations and controls",
+          "overlap": "high",
+          "binance_artefact": "MiCA custodian measures inventory",
+          "delta_notes": { "pt": "Mapeamento medida → responsável → evidência deve seguir art. 76.", "en": "Measure → owner → evidence mapping must follow art. 76." }
+        },
+        "vara_dubai": {
+          "ref": "Tech & Info Rulebook I.D — Custody operational measures",
+          "overlap": "high",
+          "binance_artefact": "VARA custody operational controls documentation",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "Nest Clearing and Custody — Operational custody measures register",
+          "overlap": "high",
+          "binance_artefact": "ADGM Nest C&C operational measures and periodic reviews",
+          "delta_notes": { "pt": "", "en": "" }
+        }
+      }
+    },
+    {
+      "inciso_id": "XVI",
+      "domain": "custody",
+      "bcb_ref": "Art. 4º, XVI — Redundância de instrumentos de controle sobre AV",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "DORA Art. 11 — Backup and restoration; ICT systems resilience",
+          "overlap": "high",
+          "binance_artefact": "DORA backup/restore documentation + redundancy architecture",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "vara_dubai": {
+          "ref": "Tech & Info Rulebook I.D — Key redundancy and recovery mechanisms",
+          "overlap": "high",
+          "binance_artefact": "VARA key redundancy and disaster recovery plans",
+          "delta_notes": { "pt": "", "en": "" }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "Nest Clearing and Custody — Redundancy for critical custody infrastructure",
+          "overlap": "high",
+          "binance_artefact": "ADGM Nest C&C redundancy test reports",
+          "delta_notes": { "pt": "", "en": "" }
+        }
+      }
+    },
+    {
+      "inciso_id": "XVII",
+      "domain": "custody",
+      "bcb_ref": "Art. 4º, XVII — Recuperação de material redundante para supervisão do BCB",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "DORA Art. 11(6) — Recovery procedures and regulatory access",
+          "overlap": "medium",
+          "binance_artefact": "DORA recovery procedures + regulator access documentation",
+          "delta_notes": { "pt": "Adaptar procedimentos de acesso para a supervisão específica do BCB.", "en": "Adapt access procedures for BCB-specific supervision." }
+        },
+        "vara_dubai": {
+          "ref": "Tech & Info Rulebook — Recovery and regulatory reporting of redundant material",
+          "overlap": "medium",
+          "binance_artefact": "VARA recovery and audit trail documentation",
+          "delta_notes": { "pt": "Acrescentar logs de leitura e prazos específicos do BCB.", "en": "Add read keys/logs and BCB-specific timeframes." }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA — Regulatory access to systems and records",
+          "overlap": "medium",
+          "binance_artefact": "ADGM regulatory access and records retention policy",
+          "delta_notes": { "pt": "Demonstrar rastreabilidade sem expor segredos operacionais.", "en": "Demonstrate traceability without exposing operational secrets." }
+        }
+      }
+    },
+    {
+      "inciso_id": "par1_I",
+      "domain": "transparency",
+      "bcb_ref": "Art. 4º, §1º, I(a–h) — Informações claras ao cliente/usuário",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 66 — Information to prospective holders; marketing disclosures",
+          "overlap": "medium",
+          "binance_artefact": "MiCA client disclosure templates + risk warnings",
+          "delta_notes": { "pt": "Adaptação linguística total (PT-BR) e alinhamento com CDC brasileiro.", "en": "Full linguistic adaptation (PT-BR) and alignment with Brazilian Consumer Code." }
+        },
+        "vara_dubai": {
+          "ref": "Market Conduct Rulebook — Fair treatment + client disclosures",
+          "overlap": "medium",
+          "binance_artefact": "VARA fair treatment policy + client information materials",
+          "delta_notes": { "pt": "Localização integral para português brasileiro obrigatória.", "en": "Full localisation to Brazilian Portuguese mandatory." }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA Conduct Rules — Client categorisation and disclosure",
+          "overlap": "low",
+          "binance_artefact": "ADGM client disclosure documents",
+          "delta_notes": { "pt": "Exige criação de materiais dedicados para o investidor brasileiro.", "en": "Requires creation of dedicated materials for Brazilian investors." }
+        }
+      }
+    },
+    {
+      "inciso_id": "par1_II",
+      "domain": "transparency",
+      "bcb_ref": "Art. 4º, §1º, II — Conteúdos informativos sobre riscos no mercado de AV",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 66 — Risk disclosures and educational content",
+          "overlap": "medium",
+          "binance_artefact": "MiCA investor education and risk warning materials",
+          "delta_notes": { "pt": "Traduzir e adaptar materiais educativos; público-alvo brasileiro.", "en": "Translate and adapt educational materials; Brazilian target audience." }
+        },
+        "vara_dubai": {
+          "ref": "Market Conduct Rulebook — Investor education obligations",
+          "overlap": "medium",
+          "binance_artefact": "VARA educational content and risk awareness program",
+          "delta_notes": { "pt": "Workflow de aprovação compliance/marketing deve incluir revisão BR.", "en": "Compliance/marketing approval workflow must include BR review." }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA — Client communication and awareness",
+          "overlap": "low",
+          "binance_artefact": "ADGM client awareness materials",
+          "delta_notes": { "pt": "Necessário criar materiais educativos em PT-BR do zero.", "en": "Need to create PT-BR educational materials from scratch." }
+        }
+      }
+    },
+    {
+      "inciso_id": "par1_III",
+      "domain": "transparency",
+      "bcb_ref": "Art. 4º, §1º, III — Relatório de posição em AV do cliente",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA Art. 75(8) — Periodic statements of crypto-assets held",
+          "overlap": "high",
+          "binance_artefact": "MiCA periodic custody statement template + reconciliation",
+          "delta_notes": { "pt": "Adaptar formato e frequência ao modelo do BCB.", "en": "Adapt format and frequency to BCB model." }
+        },
+        "vara_dubai": {
+          "ref": "Company Rulebook — Client position reporting and statements",
+          "overlap": "medium",
+          "binance_artefact": "VARA client statement generation system",
+          "delta_notes": { "pt": "Template redigido + reconciliação com movimentações.", "en": "Redacted template + reconciliation with movements." }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA — Client reporting obligations for custody and trading",
+          "overlap": "medium",
+          "binance_artefact": "ADGM Nest client reporting framework",
+          "delta_notes": { "pt": "Adaptar modelo de relatório para formato exigido pelo BCB.", "en": "Adapt report template to BCB-required format." }
+        }
+      }
+    },
+    {
+      "inciso_id": "par1_I_h",
+      "domain": "market",
+      "bcb_ref": "Art. 4º, §1º, I(h) — Staking de AV: riscos e informações (art. 71 Res. 520)",
+      "jurisdictions": {
+        "eu_mica": {
+          "ref": "MiCA — Not explicitly covered (staking regulation pending EU review)",
+          "overlap": "low",
+          "binance_artefact": "Binance Earn staking terms of service (global)",
+          "delta_notes": { "pt": "MiCA não regula staking explicitamente; criar documentação dedicada para art. 71.", "en": "MiCA does not explicitly regulate staking; create dedicated documentation for art. 71." }
+        },
+        "vara_dubai": {
+          "ref": "VARA VA Advisory Management Activity — Staking operations",
+          "overlap": "medium",
+          "binance_artefact": "VARA staking advisory documentation + risk disclosures",
+          "delta_notes": { "pt": "Documentar contraparte, smart contracts e riscos de protocolo conforme art. 71.", "en": "Document counterparty, smart contracts and protocol risks per art. 71." }
+        },
+        "adgm_abu_dhabi": {
+          "ref": "FSRA — Currently no explicit staking framework",
+          "overlap": "low",
+          "binance_artefact": "Internal staking risk framework",
+          "delta_notes": { "pt": "Criar documentação dedicada de divulgação de riscos para staking no BR.", "en": "Create dedicated staking risk disclosure documentation for BR." }
+        }
+      }
+    }
+  ]
+}

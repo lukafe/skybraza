@@ -1,0 +1,36 @@
+{
+  "jurisdictions": [
+    {
+      "id": "bcb_in701",
+      "name": { "pt": "Brasil — IN BCB 701", "en": "Brazil — IN BCB 701" },
+      "regulator": "BCB",
+      "flag": "🇧🇷",
+      "color": "#009c3b",
+      "frameworks": ["IN 701", "Res. 520"]
+    },
+    {
+      "id": "eu_mica",
+      "name": { "pt": "União Europeia — MiCA / DORA", "en": "European Union — MiCA / DORA" },
+      "regulator": "EBA / ESMA",
+      "flag": "🇪🇺",
+      "color": "#003399",
+      "frameworks": ["MiCA", "DORA", "TFR"]
+    },
+    {
+      "id": "vara_dubai",
+      "name": { "pt": "Dubai — VARA", "en": "Dubai — VARA" },
+      "regulator": "VARA",
+      "flag": "🇦🇪",
+      "color": "#c8102e",
+      "frameworks": ["Company Rulebook", "Compliance Rulebook", "Tech & Info Rulebook", "Market Conduct Rulebook"]
+    },
+    {
+      "id": "adgm_abu_dhabi",
+      "name": { "pt": "Abu Dhabi — ADGM / FSRA", "en": "Abu Dhabi — ADGM / FSRA" },
+      "regulator": "FSRA",
+      "flag": "🇦🇪",
+      "color": "#8b6914",
+      "frameworks": ["FSMR", "RIE Rules", "RCH Rules"]
+    }
+  ]
+}

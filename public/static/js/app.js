@@ -4,7 +4,8 @@
  */
 
 import { wireDecisionTreeUI } from "./decision_tree.js?v=8";
-import { wireDocsGuideUI } from "./docs_guide.js?v=7";
+import { wireDocsGuideUI } from "./docs_guide.js?v=8";
+import { wireCrossJurisdictionUI } from "./cross_jurisdiction.js?v=1";
 import { initI18n, initLangSync, t, getCurrentLang, buildLangToggle } from "./i18n.js?v=2";
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -185,13 +186,14 @@ function showToast(msg) {
 }
 
 function setView(view) {
-  const isIntroLike = view === "intro" || view === "decisionTree" || view === "docsGuide";
+  const isIntroLike = view === "intro" || view === "decisionTree" || view === "docsGuide" || view === "crossJurisdiction";
   document.body.classList.toggle("app-view-intro", isIntroLike);
   $("#intro").classList.toggle("hidden", view !== "intro");
   $("#wizard").classList.toggle("hidden", view !== "wizard");
   $("#results").classList.toggle("hidden", view !== "results");
   $("#decision-tree-view")?.classList.toggle("hidden", view !== "decisionTree");
   $("#docs-guide-view")?.classList.toggle("hidden", view !== "docsGuide");
+  $("#cross-jurisdiction-view")?.classList.toggle("hidden", view !== "crossJurisdiction");
 }
 
 function qType(q) {
@@ -932,6 +934,55 @@ function normalizeScopePayload(data) {
   return { sujeitos, fora, raw: data };
 }
 
+let _cjMapDataApp = null;
+async function renderCjInsightsPanel(inScopeIds) {
+  const container = $("#cj-insights-panel");
+  if (!container) return;
+  try {
+    if (!_cjMapDataApp) {
+      const res = await fetch("/static/data/cross_jurisdiction_map.json?v=1");
+      _cjMapDataApp = await res.json();
+    }
+  } catch { return; }
+
+  const en = getCurrentLang() === "en";
+  const mappings = (_cjMapDataApp.mappings || []).filter(m => inScopeIds.includes(m.inciso_id));
+  if (!mappings.length) { container.innerHTML = ""; return; }
+
+  const jurLabels = { eu_mica: en ? "EU" : "UE", vara_dubai: "VARA", adgm_abu_dhabi: "ADGM" };
+  const jurIds = ["eu_mica", "vara_dubai", "adgm_abu_dhabi"];
+  const counts = {};
+  for (const jid of jurIds) counts[jid] = { high: 0, medium: 0, low: 0 };
+  for (const m of mappings) {
+    for (const jid of jurIds) {
+      const ov = (m.jurisdictions?.[jid]?.overlap) || "none";
+      if (counts[jid][ov] !== undefined) counts[jid][ov]++;
+    }
+  }
+
+  const rows = jurIds.map(jid => {
+    const c = counts[jid];
+    const label = jurLabels[jid];
+    return `
+<div class="cji-row">
+  <span class="cji-jur">${escapeHtml(label)}</span>
+  <span class="cj-overlap cj-overlap--high">${c.high}</span>
+  <span class="cji-desc">${en ? "high overlap" : "alta sobreposição"}</span>
+  <span class="cj-overlap cj-overlap--medium">${c.medium}</span>
+  <span class="cji-desc">${en ? "medium" : "média"}</span>
+  <span class="cj-overlap cj-overlap--low">${c.low}</span>
+  <span class="cji-desc">${en ? "low/new" : "baixa/nova"}</span>
+</div>`;
+  }).join("");
+
+  container.innerHTML = `
+<details class="cji-panel" open>
+  <summary class="cji-summary">${en ? "Cross-Jurisdiction Insights" : "Insights Transfronteiriços"} <span class="cji-count">(${mappings.length} ${en ? "in-scope clauses" : "incisos no escopo"})</span></summary>
+  <div class="cji-body">${rows}</div>
+  <p class="cji-tip">${en ? "Open the Regulatory Comparison from the home screen for full detail." : "Abra a Comparação Regulatória no ecrã inicial para o detalhe completo."}</p>
+</details>`;
+}
+
 async function submitScope() {
   const institution = ($("#institution").value || "").trim();
   const payload = {
@@ -1005,6 +1056,8 @@ async function submitScope() {
   `;
 
   renderComplianceDonut(mand, cond, nf);
+
+  renderCjInsightsPanel(sujeitos.map(r => r?.inciso_id).filter(Boolean));
 
   elCountA.textContent = String(sujeitos.length);
   elCountS.textContent = String(fora.length);
@@ -1224,6 +1277,13 @@ async function boot() {
     viewEl:  $("#docs-guide-view"),
     btnBack: $("#btn-dg-back"),
     getTrack: () => state.track,
+    setView,
+  });
+
+  wireCrossJurisdictionUI({
+    btnOpen: $("#btn-open-cross-jurisdiction"),
+    viewEl:  $("#cross-jurisdiction-view"),
+    btnBack: $("#btn-cj-back"),
     setView,
   });
 

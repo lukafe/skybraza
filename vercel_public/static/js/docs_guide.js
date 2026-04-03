@@ -5,6 +5,31 @@
 
 import { t, getCurrentLang } from "./i18n.js?v=2";
 
+let _cjMapCache = null;
+async function loadCjMap() {
+  if (_cjMapCache) return _cjMapCache;
+  try {
+    const res = await fetch("/static/data/cross_jurisdiction_map.json?v=1");
+    _cjMapCache = await res.json();
+  } catch { _cjMapCache = { mappings: [] }; }
+  return _cjMapCache;
+}
+
+function cjBadgesHtml(incisoId) {
+  if (!_cjMapCache) return "";
+  const m = (_cjMapCache.mappings || []).find(m => m.inciso_id === incisoId);
+  if (!m) return "";
+  const jurLabels = { eu_mica: "EU", vara_dubai: "VARA", adgm_abu_dhabi: "ADGM" };
+  const badges = [];
+  for (const [jid, jd] of Object.entries(m.jurisdictions || {})) {
+    if (jd.overlap === "high" || jd.overlap === "medium") {
+      const cls = jd.overlap === "high" ? "cj-overlap--high" : "cj-overlap--medium";
+      badges.push(`<span class="cj-overlap ${cls}" title="${jd.ref}">${jurLabels[jid] || jid}</span>`);
+    }
+  }
+  return badges.length ? `<span class="dg-cj-badges">${badges.join("")}</span>` : "";
+}
+
 const CAT_ICONS = {
   politica:     "📋",
   procedimento: "⚙️",
@@ -236,6 +261,7 @@ function renderIncisoCard(inciso, meta) {
     <div class="dg-inc-badges">
       <span class="dg-inc-badge dg-inc-badge--docs" title="${esc(docsLabel)}">${esc(docsLabel)}</span>
       ${criticos > 0 ? `<span class="dg-inc-badge dg-inc-badge--critico" title="${esc(critLabel)}">${esc(critLabel)}</span>` : ""}
+      ${cjBadgesHtml(inciso.id)}
     </div>
   </summary>
   <div class="dg-inciso-body">
@@ -535,6 +561,7 @@ export function wireDocsGuideUI({ btnOpen, viewEl, btnBack, getTrack, setView })
         enData = await res.json();
       } catch { /* optional */ }
     }
+    await loadCjMap();
   }
 
   async function renderGuide() {
