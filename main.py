@@ -283,9 +283,14 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
             },
         ) from None
 
+    from matrix_loader import get_coverage_meta
+    matrix_meta = get_coverage_meta(t)
+
     inst = body.institution.strip()
     return {
         "api_schema_version": API_SCHEMA_VERSION,
+        "matrix_version": matrix_meta.get("matrix_version"),
+        "matrix_last_updated": matrix_meta.get("last_updated"),
         "track": t,
         "institution": inst,
         "incisos_sujeitos_auditoria": meta["incisos_sujeitos_auditoria"],
@@ -297,6 +302,7 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
             "total_fora_escopo_auditoria": meta["total_fora_escopo_auditoria"],
         },
         "corpus_readiness": meta["corpus_readiness"],
+        "suppressed_incisos": meta.get("suppressed_incisos") or {},
         "journey_2": meta.get("journey_2") or {},
     }
 

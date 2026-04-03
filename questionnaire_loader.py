@@ -155,14 +155,20 @@ def normalize_answers(answers: dict[str, Any], track: str | None = None) -> dict
         if qtype == "yes_no":
             out[qid] = _coerce_bool(raw)
         elif qtype == "single_choice":
-            out[qid] = (raw.strip() if isinstance(raw, str) else raw) or None
+            val = (raw.strip() if isinstance(raw, str) else raw) or None
+            if val is not None:
+                valid_ids = {opt["id"] for opt in (q.get("options") or [])}
+                if val not in valid_ids:
+                    val = None
+            out[qid] = val
         elif qtype == "multi_choice":
+            valid_ids = {opt["id"] for opt in (q.get("options") or [])}
             if raw is None:
                 out[qid] = []
             elif isinstance(raw, list):
-                out[qid] = [str(x) for x in raw]
+                out[qid] = [str(x) for x in raw if str(x) in valid_ids]
             elif isinstance(raw, str) and raw.strip():
-                out[qid] = [s.strip() for s in raw.split(",") if s.strip()]
+                out[qid] = [s.strip() for s in raw.split(",") if s.strip() in valid_ids]
             else:
                 out[qid] = []
         elif qtype == "text_short":

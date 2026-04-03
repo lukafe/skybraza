@@ -4,7 +4,7 @@
  */
 
 import { wireDecisionTreeUI } from "./decision_tree.js?v=8";
-import { wireDocsGuideUI } from "./docs_guide.js?v=3";
+import { wireDocsGuideUI } from "./docs_guide.js?v=6";
 import { initI18n, initLangSync, t, getCurrentLang, buildLangToggle } from "./i18n.js?v=2";
 
 const $ = (sel, root = document) => root.querySelector(sel);

@@ -27,7 +27,7 @@ export function initLangSync() {
 export async function initI18n() {
   if (!_i18nLoaded) {
     try {
-      const res = await fetch("/static/data/i18n.json?v=4");
+      const res = await fetch("/static/data/i18n.json?v=5");
       const data = await res.json();
       Object.assign(_strings, data);
       _i18nLoaded = true;
