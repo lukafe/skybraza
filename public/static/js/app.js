@@ -4,7 +4,8 @@
  */
 
 import { wireDecisionTreeUI } from "./decision_tree.js?v=8";
-import { wireDocsGuideUI } from "./docs_guide.js?v=9";
+import { wireDocsGuideUI } from "./docs_guide.js?v=10";
+import { renderGapAnalysisPanel } from "./gap_analysis.js?v=1";
 import { wireCrossJurisdictionUI } from "./cross_jurisdiction.js?v=4";
 import { initI18n, initLangSync, t, getCurrentLang, buildLangToggle } from "./i18n.js?v=3";
 
@@ -1049,6 +1050,7 @@ async function submitScope() {
   renderComplianceDonut(mand, cond, nf);
 
   renderCjInsightsPanel(sujeitos.map(r => r?.inciso_id).filter(Boolean));
+  void renderGapAnalysisPanel(data, $("#gap-analysis-mount")).catch(() => {});
 
   elCountA.textContent = String(sujeitos.length);
   elCountS.textContent = String(fora.length);

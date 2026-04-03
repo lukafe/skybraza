@@ -132,6 +132,30 @@ function mergeEnMeta(meta, enData) {
   return out;
 }
 
+let _mergedGuideCache = null;
+
+/**
+ * Guia de documentos com traduções EN fundidas (cache por sessão do módulo).
+ * @returns {Promise<{ incisos: any[]; meta: any }>}
+ */
+export async function fetchMergedDocsGuide() {
+  if (_mergedGuideCache) return _mergedGuideCache;
+  const res = await fetch("/static/data/docs_guide.json?v=1");
+  if (!res.ok) throw new Error(`docs_guide: HTTP ${res.status}`);
+  const guideData = await res.json();
+  let enData = null;
+  try {
+    const enRes = await fetch("/static/data/docs_guide_en.json?v=1");
+    if (enRes.ok) enData = await enRes.json();
+  } catch {
+    /* EN overlay opcional */
+  }
+  const meta = mergeEnMeta(guideData.meta || {}, enData);
+  const incisos = mergeEnTranslations(guideData.incisos || [], enData);
+  _mergedGuideCache = { incisos, meta };
+  return _mergedGuideCache;
+}
+
 /** Renderiza o badge CertiK para um documento */
 function renderCertikBadge(doc, certikServicos) {
   if (!doc.certik_servico) return "";

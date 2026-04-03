@@ -299,5 +299,25 @@
   "cj_badge_high":      { "pt": "ALTA",                                    "en": "HIGH" },
   "cj_badge_medium":    { "pt": "MÉDIA",                                   "en": "MED" },
   "cj_badge_low":       { "pt": "BAIXA",                                   "en": "LOW" },
-  "cj_badge_none":      { "pt": "—",                                       "en": "—" }
+  "cj_badge_none":      { "pt": "—",                                       "en": "—" },
+
+  "ga_panel_title":     { "pt": "Análise de lacunas (escopo × guia × CJ)", "en": "Gap analysis (scope × guide × CJ)" },
+  "ga_panel_count":     { "pt": "incisos no escopo",                       "en": "in-scope clauses" },
+  "ga_loading":         { "pt": "A agregar dados…",                        "en": "Aggregating data…" },
+  "ga_kpi_docs":        { "pt": "documentos no guia (soma)",                "en": "guide documents (sum)" },
+  "ga_kpi_crit":        { "pt": "docs prioridade crítica",                 "en": "critical-priority docs" },
+  "ga_kpi_cj_high":     { "pt": "células CJ alta",                         "en": "CJ high cells" },
+  "ga_kpi_cj_adapt":    { "pt": "CJ média/baixa",                          "en": "CJ medium/low" },
+  "ga_col_clause":      { "pt": "Inciso",                                  "en": "Clause" },
+  "ga_col_label":       { "pt": "Rótulo",                                  "en": "Label" },
+  "ga_col_docs":        { "pt": "Docs",                                    "en": "Docs" },
+  "ga_col_crit":        { "pt": "Crít.",                                   "en": "Crit." },
+  "ga_col_eu":          { "pt": "UE",                                      "en": "EU" },
+  "ga_col_vara":        { "pt": "VARA",                                    "en": "VARA" },
+  "ga_col_adgm":        { "pt": "ADGM",                                    "en": "ADGM" },
+  "ga_export_csv":      { "pt": "⬇ CSV lacunas",                          "en": "⬇ Gap CSV" },
+  "ga_export_title":    { "pt": "Descarregar relatório de lacunas (CSV)", "en": "Download gap report (CSV)" },
+  "ga_csv_done":        { "pt": "Relatório de lacunas exportado.",         "en": "Gap report exported." },
+  "ga_load_error":      { "pt": "Não foi possível carregar o guia.",      "en": "Could not load guide data." },
+  "ga_tip":             { "pt": "Cruza o escopo com o guia de documentos e o mapa transfronteiriço. Não substitui revisão jurídica.", "en": "Crosses scope with the document guide and cross-jurisdiction map. Does not replace legal review." }
 }
