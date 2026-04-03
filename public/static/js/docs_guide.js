@@ -17,7 +17,7 @@ async function loadCjMap() {
 
 function cjBadgesHtml(incisoId) {
   if (!_cjMapCache) return "";
-  const m = (_cjMapCache.mappings || []).find(m => m.inciso_id === incisoId);
+  const m = (_cjMapCache.mappings || []).find(entry => entry.inciso_id === incisoId);
   if (!m) return "";
   const jurLabels = { eu_mica: "EU", vara_dubai: "VARA", adgm_abu_dhabi: "ADGM" };
   const badges = [];

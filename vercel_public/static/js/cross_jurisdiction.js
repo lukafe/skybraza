@@ -12,19 +12,10 @@ function esc(s) {
   return d.innerHTML;
 }
 
-function pick(obj, field) {
-  if (!obj) return "";
-  return getCurrentLang() === "en"
-    ? (obj[`${field}_en`] ?? obj[field] ?? "")
-    : (obj[field] ?? "");
-}
-
 function pickBi(biObj) {
   if (!biObj) return "";
   return getCurrentLang() === "en" ? (biObj.en ?? biObj.pt ?? "") : (biObj.pt ?? biObj.en ?? "");
 }
-
-const OVERLAP_ORDER = { high: 0, medium: 1, low: 2, none: 3 };
 
 function overlapBadgeText(level) {
   const map = { high: "cj_badge_high", medium: "cj_badge_medium", low: "cj_badge_low", none: "cj_badge_none" };
@@ -177,9 +168,15 @@ function renderIncisoRow(m, domains, jurisdictions, visibleJurs) {
 </div>`;
   }).join("");
 
+  const searchParts = [m.inciso_id, domainLabel, m.bcb_ref];
+  for (const jd of Object.values(m.jurisdictions || {})) {
+    searchParts.push(jd.ref || "", jd.binance_artefact || "", jd.overlap || "");
+    if (jd.delta_notes) searchParts.push(jd.delta_notes.pt || "", jd.delta_notes.en || "");
+  }
+
   return `
 <details class="cj-inciso" data-id="${esc(m.inciso_id)}" data-domain="${esc(m.domain)}"
-  data-search="${esc((m.inciso_id + ' ' + domainLabel + ' ' + m.bcb_ref + ' ' + JSON.stringify(m.jurisdictions)).toLowerCase())}">
+  data-search="${esc(searchParts.join(' ').toLowerCase())}">
   <summary class="cj-inciso-summary">
     <span class="cj-chevron" aria-hidden="true">▸</span>
     <span class="cj-inc-id">${esc(m.inciso_id)}</span>
@@ -245,15 +242,35 @@ export function wireCrossJurisdictionUI({ btnOpen, viewEl, btnBack, setView }) {
     togglesEl?.querySelectorAll("input:checked").forEach(cb => visibleJurs.add(cb.value));
     if (visibleJurs.size === 0) foreignJurs.forEach(j => visibleJurs.add(j.id));
 
-    // Domain filter options
+    // Domain filter options — rebuild on every render so language switches are reflected
     const domainSelect = viewEl.querySelector("#cj-domain-filter");
-    if (domainSelect && domainSelect.options.length <= 1) {
+    if (domainSelect) {
+      const prevVal = domainSelect.value;
+      while (domainSelect.options.length > 1) domainSelect.remove(1);
+      domainSelect.options[0].textContent = t("cj_domain_all");
       for (const [key, val] of Object.entries(domains)) {
         const opt = document.createElement("option");
         opt.value = key;
         opt.textContent = pickBi(val);
         domainSelect.appendChild(opt);
       }
+      domainSelect.value = prevVal;
+    }
+
+    // Refresh overlap filter labels on lang change
+    const overlapSel = viewEl.querySelector("#cj-overlap-filter");
+    if (overlapSel) {
+      overlapSel.querySelectorAll("option[data-i18n]").forEach(opt => {
+        opt.textContent = t(opt.getAttribute("data-i18n"));
+      });
+    }
+
+    // Refresh jurisdiction toggle labels
+    if (togglesEl) {
+      togglesEl.querySelectorAll(".cj-jur-toggle span").forEach((span, i) => {
+        const j = foreignJurs[i];
+        if (j) span.textContent = `${j.flag || ""} ${pickBi(j.name).split("—")[0].trim()}`;
+      });
     }
 
     // Stats
