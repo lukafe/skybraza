@@ -280,6 +280,124 @@ function applyGuideFilter(root, searchVal, prioVal, certikOnly) {
   });
 }
 
+/** RFC 4180 CSV cell escaping */
+function csvCell(val) {
+  const s = val == null ? "" : String(val);
+  // Wrap in quotes if the value contains a comma, double-quote, newline, or semicolon
+  if (s.includes('"') || s.includes(',') || s.includes('\n') || s.includes('\r') || s.includes(';')) {
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  return s;
+}
+
+/** Build and download a CSV from the merged guide data */
+function exportDocsGuideCsv(incisos, meta) {
+  const lang = getCurrentLang();
+
+  // Column headers (bilingual, driven by current language)
+  const headers = [
+    t("dg_csv_col_clause"),
+    t("dg_csv_col_label"),
+    t("dg_csv_col_article"),
+    t("dg_csv_col_theme"),
+    t("dg_csv_col_summary"),
+    t("dg_csv_col_legal_basis"),
+    t("dg_csv_col_trigger"),
+    t("dg_csv_col_doc_id"),
+    t("dg_csv_col_doc_title"),
+    t("dg_csv_col_category"),
+    t("dg_csv_col_priority"),
+    t("dg_csv_col_description"),
+    t("dg_csv_col_justif"),
+    t("dg_csv_col_content"),
+    t("dg_csv_col_retention"),
+    t("dg_csv_col_certik_svc"),
+    t("dg_csv_col_certik_note"),
+    t("dg_csv_col_optimal_desc"),
+    t("dg_csv_col_optimal_ind"),
+  ];
+
+  const rows = [headers];
+
+  for (const inc of incisos) {
+    const incId      = inc.id || "";
+    const rotulo     = inc.rotulo || "";
+    const artigo     = inc.artigo_in701 || "";
+    const tema       = pick(inc, "tema");
+    const resumo     = pick(inc, "resumo");
+    const baseLegal  = Array.isArray(inc.base_legal) ? inc.base_legal.join("; ") : (inc.base_legal || "");
+    const gatilho    = pick(inc, "gatilho");
+
+    const ro           = inc.resposta_otima || null;
+    const roDesc       = ro ? pick(ro, "descricao") : "";
+    const roInds       = ro ? pick(ro, "indicadores") : "";
+    const roIndsStr    = Array.isArray(roInds) ? roInds.join(" | ") : (roInds || "");
+
+    const catLookup = (catKey) => {
+      const catMeta = meta.categorias?.[catKey] || {};
+      return lang === "en"
+        ? (catMeta.label_en || catMeta.label || catKey)
+        : (catMeta.label || catKey);
+    };
+
+    const prioLookup = (prioKey) => {
+      return t(`prio_${prioKey}`) || prioKey;
+    };
+
+    const certikSvcLookup = (svcKey) => {
+      if (!svcKey) return "";
+      const svc = meta.certik_servicos?.[svcKey] || {};
+      return lang === "en"
+        ? (svc.nome_en || svc.nome || svcKey)
+        : (svc.nome || svcKey);
+    };
+
+    const docs = Array.isArray(inc.documentos) ? inc.documentos : [];
+
+    if (docs.length === 0) {
+      // Inciso row without documents — still export inciso metadata
+      rows.push([
+        incId, rotulo, artigo, tema, resumo, baseLegal, gatilho,
+        "", "", "", "", "", "", "", "", "", "",
+        roDesc, roIndsStr,
+      ].map(csvCell));
+    } else {
+      for (const doc of docs) {
+        const docId      = doc.id || "";
+        const docTitulo  = pick(doc, "titulo");
+        const docCat     = catLookup(doc.categoria || "");
+        const docPrio    = prioLookup(doc.prioridade || "");
+        const docDesc    = pick(doc, "descricao");
+        const docJustif  = pick(doc, "justificativa_legal");
+        const contItems  = pick(doc, "conteudo_minimo");
+        const docContent = Array.isArray(contItems) ? contItems.join(" | ") : (contItems || "");
+        const docRet     = pick(doc, "retencao");
+        const certikSvc  = certikSvcLookup(doc.certik_servico || "");
+        const certikNote = pick(doc, "certik_nota");
+
+        rows.push([
+          incId, rotulo, artigo, tema, resumo, baseLegal, gatilho,
+          docId, docTitulo, docCat, docPrio,
+          docDesc, docJustif, docContent, docRet,
+          certikSvc, certikNote,
+          roDesc, roIndsStr,
+        ].map(csvCell));
+      }
+    }
+  }
+
+  // UTF-8 BOM ensures Excel opens the file with correct encoding
+  const BOM = "\uFEFF";
+  const csvContent = BOM + rows.map((r) => r.join(",")).join("\r\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href = url;
+  a.download = `certik_vasp_docs_guide_${new Date().toISOString().slice(0, 10)}_${lang}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 /** Ponto de entrada — chamar após montar o HTML do guia */
 export function wireDocsGuideUI({ btnOpen, viewEl, btnBack, getTrack, setView }) {
   if (!btnOpen || !viewEl) return;
@@ -373,6 +491,16 @@ export function wireDocsGuideUI({ btnOpen, viewEl, btnBack, getTrack, setView })
         a.download = `certik_vasp_docs_guide_${new Date().toISOString().slice(0, 10)}.json`;
         a.click();
         URL.revokeObjectURL(url);
+      });
+
+      viewEl.querySelector("#dg-export-csv")?.addEventListener("click", () => {
+        const mergedMeta   = mergeEnMeta(guideData.meta || {}, enData);
+        const mergedIncisos = mergeEnTranslations(guideData.incisos || [], enData);
+        exportDocsGuideCsv(mergedIncisos, mergedMeta);
+        // Show a brief toast if available
+        document.dispatchEvent(new CustomEvent("app:toast", {
+          detail: { msg: t("dg_csv_done"), kind: "success" }
+        }));
       });
     }
     rendered = true;
