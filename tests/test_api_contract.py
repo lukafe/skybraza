@@ -187,3 +187,30 @@ def test_optional_api_key_rejects_without_header(monkeypatch: pytest.MonkeyPatch
     )
     assert r6.status_code == 200
     monkeypatch.delenv("CERTIK_API_KEY", raising=False)
+
+
+def test_post_scope_pdf_returns_pdf(client: TestClient) -> None:
+    r = client.post(
+        "/api/v1/scope/pdf",
+        json={"institution": "PDF Co", "answers": {}, "lang": "pt"},
+    )
+    assert r.status_code == 200
+    assert r.content[:4] == b"%PDF"
+    assert "application/pdf" in (r.headers.get("content-type") or "")
+    assert "attachment" in (r.headers.get("content-disposition") or "").lower()
+    assert ".pdf" in (r.headers.get("content-disposition") or "")
+
+
+def test_post_scope_pdf_en_ok(client: TestClient) -> None:
+    r = client.post(
+        "/api/v1/scope/pdf",
+        json={"institution": "X", "answers": {}, "lang": "en"},
+    )
+    assert r.status_code == 200
+    assert r.content[:4] == b"%PDF"
+
+
+def test_post_scope_pdf_invalid_answers_same_as_export(client: TestClient) -> None:
+    answers = {f"k{i}": True for i in range(201)}
+    r = client.post("/api/v1/scope/pdf", json={"institution": "X", "answers": answers})
+    assert r.status_code == 422

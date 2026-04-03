@@ -396,6 +396,81 @@ def post_scope_export(body: ScopeRequest) -> StreamingResponse:
     )
 
 
+@api_router.post("/scope/pdf")
+def post_scope_pdf(body: ScopeRequest) -> StreamingResponse:
+    """
+    Gera e devolve ficheiro .pdf com resumo executivo do escopo, prontidão do corpus
+    e listagens de incisos (mesmos campos que POST /scope e /scope/export).
+    """
+    from matrix_loader import MatrixLoadError, normalize_track
+    from questionnaire_loader import QuestionnaireLoadError
+    from rules_engine import compute_scope
+    from scope_pdf import build_scope_pdf_bytes
+
+    try:
+        t = normalize_track(body.track)
+    except MatrixLoadError as e:
+        raise HTTPException(status_code=400, detail={"code": "INVALID_TRACK", "message": str(e)}) from e
+
+    _raise_if_track_disabled(t)
+
+    lang = body.lang if body.lang in ("pt", "en") else "pt"
+
+    try:
+        _, meta = compute_scope(body.answers, track=t, lang=lang, build_df=False)
+    except QuestionnaireLoadError as e:
+        logger.warning("compute_scope rejected input (pdf): %s", e)
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "INVALID_SCOPE_INPUT", "message": str(e)},
+        ) from e
+    except Exception:
+        logger.exception("compute_scope failed (pdf)")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "code": "SCOPE_INTERNAL_ERROR",
+                "message": "Erro interno ao calcular o escopo para exportação PDF.",
+            },
+        ) from None
+
+    from matrix_loader import get_coverage_meta
+
+    matrix_meta = get_coverage_meta(t)
+    inst = body.institution.strip()
+    scope_response = {
+        "institution": inst,
+        "track": t,
+        "incisos_sujeitos_auditoria": meta["incisos_sujeitos_auditoria"],
+        "incisos_fora_escopo_auditoria": meta["incisos_fora_escopo_auditoria"],
+        "resumo": {
+            "total_sujeitos_auditoria": meta["total_count"],
+            "obrigatorios_matriz": meta["mandatory_count"],
+            "acionados_por_respostas": meta["conditional_count"],
+            "total_fora_escopo_auditoria": meta["total_fora_escopo_auditoria"],
+        },
+        "corpus_readiness": meta["corpus_readiness"],
+    }
+
+    buf = build_scope_pdf_bytes(
+        scope_response,
+        lang=lang,
+        matrix_version=str(matrix_meta.get("matrix_version") or "") or None,
+        matrix_last_updated=str(matrix_meta.get("last_updated") or "") or None,
+    )
+
+    from datetime import date
+
+    safe_inst = "".join(c if c.isalnum() or c in "-_" else "_" for c in inst)[:40] or "export"
+    filename = f"certik_vasp_scope_{safe_inst}_{date.today().isoformat()}.pdf"
+
+    return StreamingResponse(
+        buf,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
 app.include_router(api_router, prefix="/api")
 app.include_router(api_router, prefix="/api/v1")
 

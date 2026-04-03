@@ -1025,6 +1025,10 @@ input[type="text"]:focus {
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
+.kpi-card--readiness .metric-value {
+  color: var(--accent, #22c55e);
+}
+
 .metric--muted .metric-value {
   color: var(--text-muted);
 }

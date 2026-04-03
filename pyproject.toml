@@ -14,6 +14,7 @@ dependencies = [
     "pandas>=2.0.0,<3",
     "google-generativeai>=0.8.0,<1",
     "tabulate>=0.9.0,<0.10",
+    "fpdf2>=2.7.0,<3",
 ]
 
 # https://vercel.com/docs/frameworks/backend/fastapi

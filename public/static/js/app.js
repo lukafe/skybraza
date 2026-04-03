@@ -1040,11 +1040,17 @@ async function submitScope() {
     .replace("{nf}", String(nf))
     .replace("{trk}", escapeHtml(trkSum));
 
+  const cr = data.corpus_readiness && typeof data.corpus_readiness === "object" ? data.corpus_readiness : {};
+  const rRaw = cr.readiness_index_0_100;
+  const rNum = Number(rRaw);
+  const rDisp = Number.isFinite(rNum) ? rNum.toFixed(1) : "—";
+
   elMetrics.innerHTML = `
     <div class="metric kpi-card"><div class="metric-value">${na}</div><div class="metric-label">${t("kpi_in_scope")}</div></div>
     <div class="metric kpi-card"><div class="metric-value">${mand}</div><div class="metric-label">${t("kpi_mandatory")}</div></div>
     <div class="metric kpi-card"><div class="metric-value">${cond}</div><div class="metric-label">${t("kpi_by_answers")}</div></div>
     <div class="metric metric--muted kpi-card"><div class="metric-value">${nf}</div><div class="metric-label">${t("kpi_out_scope")}</div></div>
+    <div class="metric kpi-card kpi-card--readiness"><div class="metric-value tabular-nums">${rDisp}</div><div class="metric-label">${t("kpi_readiness")}</div></div>
   `;
 
   renderComplianceDonut(mand, cond, nf);
@@ -1142,6 +1148,68 @@ function wireSkipToggle(nf) {
       ? `<span class="skip-section-toggle__chevron">▸</span> ${t("dash_toggle_hide")}`
       : `<span class="skip-section-toggle__chevron">▸</span> ${t("dash_toggle_show", { n: nf })}`;
   });
+}
+
+/** Export scope as PDF via POST /scope/pdf */
+async function exportScopePdf() {
+  const btn = $("#btn-export-pdf");
+  if (!btn) return;
+  if (!state._lastScopeData && !Object.keys(state.answers || {}).length) {
+    showToast(t("toast_run_first"));
+    return;
+  }
+  const origLabel = btn.textContent;
+  try {
+    btn.classList.add("btn-export-loading");
+    btn.disabled = true;
+    btn.textContent = t("export_loading");
+
+    const payload = {
+      institution: state._lastInstitution || "",
+      track: state.track,
+      answers: { ...state.answers },
+      lang: getCurrentLang(),
+    };
+
+    const resp = await fetch(`${apiBase()}/scope/pdf`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/pdf",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!resp.ok) {
+      let msg = `HTTP ${resp.status}`;
+      try {
+        const j = await resp.json();
+        msg = j?.detail?.message || j?.detail || msg;
+      } catch { /* ignore */ }
+      throw new Error(String(msg));
+    }
+
+    const arrayBuf = await resp.arrayBuffer();
+    const blob = new Blob([arrayBuf], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    const inst = (state._lastInstitution || "vasp").replace(/[^a-z0-9]/gi, "_").toLowerCase();
+    a.download = `certik_vasp_scope_${inst}_${new Date().toISOString().slice(0, 10)}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast(t("export_pdf_done"));
+  } catch (e) {
+    showToast(`${t("export_error")} ${String(e.message || e)}`);
+  } finally {
+    if (btn) {
+      btn.classList.remove("btn-export-loading");
+      btn.disabled = false;
+      btn.textContent = origLabel;
+    }
+  }
 }
 
 /** Export scope as Excel (.xlsx) via POST /scope/export */
@@ -1376,6 +1444,10 @@ async function boot() {
   const exportBtn = $("#btn-export-excel");
   if (exportBtn) {
     exportBtn.addEventListener("click", () => exportScopeJSON());
+  }
+  const exportPdfBtn = $("#btn-export-pdf");
+  if (exportPdfBtn) {
+    exportPdfBtn.addEventListener("click", () => exportScopePdf());
   }
 
   // #9: resume banner logic
