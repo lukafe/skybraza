@@ -146,10 +146,24 @@ def test_post_scope_compute_error_hides_internal_detail(client: TestClient, monk
 
     monkeypatch.setattr(rules_engine, "compute_scope", _boom)
     r = client.post("/api/scope", json={"institution": "X", "answers": {}})
-    assert r.status_code == 400
+    assert r.status_code == 500
     body = r.json()
-    assert body["detail"]["code"] == "SCOPE_COMPUTE_ERROR"
+    assert body["detail"]["code"] == "SCOPE_INTERNAL_ERROR"
     assert "internal_secret" not in str(body)
+
+
+def test_post_scope_answers_too_many_keys_returns_422(client: TestClient) -> None:
+    answers = {f"k{i}": True for i in range(201)}
+    r = client.post("/api/scope", json={"institution": "X", "answers": answers})
+    assert r.status_code == 422
+
+
+def test_post_scope_answers_json_too_large_returns_422(client: TestClient) -> None:
+    # Poucas chaves mas strings longas → JSON > 10 KB (limite do ScopeRequest)
+    chunk = "x" * 400
+    answers = {f"k{i}": chunk for i in range(40)}
+    r = client.post("/api/scope", json={"institution": "X", "answers": answers})
+    assert r.status_code == 422
 
 
 def test_optional_api_key_rejects_without_header(monkeypatch: pytest.MonkeyPatch) -> None:

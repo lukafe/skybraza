@@ -3,7 +3,7 @@
  * Designed for Binance compliance workflow
  */
 
-import { t, getCurrentLang } from "./i18n.js?v=2";
+import { t, getCurrentLang } from "./i18n.js?v=3";
 
 function esc(s) {
   if (!s) return "";
@@ -185,7 +185,7 @@ function renderIncisoRow(m, domains, jurisdictions, visibleJurs) {
     <span class="cj-inc-overlaps">${overlapBadges}</span>
   </summary>
   <div class="cj-inciso-body">
-    <p class="cj-bcb-ref"><strong>BCB:</strong> ${esc(m.bcb_ref)}</p>
+    <p class="cj-bcb-ref"><strong>${esc(t("cj_bcb_prefix"))}</strong> ${esc(m.bcb_ref)}</p>
     <div class="cj-grid">${cards}</div>
   </div>
 </details>`;

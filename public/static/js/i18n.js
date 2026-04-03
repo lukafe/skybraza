@@ -27,7 +27,7 @@ export function initLangSync() {
 export async function initI18n() {
   if (!_i18nLoaded) {
     try {
-      const res = await fetch("/static/data/i18n.json?v=6");
+      const res = await fetch("/static/data/i18n.json?v=7");
       const data = await res.json();
       Object.assign(_strings, data);
       _i18nLoaded = true;
@@ -100,6 +100,25 @@ function _applyHTML() {
   document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
     el.setAttribute("aria-label", t(el.getAttribute("data-i18n-aria")));
   });
+
+  _applyPageMeta();
+}
+
+/** Atualiza <title> e meta tags Open Graph / Twitter conforme o idioma ativo. */
+function _applyPageMeta() {
+  if (!Object.keys(_strings).length) return;
+  document.title = t("meta_page_title");
+  const setContent = (sel, key) => {
+    const el = document.querySelector(sel);
+    if (el) el.setAttribute("content", t(key));
+  };
+  setContent('meta[name="description"]', "meta_description");
+  setContent('meta[property="og:title"]', "meta_og_title");
+  setContent('meta[property="og:description"]', "meta_og_description");
+  setContent('meta[name="twitter:title"]', "meta_twitter_title");
+  setContent('meta[name="twitter:description"]', "meta_twitter_description");
+  const ogLoc = document.querySelector('meta[property="og:locale"]');
+  if (ogLoc) ogLoc.setAttribute("content", _lang === "en" ? "en_US" : "pt_BR");
 }
 
 function _updateToggleButtons(lang) {

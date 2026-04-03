@@ -5,8 +5,8 @@
 
 import { wireDecisionTreeUI } from "./decision_tree.js?v=8";
 import { wireDocsGuideUI } from "./docs_guide.js?v=9";
-import { wireCrossJurisdictionUI } from "./cross_jurisdiction.js?v=3";
-import { initI18n, initLangSync, t, getCurrentLang, buildLangToggle } from "./i18n.js?v=2";
+import { wireCrossJurisdictionUI } from "./cross_jurisdiction.js?v=4";
+import { initI18n, initLangSync, t, getCurrentLang, buildLangToggle } from "./i18n.js?v=3";
 
 const $ = (sel, root = document) => root.querySelector(sel);
 
@@ -615,7 +615,7 @@ function showResumeBanner(saved) {
   const trk = trackNames[saved.track] || saved.track;
   const inst = saved.institution ? ` · ${saved.institution}` : "";
   const mins = Math.round((Date.now() - (saved.savedAt || 0)) / 60000);
-  const timeStr = mins < 60 ? `${mins} min` : `${Math.round(mins / 60)} h`;
+  const timeStr = mins < 60 ? `${mins}${t("resume_time_min")}` : `${Math.round(mins / 60)}${t("resume_time_h")}`;
   banner.querySelector(".resume-banner__text").textContent =
     `${t("resume_text")} ${trk}${inst} (${timeStr}).`;
   banner.classList.remove("hidden");
@@ -1144,7 +1144,7 @@ function wireSkipToggle(nf) {
 
 /** Export scope as Excel (.xlsx) via POST /scope/export */
 async function exportScopeJSON() {
-  const btn = $("#btn-export-json");
+  const btn = $("#btn-export-excel");
   if (!btn) return;
   if (!state._lastScopeData && !Object.keys(state.answers || {}).length) {
     showToast(t("toast_run_first"));
@@ -1371,7 +1371,7 @@ async function boot() {
   });
 
   // #10: export button
-  const exportBtn = $("#btn-export-json");
+  const exportBtn = $("#btn-export-excel");
   if (exportBtn) {
     exportBtn.addEventListener("click", () => exportScopeJSON());
   }

@@ -1,6 +1,9 @@
 """
 Rate limiting best-effort por IP (ou X-Forwarded-For) — útil em instância única; em serverless
 cada invocação pode ser isolada. Desligar: RATE_LIMIT_DISABLED=1
+
+TRUST_PROXY_DEPTH: 0 = ignorar X-Forwarded-For (IP da ligação apenas; útil em dev).
+  >= 1 = usar o primeiro hop de X-Forwarded-For (omissão 1, p.ex. atrás da Vercel).
 """
 
 from __future__ import annotations
@@ -15,9 +18,17 @@ from starlette.responses import JSONResponse, Response
 
 
 def _client_key(request: Request) -> str:
-    fwd = (request.headers.get("x-forwarded-for") or "").strip()
-    if fwd:
-        return fwd.split(",")[0].strip() or "unknown"
+    """
+    TRUST_PROXY_DEPTH=0 — ignora X-Forwarded-For (útil em dev sem proxy; evita spoofing).
+    TRUST_PROXY_DEPTH>=1 — usa o primeiro hop da cadeia (cliente visto pelo proxy de confiança).
+    Omisão: 1 (comportamento anterior; Vercel/proxy costuma preencher XFF corretamente).
+    """
+    if _int_env("TRUST_PROXY_DEPTH", 1) > 0:
+        fwd = (request.headers.get("x-forwarded-for") or "").strip()
+        if fwd:
+            first = fwd.split(",")[0].strip()
+            if first:
+                return first
     if request.client:
         return request.client.host
     return "unknown"

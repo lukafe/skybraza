@@ -12,6 +12,7 @@ Após editar public/, execute: python scripts/sync_vercel_public.py
 Rotas versionadas: /api/v1/* (recomendado). Legado: /api/* (mesmo comportamento).
 
 Env: LOG_LEVEL, LOG_FORMAT=text|json, RATE_LIMIT_* (ver rate_limit.py), RATE_LIMIT_DISABLED=1,
+     TRUST_PROXY_DEPTH (0 = ignorar X-Forwarded-For; omissão 1),
      CORS_ALLOWED_ORIGINS (lista CSV; omissão = *),
      CERTIK_ENABLE_CUSTODIANTE_TRACK, CERTIK_ENABLE_CORRETORA_TRACK (0|false|off desativa a trilha)
 
@@ -20,6 +21,7 @@ Local: uvicorn main:app --reload --host 127.0.0.1 --port 8000
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 import sys
@@ -36,7 +38,7 @@ from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from fastapi.middleware.gzip import GZipMiddleware  # noqa: E402
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, StreamingResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
-from pydantic import BaseModel, Field  # noqa: E402
+from pydantic import BaseModel, Field, model_validator  # noqa: E402
 
 from logging_config import configure_logging  # noqa: E402
 from rate_limit import build_rate_limit_middleware  # noqa: E402
@@ -200,6 +202,20 @@ class ScopeRequest(BaseModel):
     track: str = Field(default="intermediaria", description="intermediaria | custodiante | corretora")
     lang: str = Field(default="pt", description="pt | en — language for generated narratives")
 
+    @model_validator(mode="after")
+    def validate_answers_bounds(self) -> ScopeRequest:
+        """Limita tamanho do payload de respostas (abuso / acidentes)."""
+        a = self.answers
+        if len(a) > 200:
+            raise ValueError("answers: demasiadas chaves (máx. 200).")
+        try:
+            payload = json.dumps(a, default=str, separators=(",", ":"))
+        except (TypeError, ValueError) as e:
+            raise ValueError("answers: valores devem ser serializáveis em JSON.") from e
+        if len(payload.encode("utf-8")) > 10240:
+            raise ValueError("answers: JSON excede 10 KB.")
+        return self
+
 
 api_router = APIRouter(tags=["scope"])
 
@@ -257,6 +273,7 @@ def get_questions(
 @api_router.post("/scope")
 def post_scope(body: ScopeRequest) -> dict[str, Any]:
     from matrix_loader import MatrixLoadError, normalize_track
+    from questionnaire_loader import QuestionnaireLoadError
     from rules_engine import compute_scope
 
     try:
@@ -273,13 +290,19 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
 
     try:
         _, meta = compute_scope(body.answers, track=t, lang=lang, build_df=False)
+    except QuestionnaireLoadError as e:
+        logger.warning("compute_scope rejected input: %s", e)
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "INVALID_SCOPE_INPUT", "message": str(e)},
+        ) from e
     except Exception:
         logger.exception("compute_scope failed")
         raise HTTPException(
-            status_code=400,
+            status_code=500,
             detail={
-                "code": "SCOPE_COMPUTE_ERROR",
-                "message": "Could not compute scope with the answers provided. Review the questionnaire and try again.",
+                "code": "SCOPE_INTERNAL_ERROR",
+                "message": "Erro interno ao calcular o escopo. Tente novamente ou contacte o suporte.",
             },
         ) from None
 
@@ -315,6 +338,7 @@ def post_scope_export(body: ScopeRequest) -> StreamingResponse:
     """
     from excel_export import build_scope_excel
     from matrix_loader import MatrixLoadError, normalize_track
+    from questionnaire_loader import QuestionnaireLoadError
     from rules_engine import compute_scope
 
     try:
@@ -328,11 +352,20 @@ def post_scope_export(body: ScopeRequest) -> StreamingResponse:
 
     try:
         _, meta = compute_scope(body.answers, track=t, lang=lang, build_df=False)
+    except QuestionnaireLoadError as e:
+        logger.warning("compute_scope rejected input (export): %s", e)
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "INVALID_SCOPE_INPUT", "message": str(e)},
+        ) from e
     except Exception:
         logger.exception("compute_scope failed (export)")
         raise HTTPException(
-            status_code=400,
-            detail={"code": "SCOPE_COMPUTE_ERROR", "message": "Could not compute scope."},
+            status_code=500,
+            detail={
+                "code": "SCOPE_INTERNAL_ERROR",
+                "message": "Erro interno ao calcular o escopo para exportação.",
+            },
         ) from None
 
     inst = body.institution.strip()

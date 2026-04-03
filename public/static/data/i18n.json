@@ -28,6 +28,15 @@
   "btn_continue":           { "pt": "Continuar",                        "en": "Continue" },
 
   "resume_text":            { "pt": "Sessão anterior guardada.",         "en": "Previous session saved." },
+  "resume_time_min":        { "pt": " min",                              "en": " min" },
+  "resume_time_h":          { "pt": " h",                               "en": " h" },
+
+  "meta_page_title":        { "pt": "Prepare o escopo da sua operação — CertiK", "en": "Prepare your VASP scope — CertiK" },
+  "meta_description":       { "pt": "CertiK — escopo IN 701 (Banco Central). Questionário rápido.", "en": "CertiK — IN 701 scope (Central Bank of Brazil). Quick questionnaire." },
+  "meta_og_title":          { "pt": "Delimitação de Escopo IN 701 — CertiK", "en": "IN 701 Scope Delimitation — CertiK" },
+  "meta_og_description":    { "pt": "Responda ao questionário, calcule automaticamente os incisos sujeitos à auditoria pela IN 701 e exporte o relatório Excel.", "en": "Complete the questionnaire, automatically compute IN 701 audit clauses, and export the Excel report." },
+  "meta_twitter_title":     { "pt": "Delimitação de Escopo IN 701 — CertiK", "en": "IN 701 Scope Delimitation — CertiK" },
+  "meta_twitter_description": { "pt": "Questionário + engine automática: calcule os incisos IN 701 do Banco Central que se aplicam à sua VASP.", "en": "Questionnaire + automatic engine: compute which Central Bank IN 701 clauses apply to your VASP." },
   "btn_resume":             { "pt": "Retomar",                          "en": "Resume" },
   "resume_dismiss_label":   { "pt": "Ignorar sessão anterior",          "en": "Dismiss previous session" },
 
@@ -58,8 +67,8 @@
   "results_dashboard":      { "pt": "Dashboard",                        "en": "Dashboard" },
   "results_scope_panel":    { "pt": "Painel de escopo",                 "en": "Scope dashboard" },
   "btn_new_questionnaire":  { "pt": "Novo questionário",                "en": "New questionnaire" },
-  "btn_export_json":        { "pt": "Exportar Excel",                   "en": "Export Excel" },
-  "btn_export_title":       { "pt": "Descarregar ficheiro Excel (.xlsx) com escopo, narrativas e prontidão do corpus", "en": "Download Excel file (.xlsx) with scope, narratives and corpus readiness" },
+  "btn_export_excel":       { "pt": "Exportar Excel",                   "en": "Export Excel" },
+  "btn_export_excel_title": { "pt": "Descarregar ficheiro Excel (.xlsx) com escopo, narrativas e prontidão do corpus", "en": "Download Excel file (.xlsx) with scope, narratives and corpus readiness" },
   "chart_title":            { "pt": "Cobertura da matriz IN 701",       "en": "IN 701 matrix coverage" },
   "chart_sub":              { "pt": "Distribuição por origem no universo de incisos da trilha", "en": "Distribution by origin across the track's clause universe" },
   "donut_in_scope":         { "pt": "no escopo",                        "en": "in scope" },
@@ -260,6 +269,7 @@
   "intro_tree_hint_cj":         { "pt": "Comparação:",                     "en": "Comparison:" },
   "intro_tree_hint_cj_body":    { "pt": "equivalências entre IN 701, MiCA, VARA e ADGM.", "en": "equivalences between IN 701, MiCA, VARA and ADGM." },
 
+  "cj_bcb_prefix":      { "pt": "BCB:",                                    "en": "BCB:" },
   "cj_back":            { "pt": "← Voltar ao início",                      "en": "← Back to home" },
   "cj_title":           { "pt": "Comparação Regulatória — IN 701 × Jurisdições Globais", "en": "Regulatory Comparison — IN 701 × Global Jurisdictions" },
   "cj_lead":            { "pt": "Mapeamento de equivalências entre os requisitos da IN BCB 701 e os regimes MiCA/DORA (UE), VARA (Dubai) e ADGM (Abu Dhabi). Identifique artefatos reutilizáveis e lacunas que exigem trabalho local.", "en": "Equivalence mapping between IN BCB 701 requirements and MiCA/DORA (EU), VARA (Dubai) and ADGM (Abu Dhabi) regimes. Identify reusable artefacts and gaps requiring local work." },

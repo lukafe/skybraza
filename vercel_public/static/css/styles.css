@@ -4326,7 +4326,7 @@ body.app-view-intro .sk-main {
 
 .cj-sticky-bar {
   position: sticky; top: 0; z-index: 20;
-  background: var(--bg, #fff); border-bottom: 1px solid var(--border, #e2e8f0);
+  background: var(--bg); border-bottom: 1px solid var(--border);
   padding: .75rem 0; margin-bottom: 1.25rem;
 }
 .cj-stats-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; margin-bottom: .5rem; }
@@ -4340,41 +4340,41 @@ body.app-view-intro .sk-main {
 .cj-filter-row { display: flex; gap: .75rem; flex-wrap: wrap; align-items: flex-end; }
 .cj-filter-label { display: flex; flex-direction: column; gap: .15rem; font-size: .8rem; }
 .cj-filter-text { font-weight: 600; }
-.cj-filter-input { padding: .35rem .5rem; border: 1px solid var(--border, #e2e8f0); border-radius: 6px; font-size: .85rem; min-width: 180px; }
-.cj-select { padding: .35rem .5rem; border: 1px solid var(--border, #e2e8f0); border-radius: 6px; font-size: .85rem; }
+.cj-filter-input { padding: .35rem .5rem; border: 1px solid var(--border); border-radius: 6px; font-size: .85rem; min-width: 180px; background: var(--bg-card); color: var(--text); }
+.cj-select { padding: .35rem .5rem; border: 1px solid var(--border); border-radius: 6px; font-size: .85rem; background: var(--bg-card); color: var(--text); }
 
 .cj-jur-toggles { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
 .cj-jur-toggle { display: flex; align-items: center; gap: .3rem; font-size: .82rem; cursor: pointer; }
-.cj-jur-toggle input { accent-color: var(--accent, #6366f1); }
+.cj-jur-toggle input { accent-color: var(--accent); }
 
 .cj-body { min-height: 200px; }
 .cj-loading { color: var(--text-muted); font-style: italic; padding: 2rem 0; }
 
 /* Inciso row */
-.cj-inciso { border: 1px solid var(--border, #e2e8f0); border-radius: 8px; margin-bottom: .75rem; overflow: hidden; }
+.cj-inciso { border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: .75rem; overflow: hidden; }
 .cj-inciso[open] > .cj-inciso-summary .cj-chevron { transform: rotate(90deg); }
 .cj-inciso-summary {
   display: flex; align-items: center; gap: .5rem; padding: .65rem .85rem;
   cursor: pointer; list-style: none; user-select: none;
-  font-size: .88rem; background: var(--bg-subtle, #f8fafc);
+  font-size: .88rem; background: var(--bg-card);
 }
 .cj-inciso-summary::-webkit-details-marker { display: none; }
 .cj-chevron { transition: transform .15s ease; font-size: .75rem; color: var(--text-muted); }
 .cj-inc-id { font-weight: 700; font-family: var(--mono, monospace); min-width: 5ch; }
 .cj-inc-domain {
   font-size: .72rem; padding: .1rem .45rem; border-radius: 4px;
-  background: var(--accent-bg, #eef2ff); color: var(--accent, #6366f1);
+  background: var(--accent-soft); color: var(--accent-bright);
   font-weight: 600; white-space: nowrap;
 }
 .cj-inc-theme { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cj-inc-overlaps { display: flex; gap: .3rem; }
 
-/* Overlap badges */
+/* Overlap badges (tema escuro) */
 .cj-overlap { font-size: .7rem; padding: .1rem .4rem; border-radius: 3px; font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
-.cj-overlap--high   { background: #dcfce7; color: #166534; }
-.cj-overlap--medium { background: #fef3c7; color: #92400e; }
-.cj-overlap--low    { background: #fee2e2; color: #991b1b; }
-.cj-overlap--none   { background: #f1f5f9; color: #64748b; }
+.cj-overlap--high   { background: rgba(34, 197, 94, 0.18); color: #86efac; }
+.cj-overlap--medium { background: rgba(234, 179, 8, 0.18); color: #fcd34d; }
+.cj-overlap--low    { background: rgba(239, 68, 68, 0.18); color: #fca5a5; }
+.cj-overlap--none   { background: rgba(148, 163, 184, 0.14); color: #94a3b8; }
 
 /* Inciso body — jurisdiction grid */
 .cj-inciso-body { padding: .5rem .85rem 1rem; }
@@ -4385,9 +4385,9 @@ body.app-view-intro .sk-main {
   gap: .75rem;
 }
 .cj-card {
-  border: 1px solid var(--border, #e2e8f0); border-radius: 8px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
   padding: .75rem; display: flex; flex-direction: column; gap: .5rem;
-  position: relative; overflow: hidden;
+  position: relative; overflow: hidden; background: var(--bg-card-strong);
 }
 .cj-card::before {
   content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
@@ -4400,28 +4400,28 @@ body.app-view-intro .sk-main {
 .cj-card-header { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
 .cj-card-flag { font-size: 1.1rem; }
 .cj-card-jur { font-weight: 700; font-size: .85rem; }
-.cj-card-ref { font-size: .82rem; color: var(--fg, #1e293b); }
+.cj-card-ref { font-size: .82rem; color: var(--text); }
 .cj-card-artefact {
   font-size: .8rem; padding: .3rem .5rem; border-radius: 5px;
-  background: var(--bg-subtle, #f8fafc); border: 1px dashed var(--border, #e2e8f0);
+  background: var(--bg-elevated); border: 1px dashed var(--border);
 }
 .cj-card-artefact-label { font-weight: 600; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); margin-bottom: .15rem; }
 .cj-card-delta {
   font-size: .8rem; padding: .3rem .5rem; border-radius: 5px;
-  background: #fffbeb; border: 1px solid #fde68a; color: #92400e;
+  background: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.35); color: #fcd34d;
 }
 .cj-card-delta:empty { display: none; }
-.cj-card-delta-label { font-weight: 600; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: #b45309; margin-bottom: .15rem; }
+.cj-card-delta-label { font-weight: 600; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: #fbbf24; margin-bottom: .15rem; }
 
 .cj-hidden { display: none !important; }
 
 .dg-cj-badges { display: inline-flex; gap: .25rem; margin-left: .3rem; }
 
 /* CJ Insights panel (results dashboard) */
-.cji-panel { border: 1px solid var(--border, #e2e8f0); border-radius: 8px; margin: .75rem 0; overflow: hidden; }
+.cji-panel { border: 1px solid var(--border); border-radius: var(--radius-sm); margin: .75rem 0; overflow: hidden; }
 .cji-summary {
   padding: .6rem .85rem; font-weight: 700; font-size: .9rem; cursor: pointer;
-  background: var(--bg-subtle, #f8fafc); list-style: none;
+  background: var(--bg-card); list-style: none;
 }
 .cji-summary::-webkit-details-marker { display: none; }
 .cji-count { font-weight: 400; color: var(--text-muted); font-size: .82rem; }

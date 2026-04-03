@@ -59,14 +59,23 @@ _CENTER = Alignment(horizontal="center", vertical="center")
 _TOP_LEFT = Alignment(horizontal="left", vertical="top")
 
 
+def _excel_formula_safe(s: str) -> str:
+    """Evita que o Excel interprete células como fórmulas (=, +, -, @, tab)."""
+    t = s.lstrip()
+    if not t:
+        return s
+    if t[0] in "=\t\r" or (len(t) > 1 and t[0] in "+-" and t[1].isdigit()) or t.startswith("@"):
+        return "'" + s
+    return s
+
+
 def _sanitize_cell_value(value: Any) -> Any:
     """Remove caracteres de controle e garante que strings são UTF-8 válido."""
     if value is None:
         return ""
     if isinstance(value, str):
-        return "".join(
-            c for c in value if unicodedata.category(c)[0] != "C"
-        )
+        s = "".join(c for c in value if unicodedata.category(c)[0] != "C")
+        return _excel_formula_safe(s)
     if isinstance(value, (int, float, bool)):
         return value
     return str(value)
