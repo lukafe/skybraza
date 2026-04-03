@@ -283,117 +283,235 @@ function applyGuideFilter(root, searchVal, prioVal, certikOnly) {
 /** RFC 4180 CSV cell escaping */
 function csvCell(val) {
   const s = val == null ? "" : String(val);
-  // Wrap in quotes if the value contains a comma, double-quote, newline, or semicolon
-  if (s.includes('"') || s.includes(',') || s.includes('\n') || s.includes('\r') || s.includes(';')) {
+  if (s.includes('"') || s.includes(',') || s.includes('\n') || s.includes('\r')) {
     return '"' + s.replace(/"/g, '""') + '"';
   }
   return s;
 }
 
-/** Build and download a CSV from the merged guide data */
+/**
+ * Build and download a well-structured CSV from the merged guide data.
+ *
+ * Structure:
+ *   ─ Metadata block (INFO rows)  ← explanatory header before the table
+ *   ─ Blank separator row
+ *   ─ Column headers row
+ *   ─ For each inciso:
+ *       • INCISO row  — clause-level data + optimal response summary
+ *       • DOCUMENTO rows (one per required document) + empty checklist cols
+ *       • RESPOSTA ÓTIMA row — full optimal response + excellence indicators
+ *       • Blank separator row
+ */
 function exportDocsGuideCsv(incisos, meta) {
   const lang = getCurrentLang();
+  const en   = lang === "en";
+  const today = new Date().toISOString().slice(0, 10);
 
-  // Column headers (bilingual, driven by current language)
-  const headers = [
-    t("dg_csv_col_clause"),
-    t("dg_csv_col_label"),
-    t("dg_csv_col_article"),
-    t("dg_csv_col_theme"),
-    t("dg_csv_col_summary"),
-    t("dg_csv_col_legal_basis"),
-    t("dg_csv_col_trigger"),
-    t("dg_csv_col_doc_id"),
-    t("dg_csv_col_doc_title"),
-    t("dg_csv_col_category"),
-    t("dg_csv_col_priority"),
-    t("dg_csv_col_description"),
-    t("dg_csv_col_justif"),
-    t("dg_csv_col_content"),
-    t("dg_csv_col_retention"),
-    t("dg_csv_col_certik_svc"),
-    t("dg_csv_col_certik_note"),
-    t("dg_csv_col_optimal_desc"),
-    t("dg_csv_col_optimal_ind"),
+  // ── Column labels ────────────────────────────────────────────────────────────
+  const L = en ? {
+    type:        "Type",
+    clause:      "Clause",
+    label:       "Label",
+    article:     "IN 701 Art.",
+    theme:       "Theme",
+    summary:     "Summary",
+    legal_basis: "Legal Basis",
+    trigger:     "Trigger",
+    seq:         "No.",
+    doc_id:      "Document ID",
+    doc_title:   "Document Title",
+    priority:    "Priority",
+    category:    "Category",
+    certik:      "CertiK Service",
+    description: "Description",
+    content:     "Minimum Content  (items separated by  |)",
+    justif:      "Legal Justification",
+    retention:   "Retention",
+    opt_desc:    "Optimal Response — Description",
+    opt_ind:     "Optimal Response — Excellence Indicators  (items separated by  |)",
+    gathered:    "✓ Gathered?",
+    notes:       "Auditor Notes",
+  } : {
+    type:        "Tipo",
+    clause:      "Inciso",
+    label:       "Rótulo",
+    article:     "Art. IN 701",
+    theme:       "Tema",
+    summary:     "Resumo",
+    legal_basis: "Base Legal",
+    trigger:     "Gatilho",
+    seq:         "Nº",
+    doc_id:      "ID Documento",
+    doc_title:   "Título do Documento",
+    priority:    "Prioridade",
+    category:    "Categoria",
+    certik:      "Serviço CertiK",
+    description: "Descrição",
+    content:     "Conteúdo Mínimo  (itens separados por  |)",
+    justif:      "Justificativa Legal",
+    retention:   "Retenção",
+    opt_desc:    "Resposta Ótima — Descrição",
+    opt_ind:     "Resposta Ótima — Indicadores de Excelência  (itens separados por  |)",
+    gathered:    "✓ Recolhido?",
+    notes:       "Observações do Auditor",
+  };
+
+  const HEADERS = Object.values(L);
+  const N = HEADERS.length; // 22 columns
+
+  // ── Row builders ─────────────────────────────────────────────────────────────
+  const blank = () => new Array(N).fill("").map(csvCell);
+
+  const mkInfo = (label, value = "") => {
+    const r = new Array(N).fill("");
+    r[0] = en ? "ℹ INFO" : "ℹ INFO";
+    r[1] = label;
+    r[2] = value;
+    return r.map(csvCell);
+  };
+
+  // ── Lookup helpers ────────────────────────────────────────────────────────────
+  const catLabel = (catKey) => {
+    const m = meta.categorias?.[catKey] || {};
+    return en ? (m.label_en || m.label || catKey) : (m.label || catKey);
+  };
+  const prioLabel = (prioKey) => t(`prio_${prioKey}`) || prioKey;
+  const certikName = (svcKey) => {
+    if (!svcKey) return "";
+    const svc = meta.certik_servicos?.[svcKey] || {};
+    return en ? (svc.nome_en || svc.nome || svcKey) : (svc.nome || svcKey);
+  };
+
+  // ── Stats for INFO block ──────────────────────────────────────────────────────
+  const totalDocs     = incisos.reduce((s, i) => s + (i.documentos?.length || 0), 0);
+  const totalCriticos = incisos.reduce((s, i) =>
+    s + (i.documentos?.filter(d => d.prioridade === "critica").length || 0), 0);
+  const totalCertik   = incisos.reduce((s, i) =>
+    s + (i.documentos?.filter(d => d.certik_servico).length || 0), 0);
+
+  // ── INFO block (before headers) ───────────────────────────────────────────────
+  const infoRows = [
+    mkInfo(en ? "CertiK — Document Guide  IN 701" : "CertiK — Guia de Documentos  IN 701"),
+    mkInfo(en ? "Exported on" : "Exportado em", today),
+    mkInfo(en ? "Language" : "Idioma", en ? "English" : "Português"),
+    mkInfo(
+      en ? "Coverage" : "Cobertura",
+      en
+        ? `${incisos.length} clauses · ${totalDocs} documents · ${totalCriticos} critical · ${totalCertik} CertiK`
+        : `${incisos.length} incisos · ${totalDocs} documentos · ${totalCriticos} críticos · ${totalCertik} CertiK`
+    ),
+    mkInfo(
+      en ? "Row types" : "Tipos de linha",
+      en
+        ? "CLAUSE = clause header | DOCUMENT = required document (fill last 2 cols) | OPTIMAL RESPONSE = best-practice target"
+        : "INCISO = cabeçalho do inciso | DOCUMENTO = doc exigido (preencha as 2 últimas colunas) | RESPOSTA ÓTIMA = alvo de excelência"
+    ),
+    mkInfo(
+      en ? "How to use" : "Como usar",
+      en
+        ? "Sort or filter by Priority to work on critical items first. Mark ✓ Gathered? and add Auditor Notes as you collect documents."
+        : "Ordene ou filtre por Prioridade para trabalhar primeiro nos itens críticos. Marque ✓ Recolhido? e adicione Observações à medida que recolhe os documentos."
+    ),
+    blank(),
   ];
 
-  const rows = [headers];
+  // ── Row type labels ───────────────────────────────────────────────────────────
+  const T_CLAUSE  = en ? "CLAUSE"           : "INCISO";
+  const T_DOC     = en ? "DOCUMENT"         : "DOCUMENTO";
+  const T_OPTIMAL = en ? "OPTIMAL RESPONSE" : "RESPOSTA ÓTIMA";
+
+  // ── Data rows ─────────────────────────────────────────────────────────────────
+  const dataRows = [];
 
   for (const inc of incisos) {
-    const incId      = inc.id || "";
-    const rotulo     = inc.rotulo || "";
-    const artigo     = inc.artigo_in701 || "";
-    const tema       = pick(inc, "tema");
-    const resumo     = pick(inc, "resumo");
-    const baseLegal  = Array.isArray(inc.base_legal) ? inc.base_legal.join("; ") : (inc.base_legal || "");
-    const gatilho    = pick(inc, "gatilho");
+    const id      = inc.id || "";
+    const rotulo  = inc.rotulo || "";
+    const artigo  = inc.artigo_in701 || "";
+    const tema    = pick(inc, "tema");
+    const resumo  = pick(inc, "resumo");
+    const base    = Array.isArray(inc.base_legal) ? inc.base_legal.join("; ") : (inc.base_legal || "");
+    const gatilho = pick(inc, "gatilho");
+    const docs    = Array.isArray(inc.documentos) ? inc.documentos : [];
+    const ro      = inc.resposta_otima || null;
+    const roDesc  = ro ? pick(ro, "descricao") : "";
+    const roInds  = ro ? pick(ro, "indicadores") : [];
+    const roStr   = Array.isArray(roInds) ? roInds.join(" | ") : (roInds || "");
 
-    const ro           = inc.resposta_otima || null;
-    const roDesc       = ro ? pick(ro, "descricao") : "";
-    const roInds       = ro ? pick(ro, "indicadores") : "";
-    const roIndsStr    = Array.isArray(roInds) ? roInds.join(" | ") : (roInds || "");
+    // Count docs by priority for the INCISO summary
+    const nCrit = docs.filter(d => d.prioridade === "critica").length;
+    const nHigh = docs.filter(d => d.prioridade === "alta").length;
+    const nMed  = docs.filter(d => d.prioridade === "media").length;
+    const docSummary = en
+      ? `${docs.length} doc(s) — ${nCrit} critical · ${nHigh} high · ${nMed} medium`
+      : `${docs.length} doc(s) — ${nCrit} crítico(s) · ${nHigh} alto(s) · ${nMed} médio(s)`;
 
-    const catLookup = (catKey) => {
-      const catMeta = meta.categorias?.[catKey] || {};
-      return lang === "en"
-        ? (catMeta.label_en || catMeta.label || catKey)
-        : (catMeta.label || catKey);
-    };
+    // INCISO header row
+    const rInc = new Array(N).fill("");
+    rInc[0]  = T_CLAUSE;
+    rInc[1]  = id;
+    rInc[2]  = rotulo;
+    rInc[3]  = artigo;
+    rInc[4]  = tema;
+    rInc[5]  = resumo;
+    rInc[6]  = base;
+    rInc[7]  = gatilho;
+    rInc[9]  = docSummary;   // doc_id col repurposed for summary on clause row
+    rInc[18] = roDesc;        // opt_desc (brief preview on clause row)
+    dataRows.push(rInc.map(csvCell));
 
-    const prioLookup = (prioKey) => {
-      return t(`prio_${prioKey}`) || prioKey;
-    };
+    // DOCUMENTO rows
+    docs.forEach((doc, idx) => {
+      const contItems = pick(doc, "conteudo_minimo");
+      const r = new Array(N).fill("");
+      r[0]  = T_DOC;
+      r[1]  = id;
+      r[2]  = rotulo;
+      r[3]  = artigo;
+      r[8]  = String(idx + 1);                                          // seq
+      r[9]  = doc.id || "";                                             // doc_id
+      r[10] = pick(doc, "titulo");                                      // title
+      r[11] = prioLabel(doc.prioridade || "");                          // priority
+      r[12] = catLabel(doc.categoria || "");                            // category
+      r[13] = certikName(doc.certik_servico || "");                     // certik
+      r[14] = pick(doc, "descricao");                                   // description
+      r[15] = Array.isArray(contItems) ? contItems.join(" | ") : (contItems || ""); // content
+      r[16] = pick(doc, "justificativa_legal");                         // justif
+      r[17] = pick(doc, "retencao");                                    // retention
+      // r[20] = "" — ✓ Gathered?  (user fills)
+      // r[21] = "" — Notes        (user fills)
+      dataRows.push(r.map(csvCell));
+    });
 
-    const certikSvcLookup = (svcKey) => {
-      if (!svcKey) return "";
-      const svc = meta.certik_servicos?.[svcKey] || {};
-      return lang === "en"
-        ? (svc.nome_en || svc.nome || svcKey)
-        : (svc.nome || svcKey);
-    };
-
-    const docs = Array.isArray(inc.documentos) ? inc.documentos : [];
-
-    if (docs.length === 0) {
-      // Inciso row without documents — still export inciso metadata
-      rows.push([
-        incId, rotulo, artigo, tema, resumo, baseLegal, gatilho,
-        "", "", "", "", "", "", "", "", "", "",
-        roDesc, roIndsStr,
-      ].map(csvCell));
-    } else {
-      for (const doc of docs) {
-        const docId      = doc.id || "";
-        const docTitulo  = pick(doc, "titulo");
-        const docCat     = catLookup(doc.categoria || "");
-        const docPrio    = prioLookup(doc.prioridade || "");
-        const docDesc    = pick(doc, "descricao");
-        const docJustif  = pick(doc, "justificativa_legal");
-        const contItems  = pick(doc, "conteudo_minimo");
-        const docContent = Array.isArray(contItems) ? contItems.join(" | ") : (contItems || "");
-        const docRet     = pick(doc, "retencao");
-        const certikSvc  = certikSvcLookup(doc.certik_servico || "");
-        const certikNote = pick(doc, "certik_nota");
-
-        rows.push([
-          incId, rotulo, artigo, tema, resumo, baseLegal, gatilho,
-          docId, docTitulo, docCat, docPrio,
-          docDesc, docJustif, docContent, docRet,
-          certikSvc, certikNote,
-          roDesc, roIndsStr,
-        ].map(csvCell));
-      }
+    // RESPOSTA ÓTIMA row (only if data exists)
+    if (roDesc || roStr) {
+      const rOpt = new Array(N).fill("");
+      rOpt[0]  = T_OPTIMAL;
+      rOpt[1]  = id;
+      rOpt[2]  = rotulo;
+      rOpt[3]  = artigo;
+      rOpt[18] = roDesc;
+      rOpt[19] = roStr;
+      dataRows.push(rOpt.map(csvCell));
     }
+
+    // Blank separator between incisos
+    dataRows.push(blank());
   }
 
-  // UTF-8 BOM ensures Excel opens the file with correct encoding
-  const BOM = "\uFEFF";
-  const csvContent = BOM + rows.map((r) => r.join(",")).join("\r\n");
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  // ── Assemble & download ───────────────────────────────────────────────────────
+  const allRows = [
+    ...infoRows,
+    HEADERS.map(csvCell),   // column headers row
+    ...dataRows,
+  ];
+
+  const BOM = "\uFEFF"; // UTF-8 BOM for correct Excel encoding
+  const csv = BOM + allRows.map(r => r.join(",")).join("\r\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement("a");
   a.href = url;
-  a.download = `certik_vasp_docs_guide_${new Date().toISOString().slice(0, 10)}_${lang}.csv`;
+  a.download = `certik_vasp_docs_guide_${today}_${lang}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
