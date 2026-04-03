@@ -347,6 +347,9 @@ def build_scope_excel(scope_response: dict[str, Any], lang: str = "pt") -> io.By
     ws_corp = wb.create_sheet()
     _build_corpus_sheet(ws_corp, scope_response.get("corpus_readiness") or {}, lang)
 
+    for ws in wb.worksheets:
+        _auto_width(ws)
+
     buf = io.BytesIO()
     wb.save(buf)
     buf.seek(0)

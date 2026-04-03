@@ -201,11 +201,13 @@ export function wireCrossJurisdictionUI({ btnOpen, viewEl, btnBack, setView }) {
 
   async function loadData() {
     if (!mapData) {
-      const res = await fetch("/static/data/cross_jurisdiction_map.json?v=1");
+      const res = await fetch("/static/data/cross_jurisdiction_map.json?v=2");
+      if (!res.ok) throw new Error(`cross_jurisdiction_map: HTTP ${res.status}`);
       mapData = await res.json();
     }
     if (!jurData) {
       const res = await fetch("/static/data/jurisdictions.json?v=1");
+      if (!res.ok) throw new Error(`jurisdictions: HTTP ${res.status}`);
       jurData = await res.json();
     }
   }

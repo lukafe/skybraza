@@ -14,23 +14,23 @@ from questionnaire_loader import get_questions
 
 def maximize_scope_answers(track: str | None = None) -> dict[str, Any]:
     """Para cada pergunta da trilha, escolhe valores que tendem a incluir o máximo de incisos no escopo."""
-    t = normalize_track(track or TRACK_DEFAULT)
+    trk = normalize_track(track or TRACK_DEFAULT)
     out: dict[str, Any] = {}
-    for q in get_questions(t):
+    for q in get_questions(trk):
         qid = q["id"]
-        t = q.get("type")
-        if t == "yes_no":
+        qtype = q.get("type")
+        if qtype == "yes_no":
             out[qid] = True
-        elif t == "single_choice":
+        elif qtype == "single_choice":
             opts = q.get("options") or []
             if not opts:
                 out[qid] = None
             else:
                 best = max(opts, key=lambda o: len(o.get("add_incisos") or []))
                 out[qid] = best["id"]
-        elif t == "multi_choice":
+        elif qtype == "multi_choice":
             out[qid] = [str(o["id"]) for o in (q.get("options") or [])]
-        elif t == "text_short":
+        elif qtype == "text_short":
             out[qid] = "validação integração"
         else:
             out[qid] = None

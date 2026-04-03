@@ -525,9 +525,10 @@ def try_enrich_why_with_llm(
     triggered_by: dict[str, list[str]],
     inc_matrix: dict[str, dict[str, str]],
     track: str | None = None,
+    lang: str = "pt",
 ) -> dict[str, str]:
     """
-    Opcional: chama Gemini para reescrever cada narrativa (pt-BR), mantendo fidelidade.
+    Opcional: chama Gemini para reescrever cada narrativa, mantendo fidelidade.
     Sem GEMINI_API_KEY ou em caso de erro, devolve {}.
 
     Na Vercel o LLM fica desligado por defeito (timeout/latência da função). Ative com
@@ -595,7 +596,24 @@ def try_enrich_why_with_llm(
             }
         )
 
-    prompt = f"""Você é especialista em compliance BCB (IN 701, Res. 520) e auditoria técnica CertiK.
+    en = lang == "en"
+    if en:
+        prompt = f"""You are a specialist in BCB compliance (IN 701, Res. 520) and CertiK technical auditing.
+
+Summarised questionnaire answers (JSON): {json.dumps(snap, ensure_ascii=False)}
+
+For each clause below, rewrite the "rascunho" (draft) field in English:
+- 3 to 5 sentences, professional and didactic tone.
+- Explain the operational and regulatory significance; do NOT merely repeat codes like P1, P2 — mention the topic of the question in plain language.
+- Do not invent facts not implicit in the draft or the answers.
+- Do not reference this prompt.
+
+Clauses (JSON array): {json.dumps(incisos, ensure_ascii=False)}
+
+Reply ONLY with a JSON object formatted as: {{"INCISO_ID": "full text", ...}}
+with one key per "id" in the array, no markdown."""
+    else:
+        prompt = f"""Você é especialista em compliance BCB (IN 701, Res. 520) e auditoria técnica CertiK.
 
 Respostas resumidas do questionário (JSON): {json.dumps(snap, ensure_ascii=False)}
 

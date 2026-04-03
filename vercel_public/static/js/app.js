@@ -4,8 +4,8 @@
  */
 
 import { wireDecisionTreeUI } from "./decision_tree.js?v=8";
-import { wireDocsGuideUI } from "./docs_guide.js?v=8";
-import { wireCrossJurisdictionUI } from "./cross_jurisdiction.js?v=2";
+import { wireDocsGuideUI } from "./docs_guide.js?v=9";
+import { wireCrossJurisdictionUI } from "./cross_jurisdiction.js?v=3";
 import { initI18n, initLangSync, t, getCurrentLang, buildLangToggle } from "./i18n.js?v=2";
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -179,7 +179,8 @@ async function fetchQuestions(track) {
 
 function showToast(msg) {
   const el = $("#toast");
-  el.textContent = msg;
+  if (!el) return;
+  el.textContent = typeof msg === "string" ? msg : (msg?.msg ?? String(msg));
   el.classList.remove("hidden");
   clearTimeout(showToast._t);
   showToast._t = setTimeout(() => el.classList.add("hidden"), 5000);
@@ -404,17 +405,6 @@ function renderBlockDots(direction) {
   lbl.className = "block-dot-label";
   lbl.textContent = state.blocks[state.step]?.title || "";
   dotsEl.appendChild(lbl);
-}
-
-/** Retorna true se a pergunta tem impacto no escopo (não audit_only e tem incisos em when_true/tags) */
-function hasScopeImpact(q) {
-  if (q.audit_only) return false;
-  if (Array.isArray(q.when_true) && q.when_true.length > 0) return true;
-  if (Array.isArray(q.tags) && q.tags.length > 0) return true;
-  if (Array.isArray(q.options)) {
-    return q.options.some((o) => Array.isArray(o.add_incisos) && o.add_incisos.length > 0);
-  }
-  return false;
 }
 
 function renderQuestions(direction = "forward") {
@@ -940,7 +930,8 @@ async function renderCjInsightsPanel(inScopeIds) {
   if (!container) return;
   try {
     if (!_cjMapDataApp) {
-      const res = await fetch("/static/data/cross_jurisdiction_map.json?v=1");
+      const res = await fetch("/static/data/cross_jurisdiction_map.json?v=2");
+      if (!res.ok) throw new Error(`CJ map: HTTP ${res.status}`);
       _cjMapDataApp = await res.json();
     }
   } catch { return; }

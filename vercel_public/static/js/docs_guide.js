@@ -9,7 +9,8 @@ let _cjMapCache = null;
 async function loadCjMap() {
   if (_cjMapCache) return _cjMapCache;
   try {
-    const res = await fetch("/static/data/cross_jurisdiction_map.json?v=1");
+    const res = await fetch("/static/data/cross_jurisdiction_map.json?v=2");
+    if (!res.ok) throw new Error(res.status);
     _cjMapCache = await res.json();
   } catch { _cjMapCache = { mappings: [] }; }
   return _cjMapCache;
@@ -553,12 +554,13 @@ export function wireDocsGuideUI({ btnOpen, viewEl, btnBack, getTrack, setView })
   async function loadData() {
     if (!guideData) {
       const res = await fetch("/static/data/docs_guide.json?v=1");
+      if (!res.ok) throw new Error(`docs_guide: HTTP ${res.status}`);
       guideData = await res.json();
     }
     if (!enData) {
       try {
         const res = await fetch("/static/data/docs_guide_en.json?v=1");
-        enData = await res.json();
+        if (res.ok) enData = await res.json();
       } catch { /* optional */ }
     }
     await loadCjMap();

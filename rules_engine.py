@@ -139,7 +139,7 @@ def compute_scope(
     suppressions = suppress_custody_cluster_if_non_custodial(active_keys, triggered_by, norm, t)
 
     why_by_key = build_why_texts_for_scope(active_keys, triggered_by, norm, mandatory, inc_matrix, t, lang=lang)
-    llm_whys = try_enrich_why_with_llm(why_by_key, norm, triggered_by, inc_matrix, t)
+    llm_whys = try_enrich_why_with_llm(why_by_key, norm, triggered_by, inc_matrix, t, lang=lang)
     why_by_key = merge_llm_whys(why_by_key, llm_whys)
 
     all_matrix_keys = set(inc_matrix.keys())
