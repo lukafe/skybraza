@@ -14,7 +14,10 @@ Rotas versionadas: /api/v1/* (recomendado). Legado: /api/* (mesmo comportamento)
 Env: LOG_LEVEL, LOG_FORMAT=text|json, RATE_LIMIT_* (ver rate_limit.py), RATE_LIMIT_DISABLED=1,
      TRUST_PROXY_DEPTH (0 = ignorar X-Forwarded-For; omissão 1),
      CORS_ALLOWED_ORIGINS (lista CSV; omissão = *),
-     CERTIK_ENABLE_CUSTODIANTE_TRACK, CERTIK_ENABLE_CORRETORA_TRACK (0|false|off desativa a trilha)
+     CERTIK_ENABLE_CUSTODIANTE_TRACK, CERTIK_ENABLE_CORRETORA_TRACK (0|false|off desativa a trilha),
+     DATABASE_URL (persistence; sqlite:///x.db local, postgresql://… produção),
+     ADMIN_SECRET (HMAC key for admin session tokens),
+     GOOGLE_CLIENT_ID (Google OAuth — admin login restricted to @certik.com)
 
 Local: uvicorn main:app --reload --host 127.0.0.1 --port 8000
 """
@@ -44,6 +47,14 @@ from logging_config import configure_logging  # noqa: E402
 from rate_limit import build_rate_limit_middleware  # noqa: E402
 
 configure_logging()
+
+# ── Database (lazy — only if DATABASE_URL is set) ────────────────────────────
+try:
+    from db import init_db
+
+    init_db()
+except Exception:
+    logging.getLogger(__name__).debug("db module not available — persistence disabled")
 
 _ON_VERCEL = bool(os.environ.get("VERCEL"))
 
@@ -310,7 +321,8 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
     matrix_meta = get_coverage_meta(t)
 
     inst = body.institution.strip()
-    return {
+
+    result = {
         "api_schema_version": API_SCHEMA_VERSION,
         "matrix_version": matrix_meta.get("matrix_version"),
         "matrix_last_updated": matrix_meta.get("last_updated"),
@@ -328,6 +340,22 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
         "suppressed_incisos": meta.get("suppressed_incisos") or {},
         "journey_2": meta.get("journey_2") or {},
     }
+
+    # Persist submission (best-effort — never blocks the client response)
+    try:
+        from db import save_submission
+
+        save_submission(
+            institution=inst,
+            track=t,
+            lang=lang,
+            answers=body.answers,
+            scope_snapshot=result,
+        )
+    except Exception:
+        logger.debug("Submission persistence skipped", exc_info=True)
+
+    return result
 
 
 @api_router.post("/scope/export")
@@ -471,13 +499,181 @@ def post_scope_pdf(body: ScopeRequest) -> StreamingResponse:
     )
 
 
+# ── Admin routes (protected by ADMIN_SECRET env var) ─────────────────────────
+
+admin_router = APIRouter(tags=["admin"])
+
+ADMIN_ALLOWED_DOMAIN = "certik.com"
+_SESSION_TTL = 86400  # 24 h
+
+
+def _admin_sign_session(email: str, name: str = "") -> str:
+    """Create an HMAC-signed session token (valid _SESSION_TTL seconds)."""
+    import base64
+    import hashlib
+    import hmac
+
+    secret = os.environ.get("ADMIN_SECRET", "")
+    if not secret:
+        raise RuntimeError("ADMIN_SECRET not configured")
+    payload = json.dumps(
+        {"email": email, "name": name, "exp": int(time.time()) + _SESSION_TTL},
+        separators=(",", ":"),
+    )
+    sig = hmac.new(secret.encode(), payload.encode(), hashlib.sha256).hexdigest()
+    return base64.urlsafe_b64encode(f"{payload}.{sig}".encode()).decode()
+
+
+def _admin_verify_session(token: str) -> dict[str, Any]:
+    """Verify an HMAC-signed session token. Raises on failure."""
+    import base64
+    import hashlib
+    import hmac as _hmac
+
+    secret = os.environ.get("ADMIN_SECRET", "")
+    if not secret:
+        raise ValueError("ADMIN_SECRET not configured")
+    try:
+        decoded = base64.urlsafe_b64decode(token).decode()
+    except Exception as exc:
+        raise ValueError("Malformed token") from exc
+    if "." not in decoded:
+        raise ValueError("Malformed token")
+    payload_str, sig = decoded.rsplit(".", 1)
+    expected = _hmac.new(secret.encode(), payload_str.encode(), hashlib.sha256).hexdigest()
+    if not _hmac.compare_digest(sig, expected):
+        raise ValueError("Invalid signature")
+    payload = json.loads(payload_str)
+    if payload.get("exp", 0) < time.time():
+        raise ValueError("Token expired")
+    return payload
+
+
+def _require_admin(request: Request) -> dict[str, Any]:
+    """Verify admin session token from Authorization header. Returns session payload."""
+    auth = request.headers.get("Authorization", "")
+    if not auth.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail={"code": "UNAUTHORIZED", "message": "Missing admin session."})
+    token = auth[7:]
+    try:
+        return _admin_verify_session(token)
+    except ValueError as exc:
+        raise HTTPException(status_code=401, detail={"code": "UNAUTHORIZED", "message": str(exc)}) from exc
+
+
+class AdminLoginRequest(BaseModel):
+    credential: str = Field(..., description="Google ID token from Sign-In")
+
+
+@admin_router.get("/admin/config")
+def admin_config() -> dict[str, Any]:
+    """Public config needed by the admin frontend (Google Client ID)."""
+    cid = os.environ.get("GOOGLE_CLIENT_ID", "")
+    return {"google_client_id": cid, "domain": ADMIN_ALLOWED_DOMAIN}
+
+
+@admin_router.post("/admin/login")
+def admin_login(body: AdminLoginRequest) -> dict[str, Any]:
+    """Exchange a Google ID token for an admin session token (only @certik.com)."""
+    cid = os.environ.get("GOOGLE_CLIENT_ID", "")
+    if not cid:
+        raise HTTPException(status_code=503, detail={"code": "NOT_CONFIGURED", "message": "GOOGLE_CLIENT_ID not set."})
+    if not os.environ.get("ADMIN_SECRET"):
+        raise HTTPException(status_code=503, detail={"code": "NOT_CONFIGURED", "message": "ADMIN_SECRET not set."})
+
+    try:
+        from google.auth.transport import requests as google_requests
+        from google.oauth2 import id_token as google_id_token
+
+        idinfo = google_id_token.verify_oauth2_token(body.credential, google_requests.Request(), cid)
+    except Exception as exc:
+        logger.warning("Google token verification failed: %s", exc)
+        raise HTTPException(status_code=401, detail={"code": "INVALID_TOKEN", "message": "Google token inválido."}) from exc
+
+    email = (idinfo.get("email") or "").lower().strip()
+    if not idinfo.get("email_verified"):
+        raise HTTPException(status_code=403, detail={"code": "EMAIL_NOT_VERIFIED", "message": "Email não verificado pelo Google."})
+    if not email.endswith(f"@{ADMIN_ALLOWED_DOMAIN}"):
+        logger.warning("Admin login rejected for %s (not @%s)", email, ADMIN_ALLOWED_DOMAIN)
+        raise HTTPException(status_code=403, detail={"code": "DOMAIN_DENIED", "message": f"Apenas contas @{ADMIN_ALLOWED_DOMAIN} podem aceder."})
+
+    name = idinfo.get("name", "")
+    session_token = _admin_sign_session(email, name)
+    return {"session_token": session_token, "email": email, "name": name}
+
+
+@admin_router.get("/admin/stats")
+def admin_stats(request: Request) -> dict[str, Any]:
+    _require_admin(request)
+    from db import db_available, submission_stats
+
+    if not db_available():
+        return {"total": 0, "by_track": {}, "db": False}
+    stats = submission_stats()
+    stats["db"] = True
+    return stats
+
+
+@admin_router.get("/admin/submissions")
+def admin_list_submissions(
+    request: Request,
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    track: str = Query(default=""),
+    search: str = Query(default=""),
+) -> dict[str, Any]:
+    _require_admin(request)
+    from db import list_submissions
+
+    rows, total = list_submissions(
+        limit=limit,
+        offset=offset,
+        track=track or None,
+        search=search or None,
+    )
+    return {"items": rows, "total": total, "limit": limit, "offset": offset}
+
+
+@admin_router.get("/admin/submissions/{sub_id}")
+def admin_get_submission(sub_id: str, request: Request) -> dict[str, Any]:
+    _require_admin(request)
+    from db import get_submission
+
+    data = get_submission(sub_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="Submission not found.")
+    return data
+
+
+@admin_router.delete("/admin/submissions/{sub_id}")
+def admin_delete_submission(sub_id: str, request: Request) -> dict[str, Any]:
+    _require_admin(request)
+    from db import delete_submission
+
+    ok = delete_submission(sub_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail="Submission not found or already deleted.")
+    return {"deleted": True, "id": sub_id}
+
+
 app.include_router(api_router, prefix="/api")
 app.include_router(api_router, prefix="/api/v1")
+
+app.include_router(admin_router, prefix="/api")
+app.include_router(admin_router, prefix="/api/v1")
 
 
 # Na Vercel a CDN também pode servir public/; aqui garantimos /static quando o pedido chega à função.
 if STATIC_DIR.is_dir():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+
+@app.get("/admin", response_model=None)
+async def admin_page() -> FileResponse | HTMLResponse:
+    index = PUBLIC_DIR / "admin.html"
+    if index.is_file():
+        return FileResponse(index, media_type="text/html; charset=utf-8")
+    return HTMLResponse(status_code=404, content="<h1>Admin page not found</h1>")
 
 
 @app.get("/", response_model=None)

@@ -26,6 +26,9 @@ Thumbs.db
 .idea/
 .vscode/
 
+# SQLite local dev databases
+*.db
+
 # Vercel / Node (scripts locais)
 .vercel/
 node_modules/

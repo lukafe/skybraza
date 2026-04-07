@@ -1,0 +1,398 @@
+/* ── Admin Panel — CertiK VASP ──────────────────────────────────────────────── */
+:root {
+  --bg: #0b0e11;
+  --bg-elevated: #0f1218;
+  --bg-card: #12151c;
+  --bg-card-strong: #181b24;
+  --border: #2d3139;
+  --border-glow: rgba(255, 59, 71, 0.32);
+  --text: #f4f4f5;
+  --text-muted: #9898a8;
+  --accent: #ff3b47;
+  --accent-bright: #ff6b6b;
+  --accent-dim: rgba(255, 59, 71, 0.18);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "Roboto Mono", ui-monospace, monospace;
+  --shadow: 0 16px 48px rgba(0, 0, 0, 0.65);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+  background-image:
+    radial-gradient(ellipse 100% 60% at 50% -20%, rgba(255, 59, 71, 0.10), transparent 55%),
+    linear-gradient(180deg, #0a0808 0%, var(--bg) 32%);
+}
+
+.wrap { max-width: 1140px; margin: 0 auto; padding: 0 1.25rem; width: 100%; }
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.admin-header {
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+  background: var(--bg-elevated);
+}
+.admin-header .wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.admin-brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+.admin-brand span { color: var(--text-muted); font-weight: 400; margin-left: 0.3rem; }
+.admin-nav { display: flex; gap: 0.5rem; margin-left: auto; align-items: center; }
+.admin-nav a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+.admin-nav a:hover { background: var(--accent-dim); color: var(--text); }
+
+/* ── Login ──────────────────────────────────────────────────────────────── */
+.login-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding: 2rem;
+}
+.login-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2.5rem 2rem;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.login-card h1 {
+  font-size: 1.4rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+.login-card .login-sub {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin: 0 0 1.75rem;
+}
+.login-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.login-input:focus { border-color: var(--accent); }
+.login-input::placeholder { color: #555; }
+.login-btn {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.login-btn:hover { background: var(--accent-bright); }
+.login-error {
+  margin-top: 0.75rem;
+  color: var(--accent-bright);
+  font-size: 0.85rem;
+  min-height: 1.3em;
+}
+
+/* ── Stats cards ────────────────────────────────────────────────────────── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+.stat-val {
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text);
+  line-height: 1.2;
+}
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 0.25rem;
+}
+
+/* ── Toolbar ────────────────────────────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.toolbar-search {
+  flex: 1;
+  min-width: 180px;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.9rem;
+  outline: none;
+}
+.toolbar-search:focus { border-color: var(--accent); }
+.toolbar-select {
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* ── Table ──────────────────────────────────────────────────────────────── */
+.sub-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+}
+.sub-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.sub-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.sub-table td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(45, 49, 57, 0.5);
+  vertical-align: middle;
+}
+.sub-table tbody tr {
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.sub-table tbody tr:hover { background: var(--bg-card-strong); }
+
+/* ── Track pill ─────────────────────────────────────────────────────────── */
+.track-pill {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.track-pill--intermediaria { background: rgba(234,179,8,0.18); color: #eab308; }
+.track-pill--custodiante { background: rgba(34,197,94,0.18); color: #22c55e; }
+.track-pill--corretora { background: rgba(139,92,246,0.18); color: #a78bfa; }
+
+/* ── Pagination ─────────────────────────────────────────────────────────── */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.pagination button {
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.15s;
+}
+.pagination button:hover:not(:disabled) { background: var(--bg-card-strong); }
+.pagination button:disabled { opacity: 0.35; cursor: default; }
+
+/* ── Detail view ────────────────────────────────────────────────────────── */
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--font);
+  transition: color 0.15s;
+}
+.detail-back:hover { color: var(--text); }
+
+.detail-hero {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.detail-hero h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.25rem;
+}
+.detail-hero .detail-meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.detail-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+.detail-section-title {
+  padding: 0.75rem 1rem;
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card-strong);
+}
+.detail-section-body { padding: 1rem; }
+
+/* answers grid */
+.answers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 0.75rem;
+}
+.answer-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+}
+.answer-id {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+.answer-q {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0.15rem 0;
+  line-height: 1.4;
+}
+.answer-val {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.2rem;
+}
+.answer-val--true { color: #22c55e; }
+.answer-val--false { color: var(--text-muted); }
+
+/* incisos list */
+.incisos-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.inciso-chip {
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+.inciso-chip--audit { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+.inciso-chip--out { background: rgba(75,85,99,0.25); color: #9ca3af; border: 1px solid rgba(75,85,99,0.4); }
+
+/* delete button */
+.btn-danger {
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(255,82,82,0.4);
+  border-radius: var(--radius-sm);
+  background: rgba(255,82,82,0.12);
+  color: #ff5252;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: background 0.15s;
+}
+.btn-danger:hover { background: rgba(255,82,82,0.25); }
+
+/* ── Utility ────────────────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+.main-content { flex: 1; padding: 2rem 0; }
+.mono { font-family: var(--font-mono); }
+.text-muted { color: var(--text-muted); }
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .answers-grid { grid-template-columns: 1fr; }
+  .sub-table { font-size: 0.82rem; }
+  .sub-table th, .sub-table td { padding: 0.55rem 0.6rem; }
+}

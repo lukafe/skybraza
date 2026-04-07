@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Admin — CertiK VASP Scoping</title>
+    <link rel="icon" href="/static/img/favicon.svg?v=1" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/admin.css?v=2" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
+  <body>
+    <header class="admin-header">
+      <div class="wrap">
+        <a class="admin-brand" href="/admin">CertiK<span>Admin</span></a>
+        <nav class="admin-nav">
+          <span id="user-email" class="hidden" style="color:var(--text-muted);font-size:.85rem"></span>
+          <a href="/" id="link-app">Questionário</a>
+          <a href="#" id="btn-logout" class="hidden">Sair</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Login -->
+    <div id="view-login" class="login-wrap">
+      <div class="login-card">
+        <h1>Painel administrativo</h1>
+        <p class="login-sub">Faça login com a sua conta Google <strong>@certik.com</strong>.</p>
+        <div id="google-signin-btn" style="display:flex;justify-content:center;margin:1.25rem 0 0.5rem"></div>
+        <p id="login-error" class="login-error"></p>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="view-dashboard" class="main-content wrap hidden">
+      <div id="stats-row" class="stats-row"></div>
+      <div class="toolbar">
+        <input type="search" id="search-input" class="toolbar-search" placeholder="Pesquisar por instituição…" autocomplete="off" />
+        <select id="filter-track" class="toolbar-select">
+          <option value="">Todas as trilhas</option>
+          <option value="intermediaria">Intermediária</option>
+          <option value="custodiante">Custodiante</option>
+          <option value="corretora">Corretora</option>
+        </select>
+      </div>
+      <div id="table-wrap"></div>
+      <div id="pagination" class="pagination hidden"></div>
+    </div>
+
+    <!-- Detail -->
+    <div id="view-detail" class="main-content wrap hidden"></div>
+
+    <script src="/static/js/admin.js?v=2" type="module"></script>
+  </body>
+</html>

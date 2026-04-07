@@ -4428,7 +4428,11 @@ body.app-view-intro .sk-main {
   background: var(--bg-card); list-style: none;
 }
 .cji-summary::-webkit-details-marker { display: none; }
+.cji-summary::before { content: "▸ "; font-size: .85em; transition: transform .15s; display: inline-block; }
+.cji-panel[open] > .cji-summary::before { content: "▾ "; }
 .cji-count { font-weight: 400; color: var(--text-muted); font-size: .82rem; }
+.cji-toggle-hint { font-weight: 400; color: var(--text-muted); font-size: .75rem; font-style: italic; }
+.cji-panel[open] .cji-toggle-hint { display: none; }
 .cji-body { padding: .5rem .85rem .25rem; display: flex; flex-direction: column; gap: .35rem; }
 .cji-row { display: flex; align-items: center; gap: .4rem; font-size: .84rem; }
 .cji-jur { font-weight: 700; min-width: 4ch; }

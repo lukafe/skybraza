@@ -968,8 +968,8 @@ async function renderCjInsightsPanel(inScopeIds) {
   }).join("");
 
   container.innerHTML = `
-<details class="cji-panel" open>
-  <summary class="cji-summary">${en ? "Cross-Jurisdiction Insights" : "Insights Transfronteiriços"} <span class="cji-count">(${mappings.length} ${en ? "in-scope clauses" : "incisos no escopo"})</span></summary>
+<details class="cji-panel">
+  <summary class="cji-summary">${en ? "Cross-Jurisdiction Insights" : "Insights Transfronteiriços"} <span class="cji-count">(${mappings.length} ${en ? "in-scope clauses" : "incisos no escopo"})</span> <span class="cji-toggle-hint">${en ? "click to expand" : "clique para expandir"}</span></summary>
   <div class="cji-body">${rows}</div>
   <p class="cji-tip">${en ? "Open the Regulatory Comparison from the home screen for full detail." : "Abra a Comparação Regulatória no ecrã inicial para o detalhe completo."}</p>
 </details>`;
