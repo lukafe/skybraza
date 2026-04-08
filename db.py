@@ -12,11 +12,12 @@ the app keeps working normally.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
@@ -45,10 +46,11 @@ def _get_model():
         __tablename__ = "submissions"
 
         id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-        created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+        created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
         institution = Column(String(500), default="")
-        track = Column(String(50), default="intermediaria")
+        track = Column(String(50), default="intermediaria", index=True)
         lang = Column(String(5), default="pt")
+        answers_hash = Column(String(64), default="", index=True)
         answers = Column(Text, default="{}")
         scope_snapshot = Column(Text, default="{}")
 
@@ -97,6 +99,18 @@ def db_available() -> bool:
 
 # ── Write ────────────────────────────────────────────────────────────────────
 
+_DEDUP_WINDOW = timedelta(minutes=5)
+
+
+def _answers_hash(institution: str, track: str, answers: dict[str, Any]) -> str:
+    """Deterministic hash of institution+track+answers for dedup."""
+    canonical = json.dumps(
+        {"i": institution, "t": track, "a": answers},
+        sort_keys=True, ensure_ascii=False, separators=(",", ":"),
+    )
+    return hashlib.sha256(canonical.encode()).hexdigest()
+
+
 def save_submission(
     institution: str,
     track: str,
@@ -104,16 +118,28 @@ def save_submission(
     answers: dict[str, Any],
     scope_snapshot: dict[str, Any],
 ) -> Optional[str]:
-    """Persist a submission. Returns the UUID on success, None on failure/skip."""
+    """Persist a submission. Deduplicates identical payloads within a 5-min window."""
     if not db_available():
         return None
     Submission = _get_model()
     session = _SessionLocal()  # type: ignore[misc]
     try:
+        h = _answers_hash(institution, track, answers)
+        cutoff = datetime.now(timezone.utc) - _DEDUP_WINDOW
+        dup = (
+            session.query(Submission.id)
+            .filter(Submission.answers_hash == h, Submission.created_at >= cutoff)
+            .first()
+        )
+        if dup:
+            logger.debug("Duplicate submission skipped (hash=%s…)", h[:12])
+            return dup[0]
+
         sub = Submission(
             institution=institution,
             track=track,
             lang=lang,
+            answers_hash=h,
             answers=json.dumps(answers, ensure_ascii=False, separators=(",", ":")),
             scope_snapshot=json.dumps(scope_snapshot, ensure_ascii=False, separators=(",", ":")),
         )
@@ -162,7 +188,8 @@ def list_submissions(
         if track:
             q = q.filter(Submission.track == track)
         if search:
-            q = q.filter(Submission.institution.ilike(f"%{search}%"))
+            safe = search.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+            q = q.filter(Submission.institution.ilike(f"%{safe}%"))
         total = q.with_entities(func.count(Submission.id)).scalar() or 0
         rows = q.order_by(desc(Submission.created_at)).offset(offset).limit(limit).all()
         return [_row_to_summary(r) for r in rows], total
@@ -228,5 +255,52 @@ def submission_stats() -> dict[str, Any]:
         )
         by_track = {row[0]: row[1] for row in by_track_rows}
         return {"total": total, "by_track": by_track}
+    finally:
+        session.close()
+
+
+def export_submissions_csv(
+    track: str | None = None,
+    search: str | None = None,
+) -> str:
+    """Return all matching submissions as a CSV string."""
+    import csv
+    import io
+
+    if not db_available():
+        return ""
+    Submission = _get_model()
+    session = _SessionLocal()  # type: ignore[misc]
+    try:
+        from sqlalchemy import desc  # noqa: E402
+
+        q = session.query(Submission)
+        if track:
+            q = q.filter(Submission.track == track)
+        if search:
+            safe = search.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+            q = q.filter(Submission.institution.ilike(f"%{safe}%"))
+        rows = q.order_by(desc(Submission.created_at)).all()
+
+        buf = io.StringIO()
+        writer = csv.writer(buf)
+        writer.writerow([
+            "id", "created_at", "institution", "track", "lang",
+            "total_sujeitos", "total_fora", "answers_json",
+        ])
+        for r in rows:
+            snap = json.loads(r.scope_snapshot or "{}")
+            resumo = snap.get("resumo", {})
+            writer.writerow([
+                r.id,
+                r.created_at.isoformat() + "Z" if r.created_at else "",
+                r.institution,
+                r.track,
+                r.lang,
+                resumo.get("total_sujeitos_auditoria", ""),
+                resumo.get("total_fora_escopo_auditoria", ""),
+                r.answers,
+            ])
+        return buf.getvalue()
     finally:
         session.close()

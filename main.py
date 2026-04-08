@@ -142,6 +142,8 @@ async def cache_headers_middleware(request: Request, call_next):
     if path.startswith("/static/"):
         response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
         response.headers["Vary"] = "Accept-Encoding"
+    elif path == "/admin":
+        response.headers["Cache-Control"] = "no-store"
     elif path in ("/", "") or path.endswith(".html"):
         response.headers["Cache-Control"] = "no-cache"
     return response
@@ -174,6 +176,9 @@ async def optional_api_key_guard(request: Request, call_next):
         return await call_next(request)
     path = request.url.path
     if path in ("/api/health", "/api/v1/health") or not path.startswith("/api"):
+        return await call_next(request)
+    # Admin routes use their own auth (Google OAuth + HMAC session tokens)
+    if "/admin/" in path or path.endswith("/admin/config") or path.endswith("/admin/login"):
         return await call_next(request)
     if request.headers.get("X-Certik-Api-Key") == key:
         return await call_next(request)
@@ -233,6 +238,11 @@ api_router = APIRouter(tags=["scope"])
 
 @api_router.get("/health")
 def health() -> dict[str, Any]:
+    try:
+        from db import db_available
+        _db = db_available()
+    except Exception:
+        _db = False
     return {
         "status": "ok",
         "phase": "E",
@@ -241,6 +251,7 @@ def health() -> dict[str, Any]:
         "features": {
             "custodiante_track": custodiante_track_enabled(),
             "corretora_track": corretora_track_enabled(),
+            "database": _db,
         },
     }
 
@@ -632,6 +643,27 @@ def admin_list_submissions(
         search=search or None,
     )
     return {"items": rows, "total": total, "limit": limit, "offset": offset}
+
+
+@admin_router.get("/admin/submissions/export")
+def admin_export_csv(
+    request: Request,
+    track: str = Query(default=""),
+    search: str = Query(default=""),
+) -> Response:
+    """Export all matching submissions as CSV."""
+    _require_admin(request)
+    from db import export_submissions_csv
+
+    csv_data = export_submissions_csv(track=track or None, search=search or None)
+    return Response(
+        content=csv_data,
+        media_type="text/csv; charset=utf-8",
+        headers={
+            "Content-Disposition": 'attachment; filename="certik_submissions.csv"',
+            "Cache-Control": "no-store",
+        },
+    )
 
 
 @admin_router.get("/admin/submissions/{sub_id}")

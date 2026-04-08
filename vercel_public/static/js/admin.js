@@ -72,6 +72,7 @@ function showLogin(error = "") {
   $("#btn-logout").classList.add("hidden");
   $("#user-email").classList.add("hidden");
   $("#login-error").textContent = error;
+  initGoogleSignIn();
 }
 
 function showDashboard() {
@@ -97,8 +98,10 @@ function showDetail(id) {
 // ── Google Sign-In ───────────────────────────────────────────────────────────
 
 let _googleClientId = "";
+let _googleInitDone = false;
 
 async function initGoogleSignIn() {
+  if (_googleInitDone) return;
   try {
     const cfg = await fetch(`${API}/admin/config`).then((r) => r.json());
     _googleClientId = cfg.google_client_id || "";
@@ -130,6 +133,7 @@ async function initGoogleSignIn() {
       text: "signin_with",
       locale: "pt-BR",
     });
+    _googleInitDone = true;
   });
 }
 
@@ -191,7 +195,7 @@ async function loadSubmissions() {
 
   try {
     const data = await api(`/admin/submissions?${params}`);
-    renderTable(data.items, data.total);
+    renderTable(data.items);
     renderPagination(data.total);
   } catch (e) {
     $("#table-wrap").innerHTML = `<div class="empty-state">Erro ao carregar: ${esc(e.message)}</div>`;
@@ -357,6 +361,27 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     clearSession();
     showLogin();
+  });
+
+  $("#btn-export-csv")?.addEventListener("click", async () => {
+    const params = new URLSearchParams();
+    if (currentTrack) params.set("track", currentTrack);
+    if (currentSearch) params.set("search", currentSearch);
+    try {
+      const res = await fetch(`${API}/admin/submissions/export?${params}`, {
+        headers: { Authorization: `Bearer ${sessionToken}` },
+      });
+      if (!res.ok) throw new Error("Export failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "certik_submissions.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      alert("Erro ao exportar: " + e.message);
+    }
   });
 
   let searchTimer;

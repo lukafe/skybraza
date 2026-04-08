@@ -96,34 +96,6 @@ body {
   font-size: 0.88rem;
   margin: 0 0 1.75rem;
 }
-.login-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.login-input:focus { border-color: var(--accent); }
-.login-input::placeholder { color: #555; }
-.login-btn {
-  margin-top: 1rem;
-  width: 100%;
-  padding: 0.75rem;
-  border: none;
-  border-radius: var(--radius-sm);
-  background: var(--accent);
-  color: #fff;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.login-btn:hover { background: var(--accent-bright); }
 .login-error {
   margin-top: 0.75rem;
   color: var(--accent-bright);
@@ -189,6 +161,19 @@ body {
   font-size: 0.9rem;
   cursor: pointer;
 }
+.toolbar-btn {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.toolbar-btn:hover { background: var(--bg-card-strong); }
 
 /* ── Table ──────────────────────────────────────────────────────────────── */
 .sub-table-wrap {
