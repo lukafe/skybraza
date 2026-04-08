@@ -175,6 +175,8 @@ def list_submissions(
     offset: int = 0,
     track: str | None = None,
     search: str | None = None,
+    date_from: str | None = None,
+    date_to: str | None = None,
 ) -> tuple[list[dict[str, Any]], int]:
     """Return (rows, total_count) for the admin listing."""
     if not db_available():
@@ -190,6 +192,18 @@ def list_submissions(
         if search:
             safe = search.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
             q = q.filter(Submission.institution.ilike(f"%{safe}%"))
+        if date_from:
+            try:
+                dt = datetime.fromisoformat(date_from).replace(tzinfo=timezone.utc)
+                q = q.filter(Submission.created_at >= dt)
+            except ValueError:
+                pass
+        if date_to:
+            try:
+                dt = datetime.fromisoformat(date_to).replace(tzinfo=timezone.utc) + timedelta(days=1)
+                q = q.filter(Submission.created_at < dt)
+            except ValueError:
+                pass
         total = q.with_entities(func.count(Submission.id)).scalar() or 0
         rows = q.order_by(desc(Submission.created_at)).offset(offset).limit(limit).all()
         return [_row_to_summary(r) for r in rows], total
@@ -262,6 +276,8 @@ def submission_stats() -> dict[str, Any]:
 def export_submissions_csv(
     track: str | None = None,
     search: str | None = None,
+    date_from: str | None = None,
+    date_to: str | None = None,
 ) -> str:
     """Return all matching submissions as a CSV string."""
     import csv
@@ -280,6 +296,18 @@ def export_submissions_csv(
         if search:
             safe = search.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
             q = q.filter(Submission.institution.ilike(f"%{safe}%"))
+        if date_from:
+            try:
+                dt = datetime.fromisoformat(date_from).replace(tzinfo=timezone.utc)
+                q = q.filter(Submission.created_at >= dt)
+            except ValueError:
+                pass
+        if date_to:
+            try:
+                dt = datetime.fromisoformat(date_to).replace(tzinfo=timezone.utc) + timedelta(days=1)
+                q = q.filter(Submission.created_at < dt)
+            except ValueError:
+                pass
         rows = q.order_by(desc(Submission.created_at)).all()
 
         buf = io.StringIO()

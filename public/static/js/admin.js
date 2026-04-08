@@ -14,6 +14,8 @@ const PAGE_SIZE = 30;
 let currentOffset = 0;
 let currentTrack = "";
 let currentSearch = "";
+let currentDateFrom = "";
+let currentDateTo = "";
 let currentSort = { col: "created_at", asc: false };
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -258,6 +260,8 @@ async function loadSubmissions() {
   });
   if (currentTrack) params.set("track", currentTrack);
   if (currentSearch) params.set("search", currentSearch);
+  if (currentDateFrom) params.set("date_from", currentDateFrom);
+  if (currentDateTo) params.set("date_to", currentDateTo);
 
   try {
     const data = await api(`/admin/submissions?${params}`);
@@ -436,12 +440,43 @@ async function loadDetail(id) {
         </div>
       </div>
 
-      <div style="display:flex; gap:0.75rem; margin-top:1rem; margin-bottom:2rem">
+      <div class="detail-actions">
+        <button class="toolbar-btn" id="btn-dl-excel">⬇ Excel</button>
+        <button class="toolbar-btn" id="btn-dl-pdf">⬇ PDF</button>
         <button class="btn-danger" id="btn-delete-sub">Apagar submissão</button>
       </div>`;
 
     view.innerHTML = html;
     $("#btn-back-list").addEventListener("click", showDashboard);
+
+    async function downloadExport(format) {
+      const btn = format === "excel" ? $("#btn-dl-excel") : $("#btn-dl-pdf");
+      const orig = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "A gerar…";
+      try {
+        const res = await fetch(`${API}/admin/submissions/${id}/${format}`, {
+          headers: { Authorization: `Bearer ${sessionToken}` },
+        });
+        if (!res.ok) throw new Error("Export failed");
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        const ext = format === "excel" ? "xlsx" : "pdf";
+        a.download = `certik_scope_${id.slice(0, 8)}.${ext}`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (e) {
+        alert("Erro ao exportar: " + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = orig;
+      }
+    }
+    $("#btn-dl-excel").addEventListener("click", () => downloadExport("excel"));
+    $("#btn-dl-pdf").addEventListener("click", () => downloadExport("pdf"));
+
     $("#btn-delete-sub").addEventListener("click", async () => {
       if (!confirm("Tem certeza que deseja apagar esta submissão?")) return;
       try {
@@ -469,6 +504,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams();
     if (currentTrack) params.set("track", currentTrack);
     if (currentSearch) params.set("search", currentSearch);
+    if (currentDateFrom) params.set("date_from", currentDateFrom);
+    if (currentDateTo) params.set("date_to", currentDateTo);
     try {
       const res = await fetch(`${API}/admin/submissions/export?${params}`, {
         headers: { Authorization: `Bearer ${sessionToken}` },
@@ -498,6 +535,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("#filter-track").addEventListener("change", () => {
     currentTrack = $("#filter-track").value;
+    currentOffset = 0;
+    loadSubmissions();
+  });
+
+  $("#filter-date-from")?.addEventListener("change", () => {
+    currentDateFrom = $("#filter-date-from").value || "";
+    currentOffset = 0;
+    loadSubmissions();
+  });
+
+  $("#filter-date-to")?.addEventListener("change", () => {
+    currentDateTo = $("#filter-date-to").value || "";
     currentOffset = 0;
     loadSubmissions();
   });

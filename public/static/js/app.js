@@ -218,16 +218,41 @@ function initAnswersFromBlocks() {
 
 /** single_choice obrigatório (exceto audit_only) antes de avançar ou submeter. */
 function blockHasUnansweredSingleChoice(block) {
+  document.querySelectorAll(".q-card--error").forEach((el) => el.classList.remove("q-card--error"));
   for (const q of block.questions) {
     if (q.audit_only) continue;
     if (qType(q) !== "single_choice") continue;
     const v = state.answers[q.id];
     if (v == null || v === "") {
       showToast(t("wizard_select_q", { qid: q.id }));
+      const card = document.querySelector(`.q-card[data-qid="${q.id}"]`);
+      if (card) {
+        card.classList.add("q-card--error");
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
       return true;
     }
   }
   return false;
+}
+
+/** On final submit, validate all blocks (not just current). */
+function allBlocksValid() {
+  for (let i = 0; i < state.blocks.length; i++) {
+    const block = state.blocks[i];
+    for (const q of block.questions) {
+      if (q.audit_only) continue;
+      if (qType(q) !== "single_choice") continue;
+      const v = state.answers[q.id];
+      if (v == null || v === "") {
+        state.step = i;
+        renderQuestions();
+        setTimeout(() => blockHasUnansweredSingleChoice(block), 100);
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 function setNavLoading(loading) {
@@ -1407,6 +1432,7 @@ async function boot() {
 
     const last = state.step === state.blocks.length - 1;
     if (last) {
+      if (!allBlocksValid()) return;
       try {
         await submitScope();
       } catch (e) {

@@ -488,6 +488,16 @@ input[type="text"]:focus {
 .q-card:hover {
   border-color: rgba(255, 59, 71, 0.22);
 }
+.q-card--error {
+  border-color: #ff5252 !important;
+  box-shadow: 0 0 0 2px rgba(255, 82, 82, 0.25), 0 4px 24px rgba(0, 0, 0, 0.2) !important;
+  animation: shake 0.4s ease;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
 
 .q-id {
   font-size: 0.75rem;

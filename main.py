@@ -680,6 +680,8 @@ def admin_list_submissions(
     offset: int = Query(default=0, ge=0),
     track: str = Query(default=""),
     search: str = Query(default=""),
+    date_from: str = Query(default="", description="ISO date YYYY-MM-DD"),
+    date_to: str = Query(default="", description="ISO date YYYY-MM-DD"),
 ) -> dict[str, Any]:
     _require_admin(request)
     from db import list_submissions
@@ -689,6 +691,8 @@ def admin_list_submissions(
         offset=offset,
         track=track or None,
         search=search or None,
+        date_from=date_from or None,
+        date_to=date_to or None,
     )
     return {"items": rows, "total": total, "limit": limit, "offset": offset}
 
@@ -698,12 +702,17 @@ def admin_export_csv(
     request: Request,
     track: str = Query(default=""),
     search: str = Query(default=""),
+    date_from: str = Query(default=""),
+    date_to: str = Query(default=""),
 ) -> Response:
     """Export all matching submissions as CSV."""
     _require_admin(request)
     from db import export_submissions_csv
 
-    csv_data = export_submissions_csv(track=track or None, search=search or None)
+    csv_data = export_submissions_csv(
+        track=track or None, search=search or None,
+        date_from=date_from or None, date_to=date_to or None,
+    )
     return Response(
         content=csv_data,
         media_type="text/csv; charset=utf-8",
@@ -714,8 +723,8 @@ def admin_export_csv(
     )
 
 
-@admin_router.get("/admin/submissions/{sub_id}")
-def admin_get_submission(sub_id: str, request: Request) -> dict[str, Any]:
+def _load_submission_for_export(sub_id: str, request: Request) -> dict[str, Any]:
+    """Shared helper: load a submission or raise 404."""
     _require_admin(request)
     from db import get_submission
 
@@ -723,6 +732,75 @@ def admin_get_submission(sub_id: str, request: Request) -> dict[str, Any]:
     if not data:
         raise HTTPException(status_code=404, detail="Submission not found.")
     return data
+
+
+@admin_router.get("/admin/submissions/{sub_id}/excel")
+def admin_export_submission_excel(sub_id: str, request: Request) -> StreamingResponse:
+    """Re-generate Excel export from a stored submission."""
+    data = _load_submission_for_export(sub_id, request)
+    from excel_export import build_scope_excel
+
+    scope_response = {
+        "institution": data.get("institution", ""),
+        "track": data.get("track", "intermediaria"),
+        "incisos_sujeitos_auditoria": (data.get("scope_snapshot") or {}).get("incisos_sujeitos_auditoria", []),
+        "incisos_fora_escopo_auditoria": (data.get("scope_snapshot") or {}).get("incisos_fora_escopo_auditoria", []),
+        "resumo": (data.get("scope_snapshot") or {}).get("resumo", {}),
+        "corpus_readiness": (data.get("scope_snapshot") or {}).get("corpus_readiness", {}),
+    }
+    lang = data.get("lang", "pt")
+    buf = build_scope_excel(scope_response, lang=lang)
+
+    from datetime import date
+    safe_inst = "".join(c if c.isalnum() or c in "-_" else "_" for c in (data.get("institution") or ""))[:40] or "export"
+    filename = f"certik_vasp_scope_{safe_inst}_{date.today().isoformat()}.xlsx"
+
+    return StreamingResponse(
+        buf,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"', "Cache-Control": "no-store"},
+    )
+
+
+@admin_router.get("/admin/submissions/{sub_id}/pdf")
+def admin_export_submission_pdf(sub_id: str, request: Request) -> Response:
+    """Re-generate PDF export from a stored submission."""
+    data = _load_submission_for_export(sub_id, request)
+    from scope_pdf import build_scope_pdf_bytes
+
+    snap = data.get("scope_snapshot") or {}
+    scope_response = {
+        "institution": data.get("institution", ""),
+        "track": data.get("track", "intermediaria"),
+        "incisos_sujeitos_auditoria": snap.get("incisos_sujeitos_auditoria", []),
+        "incisos_fora_escopo_auditoria": snap.get("incisos_fora_escopo_auditoria", []),
+        "resumo": snap.get("resumo", {}),
+        "corpus_readiness": snap.get("corpus_readiness", {}),
+    }
+    lang = data.get("lang", "pt")
+
+    try:
+        from matrix_loader import get_coverage_meta, normalize_track
+        t = normalize_track(data.get("track", "intermediaria"))
+        matrix_meta = get_coverage_meta(t)
+    except Exception:
+        matrix_meta = {}
+
+    pdf_bytes = build_scope_pdf_bytes(scope_response, matrix_meta=matrix_meta, lang=lang)
+
+    safe_inst = "".join(c if c.isalnum() or c in "-_" else "_" for c in (data.get("institution") or ""))[:40] or "report"
+    filename = f"certik_vasp_scope_{safe_inst}.pdf"
+
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"', "Cache-Control": "no-store"},
+    )
+
+
+@admin_router.get("/admin/submissions/{sub_id}")
+def admin_get_submission(sub_id: str, request: Request) -> dict[str, Any]:
+    return _load_submission_for_export(sub_id, request)
 
 
 @admin_router.delete("/admin/submissions/{sub_id}")
