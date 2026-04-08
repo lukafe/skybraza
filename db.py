@@ -28,11 +28,12 @@ _engine = None
 _SessionLocal = None
 _Base = None
 _Submission = None
+_AuditLog = None
 
 
 def _get_model():
     """Lazy-build the SQLAlchemy model so the app doesn't crash if sqlalchemy isn't installed."""
-    global _Base, _Submission
+    global _Base, _Submission, _AuditLog
     if _Submission is not None:
         return _Submission
 
@@ -54,8 +55,19 @@ def _get_model():
         answers = Column(Text, default="{}")
         scope_snapshot = Column(Text, default="{}")
 
+    class AuditLog(Base):
+        __tablename__ = "audit_log"
+
+        id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+        created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
+        action = Column(String(50), nullable=False)
+        actor = Column(String(255), default="")
+        ip = Column(String(45), default="")
+        detail = Column(Text, default="")
+
     _Base = Base
     _Submission = Submission
+    _AuditLog = AuditLog
     return Submission
 
 
@@ -345,5 +357,58 @@ def export_submissions_csv(
                 r.answers,
             ])
         return buf.getvalue()
+    finally:
+        session.close()
+
+
+# ── Audit log ────────────────────────────────────────────────────────────────
+
+
+def record_audit(action: str, actor: str = "", ip: str = "", detail: str = "") -> None:
+    """Best-effort audit log entry."""
+    if not db_available():
+        return
+    _get_model()
+    session = _SessionLocal()  # type: ignore[misc]
+    try:
+        entry = _AuditLog(action=action, actor=actor, ip=ip, detail=detail)
+        session.add(entry)
+        session.commit()
+    except Exception:
+        logger.debug("Audit log write failed", exc_info=True)
+        session.rollback()
+    finally:
+        session.close()
+
+
+def list_audit_log(limit: int = 100, offset: int = 0) -> tuple[list[dict[str, Any]], int]:
+    """Return recent audit entries for the admin panel."""
+    if not db_available():
+        return [], 0
+    _get_model()
+    session = _SessionLocal()  # type: ignore[misc]
+    try:
+        from sqlalchemy import desc, func  # noqa: E402
+
+        total = session.query(func.count(_AuditLog.id)).scalar() or 0
+        rows = (
+            session.query(_AuditLog)
+            .order_by(desc(_AuditLog.created_at))
+            .offset(offset)
+            .limit(limit)
+            .all()
+        )
+        items = [
+            {
+                "id": r.id,
+                "created_at": r.created_at.isoformat() + "Z" if r.created_at else None,
+                "action": r.action,
+                "actor": r.actor,
+                "ip": r.ip,
+                "detail": r.detail,
+            }
+            for r in rows
+        ]
+        return items, total
     finally:
         session.close()

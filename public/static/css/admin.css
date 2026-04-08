@@ -499,6 +499,110 @@ body {
   font-size: 0.82rem;
 }
 
+/* ── Simulate ──────────────────────────────────────────────────────────── */
+.sim-controls { display: flex; gap: 1rem; flex-wrap: wrap; }
+.sim-row { display: flex; flex-direction: column; gap: 0.25rem; }
+.sim-row label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+.sim-q {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.sim-q-label { font-weight: 600; font-size: 0.85rem; margin: 0 0 0.4rem; }
+.sim-opt {
+  display: block;
+  font-size: 0.82rem;
+  padding: 0.15rem 0;
+  cursor: pointer;
+}
+.sim-opt input { margin-right: 0.4rem; accent-color: var(--accent); }
+.sim-result-card {
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+.sim-result-card h3 { margin: 0 0 0.75rem; font-size: 1rem; }
+.sim-incisos { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; }
+.sim-inciso {
+  padding: 0.2rem 0.5rem;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+/* ── Compare ───────────────────────────────────────────────────────────── */
+.compare-bar {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.65rem 1rem;
+  margin-bottom: 0.75rem;
+  background: color-mix(in srgb, var(--accent) 10%, var(--bg-card));
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+}
+.compare-btn {
+  padding: 0.4rem 0.9rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.compare-btn:hover { background: var(--accent-bright); }
+.compare-btn-clear { background: var(--bg-card-strong); color: var(--text-muted); }
+.compare-btn-clear:hover { background: var(--border); }
+
+.cmp-check { cursor: pointer; width: 16px; height: 16px; accent-color: var(--accent); }
+
+.cmp-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+.cmp-col { display: flex; flex-direction: column; gap: 0.2rem; }
+.cmp-label {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.15rem;
+}
+.cmp-label-a { background: var(--accent); }
+.cmp-label-b { background: #6366f1; }
+
+.cmp-stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.cmp-stat {
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.cmp-stat.cmp-both { background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); }
+.cmp-stat.cmp-only-a { background: color-mix(in srgb, #22c55e 15%, transparent); color: #16a34a; }
+.cmp-stat.cmp-only-b { background: color-mix(in srgb, #6366f1 15%, transparent); color: #6366f1; }
+
+.cmp-table tr.cmp-only-a td { background: color-mix(in srgb, #22c55e 6%, transparent); }
+.cmp-table tr.cmp-only-b td { background: color-mix(in srgb, #6366f1 6%, transparent); }
+
 /* ── Utility ────────────────────────────────────────────────────────────── */
 .hidden { display: none !important; }
 .main-content { flex: 1; padding: 2rem 0; }

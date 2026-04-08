@@ -633,6 +633,11 @@ def admin_login(body: AdminLoginRequest, request: Request) -> dict[str, Any]:
             _record_login_attempt(client_ip)
             raise HTTPException(status_code=401, detail={"code": "WRONG_PASSWORD", "message": "Senha incorreta."})
         session_token = _admin_sign_session("admin@local", "Administrador")
+        try:
+            from db import record_audit
+            record_audit("login", actor="admin@local", ip=client_ip, detail="password")
+        except Exception:
+            pass
         return {"session_token": session_token, "email": "admin@local", "name": "Administrador"}
 
     # --- Google OAuth flow ---
@@ -662,6 +667,11 @@ def admin_login(body: AdminLoginRequest, request: Request) -> dict[str, Any]:
 
     name = idinfo.get("name", "")
     session_token = _admin_sign_session(email, name)
+    try:
+        from db import record_audit
+        record_audit("login", actor=email, ip=client_ip, detail="google_oauth")
+    except Exception:
+        pass
     return {"session_token": session_token, "email": email, "name": name}
 
 
@@ -807,14 +817,74 @@ def admin_get_submission(sub_id: str, request: Request) -> dict[str, Any]:
     return _load_submission_for_export(sub_id, request)
 
 
+@admin_router.post("/admin/simulate")
+def admin_simulate(body: ScopeRequest, request: Request) -> dict[str, Any]:
+    """Run compute_scope without persisting — sandbox mode for admin."""
+    _require_admin(request)
+    from matrix_loader import MatrixLoadError, get_coverage_meta, normalize_track
+    from questionnaire_loader import QuestionnaireLoadError
+    from rules_engine import compute_scope
+
+    try:
+        t = normalize_track(body.track)
+    except MatrixLoadError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+    lang = body.lang if body.lang in ("pt", "en") else "pt"
+
+    try:
+        _, meta = compute_scope(body.answers, track=t, lang=lang, build_df=False)
+    except QuestionnaireLoadError as e:
+        raise HTTPException(status_code=422, detail=str(e)) from e
+    except Exception:
+        raise HTTPException(status_code=500, detail="Erro interno na simulação.") from None
+
+    matrix_meta = get_coverage_meta(t)
+    return {
+        "simulated": True,
+        "track": t,
+        "institution": body.institution.strip(),
+        "api_schema_version": API_SCHEMA_VERSION,
+        "matrix_version": matrix_meta.get("matrix_version"),
+        "incisos_sujeitos_auditoria": meta["incisos_sujeitos_auditoria"],
+        "incisos_fora_escopo_auditoria": meta["incisos_fora_escopo_auditoria"],
+        "resumo": {
+            "total_sujeitos_auditoria": meta["total_count"],
+            "obrigatorios_matriz": meta["mandatory_count"],
+            "acionados_por_respostas": meta["conditional_count"],
+            "total_fora_escopo_auditoria": meta["total_fora_escopo_auditoria"],
+        },
+        "corpus_readiness": meta["corpus_readiness"],
+    }
+
+
+@admin_router.get("/admin/audit")
+def admin_audit_log(
+    request: Request,
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+) -> dict[str, Any]:
+    _require_admin(request)
+    from db import list_audit_log
+
+    items, total = list_audit_log(limit=limit, offset=offset)
+    return {"items": items, "total": total}
+
+
 @admin_router.delete("/admin/submissions/{sub_id}")
 def admin_delete_submission(sub_id: str, request: Request) -> dict[str, Any]:
-    _require_admin(request)
-    from db import delete_submission
+    session = _require_admin(request)
+    from db import delete_submission, record_audit
 
     ok = delete_submission(sub_id)
     if not ok:
         raise HTTPException(status_code=404, detail="Submission not found or already deleted.")
+    try:
+        actor = session.get("email", "unknown")
+        ip = request.client.host if request.client else ""
+        record_audit("delete_submission", actor=actor, ip=ip, detail=sub_id)
+    except Exception:
+        pass
     return {"deleted": True, "id": sub_id}
 
 

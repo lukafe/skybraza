@@ -17,6 +17,7 @@ let currentSearch = "";
 let currentDateFrom = "";
 let currentDateTo = "";
 let currentSort = { col: "created_at", asc: false };
+let compareSelection = new Set();
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -70,20 +71,32 @@ function clearSession() {
 // ── Views ────────────────────────────────────────────────────────────────────
 
 function showLogin(error = "") {
+  hideAllViews();
   $("#view-login").classList.remove("hidden");
-  $("#view-dashboard").classList.add("hidden");
-  $("#view-detail").classList.add("hidden");
   $("#btn-logout").classList.add("hidden");
+  showNavLinks(false);
   $("#user-email").classList.add("hidden");
   $("#login-error").textContent = error;
   initLoginUI();
 }
 
+function hideAllViews() {
+  for (const v of ["#view-login", "#view-dashboard", "#view-detail", "#view-audit", "#view-simulate"]) {
+    $(v)?.classList.add("hidden");
+  }
+}
+
+function showNavLinks(visible) {
+  for (const id of ["#btn-audit", "#btn-simulate"]) {
+    $(id)?.classList.toggle("hidden", !visible);
+  }
+}
+
 function showDashboard() {
-  $("#view-login").classList.add("hidden");
+  hideAllViews();
   $("#view-dashboard").classList.remove("hidden");
-  $("#view-detail").classList.add("hidden");
   $("#btn-logout").classList.remove("hidden");
+  showNavLinks(true);
   if (sessionEmail) {
     $("#user-email").textContent = sessionEmail;
     $("#user-email").classList.remove("hidden");
@@ -93,10 +106,15 @@ function showDashboard() {
 }
 
 function showDetail(id) {
-  $("#view-login").classList.add("hidden");
-  $("#view-dashboard").classList.add("hidden");
+  hideAllViews();
   $("#view-detail").classList.remove("hidden");
   loadDetail(id);
+}
+
+function showAuditLog() {
+  hideAllViews();
+  $("#view-audit").classList.remove("hidden");
+  loadAuditLog();
 }
 
 // ── Login UI (Google OAuth or password fallback) ─────────────────────────────
@@ -346,13 +364,20 @@ function renderTable(items) {
     { key: "total_fora", label: "Fora", align: "right" },
   ];
 
-  let html = `<div class="sub-table-wrap"><table class="sub-table">
-    <thead><tr>${cols.map((c) =>
+  let html = `<div class="compare-bar${compareSelection.size >= 2 ? "" : " hidden"}" id="compare-bar">
+    <button id="btn-compare" class="compare-btn">⇄ Comparar selecionados (${compareSelection.size})</button>
+    <button id="btn-compare-clear" class="compare-btn compare-btn-clear">Limpar</button>
+  </div>`;
+
+  html += `<div class="sub-table-wrap"><table class="sub-table">
+    <thead><tr><th style="width:30px"></th>${cols.map((c) =>
       `<th class="sortable-th" data-sort="${c.key}" style="text-align:${c.align};cursor:pointer">${c.label}${sortIndicator(c.key)}</th>`
     ).join("")}</tr></thead><tbody>`;
 
   for (const r of sorted) {
+    const checked = compareSelection.has(r.id) ? "checked" : "";
     html += `<tr data-id="${esc(r.id)}">
+      <td style="text-align:center"><input type="checkbox" class="cmp-check" data-id="${esc(r.id)}" ${checked}></td>
       <td class="mono" style="white-space:nowrap">${fmtDate(r.created_at)}</td>
       <td>${esc(r.institution || "—")}</td>
       <td>${trackPill(r.track)}</td>
@@ -364,6 +389,25 @@ function renderTable(items) {
   html += "</tbody></table></div>";
   $("#table-wrap").innerHTML = html;
 
+  for (const cb of document.querySelectorAll(".cmp-check")) {
+    cb.addEventListener("change", (e) => {
+      e.stopPropagation();
+      const id = cb.dataset.id;
+      if (cb.checked) {
+        if (compareSelection.size >= 2) {
+          const oldest = compareSelection.values().next().value;
+          compareSelection.delete(oldest);
+          const oldCb = document.querySelector(`.cmp-check[data-id="${oldest}"]`);
+          if (oldCb) oldCb.checked = false;
+        }
+        compareSelection.add(id);
+      } else {
+        compareSelection.delete(id);
+      }
+      updateCompareBar();
+    });
+  }
+
   for (const th of document.querySelectorAll(".sortable-th")) {
     th.addEventListener("click", () => {
       const col = th.dataset.sort;
@@ -373,8 +417,22 @@ function renderTable(items) {
     });
   }
 
+  $("#btn-compare")?.addEventListener("click", () => {
+    if (compareSelection.size === 2) {
+      const [a, b] = [...compareSelection];
+      showCompare(a, b);
+    }
+  });
+  $("#btn-compare-clear")?.addEventListener("click", () => {
+    compareSelection.clear();
+    renderTable(items);
+  });
+
   for (const tr of document.querySelectorAll(".sub-table tbody tr")) {
-    tr.addEventListener("click", () => showDetail(tr.dataset.id));
+    tr.addEventListener("click", (e) => {
+      if (e.target.classList.contains("cmp-check")) return;
+      showDetail(tr.dataset.id);
+    });
   }
 }
 
@@ -543,6 +601,249 @@ async function loadDetail(id) {
   }
 }
 
+// ── Simulate ─────────────────────────────────────────────────────────────────
+
+let simQuestions = null;
+
+async function showSimulate() {
+  hideAllViews();
+  $("#view-simulate").classList.remove("hidden");
+  $("#sim-result").innerHTML = "";
+  if (!simQuestions) await loadSimQuestions();
+}
+
+async function loadSimQuestions() {
+  const wrap = $("#sim-questions");
+  wrap.innerHTML = '<div class="empty-state">A carregar perguntas…</div>';
+  try {
+    const track = $("#sim-track").value;
+    const data = await fetch(`/api/v1/questions?track=${track}`).then(r => r.json());
+    simQuestions = data.blocks || [];
+    renderSimQuestions();
+  } catch (e) {
+    wrap.innerHTML = `<div class="empty-state">Erro: ${e.message}</div>`;
+  }
+}
+
+function renderSimQuestions() {
+  const wrap = $("#sim-questions");
+  if (!simQuestions || !simQuestions.length) {
+    wrap.innerHTML = '<p class="text-muted">Nenhuma pergunta disponível.</p>';
+    return;
+  }
+  let html = "";
+  for (const block of simQuestions) {
+    for (const q of (block.questions || [])) {
+      html += `<div class="sim-q" data-qid="${esc(q.id)}">
+        <p class="sim-q-label">${esc(q.label || q.id)}</p>`;
+      if (q.type === "single_choice") {
+        for (const opt of (q.options || [])) {
+          html += `<label class="sim-opt">
+            <input type="radio" name="sim-${q.id}" value="${esc(opt.value)}"> ${esc(opt.label || opt.value)}
+          </label>`;
+        }
+      } else if (q.type === "multi_choice") {
+        for (const opt of (q.options || [])) {
+          html += `<label class="sim-opt">
+            <input type="checkbox" name="sim-${q.id}" value="${esc(opt.value)}"> ${esc(opt.label || opt.value)}
+          </label>`;
+        }
+      }
+      html += "</div>";
+    }
+  }
+  wrap.innerHTML = html;
+}
+
+function collectSimAnswers() {
+  const answers = {};
+  if (!simQuestions) return answers;
+  for (const block of simQuestions) {
+    for (const q of (block.questions || [])) {
+      if (q.type === "single_choice") {
+        const checked = document.querySelector(`input[name="sim-${q.id}"]:checked`);
+        if (checked) answers[q.id] = checked.value;
+      } else if (q.type === "multi_choice") {
+        const checked = document.querySelectorAll(`input[name="sim-${q.id}"]:checked`);
+        if (checked.length) answers[q.id] = [...checked].map(c => c.value);
+      }
+    }
+  }
+  return answers;
+}
+
+async function runSimulation() {
+  const btn = $("#btn-sim-run");
+  btn.disabled = true;
+  btn.textContent = "A executar…";
+  const resultWrap = $("#sim-result");
+  resultWrap.innerHTML = "";
+
+  try {
+    const answers = collectSimAnswers();
+    const body = {
+      answers,
+      track: $("#sim-track").value,
+      institution: $("#sim-institution").value || "Simulação",
+      lang: "pt",
+    };
+    const data = await api("/admin/simulate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    const resumo = data.resumo || {};
+    let html = `<div class="sim-result-card">
+      <h3>Resultado da Simulação</h3>
+      <div class="stats-row" style="margin-bottom:1rem">
+        <div class="stat-card"><div class="stat-value">${resumo.total_sujeitos_auditoria ?? "—"}</div><div class="stat-label">Sujeitos a auditoria</div></div>
+        <div class="stat-card"><div class="stat-value">${resumo.total_fora_escopo_auditoria ?? "—"}</div><div class="stat-label">Fora do escopo</div></div>
+        <div class="stat-card"><div class="stat-value">${resumo.obrigatorios_matriz ?? "—"}</div><div class="stat-label">Obrigatórios</div></div>
+        <div class="stat-card"><div class="stat-value">${resumo.acionados_por_respostas ?? "—"}</div><div class="stat-label">Condicionais</div></div>
+      </div>`;
+
+    const incisos = data.incisos_sujeitos_auditoria || [];
+    if (incisos.length) {
+      html += `<details><summary style="cursor:pointer;font-weight:600;margin-bottom:.5rem">Incisos sujeitos (${incisos.length})</summary>
+        <div class="sim-incisos">`;
+      for (const inc of incisos) {
+        const label = typeof inc === "string" ? inc : (inc.inciso || JSON.stringify(inc));
+        html += `<span class="sim-inciso">${esc(label)}</span>`;
+      }
+      html += "</div></details>";
+    }
+    html += "</div>";
+    resultWrap.innerHTML = html;
+  } catch (e) {
+    resultWrap.innerHTML = `<div class="empty-state">Erro: ${esc(e.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "▶ Executar simulação";
+  }
+}
+
+// ── Compare ──────────────────────────────────────────────────────────────────
+
+function updateCompareBar() {
+  const bar = $("#compare-bar");
+  if (!bar) return;
+  if (compareSelection.size >= 2) {
+    bar.classList.remove("hidden");
+    $("#btn-compare").textContent = `⇄ Comparar selecionados (${compareSelection.size})`;
+  } else {
+    bar.classList.add("hidden");
+  }
+}
+
+async function showCompare(idA, idB) {
+  hideAllViews();
+  $("#view-detail").classList.remove("hidden");
+  const wrap = $("#view-detail");
+  wrap.innerHTML = '<div class="empty-state">A carregar comparação…</div>';
+
+  try {
+    const [a, b] = await Promise.all([
+      api(`/admin/submissions/${idA}`),
+      api(`/admin/submissions/${idB}`),
+    ]);
+
+    const snapA = a.scope_snapshot || {};
+    const snapB = b.scope_snapshot || {};
+    const incisosA = snapA.incisos_sujeitos || [];
+    const incisosB = snapB.incisos_sujeitos || [];
+    const setA = new Set(incisosA.map(i => i.inciso || i));
+    const setB = new Set(incisosB.map(i => i.inciso || i));
+    const allIncisos = [...new Set([...setA, ...setB])].sort();
+
+    let rows = "";
+    let onlyA = 0, onlyB = 0, both = 0;
+    for (const inc of allIncisos) {
+      const inA = setA.has(inc);
+      const inB = setB.has(inc);
+      let cls = "";
+      if (inA && inB) { cls = "cmp-both"; both++; }
+      else if (inA) { cls = "cmp-only-a"; onlyA++; }
+      else { cls = "cmp-only-b"; onlyB++; }
+      rows += `<tr class="${cls}">
+        <td class="mono">${esc(inc)}</td>
+        <td style="text-align:center">${inA ? "✓" : "—"}</td>
+        <td style="text-align:center">${inB ? "✓" : "—"}</td>
+      </tr>`;
+    }
+
+    const labelA = a.institution || a.id.slice(0, 8);
+    const labelB = b.institution || b.id.slice(0, 8);
+
+    wrap.innerHTML = `
+      <button class="detail-back" id="cmp-back">← Voltar</button>
+      <h2 style="margin:.5rem 0 0">Comparação de submissões</h2>
+      <div class="cmp-header">
+        <div class="cmp-col">
+          <span class="cmp-label cmp-label-a">A</span>
+          <strong>${esc(labelA)}</strong>
+          <span class="text-muted mono" style="font-size:.75rem">${fmtDate(a.created_at)} · ${a.track}</span>
+        </div>
+        <div class="cmp-col">
+          <span class="cmp-label cmp-label-b">B</span>
+          <strong>${esc(labelB)}</strong>
+          <span class="text-muted mono" style="font-size:.75rem">${fmtDate(b.created_at)} · ${b.track}</span>
+        </div>
+      </div>
+      <div class="cmp-stats">
+        <span class="cmp-stat cmp-both">Ambos: ${both}</span>
+        <span class="cmp-stat cmp-only-a">Apenas A: ${onlyA}</span>
+        <span class="cmp-stat cmp-only-b">Apenas B: ${onlyB}</span>
+      </div>
+      <div class="sub-table-wrap"><table class="sub-table cmp-table">
+        <thead><tr>
+          <th>Inciso</th><th style="text-align:center">${esc(labelA)}</th><th style="text-align:center">${esc(labelB)}</th>
+        </tr></thead><tbody>${rows}</tbody>
+      </table></div>`;
+
+    $("#cmp-back").addEventListener("click", () => showDashboard());
+  } catch (e) {
+    wrap.innerHTML = `<div class="empty-state">Erro: ${esc(e.message)}<br><button class="detail-back" onclick="showDashboard()">Voltar</button></div>`;
+  }
+}
+
+// ── Audit Log ────────────────────────────────────────────────────────────────
+
+const ACTION_LABELS = {
+  login: "Login",
+  delete_submission: "Apagou submissão",
+  export_csv: "Exportou CSV",
+};
+
+async function loadAuditLog() {
+  const wrap = $("#audit-table-wrap");
+  wrap.innerHTML = '<div class="empty-state">A carregar…</div>';
+  try {
+    const data = await api("/admin/audit?limit=100");
+    if (!data.items.length) {
+      wrap.innerHTML = '<div class="empty-state"><div class="empty-state-icon">&#128221;</div><p>Nenhuma entrada no audit log.</p></div>';
+      return;
+    }
+    let html = `<div class="sub-table-wrap"><table class="sub-table">
+      <thead><tr>
+        <th>Data</th><th>Ação</th><th>Ator</th><th>IP</th><th>Detalhe</th>
+      </tr></thead><tbody>`;
+    for (const r of data.items) {
+      html += `<tr>
+        <td class="mono" style="white-space:nowrap">${fmtDate(r.created_at)}</td>
+        <td>${esc(ACTION_LABELS[r.action] || r.action)}</td>
+        <td>${esc(r.actor || "—")}</td>
+        <td class="mono">${esc(r.ip || "—")}</td>
+        <td class="mono text-muted" style="max-width:200px;overflow:hidden;text-overflow:ellipsis">${esc(r.detail || "—")}</td>
+      </tr>`;
+    }
+    html += "</tbody></table></div>";
+    wrap.innerHTML = html;
+  } catch (e) {
+    wrap.innerHTML = `<div class="empty-state">Erro: ${esc(e.message)}</div>`;
+  }
+}
+
 // ── Events ───────────────────────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -604,6 +905,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("#password-form")?.addEventListener("submit", handlePasswordSubmit);
+
+  $("#btn-audit")?.addEventListener("click", (e) => { e.preventDefault(); showAuditLog(); });
+  $("#btn-audit-back")?.addEventListener("click", () => showDashboard());
+
+  $("#btn-simulate")?.addEventListener("click", (e) => { e.preventDefault(); showSimulate(); });
+  $("#btn-sim-back")?.addEventListener("click", () => showDashboard());
+  $("#btn-sim-run")?.addEventListener("click", () => runSimulation());
+  $("#sim-track")?.addEventListener("change", () => { simQuestions = null; loadSimQuestions(); });
 
   if (sessionToken) {
     api("/admin/stats")
