@@ -16,7 +16,8 @@ Env: LOG_LEVEL, LOG_FORMAT=text|json, RATE_LIMIT_* (ver rate_limit.py), RATE_LIM
      CORS_ALLOWED_ORIGINS (lista CSV; omissão = *),
      CERTIK_ENABLE_CUSTODIANTE_TRACK, CERTIK_ENABLE_CORRETORA_TRACK (0|false|off desativa a trilha),
      DATABASE_URL (persistence; sqlite:///x.db local, postgresql://… produção),
-     ADMIN_SECRET (HMAC key for admin session tokens),
+     ADMIN_SECRET (HMAC key for admin session tokens — also used as login password if ADMIN_PASSWORD not set),
+     ADMIN_PASSWORD (optional separate password for admin login; defaults to ADMIN_SECRET),
      GOOGLE_CLIENT_ID (Google OAuth — admin login restricted to @certik.com)
 
 Local: uvicorn main:app --reload --host 127.0.0.1 --port 8000
@@ -517,6 +518,27 @@ admin_router = APIRouter(tags=["admin"])
 ADMIN_ALLOWED_DOMAIN = "certik.com"
 _SESSION_TTL = 86400  # 24 h
 
+_LOGIN_MAX_ATTEMPTS = 5
+_LOGIN_LOCKOUT_SECS = 60
+_login_attempts: dict[str, list[float]] = {}
+
+
+def _check_login_rate_limit(ip: str) -> None:
+    """Raise 429 if IP exceeded login attempts within the lockout window."""
+    now = time.time()
+    attempts = _login_attempts.get(ip, [])
+    attempts = [t for t in attempts if now - t < _LOGIN_LOCKOUT_SECS]
+    _login_attempts[ip] = attempts
+    if len(attempts) >= _LOGIN_MAX_ATTEMPTS:
+        raise HTTPException(
+            status_code=429,
+            detail={"code": "TOO_MANY_ATTEMPTS", "message": f"Demasiadas tentativas. Aguarde {_LOGIN_LOCKOUT_SECS}s."},
+        )
+
+
+def _record_login_attempt(ip: str) -> None:
+    _login_attempts.setdefault(ip, []).append(time.time())
+
 
 def _admin_sign_session(email: str, name: str = "") -> str:
     """Create an HMAC-signed session token (valid _SESSION_TTL seconds)."""
@@ -581,27 +603,30 @@ class AdminLoginRequest(BaseModel):
 def admin_config() -> dict[str, Any]:
     """Public config needed by the admin frontend."""
     cid = os.environ.get("GOOGLE_CLIENT_ID", "")
-    has_secret = bool(os.environ.get("ADMIN_SECRET", ""))
     return {
         "google_client_id": cid,
         "domain": ADMIN_ALLOWED_DOMAIN,
-        "password_login": has_secret and not cid,
     }
 
 
 @admin_router.post("/admin/login")
-def admin_login(body: AdminLoginRequest) -> dict[str, Any]:
-    """Login via Google ID token or fallback password (ADMIN_SECRET)."""
+def admin_login(body: AdminLoginRequest, request: Request) -> dict[str, Any]:
+    """Login via Google ID token or fallback password (ADMIN_PASSWORD / ADMIN_SECRET)."""
     admin_secret = os.environ.get("ADMIN_SECRET", "")
     if not admin_secret:
         raise HTTPException(status_code=503, detail={"code": "NOT_CONFIGURED", "message": "ADMIN_SECRET not set."})
+
+    client_ip = request.client.host if request.client else "unknown"
+    _check_login_rate_limit(client_ip)
 
     cid = os.environ.get("GOOGLE_CLIENT_ID", "")
 
     # --- Password fallback (when Google OAuth is not configured) ---
     if body.password:
         import hmac as _hmac_pw
-        if not _hmac_pw.compare_digest(body.password, admin_secret):
+        admin_password = os.environ.get("ADMIN_PASSWORD", admin_secret)
+        if not _hmac_pw.compare_digest(body.password, admin_password):
+            _record_login_attempt(client_ip)
             raise HTTPException(status_code=401, detail={"code": "WRONG_PASSWORD", "message": "Senha incorreta."})
         session_token = _admin_sign_session("admin@local", "Administrador")
         return {"session_token": session_token, "email": "admin@local", "name": "Administrador"}
@@ -619,13 +644,16 @@ def admin_login(body: AdminLoginRequest) -> dict[str, Any]:
         idinfo = google_id_token.verify_oauth2_token(body.credential, google_requests.Request(), cid)
     except Exception as exc:
         logger.warning("Google token verification failed: %s", exc)
+        _record_login_attempt(client_ip)
         raise HTTPException(status_code=401, detail={"code": "INVALID_TOKEN", "message": "Google token inválido."}) from exc
 
     email = (idinfo.get("email") or "").lower().strip()
     if not idinfo.get("email_verified"):
+        _record_login_attempt(client_ip)
         raise HTTPException(status_code=403, detail={"code": "EMAIL_NOT_VERIFIED", "message": "Email não verificado pelo Google."})
     if not email.endswith(f"@{ADMIN_ALLOWED_DOMAIN}"):
         logger.warning("Admin login rejected for %s (not @%s)", email, ADMIN_ALLOWED_DOMAIN)
+        _record_login_attempt(client_ip)
         raise HTTPException(status_code=403, detail={"code": "DOMAIN_DENIED", "message": f"Apenas contas @{ADMIN_ALLOWED_DOMAIN} podem aceder."})
 
     name = idinfo.get("name", "")

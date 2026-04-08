@@ -14,6 +14,7 @@ const PAGE_SIZE = 30;
 let currentOffset = 0;
 let currentTrack = "";
 let currentSearch = "";
+let currentSort = { col: "created_at", asc: false };
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -61,6 +62,7 @@ function clearSession() {
   sessionEmail = "";
   sessionStorage.removeItem("admin_session");
   sessionStorage.removeItem("admin_email");
+  _loginInitDone = false;
 }
 
 // ── Views ────────────────────────────────────────────────────────────────────
@@ -106,7 +108,7 @@ async function initLoginUI() {
   try {
     const cfg = await fetch(`${API}/admin/config`).then((r) => r.json());
     _googleClientId = cfg.google_client_id || "";
-    _usePasswordLogin = cfg.password_login || false;
+    _usePasswordLogin = !_googleClientId;
   } catch {
     $("#login-error").textContent = "Não foi possível obter configuração do servidor.";
     return;
@@ -120,38 +122,53 @@ async function initLoginUI() {
     return;
   }
 
-  if (_googleClientId) {
-    $("#login-sub").innerHTML = 'Faça login com a sua conta Google <strong>@certik.com</strong>.';
-    $("#password-form").classList.add("hidden");
-    $("#google-signin-btn").classList.remove("hidden");
-    initGoogleButton();
-    return;
-  }
-
-  $("#login-error").textContent = "Login não configurado. Defina ADMIN_SECRET nas variáveis de ambiente.";
+  $("#login-sub").innerHTML = 'Faça login com a sua conta Google <strong>@certik.com</strong>.';
+  $("#password-form").classList.add("hidden");
+  $("#google-signin-btn").classList.remove("hidden");
+  initGoogleButton();
 }
 
 function initGoogleButton() {
+  function loadGsiScript() {
+    return new Promise((resolve, reject) => {
+      if (window.google?.accounts?.id) return resolve();
+      if (document.querySelector('script[src*="accounts.google.com/gsi/client"]')) {
+        waitForGoogle(resolve, 40);
+        return;
+      }
+      const s = document.createElement("script");
+      s.src = "https://accounts.google.com/gsi/client";
+      s.async = true;
+      s.onload = () => waitForGoogle(resolve, 20);
+      s.onerror = () => reject(new Error("Failed to load Google Sign-In"));
+      document.head.appendChild(s);
+    });
+  }
+
   function waitForGoogle(cb, retries = 20) {
     if (window.google?.accounts?.id) return cb();
     if (retries <= 0) { $("#login-error").textContent = "Google Sign-In não carregou."; return; }
     setTimeout(() => waitForGoogle(cb, retries - 1), 250);
   }
 
-  waitForGoogle(() => {
-    google.accounts.id.initialize({
-      client_id: _googleClientId,
-      callback: handleGoogleCredential,
+  loadGsiScript()
+    .then(() => {
+      google.accounts.id.initialize({
+        client_id: _googleClientId,
+        callback: handleGoogleCredential,
+      });
+      google.accounts.id.renderButton($("#google-signin-btn"), {
+        theme: "filled_black",
+        size: "large",
+        shape: "pill",
+        text: "signin_with",
+        locale: "pt-BR",
+      });
+      _loginInitDone = true;
+    })
+    .catch(() => {
+      $("#login-error").textContent = "Google Sign-In não carregou.";
     });
-    google.accounts.id.renderButton($("#google-signin-btn"), {
-      theme: "filled_black",
-      size: "large",
-      shape: "pill",
-      text: "signin_with",
-      locale: "pt-BR",
-    });
-    _loginInitDone = true;
-  });
 }
 
 async function handleGoogleCredential(response) {
@@ -169,12 +186,19 @@ async function handlePasswordSubmit(e) {
   e.preventDefault();
   const pw = $("#password-input").value.trim();
   if (!pw) return;
+  const btn = $("#password-form .login-btn");
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "A entrar…";
   $("#login-error").textContent = "";
   try {
     const data = await doLogin({ password: pw });
     applySession(data);
   } catch (err) {
     $("#login-error").textContent = err.message || "Erro ao autenticar.";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
   }
 }
 
@@ -204,6 +228,12 @@ function applySession(data) {
 async function loadStats() {
   try {
     const data = await api("/admin/stats");
+
+    if (data.db === false) {
+      $("#stats-row").innerHTML = `<div class="alert-banner">Base de dados não configurada — defina <code>DATABASE_URL</code> nas variáveis de ambiente para ativar a persistência.</div>`;
+      return;
+    }
+
     const byTrack = data.by_track || {};
     const cards = [
       { val: data.total, label: "Total submissões" },
@@ -240,25 +270,61 @@ async function loadSubmissions() {
 
 function renderTable(items) {
   if (!items.length) {
-    $("#table-wrap").innerHTML = '<div class="empty-state">Nenhuma submissão encontrada.</div>';
+    const hasFilters = currentTrack || currentSearch;
+    const msg = hasFilters
+      ? "Nenhuma submissão corresponde aos filtros atuais."
+      : "Ainda não há submissões. Os dados aparecerão quando clientes completarem o questionário.";
+    $("#table-wrap").innerHTML = `<div class="empty-state"><div class="empty-state-icon">&#128203;</div><p>${msg}</p></div>`;
     return;
   }
+  function sortIndicator(col) {
+    if (currentSort.col !== col) return "";
+    return currentSort.asc ? " ▲" : " ▼";
+  }
+
+  const sorted = [...items].sort((a, b) => {
+    const col = currentSort.col;
+    let va = a[col] ?? "", vb = b[col] ?? "";
+    if (col === "created_at") { va = va || ""; vb = vb || ""; }
+    if (typeof va === "number" && typeof vb === "number") return currentSort.asc ? va - vb : vb - va;
+    return currentSort.asc ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+  });
+
+  const cols = [
+    { key: "created_at", label: "Data", align: "left" },
+    { key: "institution", label: "Instituição", align: "left" },
+    { key: "track", label: "Trilha", align: "left" },
+    { key: "lang", label: "Lang", align: "center" },
+    { key: "total_sujeitos", label: "Auditoria", align: "right" },
+    { key: "total_fora", label: "Fora", align: "right" },
+  ];
+
   let html = `<div class="sub-table-wrap"><table class="sub-table">
-    <thead><tr>
-      <th>Data</th><th>Instituição</th><th>Trilha</th>
-      <th style="text-align:right">Auditoria</th><th style="text-align:right">Fora</th>
-    </tr></thead><tbody>`;
-  for (const r of items) {
+    <thead><tr>${cols.map((c) =>
+      `<th class="sortable-th" data-sort="${c.key}" style="text-align:${c.align};cursor:pointer">${c.label}${sortIndicator(c.key)}</th>`
+    ).join("")}</tr></thead><tbody>`;
+
+  for (const r of sorted) {
     html += `<tr data-id="${esc(r.id)}">
       <td class="mono" style="white-space:nowrap">${fmtDate(r.created_at)}</td>
       <td>${esc(r.institution || "—")}</td>
       <td>${trackPill(r.track)}</td>
+      <td style="text-align:center" class="mono">${esc(r.lang || "—")}</td>
       <td style="text-align:right" class="mono">${r.total_sujeitos ?? "—"}</td>
       <td style="text-align:right" class="mono">${r.total_fora ?? "—"}</td>
     </tr>`;
   }
   html += "</tbody></table></div>";
   $("#table-wrap").innerHTML = html;
+
+  for (const th of document.querySelectorAll(".sortable-th")) {
+    th.addEventListener("click", () => {
+      const col = th.dataset.sort;
+      if (currentSort.col === col) { currentSort.asc = !currentSort.asc; }
+      else { currentSort = { col, asc: true }; }
+      renderTable(items);
+    });
+  }
 
   for (const tr of document.querySelectorAll(".sub-table tbody tr")) {
     tr.addEventListener("click", () => showDetail(tr.dataset.id));
