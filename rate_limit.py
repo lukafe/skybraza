@@ -1,6 +1,8 @@
 """
-Rate limiting best-effort por IP (ou X-Forwarded-For) — útil em instância única; em serverless
-cada invocação pode ser isolada. Desligar: RATE_LIMIT_DISABLED=1
+Rate limiting best-effort por IP (ou X-Forwarded-For). Desligar: RATE_LIMIT_DISABLED=1
+
+Com REDIS_URL definido e o pacote ``redis`` instalado, usa contagem distribuída (janela fixa de 60s por minuto
+de relógio); caso contrário, memória por instância (serverless = limitação parcial).
 
 TRUST_PROXY_DEPTH: 0 = ignorar X-Forwarded-For (IP da ligação apenas; útil em dev).
   >= 1 = usar o primeiro hop de X-Forwarded-For (omissão 1, p.ex. atrás da Vercel).
@@ -9,12 +11,15 @@ TRUST_PROXY_DEPTH: 0 = ignorar X-Forwarded-For (IP da ligação apenas; útil em
 from __future__ import annotations
 
 import asyncio
+import logging
 import os
 import time
 from typing import Callable
 
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
+
+_logger = logging.getLogger(__name__)
 
 
 def _client_key(request: Request) -> str:
@@ -106,15 +111,55 @@ def rate_limit_exempt_path(path: str) -> bool:
     return not path.startswith("/api")
 
 
+def _redis_allow_sync(client_key: str) -> bool | None:
+    """
+    Fixed 60s window per wall-clock minute, shared across instances.
+    Returns True/False when Redis is used; None to fall back to in-memory limiter.
+    """
+    url = (os.environ.get("REDIS_URL") or "").strip()
+    if not url:
+        return None
+    try:
+        import redis  # type: ignore[import-untyped]
+    except ImportError:
+        return None
+    try:
+        r = redis.from_url(url, decode_responses=True, socket_connect_timeout=2, socket_timeout=2)
+        max_hits = _int_env("RATE_LIMIT_MAX_REQUESTS", 120)
+        bucket = int(time.time() // 60)
+        safe = client_key.replace(":", "_")[:200]
+        k = f"rl:{safe}:{bucket}"
+        n = int(r.incr(k))
+        if n == 1:
+            r.expire(k, 120)
+        return n <= max_hits
+    except Exception:
+        _logger.debug("Redis rate limit failed; falling back to memory", exc_info=True)
+        return None
+
+
 def build_rate_limit_middleware() -> Callable:
     async def middleware(request: Request, call_next: Callable) -> Response:
         path = request.url.path
         if rate_limit_exempt_path(path):
             return await call_next(request)
+        key = _client_key(request)
+        redis_ok = await asyncio.to_thread(_redis_allow_sync, key)
+        if redis_ok is not None:
+            if not redis_ok:
+                return JSONResponse(
+                    status_code=429,
+                    content={
+                        "detail": {
+                            "code": "RATE_LIMIT_EXCEEDED",
+                            "message": "Demasiados pedidos. Aguarde um momento e tente novamente.",
+                        }
+                    },
+                )
+            return await call_next(request)
         lim = _get_limiter()
         if lim is None:
             return await call_next(request)
-        key = _client_key(request)
         if not await lim.allow(key):
             return JSONResponse(
                 status_code=429,

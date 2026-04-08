@@ -2182,6 +2182,14 @@ body.app-view-intro .sk-main {
   color: #5c5c64;
 }
 
+.intro-landing__cta .field-hint {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.7rem;
+  line-height: 1.35;
+  color: #717179;
+}
+
 .intro-landing__input:hover {
   border-color: rgba(255, 255, 255, 0.14);
   background: rgba(44, 44, 52, 0.98);

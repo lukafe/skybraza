@@ -27,7 +27,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/css/styles.css?v=44" />
+    <link rel="stylesheet" href="/static/css/styles.css?v=45" />
     <!-- Preload critical fetch so the browser starts downloading before JS executes -->
     <link rel="preload" href="/static/data/i18n.json?v=9" as="fetch" crossorigin />
     <!-- Modulepreload: browser discovers these imports only after parsing app.js;
@@ -123,6 +123,22 @@
                   autocomplete="organization"
                   aria-required="true"
                 />
+              </label>
+              <label class="field">
+                <span class="field-label intro-landing__field-label" data-i18n="notify_email_label">Email (opcional)</span>
+                <input
+                  type="email"
+                  id="notify-email"
+                  name="notify_email"
+                  class="intro-landing__input"
+                  maxlength="254"
+                  data-i18n-ph="notify_email_ph"
+                  placeholder="Receber link do resultado por email"
+                  autocomplete="email"
+                  inputmode="email"
+                  aria-describedby="notify-email-hint"
+                />
+                <span id="notify-email-hint" class="field-hint" data-i18n="notify_email_hint">Só é usado se o servidor estiver configurado para enviar o link.</span>
               </label>
               <button type="button" class="btn btn-primary btn-hero intro-landing__submit" id="btn-start" data-i18n="btn_continue">
                 Continuar
@@ -506,6 +522,6 @@
 
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-    <script src="/static/js/app.js?v=48" type="module"></script>
+    <script src="/static/js/app.js?v=49" type="module"></script>
   </body>
 </html>

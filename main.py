@@ -19,7 +19,10 @@ Env: LOG_LEVEL, LOG_FORMAT=text|json, RATE_LIMIT_* (ver rate_limit.py), RATE_LIM
      ADMIN_SECRET (HMAC key for admin session tokens — also used as login password if ADMIN_PASSWORD not set),
      ADMIN_PASSWORD (optional separate password for admin login; defaults to ADMIN_SECRET),
      GOOGLE_CLIENT_ID (Google OAuth — admin login restricted to @certik.com),
-     WEBHOOK_URL (optional — POST notification on each new submission)
+     WEBHOOK_URL (optional — POST notification on each new submission),
+     SMTP_HOST, SMTP_FROM, PUBLIC_APP_URL (+ SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_USE_SSL)
+       — optional: send result link email when client submits notify_email on POST /scope
+     REDIS_URL (optional — distributed API rate limit; fixed 60s window per IP; requires redis package)
 
 Local: uvicorn main:app --reload --host 127.0.0.1 --port 8000
 """
@@ -43,7 +46,7 @@ from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from fastapi.middleware.gzip import GZipMiddleware  # noqa: E402
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, StreamingResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
-from pydantic import BaseModel, Field, model_validator  # noqa: E402
+from pydantic import BaseModel, Field, field_validator, model_validator  # noqa: E402
 
 from logging_config import configure_logging  # noqa: E402
 from rate_limit import build_rate_limit_middleware  # noqa: E402
@@ -71,6 +74,15 @@ def corretora_track_enabled() -> bool:
     """Trilha corretora na API/UI. Desative com CERTIK_ENABLE_CORRETORA_TRACK=0|false|off."""
     v = (os.environ.get("CERTIK_ENABLE_CORRETORA_TRACK") or "").strip().lower()
     return v not in ("0", "false", "no", "off")
+
+
+def _notify_email_feature_flag() -> bool:
+    try:
+        from result_email import notify_email_configured
+
+        return notify_email_configured()
+    except Exception:
+        return False
 
 
 def _raise_if_track_disabled(t: str) -> None:
@@ -219,6 +231,23 @@ class ScopeRequest(BaseModel):
     answers: dict[str, Any] = Field(default_factory=dict)
     track: str = Field(default="intermediaria", description="intermediaria | custodiante | corretora")
     lang: str = Field(default="pt", description="pt | en — language for generated narratives")
+    notify_email: str = Field(
+        default="",
+        max_length=254,
+        description="Optional email — result link sent when SMTP + PUBLIC_APP_URL are configured",
+    )
+
+    @field_validator("notify_email", mode="after")
+    @classmethod
+    def _validate_notify_email(cls, v: str) -> str:
+        s = (v or "").strip()
+        if not s:
+            return ""
+        from result_email import is_plausible_email
+
+        if not is_plausible_email(s):
+            raise ValueError("notify_email: endereço inválido.")
+        return s
 
     @model_validator(mode="after")
     def validate_answers_bounds(self) -> ScopeRequest:
@@ -254,6 +283,7 @@ def health() -> dict[str, Any]:
             "custodiante_track": custodiante_track_enabled(),
             "corretora_track": corretora_track_enabled(),
             "database": _db,
+            "notify_email": _notify_email_feature_flag(),
         },
     }
 
@@ -393,6 +423,14 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
     if sub_id:
         result["submission_id"] = sub_id
         _fire_webhook(sub_id, inst, t, meta["total_count"])
+        if body.notify_email.strip():
+            try:
+                from result_email import notify_email_configured, send_submission_result_email
+
+                if notify_email_configured():
+                    send_submission_result_email(body.notify_email.strip(), sub_id, inst, lang)
+            except Exception:
+                logger.debug("Result email skipped", exc_info=True)
 
     return result
 

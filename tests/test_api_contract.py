@@ -35,6 +35,8 @@ def test_health_includes_api_schema_version(client: TestClient) -> None:
     assert isinstance(feat["custodiante_track"], bool)
     assert "corretora_track" in feat
     assert isinstance(feat["corretora_track"], bool)
+    assert "notify_email" in feat
+    assert isinstance(feat["notify_email"], bool)
 
 
 def test_v1_routes_mirror_legacy(client: TestClient) -> None:
@@ -109,6 +111,14 @@ def test_post_scope_corretora_mandatory_count(client: TestClient) -> None:
     exp = len(build_mandatory_keys("corretora"))
     assert data["resumo"]["obrigatorios_matriz"] == exp
     assert data["resumo"]["total_sujeitos_auditoria"] >= exp
+
+
+def test_post_scope_invalid_notify_email_returns_422(client: TestClient) -> None:
+    r = client.post(
+        "/api/v1/scope",
+        json={"institution": "X", "answers": {}, "notify_email": "not-an-email"},
+    )
+    assert r.status_code == 422
 
 
 def test_post_scope_minimal_contract(client: TestClient) -> None:

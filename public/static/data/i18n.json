@@ -25,6 +25,9 @@
 
   "institution_label":      { "pt": "Nome da sua empresa",              "en": "Your company name" },
   "institution_ph":         { "pt": "Ex.: nome da empresa ou do projeto", "en": "E.g.: company or project name" },
+  "notify_email_label":     { "pt": "Email (opcional)",                 "en": "Email (optional)" },
+  "notify_email_ph":        { "pt": "Receber link do resultado por email", "en": "Receive result link by email" },
+  "notify_email_hint":      { "pt": "Só é usado se o servidor estiver configurado para enviar o link.", "en": "Only used if the server is configured to send the link." },
   "btn_continue":           { "pt": "Continuar",                        "en": "Continue" },
 
   "resume_text":            { "pt": "Sessão anterior guardada.",         "en": "Previous session saved." },

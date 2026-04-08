@@ -1002,11 +1002,13 @@ async function renderCjInsightsPanel(inScopeIds) {
 
 async function submitScope() {
   const institution = ($("#institution").value || "").trim();
+  const notifyEmail = ($("#notify-email")?.value || "").trim();
   const payload = {
     institution,
     track: state.track,
     answers: { ...state.answers },
     lang: getCurrentLang(),
+    ...(notifyEmail ? { notify_email: notifyEmail } : {}),
   };
 
   let data;
@@ -1464,6 +1466,8 @@ async function boot() {
 
   $("#btn-restart").addEventListener("click", () => {
     $("#institution").value = "";
+    const ne = $("#notify-email");
+    if (ne) ne.value = "";
     state.blocks = [];
     state.step = 0;
     state.track = "intermediaria";
