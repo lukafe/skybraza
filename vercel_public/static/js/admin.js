@@ -246,9 +246,52 @@ async function loadStats() {
     $("#stats-row").innerHTML = cards
       .map((c) => `<div class="stat-card"><div class="stat-val">${c.val}</div><div class="stat-label">${c.label}</div></div>`)
       .join("");
+
+    renderDailyChart(data.daily || {});
   } catch {
     $("#stats-row").innerHTML = "";
   }
+}
+
+function renderDailyChart(daily) {
+  let container = $("#daily-chart");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "daily-chart";
+    container.className = "daily-chart";
+    $("#stats-row").after(container);
+  }
+
+  const today = new Date();
+  const days = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    days.push({ key, count: daily[key] || 0 });
+  }
+
+  const max = Math.max(1, ...days.map((d) => d.count));
+
+  container.innerHTML = `
+    <div class="daily-chart-header">
+      <span class="daily-chart-title">Últimos 30 dias</span>
+      <span class="daily-chart-total">${days.reduce((s, d) => s + d.count, 0)} submissões</span>
+    </div>
+    <div class="daily-chart-bars">
+      ${days.map((d) => {
+        const h = Math.max(2, (d.count / max) * 100);
+        const label = d.key.slice(5);
+        return `<div class="daily-bar-col" title="${label}: ${d.count}">
+          <div class="daily-bar" style="height:${h}%"></div>
+        </div>`;
+      }).join("")}
+    </div>
+    <div class="daily-chart-labels">
+      <span>${days[0].key.slice(5)}</span>
+      <span>${days[Math.floor(days.length / 2)].key.slice(5)}</span>
+      <span>${days[days.length - 1].key.slice(5)}</span>
+    </div>`;
 }
 
 // ── List ─────────────────────────────────────────────────────────────────────
@@ -380,6 +423,10 @@ async function loadDetail(id) {
     const fora = snap.incisos_fora_escopo_auditoria || [];
     const answers = data.answers || {};
 
+    const schemaVersion = snap.api_schema_version || "—";
+    const matrixVersion = snap.matrix_version || "—";
+    const permalinkUrl = `${window.location.origin}/resultado/${data.id}`;
+
     let html = `
       <button class="detail-back" id="btn-back-list">← Voltar à lista</button>
       <div class="detail-hero">
@@ -388,6 +435,11 @@ async function loadDetail(id) {
           <span>${trackPill(data.track)}</span>
           <span>${fmtDate(data.created_at)}</span>
           <span class="mono text-muted">${esc(data.id)}</span>
+        </div>
+        <div class="detail-meta" style="margin-top:0.35rem">
+          <span class="mono text-muted" title="Schema API">API v${esc(schemaVersion)}</span>
+          <span class="mono text-muted" title="Versão da matriz">Matriz: ${esc(matrixVersion)}</span>
+          <a href="${permalinkUrl}" target="_blank" class="detail-permalink" title="Link público do resultado">🔗 Permalink</a>
         </div>
       </div>
 

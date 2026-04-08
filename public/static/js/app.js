@@ -1124,6 +1124,24 @@ async function submitScope() {
   state._lastScopeData = data;
   state._lastInstitution = ($("#institution").value || "").trim();
 
+  // Show permalink banner if submission was persisted
+  if (data.submission_id) {
+    const linkUrl = `${window.location.origin}/resultado/${data.submission_id}`;
+    const banner = document.createElement("div");
+    banner.className = "permalink-banner";
+    banner.innerHTML = `<span>Guarde este link para consultar o resultado mais tarde:</span>
+      <a href="${linkUrl}" target="_blank" class="permalink-link">${linkUrl}</a>
+      <button class="permalink-copy" title="Copiar link">Copiar</button>`;
+    banner.querySelector(".permalink-copy").addEventListener("click", () => {
+      navigator.clipboard.writeText(linkUrl).then(() => {
+        banner.querySelector(".permalink-copy").textContent = "Copiado!";
+        setTimeout(() => { banner.querySelector(".permalink-copy").textContent = "Copiar"; }, 2000);
+      });
+    });
+    const resultsBody = $("#results-body");
+    if (resultsBody) resultsBody.prepend(banner);
+  }
+
   setView("results");
   clearProgressStorage();
   requestAnimationFrame(() => {

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Resultado — CertiK VASP Scoping</title>
+    <link rel="icon" href="/static/img/favicon.svg?v=1" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/admin.css?v=3" />
+    <style>
+      .result-wrap { max-width: 860px; margin: 0 auto; padding: 2rem 1.25rem; }
+      .result-header { text-align: center; margin-bottom: 2rem; }
+      .result-header h1 { font-size: 1.5rem; margin: 0 0 0.25rem; }
+      .result-header p { color: var(--text-muted); font-size: 0.88rem; margin: 0; }
+      .result-footer { text-align: center; margin-top: 2rem; padding-bottom: 2rem; }
+      .result-footer a {
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      .result-footer a:hover { color: var(--accent-bright); }
+    </style>
+  </head>
+  <body>
+    <header class="admin-header">
+      <div class="wrap">
+        <a class="admin-brand" href="/">CertiK<span>VASP Scoping</span></a>
+      </div>
+    </header>
+
+    <div id="view-loading" class="result-wrap">
+      <div class="empty-state">A carregar resultado…</div>
+    </div>
+
+    <div id="view-result" class="result-wrap hidden"></div>
+
+    <div id="view-error" class="result-wrap hidden">
+      <div class="empty-state">
+        <div class="empty-state-icon">&#128683;</div>
+        <p id="error-msg">Resultado não encontrado.</p>
+      </div>
+    </div>
+
+    <script type="module">
+      const $ = (s) => document.querySelector(s);
+
+      function esc(s) {
+        const el = document.createElement("span");
+        el.textContent = s;
+        return el.innerHTML;
+      }
+
+      function fmtDate(iso) {
+        if (!iso) return "";
+        const d = new Date(iso);
+        return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" })
+          + " " + d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+      }
+
+      const path = window.location.pathname;
+      const subId = path.split("/resultado/")[1];
+      if (!subId) {
+        showError("URL inválido.");
+      } else {
+        loadResult(subId);
+      }
+
+      async function loadResult(id) {
+        try {
+          const res = await fetch(`/api/v1/resultado/${id}`);
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || "Resultado não encontrado.");
+          }
+          const data = await res.json();
+          render(data);
+        } catch (e) {
+          showError(e.message);
+        }
+      }
+
+      function showError(msg) {
+        $("#view-loading").classList.add("hidden");
+        $("#view-result").classList.add("hidden");
+        $("#view-error").classList.remove("hidden");
+        $("#error-msg").textContent = msg;
+      }
+
+      function render(data) {
+        $("#view-loading").classList.add("hidden");
+        $("#view-error").classList.add("hidden");
+        $("#view-result").classList.remove("hidden");
+
+        const resumo = data.resumo || {};
+        const audit = data.incisos_sujeitos_auditoria || [];
+        const fora = data.incisos_fora_escopo_auditoria || [];
+        const trackLabel = { intermediaria: "Intermediária", custodiante: "Custodiante", corretora: "Corretora" }[data.track] || data.track;
+
+        const trackCls = `track-pill track-pill--${data.track || "intermediaria"}`;
+
+        $("#view-result").innerHTML = `
+          <div class="result-header">
+            <h1>${esc(data.institution || "Resultado do Scoping")}</h1>
+            <p><span class="${trackCls}">${esc(trackLabel)}</span> · ${fmtDate(data.created_at)}</p>
+          </div>
+
+          <div class="stats-row" style="margin-bottom:1.5rem">
+            <div class="stat-card"><div class="stat-val">${resumo.total_sujeitos_auditoria ?? "—"}</div><div class="stat-label">No escopo</div></div>
+            <div class="stat-card"><div class="stat-val">${resumo.obrigatorios_matriz ?? "—"}</div><div class="stat-label">Obrigatórios</div></div>
+            <div class="stat-card"><div class="stat-val">${resumo.acionados_por_respostas ?? "—"}</div><div class="stat-label">Por respostas</div></div>
+            <div class="stat-card"><div class="stat-val">${resumo.total_fora_escopo_auditoria ?? "—"}</div><div class="stat-label">Fora do escopo</div></div>
+          </div>
+
+          <div class="detail-section">
+            <h3 class="detail-section-title">Incisos sujeitos a auditoria (${audit.length})</h3>
+            <div class="detail-section-body">
+              ${audit.length
+                ? `<div class="incisos-chips">${audit.map((i) => `<span class="inciso-chip inciso-chip--audit">${esc(typeof i === "string" ? i : i.id || JSON.stringify(i))}</span>`).join("")}</div>`
+                : '<span class="text-muted">Nenhum</span>'}
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h3 class="detail-section-title">Incisos fora do escopo (${fora.length})</h3>
+            <div class="detail-section-body">
+              ${fora.length
+                ? `<div class="incisos-chips">${fora.map((i) => `<span class="inciso-chip inciso-chip--out">${esc(typeof i === "string" ? i : i.id || JSON.stringify(i))}</span>`).join("")}</div>`
+                : '<span class="text-muted">Nenhum</span>'}
+            </div>
+          </div>
+
+          <div class="result-footer">
+            <a href="/">← Voltar ao questionário</a>
+          </div>`;
+      }
+    </script>
+  </body>
+</html>

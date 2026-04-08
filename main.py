@@ -354,10 +354,11 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
     }
 
     # Persist submission (best-effort — never blocks the client response)
+    sub_id = None
     try:
         from db import save_submission
 
-        save_submission(
+        sub_id = save_submission(
             institution=inst,
             track=t,
             lang=lang,
@@ -366,6 +367,9 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
         )
     except Exception:
         logger.debug("Submission persistence skipped", exc_info=True)
+
+    if sub_id:
+        result["submission_id"] = sub_id
 
     return result
 
@@ -814,6 +818,31 @@ def admin_delete_submission(sub_id: str, request: Request) -> dict[str, Any]:
     return {"deleted": True, "id": sub_id}
 
 
+@api_router.get("/resultado/{sub_id}")
+def public_get_result(sub_id: str) -> dict[str, Any]:
+    """Public read-only endpoint for clients to revisit their result."""
+    from db import db_available, get_submission
+
+    if not db_available():
+        raise HTTPException(status_code=503, detail="Database not configured.")
+    data = get_submission(sub_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="Resultado não encontrado.")
+    snap = data.get("scope_snapshot") or {}
+    return {
+        "id": data["id"],
+        "institution": data.get("institution", ""),
+        "track": data.get("track", ""),
+        "lang": data.get("lang", "pt"),
+        "created_at": data.get("created_at"),
+        "resumo": snap.get("resumo", {}),
+        "incisos_sujeitos_auditoria": snap.get("incisos_sujeitos_auditoria", []),
+        "incisos_fora_escopo_auditoria": snap.get("incisos_fora_escopo_auditoria", []),
+        "corpus_readiness": snap.get("corpus_readiness", {}),
+        "journey_2": snap.get("journey_2", {}),
+    }
+
+
 app.include_router(api_router, prefix="/api")
 app.include_router(api_router, prefix="/api/v1")
 
@@ -824,6 +853,14 @@ app.include_router(admin_router, prefix="/api/v1")
 # Na Vercel a CDN também pode servir public/; aqui garantimos /static quando o pedido chega à função.
 if STATIC_DIR.is_dir():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+
+@app.get("/resultado/{sub_id}", response_model=None)
+async def resultado_page(sub_id: str) -> FileResponse | HTMLResponse:
+    f = PUBLIC_DIR / "resultado.html"
+    if f.is_file():
+        return FileResponse(f, media_type="text/html; charset=utf-8")
+    return HTMLResponse(status_code=404, content="<h1>Página não encontrada</h1>")
 
 
 @app.get("/admin", response_model=None)

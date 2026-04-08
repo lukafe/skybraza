@@ -1066,6 +1066,42 @@ input[type="text"]:focus {
   }
 }
 
+.permalink-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  border-radius: var(--radius);
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.25);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.permalink-link {
+  color: #22c55e;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  word-break: break-all;
+}
+.permalink-link:hover { text-decoration: underline; }
+.permalink-copy {
+  margin-left: auto;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid rgba(34,197,94,0.3);
+  border-radius: 6px;
+  background: rgba(34,197,94,0.12);
+  color: #22c55e;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: background 0.15s;
+}
+.permalink-copy:hover { background: rgba(34,197,94,0.22); }
+
 .results-section {
   border: 1px solid var(--border);
   border-radius: var(--radius);

@@ -259,7 +259,8 @@ def submission_stats() -> dict[str, Any]:
     Submission = _get_model()
     session = _SessionLocal()  # type: ignore[misc]
     try:
-        from sqlalchemy import func  # noqa: E402
+        from sqlalchemy import cast, func  # noqa: E402
+        from sqlalchemy.types import Date
 
         total = session.query(func.count(Submission.id)).scalar() or 0
         by_track_rows = (
@@ -268,7 +269,21 @@ def submission_stats() -> dict[str, Any]:
             .all()
         )
         by_track = {row[0]: row[1] for row in by_track_rows}
-        return {"total": total, "by_track": by_track}
+
+        cutoff = datetime.now(timezone.utc) - timedelta(days=30)
+        daily_rows = (
+            session.query(
+                cast(Submission.created_at, Date).label("day"),
+                func.count(Submission.id),
+            )
+            .filter(Submission.created_at >= cutoff)
+            .group_by("day")
+            .order_by("day")
+            .all()
+        )
+        daily = {row[0].isoformat(): row[1] for row in daily_rows if row[0]}
+
+        return {"total": total, "by_track": by_track, "daily": daily}
     finally:
         session.close()
 
