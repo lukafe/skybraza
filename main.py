@@ -18,7 +18,8 @@ Env: LOG_LEVEL, LOG_FORMAT=text|json, RATE_LIMIT_* (ver rate_limit.py), RATE_LIM
      DATABASE_URL (persistence; sqlite:///x.db local, postgresql://… produção),
      ADMIN_SECRET (HMAC key for admin session tokens — also used as login password if ADMIN_PASSWORD not set),
      ADMIN_PASSWORD (optional separate password for admin login; defaults to ADMIN_SECRET),
-     GOOGLE_CLIENT_ID (Google OAuth — admin login restricted to @certik.com)
+     GOOGLE_CLIENT_ID (Google OAuth — admin login restricted to @certik.com),
+     WEBHOOK_URL (optional — POST notification on each new submission)
 
 Local: uvicorn main:app --reload --host 127.0.0.1 --port 8000
 """
@@ -257,6 +258,27 @@ def health() -> dict[str, Any]:
     }
 
 
+def _fire_webhook(sub_id: str, institution: str, track: str, total_incisos: int) -> None:
+    """Best-effort POST to WEBHOOK_URL on each new submission. Never blocks."""
+    url = os.environ.get("WEBHOOK_URL", "").strip()
+    if not url:
+        return
+    try:
+        import urllib.request
+
+        payload = json.dumps({
+            "event": "new_submission",
+            "submission_id": sub_id,
+            "institution": institution,
+            "track": track,
+            "total_incisos": total_incisos,
+        }).encode()
+        req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"}, method="POST")
+        urllib.request.urlopen(req, timeout=5)
+    except Exception:
+        logger.debug("Webhook fire failed for %s", url, exc_info=True)
+
+
 @api_router.get("/questions")
 def get_questions(
     response: Response,
@@ -370,6 +392,7 @@ def post_scope(body: ScopeRequest) -> dict[str, Any]:
 
     if sub_id:
         result["submission_id"] = sub_id
+        _fire_webhook(sub_id, inst, t, meta["total_count"])
 
     return result
 
@@ -815,6 +838,25 @@ def admin_export_submission_pdf(sub_id: str, request: Request) -> Response:
 @admin_router.get("/admin/submissions/{sub_id}")
 def admin_get_submission(sub_id: str, request: Request) -> dict[str, Any]:
     return _load_submission_for_export(sub_id, request)
+
+
+@admin_router.get("/admin/matrix-versions")
+def admin_matrix_versions(request: Request) -> dict[str, Any]:
+    """Return regulatory matrix metadata for each track."""
+    _require_admin(request)
+    from matrix_loader import TRACK_IDS, get_coverage_meta
+
+    tracks: list[dict[str, Any]] = []
+    for tid in sorted(TRACK_IDS):
+        meta = get_coverage_meta(tid)
+        tracks.append({
+            "track": tid,
+            "matrix_version": meta.get("matrix_version"),
+            "last_updated": meta.get("last_updated"),
+            "description": meta.get("description", ""),
+            "source": meta.get("source", ""),
+        })
+    return {"tracks": tracks}
 
 
 @admin_router.post("/admin/simulate")

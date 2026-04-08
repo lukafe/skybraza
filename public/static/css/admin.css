@@ -499,6 +499,34 @@ body {
   font-size: 0.82rem;
 }
 
+/* ── Changelog ─────────────────────────────────────────────────────────── */
+.changelog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.changelog-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+.changelog-track {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--accent);
+}
+.changelog-meta {
+  font-size: 0.82rem;
+  margin-bottom: 0.35rem;
+  color: var(--text-secondary);
+}
+.changelog-label {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
 /* ── Simulate ──────────────────────────────────────────────────────────── */
 .sim-controls { display: flex; gap: 1rem; flex-wrap: wrap; }
 .sim-row { display: flex; flex-direction: column; gap: 0.25rem; }

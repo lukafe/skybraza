@@ -283,17 +283,25 @@ def submission_stats() -> dict[str, Any]:
         by_track = {row[0]: row[1] for row in by_track_rows}
 
         cutoff = datetime.now(timezone.utc) - timedelta(days=30)
-        daily_rows = (
-            session.query(
-                cast(Submission.created_at, Date).label("day"),
-                func.count(Submission.id),
+        daily: dict[str, int] = {}
+        try:
+            daily_rows = (
+                session.query(
+                    cast(Submission.created_at, Date).label("day"),
+                    func.count(Submission.id),
+                )
+                .filter(Submission.created_at >= cutoff)
+                .group_by("day")
+                .order_by("day")
+                .all()
             )
-            .filter(Submission.created_at >= cutoff)
-            .group_by("day")
-            .order_by("day")
-            .all()
-        )
-        daily = {row[0].isoformat(): row[1] for row in daily_rows if row[0]}
+            for row in daily_rows:
+                if row[0] is None:
+                    continue
+                key = row[0].isoformat() if hasattr(row[0], "isoformat") else str(row[0])
+                daily[key] = row[1]
+        except Exception:
+            pass
 
         return {"total": total, "by_track": by_track, "daily": daily}
     finally:

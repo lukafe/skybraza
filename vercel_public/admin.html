@@ -19,6 +19,7 @@
           <span id="user-email" class="hidden" style="color:var(--text-muted);font-size:.85rem"></span>
           <a href="/" id="link-app">Questionário</a>
           <a href="#" id="btn-simulate" class="hidden">Simulação</a>
+          <a href="#" id="btn-changelog" class="hidden">Versões</a>
           <a href="#" id="btn-audit" class="hidden">Audit Log</a>
           <a href="#" id="btn-logout" class="hidden">Sair</a>
         </nav>
@@ -84,6 +85,15 @@
       <div id="sim-questions" style="margin:1rem 0"></div>
       <button class="compare-btn" id="btn-sim-run" style="margin-top:.5rem">▶ Executar simulação</button>
       <div id="sim-result" style="margin-top:1.5rem"></div>
+    </div>
+
+    <!-- Changelog -->
+    <div id="view-changelog" class="main-content wrap hidden">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+        <button class="detail-back" id="btn-changelog-back">← Voltar</button>
+        <h2 style="margin:0;font-size:1.1rem">Versões da Matriz Regulatória</h2>
+      </div>
+      <div id="changelog-content"></div>
     </div>
 
     <!-- Audit Log -->

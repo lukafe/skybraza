@@ -81,13 +81,13 @@ function showLogin(error = "") {
 }
 
 function hideAllViews() {
-  for (const v of ["#view-login", "#view-dashboard", "#view-detail", "#view-audit", "#view-simulate"]) {
+  for (const v of ["#view-login", "#view-dashboard", "#view-detail", "#view-audit", "#view-simulate", "#view-changelog"]) {
     $(v)?.classList.add("hidden");
   }
 }
 
 function showNavLinks(visible) {
-  for (const id of ["#btn-audit", "#btn-simulate"]) {
+  for (const id of ["#btn-audit", "#btn-simulate", "#btn-changelog"]) {
     $(id)?.classList.toggle("hidden", !visible);
   }
 }
@@ -601,6 +601,46 @@ async function loadDetail(id) {
   }
 }
 
+// ── Changelog ────────────────────────────────────────────────────────────────
+
+function showChangelog() {
+  hideAllViews();
+  $("#view-changelog").classList.remove("hidden");
+  loadChangelog();
+}
+
+const TRACK_NAMES = { intermediaria: "Intermediária", custodiante: "Custodiante", corretora: "Corretora" };
+
+async function loadChangelog() {
+  const wrap = $("#changelog-content");
+  wrap.innerHTML = '<div class="empty-state">A carregar…</div>';
+  try {
+    const data = await api("/admin/matrix-versions");
+    if (!data.tracks || !data.tracks.length) {
+      wrap.innerHTML = '<div class="empty-state">Nenhuma informação de versão disponível.</div>';
+      return;
+    }
+    let html = '<div class="changelog-grid">';
+    for (const t of data.tracks) {
+      html += `<div class="changelog-card">
+        <div class="changelog-track">${esc(TRACK_NAMES[t.track] || t.track)}</div>
+        <div class="changelog-meta">
+          <span class="changelog-label">Versão:</span> <span class="mono">${esc(t.matrix_version || "—")}</span>
+        </div>
+        <div class="changelog-meta">
+          <span class="changelog-label">Última atualização:</span> <span class="mono">${esc(t.last_updated || "—")}</span>
+        </div>
+        ${t.description ? `<div class="changelog-meta"><span class="changelog-label">Descrição:</span> ${esc(t.description)}</div>` : ""}
+        ${t.source ? `<div class="changelog-meta"><span class="changelog-label">Fonte:</span> ${esc(t.source)}</div>` : ""}
+      </div>`;
+    }
+    html += "</div>";
+    wrap.innerHTML = html;
+  } catch (e) {
+    wrap.innerHTML = `<div class="empty-state">Erro: ${esc(e.message)}</div>`;
+  }
+}
+
 // ── Simulate ─────────────────────────────────────────────────────────────────
 
 let simQuestions = null;
@@ -911,6 +951,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("#btn-simulate")?.addEventListener("click", (e) => { e.preventDefault(); showSimulate(); });
   $("#btn-sim-back")?.addEventListener("click", () => showDashboard());
+  $("#btn-changelog")?.addEventListener("click", (e) => { e.preventDefault(); showChangelog(); });
+  $("#btn-changelog-back")?.addEventListener("click", () => showDashboard());
   $("#btn-sim-run")?.addEventListener("click", () => runSimulation());
   $("#sim-track")?.addEventListener("change", () => { simQuestions = null; loadSimQuestions(); });
 
