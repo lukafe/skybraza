@@ -791,6 +791,12 @@ input[type="text"]:focus {
 .sk-footer-links a:hover {
   color: var(--accent);
 }
+.sk-footer-admin-link {
+  opacity: 0.5;
+  border-left: 1px solid var(--border);
+  padding-left: 1.1rem !important;
+}
+.sk-footer-admin-link:hover { opacity: 1; }
 
 .toast {
   position: fixed;
