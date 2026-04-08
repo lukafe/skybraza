@@ -72,7 +72,7 @@ function showLogin(error = "") {
   $("#btn-logout").classList.add("hidden");
   $("#user-email").classList.add("hidden");
   $("#login-error").textContent = error;
-  initGoogleSignIn();
+  initLoginUI();
 }
 
 function showDashboard() {
@@ -95,26 +95,43 @@ function showDetail(id) {
   loadDetail(id);
 }
 
-// ── Google Sign-In ───────────────────────────────────────────────────────────
+// ── Login UI (Google OAuth or password fallback) ─────────────────────────────
 
 let _googleClientId = "";
-let _googleInitDone = false;
+let _loginInitDone = false;
+let _usePasswordLogin = false;
 
-async function initGoogleSignIn() {
-  if (_googleInitDone) return;
+async function initLoginUI() {
+  if (_loginInitDone) return;
   try {
     const cfg = await fetch(`${API}/admin/config`).then((r) => r.json());
     _googleClientId = cfg.google_client_id || "";
+    _usePasswordLogin = cfg.password_login || false;
   } catch {
     $("#login-error").textContent = "Não foi possível obter configuração do servidor.";
     return;
   }
 
-  if (!_googleClientId) {
-    $("#login-error").textContent = "Google Sign-In não configurado (GOOGLE_CLIENT_ID).";
+  if (_usePasswordLogin) {
+    $("#login-sub").textContent = "Insira a senha de administrador.";
+    $("#password-form").classList.remove("hidden");
+    $("#google-signin-btn").classList.add("hidden");
+    _loginInitDone = true;
     return;
   }
 
+  if (_googleClientId) {
+    $("#login-sub").innerHTML = 'Faça login com a sua conta Google <strong>@certik.com</strong>.';
+    $("#password-form").classList.add("hidden");
+    $("#google-signin-btn").classList.remove("hidden");
+    initGoogleButton();
+    return;
+  }
+
+  $("#login-error").textContent = "Login não configurado. Defina ADMIN_SECRET nas variáveis de ambiente.";
+}
+
+function initGoogleButton() {
   function waitForGoogle(cb, retries = 20) {
     if (window.google?.accounts?.id) return cb();
     if (retries <= 0) { $("#login-error").textContent = "Google Sign-In não carregou."; return; }
@@ -133,34 +150,53 @@ async function initGoogleSignIn() {
       text: "signin_with",
       locale: "pt-BR",
     });
-    _googleInitDone = true;
+    _loginInitDone = true;
   });
 }
 
 async function handleGoogleCredential(response) {
   $("#login-error").textContent = "";
   try {
-    const data = await fetch(`${API}/admin/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ credential: response.credential }),
-    }).then(async (r) => {
-      if (!r.ok) {
-        const err = await r.json().catch(() => ({}));
-        throw new Error(err.detail?.message || err.detail || "Falha no login");
-      }
-      return r.json();
-    });
-
-    sessionToken = data.session_token;
-    sessionEmail = data.email || "";
-    sessionStorage.setItem("admin_session", sessionToken);
-    sessionStorage.setItem("admin_email", sessionEmail);
-    showDashboard();
+    const data = await doLogin({ credential: response.credential });
+    applySession(data);
   } catch (e) {
     clearSession();
     $("#login-error").textContent = e.message || "Erro ao autenticar.";
   }
+}
+
+async function handlePasswordSubmit(e) {
+  e.preventDefault();
+  const pw = $("#password-input").value.trim();
+  if (!pw) return;
+  $("#login-error").textContent = "";
+  try {
+    const data = await doLogin({ password: pw });
+    applySession(data);
+  } catch (err) {
+    $("#login-error").textContent = err.message || "Erro ao autenticar.";
+  }
+}
+
+async function doLogin(body) {
+  const res = await fetch(`${API}/admin/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail?.message || err.detail || "Falha no login");
+  }
+  return res.json();
+}
+
+function applySession(data) {
+  sessionToken = data.session_token;
+  sessionEmail = data.email || "";
+  sessionStorage.setItem("admin_session", sessionToken);
+  sessionStorage.setItem("admin_email", sessionEmail);
+  showDashboard();
 }
 
 // ── Stats ────────────────────────────────────────────────────────────────────
@@ -400,13 +436,13 @@ document.addEventListener("DOMContentLoaded", () => {
     loadSubmissions();
   });
 
-  // If we have a stored session, validate it
+  $("#password-form")?.addEventListener("submit", handlePasswordSubmit);
+
   if (sessionToken) {
     api("/admin/stats")
       .then(() => showDashboard())
-      .catch(() => { clearSession(); showLogin(); initGoogleSignIn(); });
+      .catch(() => { clearSession(); showLogin(); });
   } else {
     showLogin();
-    initGoogleSignIn();
   }
 });

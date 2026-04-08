@@ -28,8 +28,12 @@
     <div id="view-login" class="login-wrap">
       <div class="login-card">
         <h1>Painel administrativo</h1>
-        <p class="login-sub">Faça login com a sua conta Google <strong>@certik.com</strong>.</p>
-        <div id="google-signin-btn" style="display:flex;justify-content:center;margin:1.25rem 0 0.5rem"></div>
+        <p class="login-sub" id="login-sub">Faça login para aceder ao painel.</p>
+        <div id="google-signin-btn" class="hidden" style="display:flex;justify-content:center;margin:1.25rem 0 0.5rem"></div>
+        <form id="password-form" class="hidden" autocomplete="off">
+          <input type="password" id="password-input" class="login-input" placeholder="Senha de administrador" required />
+          <button type="submit" class="login-btn">Entrar</button>
+        </form>
         <p id="login-error" class="login-error"></p>
       </div>
     </div>

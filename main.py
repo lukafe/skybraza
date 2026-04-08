@@ -573,24 +573,44 @@ def _require_admin(request: Request) -> dict[str, Any]:
 
 
 class AdminLoginRequest(BaseModel):
-    credential: str = Field(..., description="Google ID token from Sign-In")
+    credential: str = Field(default="", description="Google ID token from Sign-In")
+    password: str = Field(default="", description="Fallback password (ADMIN_SECRET)")
 
 
 @admin_router.get("/admin/config")
 def admin_config() -> dict[str, Any]:
-    """Public config needed by the admin frontend (Google Client ID)."""
+    """Public config needed by the admin frontend."""
     cid = os.environ.get("GOOGLE_CLIENT_ID", "")
-    return {"google_client_id": cid, "domain": ADMIN_ALLOWED_DOMAIN}
+    has_secret = bool(os.environ.get("ADMIN_SECRET", ""))
+    return {
+        "google_client_id": cid,
+        "domain": ADMIN_ALLOWED_DOMAIN,
+        "password_login": has_secret and not cid,
+    }
 
 
 @admin_router.post("/admin/login")
 def admin_login(body: AdminLoginRequest) -> dict[str, Any]:
-    """Exchange a Google ID token for an admin session token (only @certik.com)."""
+    """Login via Google ID token or fallback password (ADMIN_SECRET)."""
+    admin_secret = os.environ.get("ADMIN_SECRET", "")
+    if not admin_secret:
+        raise HTTPException(status_code=503, detail={"code": "NOT_CONFIGURED", "message": "ADMIN_SECRET not set."})
+
     cid = os.environ.get("GOOGLE_CLIENT_ID", "")
+
+    # --- Password fallback (when Google OAuth is not configured) ---
+    if body.password:
+        import hmac as _hmac_pw
+        if not _hmac_pw.compare_digest(body.password, admin_secret):
+            raise HTTPException(status_code=401, detail={"code": "WRONG_PASSWORD", "message": "Senha incorreta."})
+        session_token = _admin_sign_session("admin@local", "Administrador")
+        return {"session_token": session_token, "email": "admin@local", "name": "Administrador"}
+
+    # --- Google OAuth flow ---
+    if not body.credential:
+        raise HTTPException(status_code=400, detail={"code": "MISSING_FIELDS", "message": "Credencial ou senha necessária."})
     if not cid:
         raise HTTPException(status_code=503, detail={"code": "NOT_CONFIGURED", "message": "GOOGLE_CLIENT_ID not set."})
-    if not os.environ.get("ADMIN_SECRET"):
-        raise HTTPException(status_code=503, detail={"code": "NOT_CONFIGURED", "message": "ADMIN_SECRET not set."})
 
     try:
         from google.auth.transport import requests as google_requests
